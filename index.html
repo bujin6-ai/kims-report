@@ -937,7 +937,7 @@ var KIMS = (function () {
     };
     return openGroups.map(function (g) {
       var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; });
-      rows.sort(function (a, b) { return (b[1].growth == null ? -9 : b[1].growth) - (a[1].growth == null ? -9 : a[1].growth); });
+      rows.sort(function (a, b) { return (b[1].gsT || 0) - (a[1].gsT || 0); }); // 그룹 안 매출 큰 순
       var gtot = M(k, g[2], sc);
       return '<tbody><tr class="gh"><th>' + g[1] + ' ' + g[2].length + '점 합계</th><td>' + man(gtot.gsT) + '</td><td><b class="' + cls(gtot.growth) + '">' + pct(gtot.growth) + '</b></td><td></td>' + cells(gtot) + '</tr>' + rows.map(function (r) {
         var t = r[1], rk = rankIn(k, K, sc, 'growth', r[0]);
@@ -975,7 +975,7 @@ var KIMS = (function () {
         [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '만원', kt.growth, pct(kt.growth)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD)) + kpi('객수', won(kt.cnt), '명/일', kt.cntG, pct(kt.cntG)) + kpi('객단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG)) + '</div>', null, 'bare')],
         [allDailySec('store', '전체')],
         [sec('groups', '그룹별 합계', '그룹별 합계', gt)],
-        [sec('rank', '점포 순위', '점포별 매출 성장율 순위', '<p class="note">그룹 안에서 성장율 순 · 순위 = 킴스 영업 ' + K.length + '점 중 매출 성장율 순위 · 점포를 누르면 상세로 이동</p><div class="hx"><table class="rt">' + RT_HEAD + '' + rankTbl + '</table></div>')],
+        [sec('rank', '점포 순위', '점포별 매출 성장율 순위', '<div class="hx"><table class="rt">' + RT_HEAD + '' + rankTbl + '</table></div>')],
         [sec('cdheat', '점포×CD 성장율', '점포 × CD 매출 성장율', heatAll)],
       ],
     };
@@ -1035,10 +1035,10 @@ var KIMS = (function () {
       sub: '그룹 ' + c[1] + ' 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
       rows: [
         [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="' + id + '">' + kpi('매출', man(kt.gsT), '만원', kt.growth, pct(kt.growth)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD)) + kpi('객수', won(kt.cnt), '명/일', kt.cntG, pct(kt.cntG)) + kpi('객단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG)) + '</div>', null, 'bare')],
-        pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf), sec('pggrp', '구매그룹 × 그룹', '그룹별 구매그룹 성장율', pgGrp)] : [],
+        pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf)] : [],
         [allDailySec(id, c[1])],
         [sec('groups', '그룹별 합계', '그룹별 ' + c[1] + ' 합계', gt)],
-        [sec('rank', '점포 순위', '점포별 ' + c[1] + ' 매출 성장율 순위', '<p class="note">그룹 안에서 성장율 순 · 순위 = 킴스 영업 ' + K.length + '점 중 매출 성장율 순위 · 점포를 누르면 그 점포 ' + c[1] + ' 화면으로 이동</p><div class="hx"><table class="rt">' + RT_HEAD + '' + rankTbl + '</table></div>')],
+        [sec('rank', '점포 순위', '점포별 ' + c[1] + ' 매출 성장율 순위', '<div class="hx"><table class="rt">' + RT_HEAD + '' + rankTbl + '</table></div>')],
         [sec('cdheat', '구매그룹 성장율', '점포 × 구매그룹 매출 성장율', heatPg)],
       ],
     };
