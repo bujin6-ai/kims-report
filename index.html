@@ -495,7 +495,9 @@ body.nav-open #nav{transform:none}
 .qlg{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:4px 0 14px;font-size:12.5px;color:var(--muted)}
 .qlg span{display:inline-flex;align-items:center;gap:6px}.qlg i{display:inline-block;width:10px;height:10px;border-radius:50%}.qlg i.u{background:var(--good)}.qlg i.d{background:var(--bad)}
 .qlg i.sz{width:14px;height:14px;border:1.5px solid var(--muted);background:none;box-shadow:inset 0 0 0 3px var(--panel),inset 0 0 0 10px color-mix(in srgb,var(--muted) 35%,transparent)}.qlg .qh{margin-left:auto}
-@media (max-width:700px){.qlg .qh{margin-left:0}.quadw{overflow-x:auto;-webkit-overflow-scrolling:touch}.quad{width:820px;max-width:none}}
+.quad.qm{display:none}
+@media (max-width:700px){.qlg .qh{margin-left:0}.quad.qd{display:none}.quad.qm{display:block}
+.quad.qm .tk{font-size:10px}.quad.qm .ax{font-size:10.5px}.quad.qm .qc .q1{font-size:10.5px}.quad.qm .qc .q2{font-size:9.5px}.quad.qm .qp text{font-size:10.5px;stroke-width:3px}}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
@@ -1068,14 +1070,14 @@ var KIMS = (function () {
     var pts = OPEN().map(function (p) { var t = M(k, [p], sc); return { p: p, x: t.cntG, y: t.atvG, g: t.growth, s: t.gsT || 0 }; })
       .filter(function (o) { return o.x != null && o.y != null && isFinite(o.x) && isFinite(o.y); });
     if (pts.length < 3) return '';
-    var W = 1100, H = 480, L = 64, R = 24, T = 44, B = 48;
+    var build = function (W, H, L, R, T, B, m) {
     var rng = function (key) {
       var v = pts.map(function (o) { return o[key]; }), lo = Math.min.apply(null, v.concat([-0.02])), hi = Math.max.apply(null, v.concat([0.02])), pad = (hi - lo) * 0.08;
       return [lo - pad, hi + pad];
     };
     var rx = rng('x'), ry = rng('y');
     var X = function (v) { return L + (v - rx[0]) / (rx[1] - rx[0]) * (W - L - R); }, Y = function (v) { return T + (ry[1] - v) / (ry[1] - ry[0]) * (H - T - B); };
-    var smax = Math.max.apply(null, pts.map(function (o) { return o.s; })) || 1, rad = function (o) { return 5 + Math.sqrt(o.s / smax) * 11; };
+    var smax = Math.max.apply(null, pts.map(function (o) { return o.s; })) || 1, rad = function (o) { return (m ? 4 : 5) + Math.sqrt(o.s / smax) * (m ? 7 : 11); };
     var step = function (a) { var span = a[1] - a[0]; return span > 0.6 ? 0.2 : span > 0.3 ? 0.1 : span > 0.12 ? 0.05 : 0.02; };
     var ticks = function (a) { var st = step(a), out = []; for (var v = Math.ceil(a[0] / st) * st; v <= a[1] + 1e-9; v += st) out.push(Math.round(v * 1000) / 1000); return out; };
     var pc = function (v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(Math.round(v * 100)) + '%'; };
@@ -1084,25 +1086,26 @@ var KIMS = (function () {
     var cnt = { a: 0, b: 0, c: 0, d: 0 };
     pts.forEach(function (o) { cnt[o.x >= 0 ? (o.y >= 0 ? 'a' : 'd') : (o.y >= 0 ? 'b' : 'c')]++; });
     var chip = function (x, y, anchor, cls, t1, n) {
-      var w = 150, xx = anchor === 'end' ? x - w : x;
-      return '<g class="qc ' + cls + '"><rect x="' + xx + '" y="' + y + '" width="' + w + '" height="40" rx="10"/><text x="' + (xx + 12) + '" y="' + (y + 17) + '" class="q1">' + t1 + '</text><text x="' + (xx + 12) + '" y="' + (y + 32) + '" class="q2">' + n + '개 점포</text></g>';
+      var w = m ? 104 : 150, xx = anchor === 'end' ? x - w : x;
+      return '<g class="qc ' + cls + '"><rect x="' + xx + '" y="' + y + '" width="' + w + '" height="' + (m ? 32 : 40) + '" rx="' + (m ? 8 : 10) + '"/><text x="' + (xx + (m ? 8 : 12)) + '" y="' + (y + (m ? 13 : 17)) + '" class="q1">' + t1 + '</text><text x="' + (xx + (m ? 8 : 12)) + '" y="' + (y + (m ? 26 : 32)) + '" class="q2">' + n + '개 점포</text></g>';
     };
     // 이름표: 겹치면 오른쪽 → 왼쪽 → 위 → 아래 순으로 비켜 놓고, 그래도 겹치면 생략(마우스 올리면 보임)
-    var boxes = [], labels = {};
+    var cw = m ? 104 : 150, ch = m ? 32 : 40, cb = m ? 42 : 50;
+    var boxes = [{ x1: W - R - 10 - cw, x2: W - R - 10, y1: T + 10, y2: T + 10 + ch }, { x1: L + 10, x2: L + 10 + cw, y1: T + 10, y2: T + 10 + ch }, { x1: L + 10, x2: L + 10 + cw, y1: H - B - cb, y2: H - B - cb + ch }, { x1: W - R - 10 - cw, x2: W - R - 10, y1: H - B - cb, y2: H - B - cb + ch }], labels = {};
     pts.slice().sort(function (a, b) { return b.s - a.s; }).forEach(function (o) {
-      var cx = X(o.x), cy = Y(o.y), r = rad(o), w = NAME[o.p].length * 12 + 4, h = 14;
+      var cx = X(o.x), cy = Y(o.y), r = rad(o), w = NAME[o.p].length * (m ? 10 : 12) + 4, h = 14;
       boxes.push({ x1: cx - r, x2: cx + r, y1: cy - r, y2: cy + r });
     });
     var hit = function (b) { return b.x1 < L || b.x2 > W - R || b.y1 < T || b.y2 > H - B || boxes.some(function (o) { return b.x1 < o.x2 && b.x2 > o.x1 && b.y1 < o.y2 && b.y2 > o.y1; }); };
     pts.slice().sort(function (a, b) { return b.s - a.s; }).forEach(function (o) {
-      var cx = X(o.x), cy = Y(o.y), r = rad(o), w = NAME[o.p].length * 12 + 4, h = 15;
+      var cx = X(o.x), cy = Y(o.y), r = rad(o), w = NAME[o.p].length * (m ? 10 : 12) + 4, h = m ? 13 : 15;
       var cand = [[cx + r + 4, cy + 5, 'start'], [cx - r - 4, cy + 5, 'end'], [cx, cy - r - 5, 'middle'], [cx, cy + r + 14, 'middle']];
       for (var i = 0; i < cand.length; i++) {
         var c = cand[i], x1 = c[2] === 'start' ? c[0] : c[2] === 'end' ? c[0] - w : c[0] - w / 2, b = { x1: x1, x2: x1 + w, y1: c[1] - h + 3, y2: c[1] + 3 };
         if (!hit(b)) { boxes.push(b); labels[o.p] = c; return; }
       }
     });
-    var svg = '<svg class="quad" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="점포별 객수 증감율과 객단가 증감율">' +
+    return '<svg class="quad' + (m ? ' qm' : ' qd') + '" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="점포별 객수 증감율과 객단가 증감율">' +
       '<rect class="qa" x="' + x0 + '" y="' + T + '" width="' + (W - R - x0) + '" height="' + (y0 - T) + '"/>' +
       '<rect class="qcz" x="' + L + '" y="' + y0 + '" width="' + (x0 - L) + '" height="' + (H - B - y0) + '"/>' +
       ticks(rx).map(function (v) { return v === 0 ? '' : '<line class="gr" x1="' + X(v) + '" x2="' + X(v) + '" y1="' + T + '" y2="' + (H - B) + '"/>'; }).join('') +
@@ -1111,15 +1114,17 @@ var KIMS = (function () {
       ticks(ry).map(function (v) { return '<text class="tk" x="' + (L - 10) + '" y="' + (Y(v) + 4) + '" text-anchor="end">' + pc(v) + '</text>'; }).join('') +
       '<line class="z" x1="' + x0 + '" x2="' + x0 + '" y1="' + T + '" y2="' + (H - B) + '"/><line class="z" x1="' + L + '" x2="' + (W - R) + '" y1="' + y0 + '" y2="' + y0 + '"/>' +
       '<text class="ax" x="' + ((L + W - R) / 2) + '" y="' + (H - 8) + '" text-anchor="middle">객수 증감율 (전년 대비)</text>' +
-      '<text class="ax" x="16" y="' + ((T + H - B) / 2) + '" transform="rotate(-90 16 ' + ((T + H - B) / 2) + ')" text-anchor="middle">객단가 증감율 (전년 대비)</text>' +
+      '<text class="ax" x="' + (m ? 9 : 16) + '" y="' + ((T + H - B) / 2) + '" transform="rotate(-90 ' + (m ? 9 : 16) + ' ' + ((T + H - B) / 2) + ')" text-anchor="middle">객단가 증감율 (전년 대비)</text>' +
       chip(W - R - 10, T + 10, 'end', 'a', '객수↑ · 객단가↑', cnt.a) + chip(L + 10, T + 10, 'start', 'b', '객수↓ · 객단가↑', cnt.b) +
-      chip(L + 10, H - B - 50, 'start', 'c', '객수↓ · 객단가↓', cnt.c) + chip(W - R - 10, H - B - 50, 'end', 'd', '객수↑ · 객단가↓', cnt.d) +
+      chip(L + 10, H - B - (m ? 42 : 50), 'start', 'c', '객수↓ · 객단가↓', cnt.c) + chip(W - R - 10, H - B - (m ? 42 : 50), 'end', 'd', '객수↑ · 객단가↓', cnt.d) +
       pts.slice().sort(function (a, b) { return b.s - a.s; }).map(function (o) {
         var cx = X(o.x), cy = Y(o.y), lb = labels[o.p];
         return '<g class="pick qp ' + (o.g == null ? '' : o.g >= 0 ? 'up' : 'dn') + (lb ? '' : ' nl') + '" data-s="' + o.p + '" tabindex="0"><title>' + esc(NAME[o.p]) + ' · 매출 ' + man(o.s) + '백만원(' + pct(o.g) + ') · 객수 ' + pct(o.x) + ' · 객단가 ' + pct(o.y) + '</title>' +
           '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + rad(o).toFixed(1) + '"/>' +
           '<text x="' + (lb ? lb[0] : cx + rad(o) + 4).toFixed(1) + '" y="' + (lb ? lb[1] : cy + 5).toFixed(1) + '" text-anchor="' + (lb ? lb[2] : 'start') + '">' + esc(NAME[o.p]) + '</text></g>';
       }).join('') + '</svg>';
+    };
+    var svg = build(1100, 480, 64, 24, 44, 48, false) + build(360, 440, 50, 10, 34, 40, true);
     return '<p class="qlg"><span><i class="u"></i>매출 증가</span><span><i class="d"></i>매출 감소</span><span><i class="sz"></i>원이 클수록 매출 큼</span><span class="qh">오른쪽일수록 객수 증가 · 위쪽일수록 객단가 증가 · 점을 누르면 그 점포로 이동</span></p><div class="quadw">' + svg + '</div>';
   }
 
