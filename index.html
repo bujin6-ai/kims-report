@@ -229,7 +229,7 @@ body{background:var(--bg)}
 .kpi[data-kpi]{cursor:pointer;transition:border-color .2s,background .2s}
 .kpi.on{border-color:var(--ac)}
 @media (hover:hover){.kpi[data-kpi]:hover{border-color:var(--ac)}}
-#kpop{position:fixed;z-index:45;width:min(320px,calc(100vw - 16px));max-height:min(60vh,520px);overflow-y:auto;padding:12px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);pointer-events:none;animation:up .2s ease both}
+#kpop{position:fixed;z-index:45;width:min(600px,calc(100vw - 16px));max-height:calc(100vh - 16px);overflow-y:auto;padding:12px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);pointer-events:none;animation:up .2s ease both}
 #kpop .kt{margin:0 0 8px;font-weight:700;font-size:14px}#kpop .kt small{display:block;font-weight:500;color:var(--muted);font-size:11px}
 #kpop ul{list-style:none;margin:0;padding:0;display:grid;gap:3px}
 #kpop li{display:grid;grid-template-columns:minmax(0,1fr) auto 4.6em;gap:8px;align-items:baseline;font-size:13px}
@@ -237,6 +237,11 @@ body{background:var(--bg)}
 #kpop li.cd{font-weight:700;margin-top:5px;padding-top:5px;border-top:1px solid var(--line)}#kpop li.cd:first-child{margin-top:0;padding-top:0;border-top:0}
 #kpop li.pg span{padding-left:12px;color:var(--muted)}
 #kpop .kn{margin:8px 0 0;font-size:11px;color:var(--muted);word-break:keep-all}
+#kpop .kgs{columns:2 250px;column-gap:22px}#kpop .kgs.one{columns:1}
+#kpop ul.kg{break-inside:avoid;margin:0 0 7px;padding:0 0 7px;border-bottom:1px solid var(--line)}
+#kpop ul.kg li.cd{margin-top:0;padding-top:0;border-top:0}
+#kpop .kgs.one ul.kg{border-bottom:0}
+@media (max-width:600px),(hover:none){#kpop{width:min(340px,calc(100vw - 16px));pointer-events:auto}#kpop .kgs{columns:1}}
 /* JS 없이 열렸을 때 (미리보기 앱) */
 .nojs-note{display:none}
 .nojs .nojs-note{display:grid;gap:4px;margin:14px 0 0;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--ac) 14%,var(--panel));border:1px solid color-mix(in srgb,var(--ac) 40%,transparent);font-size:13px;word-break:keep-all}
@@ -350,6 +355,15 @@ body.nav-open #nav{transform:none}
 .rt td:nth-child(4){text-align:center}
 .rt tr.gh th{background:var(--ac-soft);font-size:13px;padding-top:9px}
 .rt tr.gh th span{margin-left:6px}
+.gt thead th:first-child,.rt thead th:first-child{text-align:left}
+.gt2 thead tr.g1 th{text-align:center;color:var(--fg);font-size:12.5px;border-bottom:1px solid var(--line)}
+.gt2 thead tr.g1 th:first-child{text-align:left;vertical-align:bottom;border-bottom:1.5px solid var(--fg)}
+.gt2 thead tr.g2 th{font-size:11.5px}
+.gt2 th.gs,.gt2 td.gs,.gt2 thead tr.g1 th+th,.gt2 thead tr.g2 th:nth-child(3n+1){border-left:1px solid var(--line)}
+.gt2 thead tr.g2 th:nth-child(3n+1){padding-left:10px}.gt2 td.gs{padding-left:10px}
+.rt thead th small{font-weight:500;font-size:10.5px;margin-left:1px}
+.rt tr.gh th,.rt tr.gh td{background:var(--ac-soft);font-weight:700;padding-top:9px}
+.rt tr.gh td b{font-weight:700}
 @media (max-width:600px){.gt{table-layout:auto;letter-spacing:-.03em}.gt thead th{white-space:normal;word-break:keep-all}.gt,.rt{font-size:12px}.gt th,.gt td,.rt th,.rt td{padding:6px 3px}.gt thead th,.rt thead th{font-size:10.5px;white-space:normal;word-break:keep-all;vertical-align:bottom}.hall{font-size:11px}}
 @media (max-width:600px){.hs{overflow-x:visible;margin:0}.st{min-width:0;width:100%;table-layout:auto;white-space:normal;font-size:11px;letter-spacing:-.03em}.st th,.st td{padding:7px 2px}.st .mh{display:none}.st td{white-space:nowrap}.st tbody th,.st tfoot th{word-break:keep-all;overflow-wrap:anywhere;font-size:12px}.st thead th{font-size:10.5px;line-height:1.25;vertical-align:bottom;word-break:keep-all;white-space:normal}.st tr.pg th{padding-left:8px}.st .rkb{min-width:0;padding:1px 5px;font-size:10.5px}}
 
@@ -362,7 +376,7 @@ html:not([data-view=report]) body{background:#f4f5f7}
 .gw{min-height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:48px;align-items:center;max-width:980px;margin:0 auto;padding:40px max(24px,env(safe-area-inset-left,0px))}
 .gw.one{grid-template-columns:minmax(0,420px);justify-content:center}
 .glogo{display:block;width:min(280px,70%);height:auto;margin-bottom:22px}.glogo.txt{font-size:34px;font-weight:800;color:var(--pr);letter-spacing:-.5px}
-.gbrand h1{margin:0;font-size:32px;letter-spacing:-.6px}.gsub{margin:4px 0 28px;color:var(--pm);font-size:16px}
+.gbrand h1{margin:0 0 28px;font-size:32px;letter-spacing:-.6px}.gsub{margin:4px 0 28px;color:var(--pm);font-size:16px}
 .gsteps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .gsteps li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--ps);border:1px solid var(--pl);border-radius:14px;opacity:0;animation:pin .4s ease forwards}
 .gsteps li:nth-child(2){animation-delay:.1s}.gsteps li:nth-child(3){animation-delay:.2s}
@@ -375,12 +389,12 @@ html:not([data-view=report]) body{background:#f4f5f7}
 .gcard input:focus{outline:none;border-color:var(--pr);box-shadow:0 0 0 3px var(--prw)}
 .gb{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;font:inherit;font-size:14px;font-weight:600;padding:12px;border-radius:12px;border:1px solid var(--pl);background:#fff;color:var(--pt);cursor:pointer;text-decoration:none;text-align:center;transition:background-color .2s,border-color .2s,transform .2s}
 .gb.pri{background:var(--pr);border-color:var(--pr);color:#fff;font-size:15px;margin-top:4px}.gb:disabled{opacity:.6;cursor:default}
-.gl2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gl2 .gb{font-size:13px;padding:10px 8px;word-break:keep-all}
+.gl2{display:grid;grid-template-columns:1fr;gap:8px}.gl2 .gb{font-size:13.5px;padding:11px 10px;white-space:nowrap}.gl2 .gb.sub{border:0;background:none;color:var(--pm);font-weight:500;padding:4px;text-decoration:underline;text-underline-offset:3px}.gcard>.gb:not(.pri){margin-top:-4px}
 .gl{margin:0}.gl a{display:inline-flex;align-items:center;gap:2px;color:var(--pm);text-decoration:none;font-size:13px}.gl svg{width:16px;height:16px}
 .gf{margin:4px 0 0;padding:12px 14px;border-radius:12px;background:var(--pb);color:var(--pm);font-size:13px;word-break:keep-all}.gf b{color:var(--pt);display:block;margin-bottom:2px}
 .gm{margin:0;padding:10px 12px;border-radius:10px;font-size:13px;word-break:keep-all}.gm.err{background:var(--prw);color:var(--pr)}.gm.ok{background:#e8f6ee;color:var(--pg)}
 @keyframes pin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media (max-width:820px){.gw{display:flex;flex-direction:column;gap:0;padding:28px 16px 40px;align-items:stretch}.gbrand{display:contents}.glogo{order:1;width:min(200px,58%);margin-bottom:14px}.gbrand>h1{order:2;font-size:24px}.gsub{order:3;margin:2px 0 18px;font-size:14px}.gw .gcard{order:4;padding:22px 18px}.gsteps{order:5;margin-top:18px}}
+@media (max-width:820px){.gw{display:flex;flex-direction:column;gap:0;padding:28px 16px 40px;align-items:stretch}.gbrand{display:contents}.glogo{order:1;width:min(200px,58%);margin-bottom:14px}.gbrand>h1{order:2;font-size:24px;margin:0 0 18px}.gsub{order:3;margin:2px 0 18px;font-size:14px}.gw .gcard{order:4;padding:22px 18px}.gsteps{order:5;margin-top:18px}}
 @media (hover:hover){.gb:hover{border-color:var(--pr)}.gb.pri:hover{background:#a8161f}.gl a:hover{color:var(--pr)}.gcard input:hover{border-color:#c9cdd4}}
 /* 포털 */
 .ptop{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px));background:rgba(255,255,255,.88);-webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--pl)}
@@ -396,7 +410,7 @@ html:not([data-view=report]) body{background:#f4f5f7}
 .pcard{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:132px;padding:16px;border-radius:16px;border:1px solid var(--pl);background:var(--ps);color:var(--pt);font:inherit;text-align:left;cursor:pointer;opacity:0;animation:pin .4s ease forwards;animation-delay:calc(var(--i)*.06s);transition:border-color .2s,box-shadow .2s,transform .2s}
 .pcard b{font-size:16px;margin-top:auto}.pcard small{color:var(--pm);font-size:12px;word-break:keep-all}
 .pic{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--prw);color:var(--pr)}#portal .pic svg{width:22px;height:22px}
-.pcard.soon{background:#fafafa;border-style:dashed}.pcard.soon .pic{background:#eef0f3;color:#9ca3af}.pcard.soon b{color:#6b7280}
+.pcard.soon{background:#fafafa;border-style:dashed}.pcard.adm{background:#f3f5ff;border-color:#c7d0f5}.pcard.adm .pic{background:#e0e6ff;color:#3346c4}.pcard.adm .pbadge{background:#3346c4}.psec.adm{color:#3346c4}@media (hover:hover){.pcard.adm:hover{border-color:#3346c4;box-shadow:0 8px 22px rgba(51,70,196,.12)}}.pcard.soon .pic{background:#eef0f3;color:#9ca3af}.pcard.soon b{color:#6b7280}
 .ptag{position:absolute;top:14px;right:14px;font-style:normal;font-size:11px;font-weight:600;color:#6b7280;background:#eef0f3;border-radius:999px;padding:2px 8px}
 .pbadge{position:absolute;top:14px;right:14px;font-style:normal;font-size:12px;font-weight:700;color:#fff;background:var(--pr);border-radius:999px;padding:2px 8px}
 .pbtn{font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;border:1px solid var(--pl);background:#fff;color:var(--pt);cursor:pointer;white-space:nowrap;transition:background-color .2s,border-color .2s}
@@ -805,14 +819,20 @@ var KIMS = (function () {
   function allView(k) {
     var sc = scopeStore(k), K = OPEN(), kt = M(k, ALL(), sc);
     var gRows = [['킴스 합계', ALL(), true]].concat(D.groups.map(function (g) { return [g[1] + ' ' + g[2].length + '점' + (g[0] === D.closed ? '<small>영업중단</small>' : ''), g[2]]; }));
-    var gt = '<p class="note">매출 만원 · 킴스 합계 = 영업중단 점포 포함 ' + ALL().length + '점</p><div class="hx"><table class="gt"><thead><tr><th>구분</th><th>매출</th><th>성장율</th><th>매총율 증감</th><th>객수 증감율</th><th>객단가 성장율</th></tr></thead><tbody>' +
-      gRows.map(function (r) { var t = M(k, r[1], sc); return '<tr' + (r[2] ? ' class="tot"' : '') + '><th>' + r[0] + '</th><td>' + man(t.gsT) + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td><td class="' + cls(t.cntG) + '">' + pct(t.cntG) + '</td><td class="' + cls(t.atvG) + '">' + pct(t.atvG) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    var gt = '<p class="note">매출 만원 · 객단가 만원 · 킴스 합계 = 영업중단 점포 포함 ' + ALL().length + '점</p><div class="hx"><table class="gt gt2"><thead><tr class="g1"><th rowspan="2">구분</th><th colspan="3">매출</th><th colspan="3">매총율</th><th colspan="3">객수</th><th colspan="3">객단가</th></tr><tr class="g2"><th>금년</th><th>전년</th><th>성장율</th><th>금년</th><th>전년</th><th>증감</th><th>금년</th><th>전년</th><th>증감율</th><th>금년</th><th>전년</th><th>성장율</th></tr></thead><tbody>' +
+      gRows.map(function (r) {
+        var t = M(k, r[1], sc), c = function (v, txt) { return '<td class="' + cls(v) + '">' + txt + '</td>'; };
+        return '<tr' + (r[2] ? ' class="tot"' : '') + '><th>' + r[0] + '</th><td class="gs">' + man(t.gsT) + '</td><td>' + man(t.gsL) + '</td><td class="' + cls(t.growth) + '"><b>' + pct(t.growth) + '</b></td>' +
+          '<td class="gs">' + (t.mr == null ? '-' : f1(t.mr) + '%') + '</td><td>' + (t.mrL == null ? '-' : f1(t.mrL) + '%') + '</td>' + c(t.mrD, pp(t.mrD)) +
+          '<td class="gs">' + (t.cnt == null ? '-' : won(t.cnt)) + '</td><td>' + (t.cntL == null ? '-' : won(t.cntL)) + '</td>' + c(t.cntG, pct(t.cntG)) +
+          '<td class="gs">' + man1(t.atv) + '</td><td>' + man1(t.atvL) + '</td>' + c(t.atvG, pct(t.atvG)) + '</tr>';
+      }).join('') + '</tbody></table></div>';
     var openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
     var rankTbl = openGroups.map(function (g) {
       var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; });
       rows.sort(function (a, b) { return (b[1].growth == null ? -9 : b[1].growth) - (a[1].growth == null ? -9 : a[1].growth); });
       var gtot = M(k, g[2], sc);
-      return '<tbody><tr class="gh"><th colspan="6">' + g[1] + ' ' + g[2].length + '점 <span class="' + cls(gtot.growth) + '">' + pct(gtot.growth) + '</span></th></tr>' + rows.map(function (r) {
+      return '<tbody><tr class="gh"><th>' + g[1] + ' ' + g[2].length + '점 합계</th><td>' + man(gtot.gsT) + '</td><td><b class="' + cls(gtot.growth) + '">' + pct(gtot.growth) + '</b></td><td></td><td class="' + cls(gtot.cntG) + '">' + pct(gtot.cntG) + '</td><td class="' + cls(gtot.mrD) + '">' + pp(gtot.mrD) + '</td></tr>' + rows.map(function (r) {
         var t = r[1], rk = rankIn(k, K, sc, 'growth', r[0]);
         return '<tr class="pick" data-s="' + r[0] + '" tabindex="0"><th>' + esc(NAME[r[0]]) + '</th><td>' + man(t.gsT) + '</td><td><b class="' + cls(t.growth) + '">' + (t.growth == null ? '전년 없음' : pct(t.growth)) + '</b></td><td>' + rkBadge(rk) + '</td><td class="' + cls(t.cntG) + '">' + pct(t.cntG) + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td></tr>';
       }).join('') + '</tbody>';
@@ -832,7 +852,7 @@ var KIMS = (function () {
         [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '만원', kt.growth, pct(kt.growth)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD)) + kpi('객수', won(kt.cnt), '명', kt.cntG, pct(kt.cntG)) + kpi('객단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG)) + '</div>', null, 'bare')],
         [allDailySec('store', '전체')],
         [sec('groups', '그룹별 합계', '그룹별 합계', gt)],
-        [sec('rank', '점포 순위', '점포별 매출 성장율 순위', '<p class="note">그룹 안에서 성장율 순 · 순위 = 킴스 영업 점포 중 · 점포를 누르면 상세로 이동</p><div class="hx"><table class="rt"><thead><tr><th>점포</th><th>매출</th><th>성장율</th><th>킴스 순위</th><th>객수 증감율</th><th>매총율 증감</th></tr></thead>' + rankTbl + '</table></div>'),
+        [sec('rank', '점포 순위', '점포별 매출 성장율 순위', '<p class="note">그룹 안에서 성장율 순 · 순위 = 킴스 영업 ' + K.length + '점 중 매출 성장율 순위 · 점포를 누르면 상세로 이동</p><div class="hx"><table class="rt"><thead><tr><th>점포</th><th>매출</th><th>성장율</th><th>순위<small>(성장율)</small></th><th>객수 증감율</th><th>매총율 증감</th></tr></thead>' + rankTbl + '</table></div>'),
           sec('cdheat', '점포×CD 성장율', '점포 × CD 매출 성장율', heatAll)],
       ],
     };
@@ -870,7 +890,7 @@ var KIMS = (function () {
       var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; });
       rows.sort(function (a, b) { return (b[1].growth == null ? -9 : b[1].growth) - (a[1].growth == null ? -9 : a[1].growth); });
       var gtot = M(k, g[2], sc);
-      return '<tbody><tr class="gh"><th colspan="6">' + g[1] + ' ' + g[2].length + '점 <span class="' + cls(gtot.growth) + '">' + pct(gtot.growth) + '</span></th></tr>' + rows.map(function (r) {
+      return '<tbody><tr class="gh"><th>' + g[1] + ' ' + g[2].length + '점 합계</th><td>' + man(gtot.gsT) + '</td><td><b class="' + cls(gtot.growth) + '">' + pct(gtot.growth) + '</b></td><td></td><td class="' + cls(gtot.cntG) + '">' + pct(gtot.cntG) + '</td><td class="' + cls(gtot.mrD) + '">' + pp(gtot.mrD) + '</td></tr>' + rows.map(function (r) {
         var t = r[1], rk = rankIn(k, K, sc, 'growth', r[0]);
         return '<tr class="pick" data-s="' + r[0] + '" tabindex="0"><th>' + esc(NAME[r[0]]) + '</th><td>' + man(t.gsT) + '</td><td><b class="' + cls(t.growth) + '">' + (t.growth == null ? '전년 없음' : pct(t.growth)) + '</b></td><td>' + rkBadge(rk) + '</td><td class="' + cls(t.cntG) + '">' + pct(t.cntG) + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td></tr>';
       }).join('') + '</tbody>';
@@ -903,7 +923,7 @@ var KIMS = (function () {
         pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf), sec('pggrp', '구매그룹 × 그룹', '그룹별 구매그룹 성장율', pgGrp)] : [],
         [allDailySec(id, c[1])],
         [sec('groups', '그룹별 합계', '그룹별 ' + c[1] + ' 합계', gt)],
-        [sec('rank', '점포 순위', '점포별 ' + c[1] + ' 매출 성장율 순위', '<p class="note">그룹 안에서 성장율 순 · 순위 = 킴스 영업 점포 중 · 점포를 누르면 그 점포 ' + c[1] + ' 화면으로 이동</p><div class="hx"><table class="rt"><thead><tr><th>점포</th><th>매출</th><th>성장율</th><th>킴스 순위</th><th>객수 증감율</th><th>매총율 증감</th></tr></thead>' + rankTbl + '</table></div>'),
+        [sec('rank', '점포 순위', '점포별 ' + c[1] + ' 매출 성장율 순위', '<p class="note">그룹 안에서 성장율 순 · 순위 = 킴스 영업 ' + K.length + '점 중 매출 성장율 순위 · 점포를 누르면 그 점포 ' + c[1] + ' 화면으로 이동</p><div class="hx"><table class="rt"><thead><tr><th>점포</th><th>매출</th><th>성장율</th><th>순위<small>(성장율)</small></th><th>객수 증감율</th><th>매총율 증감</th></tr></thead>' + rankTbl + '</table></div>'),
           sec('cdheat', '구매그룹 성장율', '점포 × 구매그룹 매출 성장율', heatPg)],
       ],
     };
@@ -986,10 +1006,10 @@ var KIMS = (function () {
       var sc = scopeCat(c[0], k), t = M(k, plants, sc);
       if (!t.gsT && !t.gsL) return '';
       var pgs = c[2].filter(function (pg) { var m = M(k, plants, scopePg(pg[0])); return m.gsT || m.gsL; });
-      return (cid ? '' : line(c[1], sc, 'cd')) + (pgs.length > 1 || cid ? pgs.map(function (pg) { return line(pg[1], scopePg(pg[0]), 'pg'); }).join('') : '');
+      return '<ul class="kg">' + (cid ? '' : line(c[1], sc, 'cd')) + (pgs.length > 1 || cid ? pgs.map(function (pg) { return line(pg[1], scopePg(pg[0]), 'pg'); }).join('') : '') + '</ul>';
     }).join('');
     var who = pAttr === 'ALL' ? '킴스 합계' : NAME[pAttr];
-    return '<p class="kt">' + esc(who) + ' · ' + KPI_NAME[key] + ' <small>' + (cid ? '구매그룹별' : 'CD·구매그룹별') + ' · 전년비</small></p><ul>' + rows + '</ul>' +
+    return '<p class="kt">' + esc(who) + ' · ' + KPI_NAME[key] + ' <small>' + (cid ? '구매그룹별' : 'CD·구매그룹별') + ' · 전년비</small></p><div class="kgs' + (cid ? ' one' : '') + '">' + rows + '</div>' +
       (key === 'cnt' ? '<p class="kn">CD·구매그룹 객수 = 그 상품을 산 영수증 수라서 더하면 전체 객수와 다릅니다.</p>' : '');
   }
   var kpiShownAt = 0;
@@ -1000,7 +1020,8 @@ var KIMS = (function () {
     var r = card.getBoundingClientRect(), z = parseFloat(doc.documentElement.style.zoom) || 1;
     var pw = pop.offsetWidth, ph = pop.offsetHeight, vw = window.innerWidth / z, vh = window.innerHeight / z;
     var left = Math.min(Math.max(8, r.left / z), vw - pw - 8), top = r.bottom / z + 6;
-    if (top + ph > vh - 8) top = Math.max(8, r.top / z - ph - 6);
+    // 아래·위 어디에도 다 안 들어가면 화면 안에서 가장 아래쪽에 맞춤(스크롤 없이 다 보이게)
+    if (top + ph > vh - 8) { var up = r.top / z - ph - 6; top = up >= 8 ? up : Math.max(8, vh - ph - 8); }
     pop.style.left = left + 'px'; pop.style.top = top + 'px';
     [].forEach.call(doc.querySelectorAll('.kpi.on'), function (x) { x.classList.remove('on'); }); card.classList.add('on'); kpiShownAt = Date.now();
   }
@@ -1433,13 +1454,15 @@ var KIMS = (function () {
       '<label>새 비밀번호<input id="aPw" type="password" autocomplete="new-password" minlength="8" required></label>' +
       '<label>비밀번호 확인<input id="aPw2" type="password" autocomplete="new-password" minlength="8" required></label>' +
       '<button class="gb pri" id="aGo" type="submit">설정하고 들어가기</button><p class="gl"><a href="#" data-v="login">' + ICON.back + '로그인으로</a></p>';
+    else if (view === 'status') f = '<h2>승인 요청 상태 확인</h2><p class="gh">열람 요청한 회사 이메일을 넣으면 승인됐는지 바로 알려 드립니다.</p>' + m + emailField +
+      '<button class="gb pri" id="aGo" type="submit">확인하기</button>' + (msg && msg.next ? '<a href="#" data-v="' + msg.next[0] + '" class="gb">' + msg.next[1] + '</a>' : '') + '<p class="gl"><a href="#" data-v="login">' + ICON.back + '로그인으로</a></p>';
     else f = '<h2>로그인</h2><p class="gh">승인된 사람만 볼 수 있습니다.</p>' + m + emailField +
       '<label>비밀번호<input id="aPw" type="password" autocomplete="current-password" required></label>' +
       '<button class="gb pri" id="aGo" type="submit">로그인</button>' +
-      '<div class="gl2"><a href="#" data-v="request" class="gb">처음이에요 · 열람 요청</a><a href="#" data-v="setpw" class="gb">승인받았어요 · 비밀번호 설정</a></div>' +
+      '<div class="gl2"><a href="#" data-v="request" class="gb">처음이에요 · 열람 요청</a><a href="#" data-v="setpw" class="gb">승인받았어요 · 비밀번호 설정</a><a href="#" data-v="status" class="gb sub">승인 요청 상태 확인</a></div>' +
       '<p class="gf"><b>비밀번호를 잊으셨나요?</b> 관리자에게 초기화를 요청하세요. 초기화되면 \'승인받았어요 · 비밀번호 설정\'에서 새로 정하면 됩니다.</p>';
     gate.innerHTML = '<div class="gw"><section class="gbrand">' + logoImg('glogo') +
-      '<h1>킴스 매출 리포트</h1><p class="gsub">점포별 매출을 매일 아침에</p>' +
+      '<h1>데일리 매출 리포트</h1>' +
       '<ol class="gsteps"><li><i>1</i><div><b>열람 요청</b><span>회사 이메일(@eland.co.kr)로 요청</span></div></li><li><i>2</i><div><b>승인 대기</b><span>관리자가 확인 후 승인</span></div></li><li><i>3</i><div><b>비밀번호 설정 후 이용</b><span>한 번 정하면 30일 동안 자동 로그인</span></div></li></ol></section>' +
       '<form class="gcard" id="aForm" novalidate data-view="' + view + '">' + f + '</form></div>';
     gate.hidden = false;
@@ -1455,7 +1478,19 @@ var KIMS = (function () {
     if (v === 'request' && DOMAINS.indexOf(email.split('@')[1]) < 0) return showGate(v, { t: '회사 이메일(@' + DOMAINS.join(', @') + ')로만 요청할 수 있습니다' }, email);
     busy(true);
     var fail = function (view) { return function (err) { showGate(view, { t: err.message }, email); }; };
-    if (v === 'request') {
+    if (v === 'status') {
+      api({ action: 'status', email: email }).then(function (r) {
+        if (!r.ok) return showGate('status', { t: r.err || '확인하지 못했습니다' }, email);
+        var M2 = {
+          none: [false, '열람 요청 기록이 없는 이메일입니다. 먼저 열람 요청을 해 주세요.', ['request', '열람 요청하기']],
+          pending: [true, '승인 대기 중입니다. 관리자가 확인하면 승인됩니다. 나중에 다시 확인해 주세요.', null],
+          setpw: [true, '승인됐습니다! 비밀번호를 설정하면 바로 볼 수 있습니다.', ['setpw', '비밀번호 설정하기']],
+          ready: [true, '이미 비밀번호까지 설정된 이메일입니다. 로그인해 주세요.', ['login', '로그인하기']],
+          rejected: [false, '열람 요청이 거절됐습니다. 관리자에게 문의해 주세요.', null],
+        }[r.state] || [false, '확인하지 못했습니다', null];
+        showGate('status', { ok: M2[0], t: M2[1], next: M2[2] }, email);
+      }, fail('status'));
+    } else if (v === 'request') {
       if (!val('aName')) return showGate('request', { t: '이름을 입력해 주세요' }, email);
       api({ action: 'request', email: email, name: val('aName'), store: val('aStore'), memo: val('aMemo') }).then(function (r) {
         if (!r.ok) return showGate('request', { t: r.err }, email);
@@ -1564,7 +1599,7 @@ var KIMS = (function () {
         return '<button type="button" class="pcard' + (m.soon ? ' soon' : '') + '" data-menu="' + m.id + '" style="--i:' + i + '">' +
           '<span class="pic">' + ICON[m.icon] + '</span><b>' + m.t + '</b><small>' + m.d + '</small>' + (m.soon ? '<em class="ptag">준비중</em>' : '') + badge + '</button>';
       }).join('') + '</div></section>' +
-      (admin ? '<section><h2 class="psec">관리</h2><div class="pgrid"><button type="button" class="pcard" data-menu="admin" style="--i:8"><span class="pic">' + ICON.users + '</span><b>사용자 관리</b><small>열람 요청 승인 · 비밀번호 초기화</small>' + (P && P.pending ? '<i class="pbadge">대기 ' + P.pending + '</i>' : '') + '</button></div></section>' : '');
+      (admin ? '<section><h2 class="psec adm">관리자 전용</h2><div class="pgrid"><button type="button" class="pcard adm" data-menu="admin" style="--i:8"><span class="pic">' + ICON.users + '</span><b>사용자 관리</b><small>열람 요청 승인 · 비밀번호 초기화</small>' + (P && P.pending ? '<i class="pbadge">대기 ' + P.pending + '</i>' : '') + '</button></div></section>' : '');
   }
   function subHead(t, extra) { return '<div class="psub"><a href="#" data-act="home" class="pback">' + ICON.back + '메뉴</a><h1>' + t + '</h1>' + (extra || '') + '</div>'; }
 
