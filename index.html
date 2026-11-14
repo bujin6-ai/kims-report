@@ -224,7 +224,7 @@ body{background:var(--bg)}
 .tip .tt{margin:0 0 6px;font-weight:700;font-size:13px}.tip .tt small{display:block;font-weight:500;color:var(--muted);font-size:11px}
 .tip ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 .tip li{display:grid;grid-template-columns:2.6em 1fr auto;gap:6px;align-items:baseline;font-size:13px}
-.tip{width:236px}.tip li.tot{grid-template-columns:minmax(0,1fr) auto auto;font-weight:700;padding-bottom:5px;margin-bottom:2px;border-bottom:1px solid var(--line)}.tip li.tot span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tip{width:236px}.tip li.tot{grid-template-columns:minmax(0,1fr) auto auto;font-weight:700;padding-bottom:5px;margin-bottom:2px;border-bottom:1px solid var(--line)}.tip li.tot span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tip li.pg{grid-template-columns:minmax(0,1fr) auto 4.5em}.tip li.pg span{padding-left:4px;white-space:nowrap}.tip .tn{margin:6px 0 0;font-size:11px;color:var(--muted)}
 .tip li b{text-align:right}.tip li em.pendt{grid-column:2/4}.tip li em{font-style:normal;color:var(--muted);font-size:11px;text-align:right;min-width:4.5em}
 /* KPI 팝업 */
 .kpi[data-kpi]{cursor:pointer;transition:border-color .2s,background .2s}
@@ -604,11 +604,11 @@ var KIMS = (function () {
       tyP.map(function (p) { return '<circle class="ty" cx="' + x(p.d).toFixed(1) + '" cy="' + y(p.tyAmt).toFixed(1) + '" r="3.5"><title>금년 ' + md(p.ty) + '(' + WD[wdi(p.ty)] + ') ' + man(p.tyAmt) + '만</title></circle>'; }).join('') +
       lyP.map(function (p) { return lbl(p, 'ly'); }).join('') + tyP.map(function (p) { return lbl(p, 'ty'); }).join('') +
       pts.map(function (p) { return p.g == null ? '' : '<text class="g ' + (p.g >= 0 ? 'gu' : 'gd') + '" x="' + x(p.d).toFixed(1) + '" y="' + GY + '" text-anchor="middle">' + pct(p.g) + '</text>'; }).join('') +
-      (cid === 'store' ? tyP.map(function (p) { return '<rect class="hit" data-d="' + p.d + '" tabindex="0" role="button" aria-label="' + md(p.ty) + ' CD별 성장율 보기" x="' + (PL + (p.d - 1) * COL) + '" y="0" width="' + COL + '" height="' + H + '"/>'; }).join('') : '') +
+      (tyP.map(function (p) { return '<rect class="hit" data-d="' + p.d + '" tabindex="0" role="button" aria-label="' + md(p.ty) + ' 실적 보기" x="' + (PL + (p.d - 1) * COL) + '" y="0" width="' + COL + '" height="' + H + '"/>'; }).join('')) +
       pts.map(function (p) { var w = wdi(p.ty); return '<text class="dt' + (w === 0 ? ' sun' : w === 6 ? ' sat' : '') + '" x="' + x(p.d).toFixed(1) + '" y="' + DY + '" text-anchor="middle">' + p.d + '(' + WD[w] + ')</text>'; }).join('') + '</svg>';
     return '<section class="panel dc"><h3>일별 매출</h3><p class="lg"><span class="sw ty"></span>금년 <span class="sw lyl"></span>전년' +
       (lym ? ' <span class="lym">전년 월마감 매출 <b>' + man(lym[0]) + '만원</b> · 전년 월마감 매총율 <b>' + (lym[0] ? (lym[1] / lym[0] * 100).toFixed(1) : '-') + '%</b></span>' : '') +
-      (cid === 'store' ? '<span class="tiph">날짜를 가리키거나 누르면 CD별 성장율</span>' : '') + '</p><div class="dcs"><div class="dcw" data-me="' + me + '" style="width:' + W + 'px">' + svg + '<div class="tip" hidden></div></div></div></section>';
+      '<span class="tiph">날짜를 가리키거나 누르면 ' + (cid === 'store' ? 'CD별 성장율' : '그날 실적') + '</span>' + '</p><div class="dcs"><div class="dcw" data-me="' + me + '" data-cid="' + cid + '" style="width:' + W + 'px">' + svg + '<div class="tip" hidden></div></div></div></section>';
   }
 
   // ── 성장율 칸 색 ──
@@ -980,7 +980,7 @@ var KIMS = (function () {
 
   // ── 일별 그래프 날짜 팝업: 그날 CD별 매출 성장율 (전년 비교일 = 그래프와 같은 규칙) ──
   var TIP_CATS = [['nongsan', '농산'], ['susan', '수산'], ['chuksan', '축산'], ['gongsan', '공산'], ['living', '리빙'], ['deli', '델리']];
-  function tipHtml(me, d) {
+  function tipHtml(me, d, cid) {
     var r = D.mm[d - 1], dd = D.daily[me] || {};
     var wd = function (s) { return WD[new Date(s + 'T00:00:00Z').getUTCDay()]; };
     var lab = function (s) { return Number(s.slice(5, 7)) + '/' + Number(s.slice(8)) + '(' + wd(s) + ')'; };
@@ -991,6 +991,18 @@ var KIMS = (function () {
       var g = t != null && l ? t / l - 1 : null;
       return '<li><span>' + c[1] + '</span><b class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</b><em>' + (t == null ? '-' : man(t) + '만') + '</em></li>';
     }).join('');
+    if (cid && cid !== 'store') { // CD 그래프: 그 CD의 그날 금년·전년·성장율
+      var cs = dd[cid] || {}, ct = cs[r.ty], cl = r.ly ? cs[r.ly] : null, cg = ct != null && cl ? ct / cl - 1 : null;
+      var cn = ((D.storeCats.filter(function (x) { return x[0] === cid; })[0] || [0, cid])[1]);
+      var who = me === 'ALL' ? '킴스 전체' : esc(NAME[me] || '');
+      var pgs = ((D.storeCats.filter(function (x) { return x[0] === cid; })[0] || [0, 0, []])[2]);
+      var pgRow = function (pg) { var ps = dd[pg[0]]; if (!ps) return ''; var a = ps[r.ty], b = r.ly ? ps[r.ly] : null, g = a != null && b ? a / b - 1 : null; return '<li class="pg"><span>' + esc(pg[1]) + '</span><b class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</b><em>' + (a == null ? '-' : man(a) + '만') + '</em></li>'; };
+      var pgHtml = pgs.length > 1 ? pgs.map(pgRow).join('') : '';
+      return '<p class="tt">' + lab(r.ty) + ' <small>' + who + ' · 전년 ' + (r.ly ? lab(r.ly) : '-') + ' 대비</small></p><ul>' +
+        '<li class="tot"><span>' + esc(cn) + ' 전체</span><b class="' + cls(cg) + '">' + (cg == null ? '-' : pct(cg)) + '</b><em>' + (ct == null ? '-' : man(ct) + '만') + '</em></li>' +
+        (pgHtml || (pgs.length > 1 ? '<li class="pg"><span>구매그룹별</span><em class="pendt">다음 갱신부터</em></li>' : '')) +
+        '</ul><p class="tn">금년 ' + (ct == null ? '-' : man(ct) + '만') + ' · 전년 ' + (cl == null ? '-' : man(cl) + '만') + '</p>';
+    }
     var st = dd.store, tt = st ? st[r.ty] : null, tl = st && r.ly ? st[r.ly] : null, tg = tt != null && tl ? tt / tl - 1 : null;
     var tot = '<li class="tot"><span>' + (me === 'ALL' ? '킴스 전체' : esc(NAME[me] || '') + ' 전체') + '</span><b class="' + cls(tg) + '">' + (tg == null ? '-' : pct(tg)) + '</b><em>' + (tt == null ? '-' : man(tt) + '만') + '</em></li>';
     return '<p class="tt">' + lab(r.ty) + ' <small>전년 ' + (r.ly ? lab(r.ly) : '-') + ' 대비</small></p><ul>' + tot + rows + '</ul>';
@@ -999,7 +1011,7 @@ var KIMS = (function () {
     var wrap = hit.closest('.dcw'), tip = wrap && wrap.querySelector('.tip');
     if (!tip) return;
     var d = Number(hit.getAttribute('data-d'));
-    tip.innerHTML = tipHtml(wrap.dataset.me || ST.s, d); tip.hidden = false;
+    tip.innerHTML = tipHtml(wrap.dataset.me || ST.s, d, wrap.dataset.cid || 'store'); tip.hidden = false;
     [].forEach.call(wrap.querySelectorAll('.hit'), function (h) { h.classList.toggle('on', h === hit); });
     var x = Number(hit.getAttribute('x')), w = Number(hit.getAttribute('width')), W = wrap.offsetWidth, tw = tip.offsetWidth;
     var left = x + w + 6; if (left + tw > W) left = x - tw - 6; if (left < 0) left = Math.max(0, Math.min(W - tw, x + w / 2 - tw / 2));
