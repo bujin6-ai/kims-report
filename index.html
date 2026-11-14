@@ -378,6 +378,37 @@ body.nav-open #nav{transform:none}
 
 @media (min-width:1024px){body{font-size:17px}.date{font-size:17px}.date b{font-size:21.5px}.tab{font-size:18px}.seg label{font-size:17px}.eyebrow{font-size:14.5px}h3{font-size:20.5px}h4{font-size:17px}.note{font-size:14.5px}.kl{font-size:15.5px}.kv{font-size:26px}.kv small{font-size:15.5px}.kd{font-size:14.5px}.badge{font-size:13px}.lg{font-size:14.5px}.sbh{font-size:17px}.br em{font-size:14.5px}.dt{font-size:15.5px}.dt thead th{font-size:14.5px}.pts li span{font-size:15.5px}.mcl li{font-size:15.5px}.pn{font-size:17px}.muted{font-size:14.5px}.pv{font-size:14.5px}.dk{font-size:14.5px}.st{font-size:15.5px}.st thead th{font-size:14.5px}.st tbody th small{font-size:13px}.ht tr.pg th{font-size:13px}.rkb{font-size:13px}.ht{font-size:14.5px}.dc text.v{font-size:13px}.dc text.v.ty{font-size:14.5px}.dc text.g{font-size:13px}.dc text.dt{font-size:13px}.ttl b{font-size:20.5px}.ttl span{font-size:14.5px}.seg button{font-size:17px}.nl{font-size:15.5px}.nv>li>button{font-size:18px}.toc a{font-size:15px}.cats button{font-size:13px}.ns{font-size:18px}.nl small{font-size:14.5px}.ng summary{font-size:17px}.ng summary b{font-size:14.5px}.sl button{font-size:17px}.sl button b{font-size:14.5px}.seg3:has(> :nth-child(4)) .rb span{font-size:15.5px}.gbi h4{font-size:19px}.h3s{font-size:14.5px}.dc svg.tight text.v,.dc svg.tight text.g,.dc svg.tight text.dt{font-size:13px}.dc svg.tight text.v.ty{font-size:13px}.tiph{font-size:13px}.tip .tt{font-size:15.5px}.tip .tt small{font-size:13px}.tip li{font-size:15.5px}.tip .tn{font-size:13px}.tip li em{font-size:13px}#kpop .kt{font-size:17px}#kpop .kt small{font-size:13px}#kpop li{font-size:15.5px}#kpop li em{font-size:14.5px}#kpop li b{font-size:15px}#kpop .kn{font-size:13px}.nojs .nojs-note{font-size:15.5px}.dh h2{font-size:21.5px}.fs legend{font-size:18px}.fs legend small{font-size:14.5px}.hint{font-size:14.5px}.cg{font-size:14.5px}.rb span{font-size:17px}.chip span{font-size:15.5px}.sel{font-size:18px}.lnk{font-size:15.5px}.btn{font-size:18px}#toast{font-size:17px}.who .wid{font-size:14px}.gt,.rt{font-size:15.5px}.gt thead th,.rt thead th{font-size:14.5px}.gt tbody th small{font-size:13px}.rt tr.gh th{font-size:15.5px}.mcl li .mtip{font-size:15px}.mcl li .mtip b{font-size:15.5px}.gt2 thead tr.g1 th{font-size:15px}.gt2 thead tr.g2 th{font-size:14px}.rt thead th small{font-size:13px}.dc svg.tight text.v,.dc svg.tight text.g,.dc svg.tight text.dt{font-size:12.5px;letter-spacing:-.04em}.dc svg.tight text.v.ty{font-size:13.5px}h1{font-size:1.9rem}}
 
+#nav{background:var(--panel);padding:14px 12px 40px}
+#nav .nl{display:flex;align-items:baseline;justify-content:space-between;margin:18px 10px 6px;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+#nav .nl small{margin:0;font-size:11.5px;font-weight:600;letter-spacing:0;color:var(--muted);background:var(--seg);border-radius:99px;padding:2px 8px}
+#nav .nv>li>button{display:flex;align-items:center;gap:10px;width:100%;font:inherit;font-size:15px;font-weight:600;line-height:1.3;color:var(--fg);background:none;border:0;border-radius:10px;padding:9px 10px;margin:1px 0;cursor:pointer;text-align:left;position:relative;transition:background .15s,color .15s}
+#nav .nv>li>button span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#nav .nv>li>button em{font-style:normal;font-size:12px;font-weight:700;color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent);border-radius:6px;padding:2px 7px}
+#nav .ni{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:var(--muted)}
+#nav .nv>li>button[aria-current=page]{background:color-mix(in srgb,var(--ac) 10%,transparent);color:var(--ac)}
+#nav .nv>li>button[aria-current=page] .ni{color:var(--ac)}
+#nav .nv>li>button[aria-current=page]::before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--ac)}
+#nav .nv.home{margin-bottom:4px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+#nav .nv.home>li>button{font-size:14px;font-weight:600;color:var(--muted);padding:7px 10px}
+#nav .toc{display:flex;flex-direction:column;gap:1px;margin:2px 0 8px 19px;padding-left:11px;border-left:1.5px solid var(--line)}
+#nav .toc a{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:9px;min-height:0;padding:7px 9px;font-size:14px;font-weight:500;line-height:1.3;text-align:left;color:var(--muted);background:none;border:0;border-radius:8px;white-space:nowrap}
+#nav .toc a svg{width:17px;height:17px;stroke-width:1.8}
+#nav .toc a span{overflow:hidden;text-overflow:ellipsis}
+#nav .toc a.on{color:var(--ac);font-weight:700;background:color-mix(in srgb,var(--ac) 8%,transparent)}
+#nav .ng{margin:0}
+#nav .ng summary{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:15px;font-weight:700;color:var(--fg)}
+#nav .ng summary::before{width:6px;height:6px;margin:0 4px 0 6px;border-width:0 1.8px 1.8px 0}
+#nav .ng summary span{display:flex;align-items:center;gap:6px}
+#nav .ng summary small{font-size:11.5px;font-weight:700;color:var(--muted);background:var(--seg);border-radius:99px;padding:1px 7px;line-height:1.5}
+#nav .ng summary b,#nav .sl button b{margin-left:auto;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+#nav .sl{margin:0 0 6px 19px;padding:0 0 0 11px;border-left:1.5px solid var(--line)}
+#nav .sl button{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:500;padding:7px 9px;border-radius:8px}
+#nav .sl button span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#nav .sl button b{font-weight:600;font-size:13px}
+#nav .sl button[aria-current=page]{background:color-mix(in srgb,var(--ac) 10%,transparent);color:var(--ac);font-weight:700}
+@media (hover:hover){#nav .nv>li>button:not([aria-current=page]):hover,#nav .ng summary:hover,#nav .sl button:not([aria-current=page]):hover,#nav .toc a:not(.on):hover{background:var(--hov);color:var(--fg)}#nav .sl button:hover span{color:inherit}}
+@media (min-width:1024px){.body{grid-template-columns:256px minmax(0,1fr)}}
+
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
 html:not([data-view=report]) .app,html:not([data-view=report]) #drawer,html:not([data-view=report]) #scrim,html:not([data-view=report]) #kpop{display:none!important}
 html:not([data-view=report]) body{background:#f4f5f7}
@@ -1123,27 +1154,38 @@ var KIMS = (function () {
     stats: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
     def: '<circle cx="12" cy="12" r="8"/>',
   };
+  var NAVI = {
+    back: '<path d="M15 18l-6-6 6-6"/>',
+    all: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    store: '<path d="M3 9.5L4.6 4h14.8L21 9.5"/><path d="M3 9.5a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v8h14v-8"/><path d="M10 20v-5h4v5"/>',
+    stats: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
+  };
+  var ni = function (k) { return '<svg class="ni" viewBox="0 0 24 24" aria-hidden="true">' + NAVI[k] + '</svg>'; };
   function navHtml() {
     var v = view(), rows = visibleRows(v), secs = [].concat.apply([], rows);
     var toc = '<ul class="toc">' + secs.map(function (x) { return '<li><a href="#" data-sec="' + x.id + '" title="' + x.nav + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + (SECICON[x.id] || SECICON.def) + '</svg><span>' + x.nav + '</span></a></li>'; }).join('') + '</ul>';
     // CD 선택은 상단 아이콘으로만 — 왼쪽 메뉴는 전점 요약 / 현재 화면 목차 / 점포 목록
     var curTab = (TABS.filter(function (x) { return x[0] === ST.t; })[0] || [0, ''])[1];
     var allOn = ST.v === 'report' && ST.s === 'all';
-    var out = (WEB && WEB.home ? '<ul class="nv home"><li><button type="button" data-go="home">← 메뉴 화면</button></li></ul>' : '') + '<p class="nl">보기</p><ul class="nv"><li><button type="button" data-go="all"' + (allOn ? ' aria-current="page"' : '') + '>전점 요약' + (allOn && ST.t !== 'store' ? ' · ' + curTab : '') + '</button>' + (allOn ? toc : '') + '</li>';
+    var item = function (attr, on, icon, label, sub) {
+      return '<button type="button" ' + attr + (on ? ' aria-current="page"' : '') + '>' + ni(icon) + '<span>' + label + '</span>' + (sub ? '<em>' + sub + '</em>' : '') + '</button>';
+    };
+    var out = (WEB && WEB.home ? '<ul class="nv home"><li><button type="button" data-go="home">' + ni('back') + '<span>메뉴 화면</span></button></li></ul>' : '') +
+      '<p class="nl">보기</p><ul class="nv"><li>' + item('data-go="all"', allOn, 'all', '전점 요약', allOn && ST.t !== 'store' ? curTab : '') + (allOn ? toc : '') + '</li>';
     if (ST.s !== 'all') {
       var stOn = ST.v === 'report';
-      out += '<li><button type="button" data-store="' + ST.s + '"' + (stOn ? ' aria-current="page"' : '') + '>' + esc(NAME[ST.s]) + (ST.t !== 'store' ? ' · ' + curTab : '') + '</button>' + (stOn ? toc : '') + '</li>';
+      out += '<li>' + item('data-store="' + ST.s + '"', stOn, 'store', esc(NAME[ST.s]), ST.t !== 'store' ? curTab : '') + (stOn ? toc : '') + '</li>';
     }
     var scS = scopeStore(ST.k);
-    out += '</ul><p class="nl">점포별 실적 <small>' + PNAME[ST.k] + ' 매출 성장율</small></p>' + D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
+    out += '</ul><p class="nl nl2"><span>점포별 실적</span><small>' + PNAME[ST.k] + ' 성장율</small></p>' + D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
       var open = NAVOPEN[g[0]] != null ? NAVOPEN[g[0]] : (ST.s !== 'all' ? GRP[ST.s] === g[0] : g[0] === 'L');
       var gt = M(ST.k, g[2], scS).growth;
-      return '<details class="ng" data-g="' + g[0] + '"' + (open ? ' open' : '') + '><summary><span>' + g[1] + ' <small>' + g[2].length + '점</small></span><b class="' + cls(gt) + '">' + pct(gt) + '</b></summary><ul class="sl">' + g[2].map(function (p) {
+      return '<details class="ng" data-g="' + g[0] + '"' + (open ? ' open' : '') + '><summary><span>' + g[1] + '<small>' + g[2].length + '</small></span><b class="' + cls(gt) + '">' + pct(gt) + '</b></summary><ul class="sl">' + g[2].map(function (p) {
         var gr = M(ST.k, [p], scS).growth, on = ST.v === 'report' && ST.s === p;
         return '<li><button type="button" data-store="' + p + '"' + (on ? ' aria-current="page"' : '') + '><span>' + esc(NAME[p]) + '</span><b class="' + cls(gr) + '">' + (gr == null ? '전년 없음' : pct(gr)) + '</b></button></li>';
       }).join('') + '</ul></details>';
     }).join('') + '<ul class="nv">';
-    if (STATS.allowed) out += '</ul><p class="nl">관리</p><ul class="nv"><li><button type="button" data-go="stats"' + (ST.v === 'stats' ? ' aria-current="page"' : '') + '>접속 현황</button>' + (ST.v === 'stats' ? toc : '') + '</li>';
+    if (STATS.allowed) out += '</ul><p class="nl">관리</p><ul class="nv"><li>' + item('data-go="stats"', ST.v === 'stats', 'stats', '접속 현황') + (ST.v === 'stats' ? toc : '') + '</li>';
     return out + '</ul>';
   }
   function headTitle() {
