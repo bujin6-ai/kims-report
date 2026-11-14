@@ -426,7 +426,7 @@ body.nav-open #nav{transform:none}
 .dt2 tbody th{color:var(--fg);font-weight:600}.dt2 tbody th small{display:block;font-size:11.5px;font-weight:500;color:var(--muted)}
 .dt2 td>b{display:block;font-weight:600;color:var(--fg)}.dt2 td.ya>b{font-weight:800}
 .dt2 td>small{display:block;font-size:12.5px;font-weight:600;margin-top:1px}
-.rkt{font-weight:600;color:var(--muted);white-space:nowrap}.rkt small{font-size:11px;font-weight:500;color:var(--muted)}.rkt.rhi{color:var(--good);font-weight:800}.rkt.rlo{color:var(--bad);font-weight:800}
+.dt2 .crk{display:block;margin-top:2px;font-size:12px}.dt2 .crk .rkt{font-weight:600}.dt2 .crk .rkt small{font-size:10.5px}.rkt{font-weight:600;color:var(--muted);white-space:nowrap}.rkt small{font-size:11px;font-weight:500;color:var(--muted)}.rkt.rhi{color:var(--good);font-weight:800}.rkt.rlo{color:var(--bad);font-weight:800}
 .dtb{display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;margin:2px 0 14px;background:var(--seg);border-radius:12px}
 .dtb label{position:relative;cursor:pointer}.dtb input{position:absolute;opacity:0;pointer-events:none}
 .dtb span{display:block;padding:7px 16px;border-radius:9px;font-size:14px;font-weight:600;color:var(--muted);transition:background .15s,color .15s}
@@ -760,8 +760,8 @@ var KIMS = (function () {
     var cols = [M(k, [me], sc)].concat(CC.map(function (c) { return M(k, c.plants, sc); }));
     var KO = OPEN();
     // 순위: 회색 글씨 'n위/전체' — 상위 5위 안은 초록, 하위 5위 안은 빨강만 색
-    var rk = function (key) {
-      var r = rankIn(k, KO, sc, key, me); if (r.r == null) return '';
+    var rk = function (key, who) {
+      var r = rankIn(k, KO, sc, key, who || me); if (r.r == null) return '';
       var c = r.r <= 5 ? 'rhi' : r.r > r.n - 5 ? 'rlo' : '';
       return '<span class="rkt ' + c + '">' + r.r + '위<small>/' + r.n + '</small></span>';
     };
@@ -781,7 +781,7 @@ var KIMS = (function () {
       R.map(function (x) {
         return '<tr><th>' + x[0] + '</th>' + cols.map(function (t, i) {
           var ly = t ? x[4](t) : '';
-          return '<td' + (i === 0 ? ' class="ya"' : '') + (ly ? ' title="' + esc(ly) + '"' : '') + '><b>' + (t ? x[1](t) : '-') + '</b>' + (t ? x[2](t) : '') + '</td>' + (i === 0 ? '<td class="rkc">' + (x[3] ? rk(x[3]) : '') + '</td>' : '');
+          return '<td' + (i === 0 ? ' class="ya"' : '') + (ly ? ' title="' + esc(ly) + '"' : '') + '><b>' + (t ? x[1](t) : '-') + '</b>' + (t ? x[2](t) : '') + (i > 0 && x[3] && CC[i - 1].plants.length === 1 ? '<span class="crk">' + rk(x[3], CC[i - 1].plants[0]) + '</span>' : '') + '</td>' + (i === 0 ? '<td class="rkc">' + (x[3] ? rk(x[3]) : '') + '</td>' : '');
         }).join('') + '</tr>';
       }).join('') + '</tbody></table></div>';
   }
@@ -823,7 +823,7 @@ var KIMS = (function () {
     var row = function (it, isTot) {
       var t = it.y;
       return '<tr class="' + (isTot ? 'tot' : it.lvl) + '"><th>' + esc(it.name) + '</th><td>' + man(t.gsT) + '</td><td class="mh">' + man(t.gsL) + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td>' + rkBadge(it.rk) + '</td>' +
-        it.comps.map(function (v) { return '<td class="cx ' + cls(v) + '">' + pct(v) + '</td>'; }).join('') +
+        it.comps.map(function (v) { return '<td class="cx">' + pct(v) + '</td>'; }).join('') +
         '<td class="sl mh">' + (t.mr == null ? '-' : f1(t.mr) + '%') + '</td><td class="mh">' + (t.mrL == null ? '-' : f1(t.mrL) + '%') + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td>' +
         '<td class="sl ' + cls(t.cntD) + ' mh">' + (t.cntD == null ? '-' : sgn(t.cntD) + '명') + '</td><td class="sl mh">' + (isTot ? '100%' : it.share == null ? '-' : f1(it.share * 100) + '%') + '</td></tr>';
     };
