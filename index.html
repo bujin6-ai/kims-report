@@ -1,4 +1,4 @@
-<!doctype html><html lang="ko" data-mode="dark" data-view="boot"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>킴스 매출 리포트</title><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"><style>
+<!doctype html><html lang="ko" data-mode="light" data-view="boot"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>킴스 매출 리포트</title><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"><style>
 :root{--bg:#f5f5f7;--panel:#fff;--fg:#1d1d1f;--muted:#7a7a7a;--line:#e0e0e0;--ac:#0066cc;--ac-soft:#eef5fd;--good:#1d8a4e;--bad:#d1302b;--ly:#d2d2d7;--tabbg:rgba(245,245,247,.8);--on-ac:#fff;--seg:#e3e3e8;
 --font:system-ui,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif}
 
@@ -153,14 +153,15 @@ body{background:var(--bg)}
 #main{max-width:1240px;margin:0 auto;padding:6px max(16px,env(safe-area-inset-right,0px)) calc(110px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .hd{padding:14px 2px 2px}
 /* 사이드바 */
-.nl{margin:14px 8px 6px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.nl{margin:16px 8px 8px;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--muted)}
 .nl:first-child{margin-top:0}
 .nv,.toc{list-style:none;margin:0;padding:0}
 .nv>li>button{display:block;width:100%;text-align:left;font:inherit;font-size:15px;font-weight:600;color:var(--fg);background:none;border:0;border-radius:10px;padding:9px 10px;cursor:pointer;transition:background .2s,color .2s}
 .nv>li>button[aria-current=page]{background:var(--ac);color:var(--on-ac)}
-.toc{margin:4px 0 8px 10px;border-left:2px solid var(--line)}
-.toc a{display:block;padding:6px 10px;font-size:13px;color:var(--muted);text-decoration:none;border-radius:0 8px 8px 0;margin-left:-2px;border-left:2px solid transparent;transition:background .2s,color .2s,border-color .2s}
-.toc a.on{color:var(--ac);border-left-color:var(--ac);font-weight:600}
+.toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:8px 0 10px}
+.toc a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:62px;padding:8px 4px;font-size:12.5px;font-weight:600;line-height:1.25;text-align:center;word-break:keep-all;color:var(--muted);text-decoration:none;border-radius:12px;background:var(--seg);border:1px solid transparent;transition:background .2s,color .2s,border-color .2s}
+.toc a svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.toc a.on{color:var(--ac);border-color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent)}
 /* 상단 카테고리 아이콘 */
 .app.has-cats .hdr{grid-template-columns:auto minmax(0,1fr) auto auto auto;grid-template-areas:"menu title cats seg set"}
 .cats{grid-area:cats;display:flex;gap:4px;min-width:0}
@@ -176,7 +177,7 @@ body{background:var(--bg)}
 .pend{padding:10px 12px;border-radius:10px;background:var(--seg);margin-top:4px}
 /* 사이드바 점포별 실적 */
 .ns{margin:0;padding:9px 10px 4px;font-size:15px;font-weight:700}
-.nl small{font-weight:500;letter-spacing:0;margin-left:4px}
+.nl small{font-size:12px;font-weight:500;letter-spacing:0;margin-left:4px}
 .ng{margin:0 0 2px}
 .ng summary{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;transition:background .2s}
 .ng summary::-webkit-details-marker{display:none}
@@ -193,7 +194,14 @@ body{background:var(--bg)}
 .row{display:grid;gap:14px;margin-top:14px;grid-template-columns:minmax(0,1fr)}
 .panel.bare{background:none;border:0;padding:0}
 @media (min-width:1100px){.row.split{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}}
-.gbi h4{margin:0 0 4px;font-size:16px}.gbi h4+ul{margin-bottom:18px}.gbi ul:last-child{margin-bottom:0}
+.gbi{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}.gbi h4{margin:0 0 4px;font-size:16px}.gbi ul{margin-bottom:0}
+@media (min-width:900px){.gbi{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}.gbi>div+div{border-left:1px solid var(--line);padding-left:28px}}
+/* 상세 비교 표 여러 개: PC에서 2열 격자, 칸 너비 고정 */
+.dts{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:1100px){.dts{grid-template-columns:repeat(auto-fit,minmax(440px,1fr))}.dts:has(>.dtw:only-child){grid-template-columns:minmax(0,820px)}}
+.dtw h4{margin-top:0}.dt{table-layout:fixed;width:100%}
+/* 점포 매출 막대: 넓은 화면 2열 */
+@media (min-width:1400px){.row:not(.split) .bars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}}
 /* 스크롤 리빌 (처음부터 보이는 상태에서 살짝 올라옴) */
 .row.rv{opacity:.35;transform:translateY(18px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
 .row.rv.in{opacity:1;transform:none}
@@ -314,7 +322,16 @@ body.nav-open #nav{transform:none}
 .badge{display:inline-flex;flex-direction:column;align-items:center;line-height:1.25;border-radius:10px;padding:3px 9px;text-align:center;flex-shrink:0;white-space:nowrap}
 .badge.n{background:var(--seg);color:var(--muted)}
 @media (max-width:600px){.kpi{padding:12px}.kb{gap:4px}.kb .badge{font-size:10px;padding:3px 5px;letter-spacing:-.04em;flex:1 1 calc(50% - 4px);min-width:0}.gt th,.gt td{padding:6px 2px}.gt thead th:first-child{text-align:left}}
-.dt col.c0{width:24%}.dt col.cr{width:15%}
+/* 스크롤 막대: 얇고 둥글게, 평소엔 흐리게 · 마우스 올리면 진하게 */
+#nav,#scroller,#drawer .db,.hs,#gate,#portal,.pmb{scrollbar-gutter:auto}
+#nav::-webkit-scrollbar,#scroller::-webkit-scrollbar,#drawer .db::-webkit-scrollbar,.hs::-webkit-scrollbar,#gate::-webkit-scrollbar,#portal::-webkit-scrollbar,.pmb::-webkit-scrollbar{width:10px;height:10px}
+#nav::-webkit-scrollbar-track,#scroller::-webkit-scrollbar-track,#drawer .db::-webkit-scrollbar-track,.hs::-webkit-scrollbar-track,#gate::-webkit-scrollbar-track,#portal::-webkit-scrollbar-track,.pmb::-webkit-scrollbar-track{background:transparent}
+#nav::-webkit-scrollbar-thumb,#scroller::-webkit-scrollbar-thumb,#drawer .db::-webkit-scrollbar-thumb,.hs::-webkit-scrollbar-thumb,#gate::-webkit-scrollbar-thumb,#portal::-webkit-scrollbar-thumb,.pmb::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--muted,#888) 35%,transparent);border-radius:99px;border:3px solid transparent;background-clip:padding-box;transition:background-color .2s}
+#nav:hover::-webkit-scrollbar-thumb,#scroller:hover::-webkit-scrollbar-thumb,#drawer .db:hover::-webkit-scrollbar-thumb,.hs:hover::-webkit-scrollbar-thumb,#gate:hover::-webkit-scrollbar-thumb,#portal:hover::-webkit-scrollbar-thumb,.pmb:hover::-webkit-scrollbar-thumb{background-color:color-mix(in srgb,var(--muted,#888) 65%,transparent)}
+#nav::-webkit-scrollbar-thumb:active,#scroller::-webkit-scrollbar-thumb:active,.hs::-webkit-scrollbar-thumb:active{background-color:var(--ac,#0a66d0)}
+::-webkit-scrollbar-button{display:none;width:0;height:0}::-webkit-scrollbar-corner{background:transparent}
+@supports not selector(::-webkit-scrollbar){#nav,#scroller,#drawer .db,.hs,#gate,#portal,.pmb{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--muted,#888) 45%,transparent) transparent}}
+.dt col.c0{width:24%}.dt col.cr{width:15%}.dt.n4 col.c0{width:21%}.dt.n4 col.cr{width:13%}@media (max-width:600px){.dt.n4{font-size:11px;letter-spacing:-.03em}.dt.n4 th,.dt.n4 td{padding-left:2px;padding-right:2px}.dt.n4 td{white-space:nowrap}}
 .dt tbody td:last-child{text-align:center}
 .ht col.c0{width:7.5em}
 .hall col.c0{width:6.4em}
@@ -334,7 +351,7 @@ body.nav-open #nav{transform:none}
 .rt tr.gh th{background:var(--ac-soft);font-size:13px;padding-top:9px}
 .rt tr.gh th span{margin-left:6px}
 @media (max-width:600px){.gt{table-layout:auto;letter-spacing:-.03em}.gt thead th{white-space:normal;word-break:keep-all}.gt,.rt{font-size:12px}.gt th,.gt td,.rt th,.rt td{padding:6px 3px}.gt thead th,.rt thead th{font-size:10.5px;white-space:normal;word-break:keep-all;vertical-align:bottom}.hall{font-size:11px}}
-@media (max-width:600px){.hs{overflow-x:visible;margin:0}.st{min-width:0;width:100%;table-layout:auto;white-space:normal;font-size:11px;letter-spacing:-.03em}.st th,.st td{padding:7px 2px}.st thead th:nth-child(5),.st tbody tr>*:nth-child(5),.st tfoot tr>*:nth-child(5){display:none}.st td{white-space:nowrap}.st tbody th,.st tfoot th{word-break:keep-all;overflow-wrap:anywhere;font-size:12px}.st thead th{font-size:10.5px;line-height:1.25;vertical-align:bottom;word-break:keep-all;white-space:normal}.st tr.pg th{padding-left:8px}.st .rkb{min-width:0;padding:1px 5px;font-size:10.5px}}
+@media (max-width:600px){.hs{overflow-x:visible;margin:0}.st{min-width:0;width:100%;table-layout:auto;white-space:normal;font-size:11px;letter-spacing:-.03em}.st th,.st td{padding:7px 2px}.st .mh{display:none}.st td{white-space:nowrap}.st tbody th,.st tfoot th{word-break:keep-all;overflow-wrap:anywhere;font-size:12px}.st thead th{font-size:10.5px;line-height:1.25;vertical-align:bottom;word-break:keep-all;white-space:normal}.st tr.pg th{padding-left:8px}.st .rkb{min-width:0;padding:1px 5px;font-size:10.5px}}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
 html:not([data-view=report]) .app,html:not([data-view=report]) #drawer,html:not([data-view=report]) #scrim,html:not([data-view=report]) #kpop{display:none!important}
@@ -443,7 +460,7 @@ html:not([data-view=report]) body{background:#f4f5f7}
 <div id="kpop" role="tooltip" hidden></div>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 <div id="gate" hidden></div><div id="portal" hidden></div><div id="npop" hidden></div>
-<script>document.documentElement.classList.remove('nojs');(function(){var s={};try{s=JSON.parse(localStorage.getItem('kims-report-settings')||'{}')||{}}catch(e){}var r=document.documentElement;r.setAttribute('data-mode',s.mode||'dark');if(s.scale&&s.scale!==100)r.style.zoom=s.scale/100;})();</script>
+<script>document.documentElement.classList.remove('nojs');(function(){var s={};try{s=JSON.parse(localStorage.getItem('kims-report-settings')||'{}')||{}}catch(e){}var r=document.documentElement;r.setAttribute('data-mode',s.mode==='dark'?'dark':'light');if(s.scale&&s.scale!==100)r.style.zoom=s.scale/100;})();</script>
 <script>/* 킴스클럽 전점 데일리 매출 리포트 — 화면 계산·그리기 (브라우저 + node 검증 공용)
    DATA 는 build.mjs 가 넣는다. 원인 추측 문장 없음: 모든 문장은 숫자 규칙으로 만든다. */
 var KIMS = (function () {
@@ -578,18 +595,23 @@ var KIMS = (function () {
   }
 
 
-  // ── 비교점 (보는 사람 설정, 없으면 같은 그룹) ──
+  // ── 비교점 (보는 사람이 최대 2개 고름. 고르지 않으면 그룹 합계와 비교) · 순위 = 같은 그룹 ──
   var S = null; // 설정
+  var CMAX = 2;
   function cmpOf(me) {
-    var c = S && S.cmp && S.cmp[me];
-    var open = OPEN();
-    if (c && c.length) { c = c.filter(function (p) { return p !== me && open.indexOf(p) >= 0; }); if (c.length) return c; }
-    return openOf(GRP[me]).filter(function (p) { return p !== me; });
+    var c = (S && S.cmp && S.cmp[me]) || [], open = OPEN();
+    return c.filter(function (p) { return p !== me && open.indexOf(p) >= 0; }).slice(0, CMAX);
   }
-  var custom = function (me) { return !!(S && S.cmp && S.cmp[me] && S.cmp[me].length); };
-  var setOf = function (me) { return [me].concat(cmpOf(me)); };
-  var cmpName = function (me) { return custom(me) ? '비교점' : GNAME[GRP[me]] + ' 비교점'; };
-  var cmpNote = function (me) { var c = cmpOf(me); return '비교점 = ' + (custom(me) ? '내가 고른 ' : GNAME[GRP[me]] + ' 다른 ') + c.length + '개 점포 합산(' + c.map(function (p) { return NAME[p]; }).join('·') + ')'; };
+  var custom = function (me) { return cmpOf(me).length > 0; };
+  // 비교 열: 고른 점포 각각, 없으면 그룹 합계 하나
+  function cmpCols(me) {
+    var c = cmpOf(me);
+    return c.length ? c.map(function (p) { return { name: NAME[p], plants: [p] }; }) : [{ name: GNAME[GRP[me]] + ' 합계', plants: openOf(GRP[me]) }];
+  }
+  var setOf = function (me) { return openOf(GRP[me]); };                 // 순위·막대 = 같은 그룹
+  var othersOf = function (me) { return openOf(GRP[me]).filter(function (p) { return p !== me; }); };
+  var rkLabel = function (me, r) { return GNAME[GRP[me]] + ' ' + r.n + '점 중 ' + r.r + '위'; };
+  var cmpNote = function (me) { var c = cmpOf(me); return (c.length ? '비교 = 내가 고른 점포(' + c.map(function (p) { return NAME[p]; }).join('·') + ')' : '비교 = ' + GNAME[GRP[me]] + ' 합계(설정에서 비교 점포를 2개까지 고를 수 있음)') + ' · 순위 = ' + GNAME[GRP[me]] + ' ' + openOf(GRP[me]).length + '점 중'; };
 
   // ── 공통 조각 ──
   function badge(label, rk) {
@@ -602,7 +624,7 @@ var KIMS = (function () {
   }
   function kpis(k, me, sc) {
     var g = GRP[me], y = M(k, [me], sc), K = OPEN(), G = openOf(g), C = setOf(me);
-    var three = function (key) { return badge('킴스', rankIn(k, K, sc, key, me)) + badge(GNAME[g], rankIn(k, G, sc, key, me)) + badge('비교', rankIn(k, C, sc, key, me)); };
+    var three = function (key) { return badge('킴스', rankIn(k, K, sc, key, me)) + badge(GNAME[g], rankIn(k, G, sc, key, me)); };
     return '<div class="kpis" data-p="' + me + '" data-c="' + (sc.posKey === 'store' ? '' : sc.posKey) + '">' +
       kpi('매출', man(y.gsT), '만원', y.growth, pct(y.growth), three('growth')) +
       kpi('매출총이익률', f1(y.mr), '%', y.mrD, pp(y.mrD), three('mr')) +
@@ -622,10 +644,10 @@ var KIMS = (function () {
           '<div class="br"><span class="bar ly" style="width:' + (t.gsL / mx * 100).toFixed(1) + '%"></span><em>' + man(t.gsL) + '</em></div></div>';
       }).join('') + '</div>';
   }
-  // 상세 비교: 본인 · 비교점(합산) · 킴스 합계 · 비교 순위
+  // 상세 비교: 본인 · 비교 점포 각각(없으면 그룹 합계) · 킴스 합계 · 그룹 순위
   function detailTable(k, me, sc, caption) {
-    var comp = cmpOf(me), C = setOf(me);
-    var cols = [M(k, [me], sc), comp.length ? M(k, comp, sc) : null, M(k, ALL(), sc)];
+    var CC = cmpCols(me), C = setOf(me);
+    var cols = [M(k, [me], sc)].concat(CC.map(function (c) { return M(k, c.plants, sc); })).concat([M(k, ALL(), sc)]);
     var rk = function (key) { var r = rankIn(k, C, sc, key, me); return r.r == null ? '-' : '<span class="rkb ' + (good(r) ? 'g' : 'b') + '">' + r.r + '위</span>'; };
     var colored = function (v, txt) { return v == null ? '-' : '<span class="' + cls(v) + '">' + txt + '</span>'; };
     var R = [
@@ -637,13 +659,13 @@ var KIMS = (function () {
       [['평당매출', function (t) { return man1(t.py); }, 'py'], ['평당매출 성장율', function (t) { return colored(t.pyG, pct(t.pyG)); }, 'pyG']],
       [['저녁장 매출', function (t) { return t.eve == null ? '-' : man(t.eve); }, 'eve'], ['저녁장 매출 성장율', function (t) { return colored(t.eveG, pct(t.eveG)); }, 'eveG'], ['저녁장 비중', function (t) { return t.eve == null || !t.amt ? '-' : f1(t.eve / t.amt * 100) + '%'; }]],
     ];
-    return (caption ? '<h4>' + esc(caption) + '</h4>' : '') + '<table class="dt"><colgroup><col class="c0"><col><col><col><col class="cr"></colgroup>' +
-      '<thead><tr><th></th><th class="ya">' + esc(NAME[me]) + '</th><th>비교점</th><th>킴스 합계</th><th>비교 순위</th></tr></thead>' +
+    return '<div class="dtw">' + (caption ? '<h4>' + esc(caption) + '</h4>' : '') + '<table class="dt n' + cols.length + '"><colgroup><col class="c0">' + cols.map(function () { return '<col>'; }).join('') + '<col class="cr"></colgroup>' +
+      '<thead><tr><th></th><th class="ya">' + esc(NAME[me]) + '</th>' + CC.map(function (c) { return '<th>' + esc(c.name) + '</th>'; }).join('') + '<th>킴스 합계</th><th>' + GNAME[GRP[me]] + ' 순위</th></tr></thead>' +
       R.map(function (rows) {
         return '<tbody>' + rows.map(function (x) {
           return '<tr><th>' + x[0] + '</th>' + cols.map(function (t, i) { return '<td' + (i === 0 ? ' class="ya"' : '') + '>' + (t ? x[1](t) : '-') + '</td>'; }).join('') + '<td>' + (x[2] ? rk(x[2]) : '') + '</td></tr>';
         }).join('') + '</tbody>';
-      }).join('') + '</table>';
+      }).join('') + '</table></div>';
   }
   // 섹션 = { id, nav(사이드바 이름), opt(켜기·끄기 키, 없으면 항상), html }
   var sec = function (id, nav, title, body, opt, extra) {
@@ -654,51 +676,54 @@ var KIMS = (function () {
     return h ? { id: 'daily', nav: '일별 매출', opt: 'daily', html: h.replace('<section class="panel dc">', '<section class="panel dc" id="sec-daily">') } : null;
   };
   function gbHtml(gd, bd) {
-    return '<div class="gbi"><h4 class="up">잘한 점</h4><ul class="pts">' + pts(gd.slice(0, 6)) + '</ul><h4 class="dn">부족한 점</h4><ul class="pts">' + pts(bd.slice(0, 6)) + '</ul></div>';
+    return '<div class="gbi"><div><h4 class="up">잘한 점</h4><ul class="pts">' + pts(gd.slice(0, 6)) + '</ul></div><div><h4 class="dn">부족한 점</h4><ul class="pts">' + pts(bd.slice(0, 6)) + '</ul></div></div>';
   }
 
   // ── 점포 화면 ──
   function storeView(k, me) {
-    var g = GRP[me], gn = GNAME[g], comp = cmpOf(me), C = setOf(me), sc = scopeStore(k);
-    var y = M(k, [me], sc), tot = y.gsT;
+    var g = GRP[me], gn = GNAME[g], CC = cmpCols(me), C = setOf(me), oth = othersOf(me), sc = scopeStore(k);
+    var y = M(k, [me], sc), tot = y.gsT, kimsAll = M(k, ALL(), sc);
     var items = [];
     D.storeCats.forEach(function (c) {
       var s = scopeCat(c[0], k);
       var it = function (name, sc2, lvl) {
-        var r = M(k, [me], sc2), cp = comp.length ? M(k, comp, sc2) : null;
-        return { name: name, lvl: lvl, y: r, comp: cp ? cp.growth : null, kims: M(k, ALL(), sc2).growth, rk: rankIn(k, C, sc2, 'growth', me), share: tot ? r.gsT / tot : null };
+        var r = M(k, [me], sc2);
+        return { name: name, lvl: lvl, y: r, comps: CC.map(function (cc) { return M(k, cc.plants, sc2).growth; }), bench: oth.length ? M(k, oth, sc2).growth : null, kims: M(k, ALL(), sc2).growth, rk: rankIn(k, C, sc2, 'growth', me), share: tot ? r.gsT / tot : null };
       };
       items.push(it(c[1], s, 'cd'));
       var pgs = c[2].filter(function (pg) { return C.some(function (p) { var m = M(k, [p], scopePg(pg[0])); return m.gsT || m.gsL; }); });
       if (pgs.length > 1) pgs.forEach(function (pg) { items.push(it(pg[1], scopePg(pg[0]), 'pg')); });
     });
-    var compAll = comp.length ? M(k, comp, sc) : null;
-    var totIt = { name: NAME[me] + ' 합계', y: y, comp: compAll ? compAll.growth : null, rk: rankIn(k, C, sc, 'growth', me) };
+    var totIt = { name: NAME[me] + ' 합계', y: y, comps: CC.map(function (cc) { return M(k, cc.plants, sc).growth; }), rk: rankIn(k, C, sc, 'growth', me) };
     var row = function (it, isTot) {
       var t = it.y;
-      return '<tr class="' + (isTot ? 'tot' : it.lvl) + '"><th>' + esc(it.name) + '</th><td>' + man(t.gsT) + '</td><td>' + (isTot ? '100%' : it.share == null ? '-' : f1(it.share * 100) + '%') + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td class="' + cls(it.comp) + '">' + pct(it.comp) + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td><td class="' + cls(t.cntD) + '">' + (t.cntD == null ? '-' : sgn(t.cntD) + '명') + '</td><td>' + rkBadge(it.rk) + '</td></tr>';
+      return '<tr class="' + (isTot ? 'tot' : it.lvl) + '"><th>' + esc(it.name) + '</th><td>' + man(t.gsT) + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td>' + rkBadge(it.rk) + '</td>' +
+        it.comps.map(function (v) { return '<td class="cx ' + cls(v) + '">' + pct(v) + '</td>'; }).join('') +
+        '<td class="' + cls(t.mrD) + ' mh">' + pp(t.mrD) + '</td><td class="' + cls(t.cntD) + '">' + (t.cntD == null ? '-' : sgn(t.cntD) + '명') + '</td><td class="mh">' + (isTot ? '100%' : it.share == null ? '-' : f1(it.share * 100) + '%') + '</td></tr>';
     };
-    var sumTable = '<p class="note">' + esc(NAME[me]) + ' · 매출 만원 · 비교점 성장율 · 순위 = 비교 ' + C.length + '점 중</p><div class="hs"><table class="st"><thead><tr><th>CD · 구매그룹</th><th>매출</th><th>구성비</th><th>성장율</th><th>비교점</th><th>매총율 증감</th><th>객수 증감</th><th>매출 성장율 순위</th></tr></thead><tbody>' +
+    var sumTable = '<p class="note">' + esc(NAME[me]) + ' · 매출 만원 · 순위 = ' + gn + ' ' + C.length + '점 중 매출 성장율 · ' + CC.map(function (c) { return esc(c.name); }).join('·') + ' = 매출 성장율</p><div class="hs"><table class="st"><thead><tr><th>CD · 구매그룹</th><th>매출</th><th>성장율</th><th>순위</th>' + CC.map(function (c) { return '<th class="cx">' + esc(c.name) + '</th>'; }).join('') + '<th class="mh">매총율 증감</th><th>객수 증감</th><th class="mh">구성비</th></tr></thead><tbody>' +
       items.map(function (it) { return row(it); }).join('') + '</tbody><tfoot>' + row(totIt, true) + '</tfoot></table></div>';
-    var heatTable = '<table class="ht"><colgroup><col class="c0"><col><col><col></colgroup><thead><tr><th>CD · 구매그룹</th><th class="ya">' + esc(NAME[me]) + '</th><th>비교점</th><th>킴스 합계</th></tr></thead><tbody>' +
+    var hc = 2 + CC.length;
+    var heatTable = '<table class="ht"><colgroup><col class="c0">' + new Array(hc + 1).join('<col>') + '</colgroup><thead><tr><th>CD · 구매그룹</th><th class="ya">' + esc(NAME[me]) + '</th>' + CC.map(function (c) { return '<th>' + esc(c.name) + '</th>'; }).join('') + '<th>킴스 합계</th></tr></thead><tbody>' +
       items.map(function (it, i) {
-        return (it.lvl === 'cd' && i > 0 ? '<tr class="sep"><td colspan="4"></td></tr>' : '') + '<tr class="' + it.lvl + '"><th>' + esc(it.name) + '</th><td' + heat(it.y.growth) + ' class="ya">' + pct(it.y.growth) + '</td><td' + heat(it.comp) + '>' + pct(it.comp) + '</td><td' + heat(it.kims) + '>' + pct(it.kims) + '</td></tr>';
+        return (it.lvl === 'cd' && i > 0 ? '<tr class="sep"><td colspan="' + (hc + 1) + '"></td></tr>' : '') + '<tr class="' + it.lvl + '"><th>' + esc(it.name) + '</th><td' + heat(it.y.growth) + ' class="ya">' + pct(it.y.growth) + '</td>' + it.comps.map(function (v) { return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '<td' + heat(it.kims) + '>' + pct(it.kims) + '</td></tr>';
       }).join('') + '</tbody></table>';
-    // 잘한 점·부족한 점 (비교 순위 상위 절반 = 잘한 점)
+    // 잘한 점·부족한 점 (그룹 순위 상위 절반 = 잘한 점)
     var gd = [], bd = [];
-    var cmpTxt = function (key, fmt) { return '비교점 ' + (compAll ? fmt(compAll[key]) : '-') + ' · 킴스 합계 ' + fmt(M(k, ALL(), sc)[key]); };
+    var cmpTxt = function (key, fmt) { return CC.map(function (c) { return c.name + ' ' + fmt(M(k, c.plants, sc)[key]); }).join(' · ') + ' · 킴스 합계 ' + fmt(kimsAll[key]); };
     [['매출 성장율', 'growth', pct(y.growth), pct], ['매총율', 'mr', f1(y.mr) + '%', function (v) { return f1(v) + '%'; }], ['객수 증가율', 'cntG', pct(y.cntG), pct], ['객단가', 'atv', man1(y.atv) + '만', function (v) { return man1(v) + '만'; }]]
       .forEach(function (x) {
         var r = rankIn(k, C, sc, x[1], me);
         if (r.r == null) return;
-        (good(r) ? gd : bd).push([x[0] + ' ' + x[2] + ', 비교 ' + r.n + '점 중 ' + r.r + '위', cmpTxt(x[1], x[3])]);
+        (good(r) ? gd : bd).push([x[0] + ' ' + x[2] + ', ' + rkLabel(me, r), cmpTxt(x[1], x[3])]);
       });
     var leaf = items.filter(function (it, i) { return it.lvl === 'pg' || !(items[i + 1] && items[i + 1].lvl === 'pg'); })
-      .filter(function (it) { return it.y.growth != null && it.comp != null && it.y.gsL > 0; })
-      .map(function (it) { return { it: it, gap: it.y.growth - it.comp }; });
+      .filter(function (it) { return it.y.growth != null && it.bench != null && it.y.gsL > 0; })
+      .map(function (it) { return { it: it, gap: it.y.growth - it.bench }; });
     leaf.sort(function (a, b) { return b.gap - a.gap; });
-    leaf.filter(function (x) { return x.gap >= 0.05; }).slice(0, 3).forEach(function (x) { gd.push([x.it.name + ' 매출 ' + pct(x.it.y.growth) + ', 비교 ' + x.it.rk.n + '점 중 ' + x.it.rk.r + '위', '비교점 ' + pct(x.it.comp) + '보다 ' + (x.gap * 100).toFixed(1) + '%p 높음']); });
-    leaf.filter(function (x) { return x.gap <= -0.05; }).reverse().slice(0, 3).forEach(function (x) { bd.push([x.it.name + ' 매출 ' + pct(x.it.y.growth) + ', 비교 ' + x.it.rk.n + '점 중 ' + x.it.rk.r + '위', '비교점 ' + pct(x.it.comp) + '보다 ' + (-x.gap * 100).toFixed(1) + '%p 낮음']); });
+    var bn = gn + ' 다른 점포 ';
+    leaf.filter(function (x) { return x.gap >= 0.05; }).slice(0, 3).forEach(function (x) { gd.push([x.it.name + ' 매출 ' + pct(x.it.y.growth) + ', ' + rkLabel(me, x.it.rk), bn + pct(x.it.bench) + '보다 ' + (x.gap * 100).toFixed(1) + '%p 높음']); });
+    leaf.filter(function (x) { return x.gap <= -0.05; }).reverse().slice(0, 3).forEach(function (x) { bd.push([x.it.name + ' 매출 ' + pct(x.it.y.growth) + ', ' + rkLabel(me, x.it.rk), bn + pct(x.it.bench) + '보다 ' + (-x.gap * 100).toFixed(1) + '%p 낮음']); });
     var cds = items.filter(function (it) { return it.lvl === 'cd'; });
     return {
       eyebrow: '킴스클럽 ' + NAME[me] + '(하이퍼 전체 구매그룹) · ' + gn + ' · ' + PNAME[k],
@@ -708,8 +733,9 @@ var KIMS = (function () {
         [sec('kpi', '핵심 지표', '', kpis(k, me, sc), null, 'bare')],
         [dailySec(me, 'store')],
         [sec('gb', '잘한·부족한 점', '', gbHtml(gd, bd), 'gb')],
-        [sec('bars', '점포 매출', '비교 점포 매출', bars(k, me, sc), 'bars'), sec('detail', '상세 비교', '상세 비교', '<p class="note">' + esc(cmpNote(me)) + ' · 킴스 합계 = 영업중단 포함 ' + ALL().length + '점</p>' + detailTable(k, me, sc, NAME[me] + ' 합계'), 'detail')],
-        [sec('big', '큰판', 'CD·구매그룹별 큰판', sumTable, 'big'), sec('heat', '성장율 색칸표', 'CD·구매그룹 매출 성장율', heatTable, 'heat')],
+        [sec('big', '큰판', 'CD·구매그룹별 큰판', sumTable, 'big')],
+        [sec('heat', '성장율 색칸표', 'CD·구매그룹 매출 성장율', heatTable, 'heat'), sec('bars', '점포 매출', gn + ' 점포 매출', bars(k, me, sc), 'bars')],
+        [sec('detail', '상세 비교', '상세 비교', '<p class="note">' + esc(cmpNote(me)) + ' · 킴스 합계 = 영업중단 포함 ' + ALL().length + '점</p><div class="dts">' + detailTable(k, me, sc, NAME[me] + ' 합계') + '</div>', 'detail')],
       ],
     };
   }
@@ -721,24 +747,25 @@ var KIMS = (function () {
     return items.map(function (x) { return '<li><span class="mn">' + esc(x[0]) + '</span><span class="track"><i class="' + (up ? 'bu' : 'bd') + '" style="width:' + (Math.abs(x[3]) / mx * 100).toFixed(1) + '%"></i></span><span class="mv ' + (up ? 'up' : 'dn') + '">' + sgn(x[3]) + '</span></li>'; }).join('');
   }
   function catView(k, me, id) {
-    var c = D.storeCats.filter(function (x) { return x[0] === id; })[0], g = GRP[me], gn = GNAME[g], G = openOf(g), comp = cmpOf(me), C = setOf(me);
-    var gcomp = G.filter(function (p) { return p !== me; }); // MC·상위 상품은 같은 그룹 기준
-    var sc = scopeCat(id, k), y = M(k, [me], sc), compT = comp.length ? M(k, comp, sc) : null, kimsT = M(k, ALL(), sc);
+    var c = D.storeCats.filter(function (x) { return x[0] === id; })[0], g = GRP[me], gn = GNAME[g], G = openOf(g), CC = cmpCols(me), C = setOf(me), oth = othersOf(me);
+    var gcomp = oth; // MC·상위 상품은 같은 그룹 기준
+    var sc = scopeCat(id, k), y = M(k, [me], sc), kimsT = M(k, ALL(), sc);
     var pgList = c[2].filter(function (pg) { return C.some(function (p) { var m = M(k, [p], scopePg(pg[0])); return m.gsT || m.gsL; }); });
-    var per = pgList.length > 1 ? pgList.map(function (pg) { var s2 = scopePg(pg[0]); return { code: pg[0], name: pg[1], sc: s2, y: M(k, [me], s2), comp: comp.length ? M(k, comp, s2).growth : null, rk: rankIn(k, C, s2, 'growth', me) }; }) : [];
+    var per = pgList.length > 1 ? pgList.map(function (pg) { var s2 = scopePg(pg[0]); return { code: pg[0], name: pg[1], sc: s2, y: M(k, [me], s2), comps: CC.map(function (cc) { return M(k, cc.plants, s2).growth; }), rk: rankIn(k, C, s2, 'growth', me) }; }) : [];
     var mc = (((D.mc[k] || {})[me] || {})[id]) || { up: [], dn: [] };
     var top = (((D.top[k] || {})[g] || {})[id]) || [];
     var R = function (key) { return rankIn(k, C, sc, key, me); };
-    var gd = [], bd = [], vs = function (key, fmt) { return '비교점 ' + (compT ? fmt(compT[key]) : '-') + ' · 킴스 합계 ' + fmt(kimsT[key]); };
+    var gd = [], bd = [], vs = function (key, fmt) { return CC.map(function (cc) { return cc.name + ' ' + fmt(M(k, cc.plants, sc)[key]); }).join(' · ') + ' · 킴스 합계 ' + fmt(kimsT[key]); };
+    var cvs = function (p) { return CC.map(function (cc, i) { return cc.name + ' ' + pct(p.comps[i]); }).join(' · '); };
     var rg = R('growth'), rm = R('mr'), rc = R('cntG'), ra = R('atv');
-    var at = function (r) { return '비교 ' + r.n + '점 중 ' + r.r + '위'; };
+    var at = function (r) { return rkLabel(me, r); };
     if (rm.r != null) (good(rm) ? gd : bd).push(['매출총이익률 ' + f1(y.mr) + '%, ' + at(rm), '전년 ' + f1(y.mrL) + '% → ' + pp(y.mrD) + ' · ' + vs('mr', function (v) { return f1(v) + '%'; })]);
     if (rg.r != null) (good(rg) ? gd : bd).push(['매출 ' + man(y.gsT) + '만, 전년비 ' + pct(y.growth) + ', ' + at(rg), vs('growth', pct)]);
     if (rc.r != null) (good(rc) ? gd : bd).push(['객수 ' + won(y.cnt) + '명, 증가율 ' + pct(y.cntG) + ', ' + at(rc), vs('cntG', pct)]);
     if (ra.r != null) (good(ra) ? gd : bd).push(['객단가 ' + man1(y.atv) + '만, ' + at(ra), '전년비 ' + pct(y.atvG) + ' · ' + vs('atv', function (v) { return man1(v) + '만'; })]);
     per.forEach(function (p) {
-      if (p.rk.r === 1) gd.push([p.name + ' 매출 성장률 ' + pct(p.y.growth) + ', 비교 ' + p.rk.n + '점 중 1위', '비교점 ' + pct(p.comp)]);
-      else if (p.rk.r != null && (p.rk.r === p.rk.n || (p.y.growth || 0) < 0)) bd.push([p.name + ' 매출 ' + pct(p.y.growth) + ', 비교 ' + p.rk.n + '점 중 ' + p.rk.r + '위', '비교점 ' + pct(p.comp)]);
+      if (p.rk.r === 1) gd.push([p.name + ' 매출 성장률 ' + pct(p.y.growth) + ', ' + at(p.rk), cvs(p)]);
+      else if (p.rk.r != null && (p.rk.r === p.rk.n || (p.y.growth || 0) < 0)) bd.push([p.name + ' 매출 ' + pct(p.y.growth) + ', ' + at(p.rk), cvs(p)]);
     });
     var mcUp = mc.up.filter(function (m) { return m[4] != null && m[3] > m[4]; }).slice(0, 2);
     if (mcUp.length) gd.push([mcUp.map(function (m) { return m[0] + ' ' + sgn(m[3]) + '만'; }).join(', '), gn + ' 다른 점포 평균 ' + mcUp.map(function (m) { return m[0] + ' ' + sgn(m[4]) + '만'; }).join(' · ')]);
@@ -757,7 +784,7 @@ var KIMS = (function () {
       var sv = G.map(function (p, j) { var v = vals[j]; return '<span class="' + [p === me ? 'me' : '', v === mx && v > 0 ? 'hi' : v === mn && mn < mx ? 'lo' : ''].join(' ').trim() + '">' + esc(NAME[p]) + ' ' + won(v) + '</span>'; }).join('');
       return '<li><div class="pn"><span class="rk">' + (i + 1) + '</span>' + esc(name) + dup + ' <span class="muted">(' + esc(t[2]) + ')</span></div><div class="pv">' + sv + '</div></li>';
     }).join('');
-    var tables = per.length ? detailTable(k, me, sc, c[1] + ' 합계') + per.map(function (p) { return detailTable(k, me, p.sc, p.name + '(' + p.code + ')'); }).join('') : detailTable(k, me, sc);
+    var tables = '<div class="dts">' + (per.length ? detailTable(k, me, sc, c[1] + ' 합계') + per.map(function (p) { return detailTable(k, me, p.sc, p.name + '(' + p.code + ')'); }).join('') : detailTable(k, me, sc)) + '</div>';
     var pr = D.per[k];
     return {
       eyebrow: '킴스클럽 ' + NAME[me] + ' ' + c[1] + '(' + c[2].map(function (x) { return x[1] + ' ' + x[0]; }).join(' · ') + ') · ' + PNAME[k],
@@ -767,9 +794,9 @@ var KIMS = (function () {
         [sec('kpi', '핵심 지표', '', kpis(k, me, sc), null, 'bare')],
         [hasData('daily', id) ? dailySec(me, id) : sec('daily', '일별 매출', '일별 매출', NOT_YET(c[1] + ' 일별'), 'daily')],
         [sec('gb', '잘한·부족한 점', '', gbHtml(gd, bd), 'gb')],
-        [sec('bars', '점포 매출', '비교 점포 ' + c[1] + ' 매출', bars(k, me, sc), 'bars'), sec('detail', '상세 비교', '상세 비교', '<p class="note">' + esc(cmpNote(me)) + '</p>' + tables, 'detail')],
-        [sec('mc', 'MC 증감', '품목(MC)별 전년 대비 증감', '<p class="note">' + esc(NAME[me]) + ' · 매출 기준 · 만원 · 비교 = ' + gn + ' 다른 점포 평균</p>' + (hasData('mc', id) ? '<h4>증가 상위</h4><ul class="mcl">' + mcList(mc.up, true) + '</ul><h4>감소 상위</h4><ul class="mcl">' + mcList(mc.dn, false) + '</ul>' : NOT_YET(c[1] + ' MC')), 'mc'),
-          sec('top', '상위 15개 상품', gn + ' 합계 매출 상위 15개 상품', '<p class="note">' + pr.ty + ' 매출 · 만원 · 점포 중 최고값 파랑, 최저값 빨강 · 밑줄 = ' + esc(NAME[me]) + '</p>' + (hasData('top', id) ? '<ol class="prods">' + items + '</ol>' : NOT_YET(c[1] + ' 상품')), 'top')],
+        [sec('detail', '상세 비교', '상세 비교', '<p class="note">' + esc(cmpNote(me)) + '</p>' + tables, 'detail')],
+        [sec('bars', '점포 매출', gn + ' 점포 ' + c[1] + ' 매출', bars(k, me, sc), 'bars'), sec('mc', 'MC 증감', '품목(MC)별 전년 대비 증감', '<p class="note">' + esc(NAME[me]) + ' · 매출 기준 · 만원 · 비교 = ' + gn + ' 다른 점포 평균</p>' + (hasData('mc', id) ? '<h4>증가 상위</h4><ul class="mcl">' + mcList(mc.up, true) + '</ul><h4>감소 상위</h4><ul class="mcl">' + mcList(mc.dn, false) + '</ul>' : NOT_YET(c[1] + ' MC')), 'mc')],
+        [sec('top', '상위 15개 상품', gn + ' 합계 매출 상위 15개 상품', '<p class="note">' + pr.ty + ' 매출 · 만원 · 점포 중 최고값 파랑, 최저값 빨강 · 밑줄 = ' + esc(NAME[me]) + '</p>' + (hasData('top', id) ? '<ol class="prods">' + items + '</ol>' : NOT_YET(c[1] + ' 상품')), 'top')],
       ],
     };
   }
@@ -1002,9 +1029,27 @@ var KIMS = (function () {
       rows.map(function (r) { return '<div class="row' + (r.length > 1 ? ' split' : '') + '">' + r.map(function (x) { return x.html; }).join('') + '</div>'; }).join('');
   }
   var NAVOPEN = {};
+  var SECICON = {
+    kpi: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    daily: '<path d="M3 17l5-6 4 3 6-8 3 3"/><path d="M3 21h18"/>',
+    gb: '<path d="M7 11l3 3 7-7"/><path d="M21 12a9 9 0 1 1-6-8.5"/>',
+    bars: '<path d="M4 6h10M4 12h16M4 18h7"/>',
+    detail: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10M15 10v10"/>',
+    big: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>',
+    heat: '<rect x="3" y="3" width="5" height="5" rx="1"/><rect x="10" y="3" width="5" height="5" rx="1"/><rect x="17" y="3" width="4" height="5" rx="1"/><rect x="3" y="10" width="5" height="5" rx="1"/><rect x="10" y="10" width="5" height="5" rx="1"/><rect x="3" y="17" width="5" height="4" rx="1"/>',
+    mc: '<path d="M12 3v18M5 10l7-7 7 7"/>',
+    top: '<path d="M12 3l2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 16.4 6.7 19.1l1-5.8L3.5 9.2l5.9-.9z"/>',
+    groups: '<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20a6 6 0 0 1 12 0M10 20a6 6 0 0 1 12 0"/>',
+    rank: '<path d="M8 21V11M12 21V5M16 21v-7M4 21h16"/>',
+    cdheat: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/>',
+    pgperf: '<path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/>',
+    pggrp: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/>',
+    stats: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    def: '<circle cx="12" cy="12" r="8"/>',
+  };
   function navHtml() {
     var v = view(), rows = visibleRows(v), secs = [].concat.apply([], rows);
-    var toc = '<ul class="toc">' + secs.map(function (x) { return '<li><a href="#" data-sec="' + x.id + '">' + x.nav + '</a></li>'; }).join('') + '</ul>';
+    var toc = '<ul class="toc">' + secs.map(function (x) { return '<li><a href="#" data-sec="' + x.id + '" title="' + x.nav + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + (SECICON[x.id] || SECICON.def) + '</svg><span>' + x.nav + '</span></a></li>'; }).join('') + '</ul>';
     // CD 선택은 상단 아이콘으로만 — 왼쪽 메뉴는 전점 요약 / 현재 화면 목차 / 점포 목록
     var curTab = (TABS.filter(function (x) { return x[0] === ST.t; })[0] || [0, ''])[1];
     var allOn = ST.v === 'report' && ST.s === 'all';
@@ -1033,7 +1078,7 @@ var KIMS = (function () {
   }
 
   // ── 설정 (아티팩트 로그인 = 계정에 저장 + 기기, 그 외 = 기기) ──
-  var DEF = { scale: 100, mode: 'dark', store: 'all', first: 'all', per: null, cmp: {}, hide: {} };
+  var DEF = { scale: 100, mode: 'light', store: 'all', first: 'all', per: null, cmp: {}, hide: {} };
   var LS = 'kims-report-settings';
   function loadLocal() { try { return JSON.parse(window.localStorage.getItem(LS) || 'null'); } catch (e) { return null; } }
   function saveLocal() { try { window.localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
@@ -1044,19 +1089,18 @@ var KIMS = (function () {
     if (!CLOUD.db || !CLOUD.uid) return Promise.resolve(false);
     return CLOUD.db.doc('data/users/' + CLOUD.uid + '/prefs').set({ v: JSON.stringify(S) }).then(function () { return true; }, function () { return false; });
   }
-  function applyMode() { var r = window.document.documentElement; r.setAttribute('data-mode', S.mode || 'dark'); r.style.zoom = (S.scale && S.scale !== 100) ? S.scale / 100 : ''; }
+  function applyMode() { var r = window.document.documentElement; r.setAttribute('data-mode', S.mode === 'dark' ? 'dark' : 'light'); r.style.zoom = (S.scale && S.scale !== 100) ? S.scale / 100 : ''; }
 
   function cmpHtml(me) {
     var openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
     if (me === 'all') return '<fieldset class="fs" id="fsCmp"><legend>비교점</legend><p class="hint">위 점포 선택에서 점포를 고르면 여기에 그 점포의 비교 점포 목록이 나옵니다.</p></fieldset>';
-    var cur = custom(me) ? S.cmp[me] : null;
-    return '<fieldset class="fs" id="fsCmp"><legend>비교점 <small>' + esc(NAME[me]) + ' 기준</small></legend><p class="hint">비교할 점포를 눌러 켜고 끄세요. 고르지 않으면 같은 그룹(' + GNAME[GRP[me]] + ') 다른 점포와 비교합니다.</p>' +
+    var cur = cmpOf(me);
+    return '<fieldset class="fs" id="fsCmp"><legend>비교점 <small>' + esc(NAME[me]) + ' 기준 · 최대 ' + CMAX + '개</small></legend><p class="hint">비교할 점포를 ' + CMAX + '개까지 고르세요. 고른 점포가 표에 각각 나옵니다. 고르지 않으면 ' + GNAME[GRP[me]] + ' 합계와 비교합니다. 순위는 늘 ' + GNAME[GRP[me]] + ' 안에서 매깁니다.</p>' +
       openGroups.map(function (g) {
         return '<p class="cg">' + g[1] + '</p><div class="chips">' + g[2].filter(function (p) { return p !== me; }).map(function (p) {
-          var on = cur ? cur.indexOf(p) >= 0 : GRP[p] === GRP[me];
-          return '<label class="chip"><input type="checkbox" name="cmp" value="' + p + '"' + (on ? ' checked' : '') + '><span>' + esc(NAME[p]) + '</span></label>';
+          return '<label class="chip"><input type="checkbox" name="cmp" value="' + p + '"' + (cur.indexOf(p) >= 0 ? ' checked' : '') + '><span>' + esc(NAME[p]) + '</span></label>';
         }).join('') + '</div>';
-      }).join('') + '<button type="button" class="lnk" id="cmpReset">같은 그룹으로 되돌리기</button></fieldset>';
+      }).join('') + '<button type="button" class="lnk" id="cmpReset">선택 모두 해제</button></fieldset>';
   }
   function drawerHtml() {
     var me = ST.s, openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
@@ -1066,7 +1110,7 @@ var KIMS = (function () {
     return '<div class="dh"><h2 id="dtitle">설정</h2><button type="button" class="ib" id="dclose" aria-label="설정 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
       '<div class="db">' +
       '<fieldset class="fs"><legend>화면 크기</legend><div class="seg3">' + [[90, '작게'], [100, '보통'], [115, '크게'], [130, '아주 크게']].map(function (x) { return radio('scale', String(x[0]), x[1], String(S.scale || 100)); }).join('') + '</div><p class="hint">글자·표·그래프가 함께 커지고 작아집니다. 이 기기에서 바로 미리 볼 수 있고, 저장해야 유지됩니다.</p></fieldset>' +
-      '<fieldset class="fs"><legend>화면 모드</legend><div class="seg3">' + radio('mode', 'dark', '다크', S.mode) + radio('mode', 'light', '라이트', S.mode) + radio('mode', 'system', '시스템', S.mode) + '</div></fieldset>' +
+      '<fieldset class="fs"><legend>화면 모드</legend><div class="seg3">' + radio('mode', 'light', '라이트', S.mode === 'dark' ? 'dark' : 'light') + radio('mode', 'dark', '다크', S.mode === 'dark' ? 'dark' : 'light') + '</div></fieldset>' +
       '<fieldset class="fs"><legend>점포 선택</legend><select id="fStore" class="sel">' + opt('all', '전점 요약', me) + openGroups.map(function (g) { return '<optgroup label="' + g[1] + '">' + g[2].map(function (p) { return opt(p, NAME[p], me); }).join('') + '</optgroup>'; }).join('') + '</select></fieldset>' +
       cmp +
       '<fieldset class="fs"><legend>처음 열 때</legend><div class="seg3">' + radio('first', 'all', '전점 요약', S.first) + radio('first', 'last', '마지막 본 점포', S.first) + '</div>' +
@@ -1086,10 +1130,8 @@ var KIMS = (function () {
     n.hide = {}; OPT.forEach(function (o) { n.hide[o[0]] = true; }); q('input[name=show]:checked').forEach(function (x) { delete n.hide[x.value]; });
     var me = n.store;
     if (me !== 'all' && q('input[name=cmp]').length) {
-      var picked = q('input[name=cmp]:checked').map(function (x) { return x.value; });
-      var grp = openOf(GRP[me]).filter(function (p) { return p !== me; });
-      var same = picked.length === grp.length && grp.every(function (p) { return picked.indexOf(p) >= 0; });
-      if (same || !picked.length) delete n.cmp[me]; else n.cmp[me] = picked;
+      var picked = q('input[name=cmp]:checked').map(function (x) { return x.value; }).slice(0, CMAX);
+      if (!picked.length) delete n.cmp[me]; else n.cmp[me] = picked;
     }
     return n;
   }
@@ -1276,12 +1318,13 @@ var KIMS = (function () {
         closeDrawer(); render(true);
         saveCloud().then(function (ok) { toast(ok ? '설정을 초기화했습니다 (계정·이 기기)' : '설정을 초기화했습니다 (이 기기)'); });
       }
-      else if (id === 'cmpReset') [].forEach.call(doc.querySelectorAll('#drawer input[name=cmp]'), function (x) { x.checked = GRP[x.value] === GRP[doc.getElementById('fStore').value]; });
+      else if (id === 'cmpReset') [].forEach.call(doc.querySelectorAll('#drawer input[name=cmp]'), function (x) { x.checked = false; });
     });
     // 설정에서 점포를 바꾸면 비교점 목록을 그 점포 기준으로 바로 바꿈
     doc.getElementById('drawer').addEventListener('change', function (e) {
       if (e.target.name === 'scale') window.document.documentElement.style.zoom = Number(e.target.value) === 100 ? '' : Number(e.target.value) / 100;
       if (e.target.id === 'fStore') { var f = doc.getElementById('fsCmp'); if (f) f.outerHTML = cmpHtml(e.target.value); }
+      if (e.target.name === 'cmp' && e.target.checked && doc.querySelectorAll('#drawer input[name=cmp]:checked').length > CMAX) { e.target.checked = false; toast('비교점은 ' + CMAX + '개까지 고를 수 있습니다'); }
     });
     doc.getElementById('nav').addEventListener('toggle', function (e) { if (e.target.dataset && e.target.dataset.g) NAVOPEN[e.target.dataset.g] = e.target.open; }, true);
     doc.getElementById('nav').addEventListener('click', function (e) {
