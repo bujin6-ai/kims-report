@@ -409,6 +409,27 @@ body.nav-open #nav{transform:none}
 @media (hover:hover){#nav .nv>li>button:not([aria-current=page]):hover,#nav .ng summary:hover,#nav .sl button:not([aria-current=page]):hover,#nav .toc a:not(.on):hover{background:var(--hov);color:var(--fg)}#nav .sl button:hover span{color:inherit}}
 @media (min-width:1024px){.body{grid-template-columns:272px minmax(0,1fr)}#nav .nv>li>button{font-size:17px;padding:10px 12px}#nav .nv.home>li>button{font-size:15px}#nav .ni{width:21px;height:21px}#nav .nl{font-size:13px}#nav .nl small{font-size:12.5px}#nav .toc a{font-size:15.5px;padding:8px 10px}#nav .toc a svg{width:19px;height:19px}#nav .ng summary{font-size:16.5px}#nav .ng summary small{font-size:12.5px}#nav .ng summary b,#nav .sl button b{font-size:14.5px}#nav .sl button{font-size:16px;padding:8px 10px}#nav .nv>li>button em{font-size:13px}}
 
+#nav{background:radial-gradient(120% 40% at 0% 0%,color-mix(in srgb,#0a84ff 9%,transparent),transparent 70%),radial-gradient(90% 35% at 100% 30%,color-mix(in srgb,#af52de 7%,transparent),transparent 70%),radial-gradient(100% 40% at 0% 75%,color-mix(in srgb,#34c759 7%,transparent),transparent 70%),var(--panel)}
+#nav .ni,#nav .toc a svg{--t:var(--ac);box-sizing:border-box;padding:6px;border-radius:11px;color:color-mix(in srgb,var(--t) 85%,#000 15%);
+ background:linear-gradient(160deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.45) 45%,color-mix(in srgb,var(--t) 16%,rgba(255,255,255,.3)) 100%);
+ border:1px solid rgba(255,255,255,.85);
+ box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset 0 -2px 4px color-mix(in srgb,var(--t) 14%,transparent),0 3px 10px color-mix(in srgb,var(--t) 20%,transparent),0 0 0 .5px rgba(0,0,0,.06);
+ -webkit-backdrop-filter:blur(12px) saturate(180%);backdrop-filter:blur(12px) saturate(180%);transition:transform .2s,box-shadow .2s,background .2s}
+#nav .ni{width:32px;height:32px;stroke-width:1.9}
+#nav .toc a svg{width:28px;height:28px;padding:5.5px;border-radius:9px;stroke-width:1.9}
+#nav .nv>li>button[data-go=all] .ni{--t:#0a84ff}#nav .nv>li>button[data-store] .ni{--t:#ff9500}#nav .nv>li>button[data-go=stats] .ni{--t:#8e8e93}#nav .nv.home .ni{--t:#8e8e93;width:28px;height:28px;padding:5px;border-radius:9px}
+#nav .toc a[data-sec=kpi] svg{--t:#0a84ff}#nav .toc a[data-sec=daily] svg{--t:#30b0c7}#nav .toc a[data-sec=gb] svg{--t:#34c759}#nav .toc a[data-sec=bars] svg{--t:#5856d6}#nav .toc a[data-sec=detail] svg{--t:#ff9500}#nav .toc a[data-sec=big] svg{--t:#af52de}#nav .toc a[data-sec=heat] svg{--t:#ff2d55}#nav .toc a[data-sec=mc] svg{--t:#00c7be}#nav .toc a[data-sec=top] svg{--t:#ffcc00}#nav .toc a[data-sec=groups] svg{--t:#34c759}#nav .toc a[data-sec=rank] svg{--t:#5856d6}#nav .toc a[data-sec=cdheat] svg{--t:#ff2d55}#nav .toc a[data-sec=pgperf] svg{--t:#ff9500}#nav .toc a[data-sec=pggrp] svg{--t:#af52de}#nav .toc a[data-sec=stats] svg{--t:#8e8e93}
+#nav .nv>li>button[aria-current=page] .ni,#nav .toc a.on svg{color:#fff;border-color:rgba(255,255,255,.55);
+ background:linear-gradient(160deg,color-mix(in srgb,var(--t) 55%,#fff 45%) 0%,var(--t) 55%,color-mix(in srgb,var(--t) 80%,#000 20%) 100%);
+ box-shadow:inset 0 1.5px 0 rgba(255,255,255,.7),inset 0 -2px 5px rgba(0,0,0,.18),0 5px 14px color-mix(in srgb,var(--t) 40%,transparent)}
+#nav .nv>li>button,#nav .toc a{gap:11px}
+#nav .nv>li>button[aria-current=page],#nav .toc a.on,#nav .sl button[aria-current=page]{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 10px rgba(0,0,0,.06),0 0 0 .5px rgba(0,0,0,.05)}
+@media (hover:hover){#nav .nv>li>button:hover .ni,#nav .toc a:hover svg{transform:translateY(-1px) scale(1.04)}}
+:root[data-mode=dark] #nav .ni,:root[data-mode=dark] #nav .toc a svg{color:color-mix(in srgb,var(--t) 70%,#fff 30%);background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 50%,color-mix(in srgb,var(--t) 22%,transparent));border-color:rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 3px 10px rgba(0,0,0,.4)}
+:root[data-mode=dark] #nav .nv>li>button[aria-current=page],:root[data-mode=dark] #nav .toc a.on,:root[data-mode=dark] #nav .sl button[aria-current=page]{background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+:root[data-mode=dark] #nav .nv>li>button[aria-current=page] .ni,:root[data-mode=dark] #nav .toc a.on svg{color:#fff;background:linear-gradient(160deg,color-mix(in srgb,var(--t) 60%,#fff 40%) 0%,var(--t) 55%,color-mix(in srgb,var(--t) 80%,#000 20%) 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.45),0 4px 12px rgba(0,0,0,.45)}
+@media (min-width:1024px){#nav .ni{width:34px;height:34px}#nav .toc a svg{width:30px;height:30px}}
+
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
 html:not([data-view=report]) .app,html:not([data-view=report]) #drawer,html:not([data-view=report]) #scrim,html:not([data-view=report]) #kpop{display:none!important}
 html:not([data-view=report]) body{background:#f4f5f7}
