@@ -476,7 +476,7 @@ body.nav-open #nav{transform:none}
 .dt2 th.dist small{display:block;font-size:10.5px;font-weight:500;color:var(--muted);white-space:nowrap}.dt2 th.dist i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px 0 6px;vertical-align:0}.dt2 th.dist i.dme{background:var(--ac)}.dt2 th.dist i.dcp{background:#636366}
 .pbar{display:block;margin:0 auto;overflow:visible}.pbar line{stroke:var(--line);stroke-width:2}.pbar line.t{stroke:var(--muted);stroke-width:1.5}.pbar .e{font-size:11px;fill:var(--muted);font-weight:600}.pbar .r{font-size:11px;fill:var(--fg);font-weight:700}.pbar circle{fill:var(--fg);stroke:var(--panel);stroke-width:2}.pbar circle.hi{fill:var(--good)}.pbar circle.lo{fill:var(--bad)}.dt2 col.cdist{width:200px}.dstrip{display:block;margin:0 auto;overflow:visible}.dstrip line{stroke:var(--line);stroke-width:2}.dstrip line.md{stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}
 .dstrip circle.o{fill:color-mix(in srgb,var(--muted) 45%,transparent)}.dstrip circle.c{fill:#636366;stroke:var(--panel);stroke-width:1.5}.dstrip circle.m{fill:var(--ac);stroke:var(--panel);stroke-width:2}
-@media (max-width:700px){.dt2 col.cdist,.dt2 .dist{display:none}}
+@media (max-width:700px){.dt2 col.cdist{width:0!important;visibility:collapse}.dt2 th.dist,.dt2 td.dist{display:none}}
 .mtbl td.gzc{white-space:nowrap}.gz{display:inline-block;position:relative;width:72px;height:8px;margin-right:6px;vertical-align:middle;background:linear-gradient(var(--line),var(--line)) center/1px 100% no-repeat}
 .gz i{position:absolute;top:1px;bottom:1px;border-radius:2px}.gz i.p{left:50%;background:color-mix(in srgb,var(--good) 70%,transparent)}.gz i.n{right:50%;background:color-mix(in srgb,var(--bad) 70%,transparent)}
 @media (max-width:600px){.gz{width:30px;margin-right:4px}}
@@ -552,7 +552,7 @@ tr.dim>*{opacity:.42}
 .seg:has(.sgi[style*=opacity]) button[aria-pressed=true]{background:transparent;box-shadow:none}
 @media (prefers-reduced-motion:reduce){.seg .sgi{transition:none}}
 /* 휴대폰: 세로 스크롤 중 화면이 좌우로 흔들리지 않게(가로 흔들림 차단, 안쪽 가로 스크롤은 유지) */
-@media (max-width:600px){html,body{overflow-x:hidden}#scroller{overflow-x:hidden;overscroll-behavior-x:none}#main{overflow-x:clip;max-width:100vw}}
+@media (max-width:600px){html,body{overflow-x:hidden}#scroller{overflow-x:hidden;overscroll-behavior-x:none}#main{overflow-x:clip;max-width:100vw}#main .panel{overflow-x:clip}.hdr{overflow-x:clip}}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
