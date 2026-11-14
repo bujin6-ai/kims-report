@@ -1,0 +1,1715 @@
+<!doctype html><html lang="ko" data-mode="dark" data-view="boot"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>킴스 매출 리포트</title><meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"><style>
+:root{--bg:#f5f5f7;--panel:#fff;--fg:#1d1d1f;--muted:#7a7a7a;--line:#e0e0e0;--ac:#0066cc;--ac-soft:#eef5fd;--good:#1d8a4e;--bad:#d1302b;--ly:#d2d2d7;--tabbg:rgba(245,245,247,.8);--on-ac:#fff;--seg:#e3e3e8;
+--font:system-ui,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.5;margin:0;font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%}
+.wrap{position:relative;max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 40px}
+.rad{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.date{margin:8px 0 6px;padding-right:92px;color:var(--muted);font-size:14px;line-height:1.45}
+.date b{display:block;color:var(--fg);font-weight:700;font-size:18px;letter-spacing:-0.02em}
+.top{position:sticky;top:0;z-index:5;margin:0 -16px;padding:8px 16px;background:var(--tabbg);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.tabs{display:flex;gap:6px}
+.tab{flex:1;text-align:center;padding:8px 0;border-radius:9999px;font-weight:600;font-size:15px;cursor:pointer;color:var(--fg);background:var(--panel);border:1px solid var(--line);transition:transform .12s;user-select:none}
+.tab:active{transform:scale(.95)}
+.view{display:grid;gap:14px;margin-top:10px;grid-template-columns:minmax(0,1fr)}
+.seg{display:flex;padding:3px;margin-bottom:8px;border-radius:9999px;background:var(--seg)}
+.seg label{flex:1;text-align:center;padding:6px 0;border-radius:9999px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none;transition:transform .12s}
+.seg label:active{transform:scale(.95)}
+.hd{padding:6px 2px 0}
+.eyebrow{margin:0 0 6px;color:var(--muted);font-size:12px;letter-spacing:.02em}
+h1{margin:0;font-size:1.6rem;font-weight:600;letter-spacing:-.025em;line-height:1.3;text-wrap:balance;word-break:keep-all}
+h1 .sl{color:var(--muted);font-weight:400}
+.sub{margin:8px 0 0;color:var(--muted);word-break:keep-all}
+h3{margin:0 0 4px;font-size:17px;font-weight:600;letter-spacing:-.02em}
+h4{margin:16px 0 6px;font-size:14px;font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}
+.note{margin:0 0 8px;color:var(--muted);font-size:12px;word-break:keep-all}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;min-width:0}
+.kl{margin:0;color:var(--muted);font-size:13px}
+.kv{margin:2px 0 6px;font-size:24px;font-weight:600;letter-spacing:-.02em}
+.kv small{font-size:13px;font-weight:500;color:var(--muted);margin-left:2px}
+.kd{margin:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px}
+.badge{display:inline-block;padding:2px 8px;border-radius:9999px;font-weight:600;font-size:11px;color:#fff}
+.badge.g{background:var(--good)}.badge.b{background:var(--bad)}
+.up{color:var(--good)}.dn{color:var(--bad)}
+.lg{margin:0 0 10px;color:var(--muted);font-size:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sw{display:inline-block;width:10px;height:10px;border-radius:9999px}.sw.ty{background:var(--ac)}.sw.ly{background:var(--ly)}
+.bars{display:grid;gap:12px}
+.sbh{display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px}
+.sb.me .sbh span{color:var(--ac);font-weight:600}
+.br{display:flex;align-items:center;gap:8px;margin-top:3px}
+.bar{display:block;height:12px;border-radius:9999px;min-width:2px}
+.bar.ty{background:var(--ac)}.bar.ly{background:var(--ly)}
+.br em{font-style:normal;font-size:12px;color:var(--muted);white-space:nowrap}
+.dt{width:100%;table-layout:fixed;border-collapse:collapse;font-size:13px}
+.dt col.c0{width:27%}
+.dt th,.dt td{padding:6px 4px;text-align:right;word-break:keep-all;overflow-wrap:anywhere}
+.dt thead th{border-bottom:1.5px solid var(--fg)}
+.dt tbody{border-bottom:1px solid var(--muted)}
+.dt tbody tr+tr th,.dt tbody tr+tr td{border-top:1px dashed var(--line)}
+.dt thead th{font-weight:600;color:var(--muted);font-size:12px}
+.dt tbody th{text-align:left;font-weight:500;color:var(--muted)}
+.dt .ya{background:var(--ac-soft)}
+.dt thead th.ya{color:var(--ac)}
+.gb{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pts{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
+.pts li{display:grid;gap:2px;word-break:keep-all}
+.pts li span{color:var(--muted);font-size:13px}
+.mcl{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.mcl li{display:grid;grid-template-columns:7.5em minmax(0,1fr) 4.2em;gap:8px;align-items:center;font-size:13px}
+.mn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track{display:block;height:10px}
+.track i{display:block;height:10px;border-radius:9999px}
+.track i.bu{background:var(--good)}.track i.bd{background:var(--bad)}
+.mv{text-align:right;font-weight:600}
+.prods{list-style:none;margin:0;padding:0}
+.prods li{padding:9px 0;border-bottom:1px solid var(--line)}
+.prods li:last-child{border-bottom:0}
+.pn{font-size:14px;word-break:keep-all}
+.rk{display:inline-block;min-width:1.6em;color:var(--ac);font-weight:600}
+.muted{color:var(--muted);font-size:12px}
+.pv{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:3px;padding-left:1.6em;font-size:12px;color:var(--muted)}
+.pv .sum{color:var(--fg);font-weight:600}
+.pv .hi{color:var(--ac);font-weight:700}
+.pv .lo{color:var(--bad);font-weight:700}
+.dkw{position:absolute;top:10px;right:max(16px,env(safe-area-inset-right,0px));z-index:6}
+.dk{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;border-radius:9999px;border:1px solid var(--line);background:var(--panel);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.dk i{position:relative;display:block;width:30px;height:18px;border-radius:9999px;background:var(--seg);transition:background .15s}
+.dk i::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:transform .15s}
+#dk:checked~.dkw .dk i{background:var(--ac)}
+#dk:checked~.dkw .dk i::after{transform:translateX(12px)}
+#dk:checked~.dkw .dk{color:var(--fg)}
+#dk:focus-visible~.dkw .dk{outline:2px solid var(--ac);outline-offset:2px}
+.hs{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;margin:0 -4px}
+.st{border-collapse:collapse;font-size:13px;min-width:100%;white-space:nowrap}
+.st th,.st td{padding:7px 8px;text-align:right}
+.st thead th{font-size:12px;font-weight:600;color:var(--muted);border-bottom:1.5px solid var(--fg)}
+.st tbody th,.st tfoot th{text-align:left;font-weight:600}
+.st tbody th small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+.st tbody tr+tr th,.st tbody tr+tr td{border-top:1px dashed var(--line)}
+.st tfoot tr{border-top:1.5px solid var(--fg)}
+.st tfoot th,.st tfoot td{font-weight:700}
+.st tr.cd th,.st tr.cd td{background:var(--ac-soft);font-weight:700}
+.st tr.pg th{padding-left:22px;font-weight:500;color:var(--muted)}
+.ht tr.cd th{font-weight:700}
+.ht tr.pg th{padding-left:14px;color:var(--muted);font-size:11px}
+.rkb{display:inline-block;min-width:2.4em;text-align:center;padding:1px 6px;border-radius:9999px;font-size:11px;font-weight:700;color:#fff}
+.rkb.g{background:var(--good)}.rkb.b{background:var(--bad)}
+.ht{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:3px;font-size:12px}
+.ht col.c0{width:6.2em}
+.ht tr.sep td{padding:0;height:0;border-top:1.5px solid var(--muted);border-radius:0;background:none}
+.ht th,.ht td{padding:7px 4px;text-align:center;border-radius:8px}
+.ht thead th{font-weight:600;color:var(--muted)}
+.ht thead th.ya{color:var(--ac)}
+.ht tbody th{text-align:left;font-weight:500;color:var(--fg);word-break:keep-all}
+.ht td{font-weight:600;color:var(--fg)}
+.ht td.ya{outline:1.5px solid var(--ac);outline-offset:-1.5px}
+@media (max-width:600px){h1{font-size:1.25rem}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.gb{grid-template-columns:minmax(0,1fr)}.panel{padding:14px}.kv{font-size:21px}.dt{font-size:12px}.dt th,.dt td{padding:6px 2px}}
+@media (prefers-reduced-motion:reduce){.tab{transition:none}}
+
+:root[data-mode=dark]{--bg:#000;--panel:#1c1c1e;--fg:#f5f5f7;--muted:#98989d;--line:#38383a;--ac:#2997ff;--ac-soft:#0f2236;--good:#30d158;--bad:#ff6961;--ly:#48484a;--tabbg:rgba(0,0,0,.72);--seg:#2c2c2e;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root[data-mode=system]:not([data-theme=light]){--bg:#000;--panel:#1c1c1e;--fg:#f5f5f7;--muted:#98989d;--line:#38383a;--ac:#2997ff;--ac-soft:#0f2236;--good:#30d158;--bad:#ff6961;--ly:#48484a;--tabbg:rgba(0,0,0,.72);--seg:#2c2c2e;color-scheme:dark}}
+:root[data-mode=system][data-theme=dark]{--bg:#000;--panel:#1c1c1e;--fg:#f5f5f7;--muted:#98989d;--line:#38383a;--ac:#2997ff;--ac-soft:#0f2236;--good:#30d158;--bad:#ff6961;--ly:#48484a;--tabbg:rgba(0,0,0,.72);--seg:#2c2c2e;color-scheme:dark}
+:root{--hov:color-mix(in srgb,var(--ac) 9%,transparent);--sk:color-mix(in srgb,var(--fg) 9%,transparent);--sk2:color-mix(in srgb,var(--fg) 16%,transparent);--shadow:0 12px 40px rgba(0,0,0,.28)}.dc .dcs{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;margin:8px -4px 0;padding-bottom:6px;max-width:100%}
+.dc svg{display:block}
+.dc svg text{font-family:inherit;font-variant-numeric:tabular-nums}
+.dc .bd{fill:var(--ac-soft)}
+.dc .ax{stroke:var(--line);stroke-width:1}
+.dc path{fill:none;stroke-linejoin:round;stroke-linecap:round}
+.dc path.ly{stroke:var(--ly);stroke-width:2}
+.dc circle.ly{fill:var(--ly)}
+.dc path.ty{stroke:var(--ac);stroke-width:3}
+.dc circle.ty{fill:var(--ac)}
+.dc text.v{font-size:11px;paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
+.dc text.v.ly{fill:var(--muted);opacity:.75}
+.dc text.v.ty{fill:var(--fg);font-weight:700;font-size:12px}
+.dc text.g{font-size:11px;font-weight:600}
+.dc text.gu{fill:var(--good)}.dc text.gd{fill:var(--bad)}
+.dc text.dt{font-size:11px;fill:var(--muted)}
+.dc text.sun{fill:var(--bad)}.dc text.sat{fill:var(--ac)}
+.sw.lyl{background:var(--ly)}
+.dc .lym{margin-left:8px}
+.dc .lym b{color:var(--fg);font-weight:600}
+
+/* ── 앱 틀: 헤더 고정 + 본문 안쪽 스크롤 (카카오톡 미리보기에서도 헤더 고정) ── */
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg)}
+.app{display:grid;grid-template-rows:auto minmax(0,1fr);height:100%}
+.hdr{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"menu title seg set";align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--tabbg);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+.hdr .menu{grid-area:menu}.hdr .ttl{grid-area:title;min-width:0}.hdr .seg{grid-area:seg;margin:0;min-width:220px}.hdr .set{grid-area:set}
+.ttl b{display:block;font-size:17px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer;transition:background .2s,border-color .2s,transform .12s}
+.ib svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ib:active{transform:scale(.94)}
+.seg button{font:inherit;border:0;cursor:pointer;flex:1;padding:6px 0;border-radius:9999px;font-size:14px;font-weight:600;color:var(--muted);background:none;transition:background .2s,color .2s}
+.seg button[aria-pressed=true]{background:var(--panel);color:var(--ac);box-shadow:0 0 0 1px var(--line)}
+.seg[hidden]{display:none}
+.body{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:0}
+#nav{overflow-y:auto;border-right:1px solid var(--line);padding:16px 12px 40px;background:var(--bg)}
+#scroller{overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#main{max-width:1240px;margin:0 auto;padding:6px max(16px,env(safe-area-inset-right,0px)) calc(110px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.hd{padding:14px 2px 2px}
+/* 사이드바 */
+.nl{margin:14px 8px 6px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.nl:first-child{margin-top:0}
+.nv,.toc{list-style:none;margin:0;padding:0}
+.nv>li>button{display:block;width:100%;text-align:left;font:inherit;font-size:15px;font-weight:600;color:var(--fg);background:none;border:0;border-radius:10px;padding:9px 10px;cursor:pointer;transition:background .2s,color .2s}
+.nv>li>button[aria-current=page]{background:var(--ac);color:var(--on-ac)}
+.toc{margin:4px 0 8px 10px;border-left:2px solid var(--line)}
+.toc a{display:block;padding:6px 10px;font-size:13px;color:var(--muted);text-decoration:none;border-radius:0 8px 8px 0;margin-left:-2px;border-left:2px solid transparent;transition:background .2s,color .2s,border-color .2s}
+.toc a.on{color:var(--ac);border-left-color:var(--ac);font-weight:600}
+/* 상단 카테고리 아이콘 */
+.app.has-cats .hdr{grid-template-columns:auto minmax(0,1fr) auto auto auto;grid-template-areas:"menu title cats seg set"}
+.cats{grid-area:cats;display:flex;gap:4px;min-width:0}
+.cats[hidden],.cats button[hidden]{display:none}
+.cats button{display:grid;justify-items:center;gap:2px;min-width:52px;padding:5px 6px 4px;font:inherit;font-size:11px;font-weight:600;color:var(--muted);background:none;border:1px solid transparent;border-radius:12px;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.cats svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cats button[aria-pressed=true]{color:var(--ac);background:var(--ac-soft);border-color:color-mix(in srgb,var(--ac) 40%,transparent)}
+@media (hover:hover){.cats button:not([aria-pressed=true]):hover{color:var(--fg);background:var(--hov)}}
+@media (max-width:1279px){.app.has-cats .hdr{grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"menu title seg set" "cats cats cats cats"}.cats{justify-content:space-between;overflow-x:auto}.cats button{flex:1}}
+@media (max-width:640px){.app.has-cats .hdr{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"menu title set" "cats cats cats" "seg seg seg"}.cats button{min-width:44px;padding:4px 2px}.cats svg{width:20px;height:20px}}
+.ht.pgg{min-width:300px}
+@media (max-width:600px){.ht.pgg th,.ht.pgg td{padding:6px 1px;font-size:11px}.ht.pgg col.c0{width:4.6em}}
+.pend{padding:10px 12px;border-radius:10px;background:var(--seg);margin-top:4px}
+/* 사이드바 점포별 실적 */
+.ns{margin:0;padding:9px 10px 4px;font-size:15px;font-weight:700}
+.nl small{font-weight:500;letter-spacing:0;margin-left:4px}
+.ng{margin:0 0 2px}
+.ng summary{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;transition:background .2s}
+.ng summary::-webkit-details-marker{display:none}
+.ng summary::before{content:"";width:6px;height:6px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .2s;flex:none}
+.ng[open] summary::before{transform:rotate(45deg)}
+.ng summary span{flex:1}.ng summary small{color:var(--muted);font-weight:500}.ng summary b{font-size:12px}
+.sl{list-style:none;margin:0 0 6px;padding:0 0 0 14px}
+.sl button{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;font:inherit;font-size:14px;color:var(--fg);background:none;border:0;border-radius:9px;padding:7px 10px;cursor:pointer;text-align:left;transition:background .2s,color .2s}
+.sl button b{font-size:12px;font-weight:600}
+.sl button[aria-current=page]{background:var(--ac-soft);color:var(--ac);font-weight:700}
+@media (hover:hover){.ng summary:hover,.sl button:not([aria-current=page]):hover{background:var(--hov)}.sl button:hover span{color:var(--ac)}}
+.seg3:has(> :nth-child(4)) .rb span{font-size:13px}
+/* 섹션 줄: PC 50:50, 좁으면 세로 */
+.row{display:grid;gap:14px;margin-top:14px;grid-template-columns:minmax(0,1fr)}
+.panel.bare{background:none;border:0;padding:0}
+@media (min-width:1100px){.row.split{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}}
+.gbi h4{margin:0 0 4px;font-size:16px}.gbi h4+ul{margin-bottom:18px}.gbi ul:last-child{margin-bottom:0}
+/* 스크롤 리빌 (처음부터 보이는 상태에서 살짝 올라옴) */
+.row.rv{opacity:.35;transform:translateY(18px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+.row.rv.in{opacity:1;transform:none}
+/* 차례 등장 (stagger 0.1초) — 리빌 전 줄은 기다렸다가 들어올 때 시작 */
+.stg>*{animation:up .42s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0) * .1s)}
+.row.rv:not(.in) .stg>*{animation:none}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* 일별 그래프 날짜 팝업 */
+.dcw{position:relative}
+.h3s{font-size:12px;font-weight:500;color:var(--muted);margin-left:6px}
+/* 일별 그래프: 왼쪽 → 오른쪽으로 서서히 그려짐 (리빌 전 줄은 들어올 때 시작) */
+.dc svg{animation:wipe 1.4s cubic-bezier(.4,.1,.2,1) .1s both}
+.row.rv:not(.in) .dc svg{animation:none;clip-path:inset(0 100% 0 0)}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0);opacity:.2}to{clip-path:inset(0 0 0 0);opacity:1}}
+.dc svg.tight text.v,.dc svg.tight text.g,.dc svg.tight text.dt{font-size:9.5px;letter-spacing:-.03em}.dc svg.tight text.v.ty{font-size:10.5px}
+.dc rect.hit{fill:transparent;cursor:pointer;outline:none}
+.dc rect.hit.on,.dc rect.hit:focus-visible{fill:color-mix(in srgb,var(--ac) 12%,transparent)}
+.tiph{margin-left:auto;font-size:11px;color:var(--muted)}
+.tip{position:absolute;top:8px;z-index:5;width:196px;padding:10px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);pointer-events:none;animation:up .2s ease both}
+.tip .tt{margin:0 0 6px;font-weight:700;font-size:13px}.tip .tt small{display:block;font-weight:500;color:var(--muted);font-size:11px}
+.tip ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.tip li{display:grid;grid-template-columns:2.6em 1fr auto;gap:6px;align-items:baseline;font-size:13px}
+.tip li b{text-align:right}.tip li em.pendt{grid-column:2/4}.tip li em{font-style:normal;color:var(--muted);font-size:11px;text-align:right;min-width:4.5em}
+/* KPI 팝업 */
+.kpi[data-kpi]{cursor:pointer;transition:border-color .2s,background .2s}
+.kpi.on{border-color:var(--ac)}
+@media (hover:hover){.kpi[data-kpi]:hover{border-color:var(--ac)}}
+#kpop{position:fixed;z-index:45;width:min(320px,calc(100vw - 16px));max-height:min(60vh,520px);overflow-y:auto;padding:12px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);pointer-events:none;animation:up .2s ease both}
+#kpop .kt{margin:0 0 8px;font-weight:700;font-size:14px}#kpop .kt small{display:block;font-weight:500;color:var(--muted);font-size:11px}
+#kpop ul{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+#kpop li{display:grid;grid-template-columns:minmax(0,1fr) auto 4.6em;gap:8px;align-items:baseline;font-size:13px}
+#kpop li em{font-style:normal;color:var(--muted);font-size:12px;text-align:right}#kpop li b{text-align:right;font-size:12.5px}
+#kpop li.cd{font-weight:700;margin-top:5px;padding-top:5px;border-top:1px solid var(--line)}#kpop li.cd:first-child{margin-top:0;padding-top:0;border-top:0}
+#kpop li.pg span{padding-left:12px;color:var(--muted)}
+#kpop .kn{margin:8px 0 0;font-size:11px;color:var(--muted);word-break:keep-all}
+/* JS 없이 열렸을 때 (미리보기 앱) */
+.nojs-note{display:none}
+.nojs .nojs-note{display:grid;gap:4px;margin:14px 0 0;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--ac) 14%,var(--panel));border:1px solid color-mix(in srgb,var(--ac) 40%,transparent);font-size:13px;word-break:keep-all}
+.nojs .nojs-note span{color:var(--muted)}
+.nojs .hdr .menu,.nojs .hdr .set,.nojs .hdr .seg,.nojs #nav,.nojs .cats,.nojs .tiph{display:none}
+.nojs .hdr{grid-template-columns:minmax(0,1fr);grid-template-areas:"title"}
+.nojs .body{grid-template-columns:minmax(0,1fr)}
+.nojs .dc svg,.nojs .tip{animation:none!important;clip-path:none!important;opacity:1!important}
+/* 스켈레톤 */
+.skel{display:grid;gap:10px;padding:4px 0}
+.sk{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,var(--sk) 0%,var(--sk2) 50%,var(--sk) 100%);background-size:200% 100%;animation:sh 1.3s linear infinite}
+.sk.blk{height:120px;border-radius:18px}.sk.ttl2{height:26px;width:40%}.sk.kp{height:96px;border-radius:18px}
+.skg{display:grid;gap:10px;grid-template-columns:repeat(4,minmax(0,1fr))}
+@keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
+/* 오버레이·drawer·토스트 */
+#scrim{position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.45);opacity:0;transition:opacity .2s}
+#scrim.on{opacity:1}
+#drawer{position:fixed;top:0;right:0;bottom:0;z-index:50;width:min(420px,100vw);display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:var(--panel);border-left:1px solid var(--line);box-shadow:var(--shadow);transform:translateX(100%);transition:transform .22s cubic-bezier(.2,.7,.2,1);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#drawer.on{transform:none}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+.dh h2{margin:0;font-size:18px}
+.db{overflow-y:auto;padding:6px 16px 16px;padding-right:max(16px,env(safe-area-inset-right,0px))}
+.df{display:flex;gap:8px;padding:12px 16px;padding-right:max(16px,env(safe-area-inset-right,0px));border-top:1px solid var(--line)}
+.fs{border:0;margin:0;padding:14px 0;border-bottom:1px solid var(--line)}
+.fs legend{font-weight:700;font-size:15px;padding:0;margin-bottom:8px}
+.fs legend small{font-weight:500;color:var(--muted);margin-left:6px;font-size:12px}
+.hint{margin:0 0 8px;color:var(--muted);font-size:12px;word-break:keep-all}
+.cg{margin:10px 0 6px;font-size:12px;font-weight:700;color:var(--muted)}
+.seg3{display:flex;padding:3px;border-radius:9999px;background:var(--seg)}
+.rb{flex:1;position:relative}
+.rb input,.chip input{position:absolute;opacity:0;pointer-events:none}
+.rb span{display:block;text-align:center;padding:7px 4px;border-radius:9999px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;transition:background .2s,color .2s}
+.rb input:checked+span{background:var(--panel);color:var(--ac);box-shadow:0 0 0 1px var(--line)}
+.rb input:focus-visible+span,.chip input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip span{display:inline-block;padding:6px 11px;border-radius:9999px;border:1px solid var(--line);font-size:13px;cursor:pointer;color:var(--fg);background:var(--bg);transition:background .2s,border-color .2s,color .2s}
+.chip input:checked+span{background:var(--ac);border-color:var(--ac);color:var(--on-ac)}
+.sel{width:100%;appearance:none;-webkit-appearance:none;font:inherit;font-size:15px;font-weight:600;color:var(--fg);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23999' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center;border:1px solid var(--line);border-radius:12px;padding:10px 36px 10px 12px;cursor:pointer;transition:border-color .2s,background-color .2s}
+.lnk{margin-top:10px;font:inherit;font-size:13px;color:var(--ac);background:none;border:0;padding:4px 0;cursor:pointer}
+.btn{flex:1;font:inherit;font-size:15px;font-weight:700;padding:11px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;transition:background .2s,filter .2s,transform .12s}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--on-ac)}
+.btn:active{transform:scale(.97)}
+.btn.warn{width:100%;flex:none;color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.btn.warn.armed{background:var(--bad);color:#fff;border-color:var(--bad)}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:60;transform:translate(-50%,12px);opacity:0;transition:opacity .25s,transform .25s;background:var(--fg);color:var(--bg);font-weight:600;font-size:14px;padding:11px 18px;border-radius:12px;box-shadow:var(--shadow);max-width:calc(100vw - 32px);word-break:keep-all;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.who{list-style:none;margin:0;padding:0}
+.who .wid{display:block;color:var(--muted);font-size:11.5px}
+.who li{display:flex;justify-content:space-between;padding:8px 2px;border-bottom:1px dashed var(--line)}
+.gt tr.on th,.gt tr.on td{background:var(--ac-soft)}
+.lim{margin-top:14px}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+/* 마우스 올렸을 때 (마우스가 있는 기기만) */
+@media (hover:hover){
+.ib:hover{background:var(--hov);border-color:var(--ac)}
+.seg button:not([aria-pressed=true]):hover{color:var(--fg);background:var(--hov)}
+.nv>li>button:not([aria-current=page]):hover{background:var(--hov);color:var(--ac)}
+.toc a:hover{background:var(--hov);color:var(--fg)}
+.rb input:not(:checked)+span:hover{color:var(--fg);background:var(--hov)}
+.chip input:not(:checked)+span:hover{border-color:var(--ac);background:var(--hov)}
+.sel:hover{border-color:var(--ac)}
+.btn:hover{background:var(--hov)}.btn.pri:hover{filter:brightness(1.08);background:var(--ac)}.btn.warn:not(.armed):hover{background:color-mix(in srgb,var(--bad) 10%,transparent)}
+.lnk:hover{text-decoration:underline}
+.pick:hover th,.pick:hover td{background:var(--hov)}
+.pick:hover th{color:var(--ac)}
+.sb:hover .sbh span{color:var(--ac)}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.row.rv{opacity:1;transform:none}}
+/* 태블릿·모바일: 사이드바는 왼쪽 팝업, 헤더 두 줄 */
+@media (max-width:1023px){
+.body{grid-template-columns:minmax(0,1fr)}
+#nav{position:fixed;top:0;bottom:0;left:0;z-index:40;width:min(300px,84vw);border-right:1px solid var(--line);box-shadow:var(--shadow);transform:translateX(-102%);transition:transform .22s cubic-bezier(.2,.7,.2,1);padding-top:calc(16px + env(safe-area-inset-top,0px));padding-left:max(12px,env(safe-area-inset-left,0px))}
+body.nav-open #nav{transform:none}
+}
+@media (min-width:1024px){.hdr .menu{display:none}}
+@media (max-width:640px){
+.hdr{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"menu title set" "seg seg seg";row-gap:8px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
+.hdr .seg{min-width:0}
+.skg{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* 표·배지 (이전 리포트 규칙 유지) */
+.kb{margin:6px 0 0;display:flex;gap:6px;flex-wrap:wrap}
+.badge{display:inline-flex;flex-direction:column;align-items:center;line-height:1.25;border-radius:10px;padding:3px 9px;text-align:center;flex-shrink:0;white-space:nowrap}
+.badge.n{background:var(--seg);color:var(--muted)}
+@media (max-width:600px){.kpi{padding:12px}.kb{gap:4px}.kb .badge{font-size:10px;padding:3px 5px;letter-spacing:-.04em;flex:1 1 calc(50% - 4px);min-width:0}.gt th,.gt td{padding:6px 2px}.gt thead th:first-child{text-align:left}}
+.dt col.c0{width:24%}.dt col.cr{width:15%}
+.dt tbody td:last-child{text-align:center}
+.ht col.c0{width:7.5em}
+.hall col.c0{width:6.4em}
+.hall th,.hall td{padding:6px 2px}
+.hx{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.pick{cursor:pointer}
+.pick th,.pick td,.sb .sbh span,.lnk{transition:background-color .2s,color .2s}
+.pv .me{color:var(--fg);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.gt,.rt{border-collapse:collapse;font-size:13px;width:100%;white-space:nowrap}
+.gt th,.gt td,.rt th,.rt td{padding:7px 6px;text-align:right}
+.gt thead th,.rt thead th{font-size:12px;font-weight:600;color:var(--muted);border-bottom:1.5px solid var(--fg)}
+.gt tbody th,.rt tbody th{text-align:left;font-weight:600}
+.gt tbody tr+tr th,.gt tbody tr+tr td,.rt tbody tr+tr th,.rt tbody tr+tr td{border-top:1px dashed var(--line)}
+.gt tbody th small{display:block;font-weight:400;font-size:10.5px;color:var(--muted)}
+.gt tr.tot th,.gt tr.tot td{background:var(--ac-soft);font-weight:700}
+.rt td:nth-child(4){text-align:center}
+.rt tr.gh th{background:var(--ac-soft);font-size:13px;padding-top:9px}
+.rt tr.gh th span{margin-left:6px}
+@media (max-width:600px){.gt{table-layout:auto;letter-spacing:-.03em}.gt thead th{white-space:normal;word-break:keep-all}.gt,.rt{font-size:12px}.gt th,.gt td,.rt th,.rt td{padding:6px 3px}.gt thead th,.rt thead th{font-size:10.5px;white-space:normal;word-break:keep-all;vertical-align:bottom}.hall{font-size:11px}}
+@media (max-width:600px){.hs{overflow-x:visible;margin:0}.st{min-width:0;width:100%;table-layout:auto;white-space:normal;font-size:11px;letter-spacing:-.03em}.st th,.st td{padding:7px 2px}.st thead th:nth-child(5),.st tbody tr>*:nth-child(5),.st tfoot tr>*:nth-child(5){display:none}.st td{white-space:nowrap}.st tbody th,.st tfoot th{word-break:keep-all;overflow-wrap:anywhere;font-size:12px}.st thead th{font-size:10.5px;line-height:1.25;vertical-align:bottom;word-break:keep-all;white-space:normal}.st tr.pg th{padding-left:8px}.st .rkb{min-width:0;padding:1px 5px;font-size:10.5px}}
+
+/* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
+html:not([data-view=report]) .app,html:not([data-view=report]) #drawer,html:not([data-view=report]) #scrim,html:not([data-view=report]) #kpop{display:none!important}
+html:not([data-view=report]) body{background:#f4f5f7}
+#gate,#portal{--pb:#f4f5f7;--ps:#fff;--pl:#e5e7eb;--pt:#111827;--pm:#6b7280;--pr:#c41e28;--prw:#fdecee;--pg:#0f8a4f;--pw:#b45309;position:fixed;inset:0;z-index:60;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--pb);color:var(--pt);font-family:var(--font);font-size:15px;line-height:1.5;color-scheme:light}
+#gate[hidden],#portal[hidden],#npop[hidden]{display:none}
+#gate svg,#portal svg,#npop svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.gw{min-height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:48px;align-items:center;max-width:980px;margin:0 auto;padding:40px max(24px,env(safe-area-inset-left,0px))}
+.gw.one{grid-template-columns:minmax(0,420px);justify-content:center}
+.glogo{display:block;width:min(280px,70%);height:auto;margin-bottom:22px}.glogo.txt{font-size:34px;font-weight:800;color:var(--pr);letter-spacing:-.5px}
+.gbrand h1{margin:0;font-size:32px;letter-spacing:-.6px}.gsub{margin:4px 0 28px;color:var(--pm);font-size:16px}
+.gsteps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.gsteps li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--ps);border:1px solid var(--pl);border-radius:14px;opacity:0;animation:pin .4s ease forwards}
+.gsteps li:nth-child(2){animation-delay:.1s}.gsteps li:nth-child(3){animation-delay:.2s}
+.gsteps i{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--prw);color:var(--pr);font-style:normal;font-weight:700;font-size:13px}
+.gsteps b{display:block;font-size:14px}.gsteps span{color:var(--pm);font-size:13px}
+.gcard{display:grid;gap:12px;padding:26px 24px;border-radius:20px;background:var(--ps);border:1px solid var(--pl);box-shadow:0 10px 30px rgba(17,24,39,.06);color:var(--pt);font-family:var(--font)}
+.gcard h2{margin:0;font-size:21px}.gh{margin:-6px 0 2px;color:var(--pm);font-size:13px;word-break:keep-all}
+.gcard label{display:grid;gap:5px;font-size:13px;font-weight:600}.gcard label small{font-weight:400;color:var(--pm)}
+.gcard input{font:inherit;font-size:16px;padding:12px 13px;border-radius:12px;border:1px solid var(--pl);background:#fff;color:var(--pt);transition:border-color .2s,box-shadow .2s}
+.gcard input:focus{outline:none;border-color:var(--pr);box-shadow:0 0 0 3px var(--prw)}
+.gb{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;font:inherit;font-size:14px;font-weight:600;padding:12px;border-radius:12px;border:1px solid var(--pl);background:#fff;color:var(--pt);cursor:pointer;text-decoration:none;text-align:center;transition:background-color .2s,border-color .2s,transform .2s}
+.gb.pri{background:var(--pr);border-color:var(--pr);color:#fff;font-size:15px;margin-top:4px}.gb:disabled{opacity:.6;cursor:default}
+.gl2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gl2 .gb{font-size:13px;padding:10px 8px;word-break:keep-all}
+.gl{margin:0}.gl a{display:inline-flex;align-items:center;gap:2px;color:var(--pm);text-decoration:none;font-size:13px}.gl svg{width:16px;height:16px}
+.gf{margin:4px 0 0;padding:12px 14px;border-radius:12px;background:var(--pb);color:var(--pm);font-size:13px;word-break:keep-all}.gf b{color:var(--pt);display:block;margin-bottom:2px}
+.gm{margin:0;padding:10px 12px;border-radius:10px;font-size:13px;word-break:keep-all}.gm.err{background:var(--prw);color:var(--pr)}.gm.ok{background:#e8f6ee;color:var(--pg)}
+@keyframes pin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (max-width:820px){.gw{display:flex;flex-direction:column;gap:0;padding:28px 16px 40px;align-items:stretch}.gbrand{display:contents}.glogo{order:1;width:min(200px,58%);margin-bottom:14px}.gbrand>h1{order:2;font-size:24px}.gsub{order:3;margin:2px 0 18px;font-size:14px}.gw .gcard{order:4;padding:22px 18px}.gsteps{order:5;margin-top:18px}}
+@media (hover:hover){.gb:hover{border-color:var(--pr)}.gb.pri:hover{background:#a8161f}.gl a:hover{color:var(--pr)}.gcard input:hover{border-color:#c9cdd4}}
+/* 포털 */
+.ptop{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px));background:rgba(255,255,255,.88);-webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--pl)}
+.pbrand{display:flex;align-items:center;gap:10px;min-width:0;color:var(--pt);text-decoration:none;font-weight:700;font-size:15px}.pbrand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plogo{height:18px;width:auto;flex:none}.plogo.txt{height:auto;font-size:16px;color:var(--pr)}
+.pme{display:flex;align-items:center;gap:8px;flex:none;font-size:13px;color:var(--pm)}
+.pmain{max-width:960px;margin:0 auto;padding:22px max(16px,env(safe-area-inset-left,0px)) 48px;display:grid;gap:22px}
+.phello h1{margin:0;font-size:24px;letter-spacing:-.4px}.phello p{margin:2px 0 0;color:var(--pm);font-size:14px}
+.psec{margin:0 0 10px;font-size:15px;color:var(--pm);font-weight:600}
+.pnote{background:var(--ps);border:1px solid var(--pl);border-radius:16px;padding:14px 16px}
+.phead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.phead h2{margin:0;font-size:16px}.phead a{color:var(--pm);font-size:13px;text-decoration:none}
+.pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pcard{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:132px;padding:16px;border-radius:16px;border:1px solid var(--pl);background:var(--ps);color:var(--pt);font:inherit;text-align:left;cursor:pointer;opacity:0;animation:pin .4s ease forwards;animation-delay:calc(var(--i)*.06s);transition:border-color .2s,box-shadow .2s,transform .2s}
+.pcard b{font-size:16px;margin-top:auto}.pcard small{color:var(--pm);font-size:12px;word-break:keep-all}
+.pic{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--prw);color:var(--pr)}#portal .pic svg{width:22px;height:22px}
+.pcard.soon{background:#fafafa;border-style:dashed}.pcard.soon .pic{background:#eef0f3;color:#9ca3af}.pcard.soon b{color:#6b7280}
+.ptag{position:absolute;top:14px;right:14px;font-style:normal;font-size:11px;font-weight:600;color:#6b7280;background:#eef0f3;border-radius:999px;padding:2px 8px}
+.pbadge{position:absolute;top:14px;right:14px;font-style:normal;font-size:12px;font-weight:700;color:#fff;background:var(--pr);border-radius:999px;padding:2px 8px}
+.pbtn{font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;border:1px solid var(--pl);background:#fff;color:var(--pt);cursor:pointer;white-space:nowrap;transition:background-color .2s,border-color .2s}
+.pbtn.pri{background:var(--pr);border-color:var(--pr);color:#fff}.pbtn.ghost{background:transparent}.pbtn.danger{color:var(--pr)}.pbtn:disabled{opacity:.55;cursor:default}
+.psub{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.psub h1{margin:0;font-size:22px;flex:1;letter-spacing:-.3px}
+.pback{display:inline-flex;align-items:center;color:var(--pm);text-decoration:none;font-size:14px;padding:6px 8px 6px 2px;border-radius:8px}
+.nlist{list-style:none;margin:0;padding:0;display:grid}
+.nlist.mini a{display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--pl);color:var(--pt);text-decoration:none}.nlist.mini li:first-child a{border-top:0}
+.nt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.nlist time{flex:none;color:var(--pm);font-size:12px}
+.tag{flex:none;font-style:normal;font-size:11px;font-weight:700;color:var(--pr);background:var(--prw);border-radius:6px;padding:1px 6px}
+.nbad{flex:none;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--pr);color:#fff;font-style:normal;font-size:10px;font-weight:800}
+.nlist:not(.mini){background:var(--ps);border:1px solid var(--pl);border-radius:16px;overflow:hidden}
+.nlist:not(.mini) li+li{border-top:1px solid var(--pl)}
+.nrow{display:flex;align-items:center;gap:8px;width:100%;padding:14px 16px;border:0;background:transparent;font:inherit;color:var(--pt);text-align:left;cursor:pointer;transition:background-color .2s}
+.nlist li.open .nrow{background:#fafbfc}.nlist li.open .nt{white-space:normal;font-weight:700}
+.nbody{padding:4px 16px 16px;background:#fafbfc}.nbody>p:first-child{margin:0 0 10px;white-space:pre-wrap;word-break:break-word;font-size:14px}
+.nmeta{margin:0;color:var(--pm);font-size:12px}
+.prow{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.prow.end{margin-top:10px}
+.pform{display:grid;gap:12px;background:var(--ps);border:1px solid var(--pl);border-radius:16px;padding:16px}
+.pform h3{margin:0;font-size:16px}.pform label{display:grid;gap:5px;font-size:13px;font-weight:600}
+.pform input:not([type=checkbox]),.pform textarea{font:inherit;font-size:15px;padding:10px 12px;border-radius:10px;border:1px solid var(--pl);background:#fff;color:var(--pt);resize:vertical}
+.pform input:focus,.pform textarea:focus{outline:none;border-color:var(--pr);box-shadow:0 0 0 3px var(--prw)}
+.pchk{display:flex;gap:18px;flex-wrap:wrap}.pchk label{display:flex;align-items:center;gap:6px;font-weight:500;font-size:14px;cursor:pointer}.pchk input{width:18px;height:18px;accent-color:var(--pr)}
+.phint{margin:0;color:var(--pm);font-size:12px;word-break:keep-all}
+.pempty{margin:0;padding:18px;text-align:center;color:var(--pm);font-size:14px;background:var(--ps);border:1px dashed var(--pl);border-radius:14px}.pempty.err{color:var(--pr)}
+.pnote .pempty{border:0;padding:12px 0}
+.pskel{height:44px;border-radius:12px;margin:6px 0;background:linear-gradient(90deg,#eef0f3 25%,#f6f7f9 50%,#eef0f3 75%);background-size:200% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{from{background-position:200% 0}to{background-position:-200% 0}}
+.pseg{display:flex;gap:6px;flex-wrap:wrap}.pseg button{font:inherit;font-size:13px;font-weight:600;padding:7px 12px;border-radius:999px;border:1px solid var(--pl);background:#fff;color:var(--pm);cursor:pointer;transition:all .2s}.pseg button[aria-pressed=true]{background:var(--pt);border-color:var(--pt);color:#fff}
+.ulist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ulist li{background:var(--ps);border:1px solid var(--pl);border-radius:14px;padding:14px 16px}
+.uh{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.uh b{font-size:15px}.uh small{color:var(--pm);font-weight:500}
+.ust{flex:none;font-style:normal;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px}.ust.sok{background:#e8f6ee;color:var(--pg)}.ust.sno{background:#f1f2f4;color:#6b7280}.ust.swait{background:#fff4e5;color:var(--pw)}
+.ue{margin:2px 0 0;font-size:13px;color:var(--pm);word-break:break-all}.um{margin:6px 0 0;font-size:13px;padding:8px 10px;border-radius:8px;background:var(--pb)}.ud{margin:6px 0 0;font-size:12px;color:var(--pm)}
+@media (hover:hover){.pcard:hover{border-color:var(--pr);box-shadow:0 8px 22px rgba(196,30,40,.10);transform:translateY(-2px)}.pcard.soon:hover{border-color:#c9cdd4;box-shadow:none;transform:none}.pbtn:hover{border-color:var(--pr)}.pbtn.pri:hover{background:#a8161f}.nrow:hover{background:#fafbfc}.phead a:hover,.pback:hover{color:var(--pr)}.nlist.mini a:hover .nt{color:var(--pr)}}
+@media (max-width:820px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pcard{min-height:118px;padding:14px}.pbrand span{display:none}.pmain{padding-top:18px}.nlist:not(.mini) time{display:none}.nlist li.open time{display:none}}
+/* 공지 팝업 */
+#npop{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:rgba(17,24,39,.45);animation:fade .2s ease}
+.pmod{width:min(460px,100%);max-height:min(80vh,640px);display:flex;flex-direction:column;gap:8px;padding:20px;border-radius:18px;background:#fff;color:#111827;font-family:var(--font);box-shadow:0 24px 60px rgba(0,0,0,.25);animation:pin .25s ease}
+.pmh{display:flex;justify-content:space-between;align-items:center;color:#6b7280;font-size:12px}.pmod .tag{color:#c41e28;background:#fdecee}
+.pmod h2{margin:0;font-size:19px;letter-spacing:-.3px}.pmod time{color:#6b7280;font-size:12px}
+.pmb{overflow-y:auto;white-space:pre-wrap;word-break:break-word;font-size:14px;padding:10px 0 4px;border-top:1px solid #e5e7eb;margin-top:4px}
+.pmod .prow{margin-top:6px}.pmod .pbtn{font-size:14px;padding:10px 16px;border:1px solid #e5e7eb;background:#fff;color:#111827}.pmod .pbtn.pri{background:#c41e28;border-color:#c41e28;color:#fff}.pmod .pbtn.ghost{background:transparent}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+#ptoast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:90;transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:11px 18px;border-radius:12px;background:#111827;color:#fff;font-family:var(--font);font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.2);transition:opacity .2s,transform .2s}
+#ptoast.on{opacity:1;transform:translate(-50%,0)}#ptoast.bad{background:#c41e28}
+@media (prefers-reduced-motion:reduce){.gsteps li,.pcard{animation:none;opacity:1}}
+</style></head><body><div class="app">
+<header class="hdr">
+<button type="button" class="ib menu" id="menuBtn" aria-label="메뉴 열기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<div class="ttl"><b id="htitle">킴스 매출 리포트</b><span id="hdate"></span></div>
+<nav class="cats" id="catbar" aria-label="카테고리" hidden><button type="button" data-t="store" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.6-5h14.8L21 9M3 9h18M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0M5 12v8h14v-8M10 20v-5h4v5"/></svg><span>점포</span></button><button type="button" data-t="nongsan" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.5c-1.6-1.1-3.7-1.3-5.2 0-2.1 1.7-2.4 5-1.2 7.9 1.1 2.9 3.3 5.4 5.3 4.9.4-.1.7-.3 1.1-.3s.7.2 1.1.3c2 .5 4.2-2 5.3-4.9 1.2-2.9.9-6.2-1.2-7.9-1.5-1.3-3.6-1.1-5.2 0zM12 7.5c0-1.9.5-3.3 1.6-4.2"/><path d="M12.8 5.6c1.3-1.6 3.4-2 4.7-1.4-.4 1.8-2.5 2.7-4.7 1.4z"/></svg><span>농산</span></button><button type="button" data-t="susan" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7l4 5-4 5M6 12c3-4 7-6 10-6 3 0 5 3 6 6-1 3-3 6-6 6-3 0-7-2-10-6z"/><circle cx="17" cy="11" r=".9"/></svg><span>수산</span></button><button type="button" data-t="chuksan" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3.5a5.5 5.5 0 015.5 5.5c0 4-4.5 6.5-7.5 6.5l-4 4a2 2 0 11-2.8-2.8 2 2 0 11-1.2-3.4l4-4C9 6 11 3.5 15 3.5z"/></svg><span>축산</span></button><button type="button" data-t="gongsan" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/></svg><span>공산</span></button><button type="button" data-t="living" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11V8a2 2 0 012-2h10a2 2 0 012 2v3M3 13a2 2 0 014 0v2h10v-2a2 2 0 014 0v5H3zM6 18v2M18 18v2"/></svg><span>리빙</span></button><button type="button" data-t="deli" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11h18a9 9 0 01-18 0zM8 3.5c0 1.5 1 1.5 1 3M12 3c0 1.5 1 1.5 1 3M16 3.5c0 1.5 1 1.5 1 3"/></svg><span>델리</span></button></nav>
+<nav class="seg" aria-label="기간"><button type="button" data-k="M">월간</button><button type="button" data-k="W">주간</button><button type="button" data-k="D">전일</button></nav>
+<button type="button" class="ib set" id="setBtn" aria-label="설정 열기"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+</header>
+<div class="body"><nav id="nav" aria-label="리포트 메뉴"></nav><div id="scroller"><main id="main"><div class="skel" aria-busy="true" aria-label="불러오는 중" style="padding-top:18px"><span class="sk ttl2"></span><span class="sk" style="width:55%"></span><div class="skg"><span class="sk kp"></span><span class="sk kp"></span><span class="sk kp"></span><span class="sk kp"></span></div><span class="sk blk"></span><span class="sk blk"></span></div></main></div></div>
+</div>
+<div id="scrim" hidden></div>
+<aside id="drawer" role="dialog" aria-modal="true" aria-labelledby="dtitle" hidden></aside>
+<div id="kpop" role="tooltip" hidden></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<div id="gate" hidden></div><div id="portal" hidden></div><div id="npop" hidden></div>
+<script>document.documentElement.classList.remove('nojs');(function(){var s={};try{s=JSON.parse(localStorage.getItem('kims-report-settings')||'{}')||{}}catch(e){}var r=document.documentElement;r.setAttribute('data-mode',s.mode||'dark');if(s.scale&&s.scale!==100)r.style.zoom=s.scale/100;})();</script>
+<script>/* 킴스클럽 전점 데일리 매출 리포트 — 화면 계산·그리기 (브라우저 + node 검증 공용)
+   DATA 는 build.mjs 가 넣는다. 원인 추측 문장 없음: 모든 문장은 숫자 규칙으로 만든다. */
+var KIMS = (function () {
+  'use strict';
+  var D = null, CHART_W = 0; // 일별 그래프 그릴 폭(px, 화면에서 잼)
+  var WD = ['일', '월', '화', '수', '목', '금', '토'];
+  var PNAME = { M: '월간', W: '주간', D: '전일' };
+
+  // ── 표기 ──
+  var man = function (v) { return v == null ? '-' : Math.round(v / 1e4).toLocaleString('ko-KR'); };
+  var won = function (v) { return v == null ? '-' : Math.round(v).toLocaleString('ko-KR'); };
+  var pct = function (v) { return v == null ? '-' : (v >= 0 ? '+' : '−') + Math.abs(v * 100).toFixed(1) + '%'; };
+  var pp = function (v) { return v == null ? '-' : (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1) + '%p'; };
+  var sgn = function (n) { return n == null ? '-' : (n >= 0 ? '+' : '−') + Math.abs(n).toLocaleString('ko-KR'); };
+  var f1 = function (v) { return v == null ? '-' : v.toFixed(1); };
+  var man1 = function (v) { return v == null ? '-' : (v / 1e4).toFixed(1); };
+  var man1s = function (v) { return v == null ? '-' : (v >= 0 ? '+' : '−') + Math.abs(v / 1e4).toFixed(1); };
+  var cls = function (v) { return v == null ? '' : v >= 0 ? 'up' : 'dn'; };
+  var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+  var cleanName = function (s) { return String(s).replace(/[★▲♣◆♥]/g, '').trim(); };
+
+  // ── 점포·그룹 ──
+  var NAME = {}, GRP = {}, GNAME = {}, GSTORES = {};
+  function setup(data) {
+    D = data;
+    D.stores.forEach(function (s) { NAME[s[0]] = s[1]; GRP[s[0]] = s[2]; });
+    D.groups.forEach(function (g) { GNAME[g[0]] = g[1]; GSTORES[g[0]] = g[2]; });
+  }
+  var ALL = function () { return D.stores.map(function (s) { return s[0]; }); };                       // 킴스 합계(영업중단 포함)
+  var OPEN = function () { return D.stores.filter(function (s) { return s[2] !== D.closed; }).map(function (s) { return s[0]; }); };
+  var openOf = function (g) { return g === D.closed ? [] : GSTORES[g]; };
+
+  // ── 지표 (점포 여러 개면 합산) ──
+  function metrics(k, plants, groups, posKey) {
+    var s = [0, 0, 0, 0, 0, 0], amtT = 0, cntT = 0, eveT = 0, amtL = 0, cntL = 0, eveL = 0, ar = [0, 0, 0, 0], hasArea = false, hasPos = false;
+    plants.forEach(function (p) {
+      var rows = (D.sales[k] || {})[p] || {};
+      groups.forEach(function (g) { (rows[g] || []).forEach(function (v, i) { s[i] += v; }); });
+      var ps = (((D.pos[k] || {})[p] || {})[posKey]) || {};
+      if (ps.T) { hasPos = true; amtT += ps.T[0]; cntT += ps.T[1]; eveT += ps.T[3]; }
+      if (ps.L) { hasPos = true; amtL += ps.L[0]; cntL += ps.L[1]; eveL += ps.L[3]; }
+      groups.forEach(function (g) { var v = (((D.area[k] || {})[p] || {})[g]); if (v) { hasArea = true; v.forEach(function (x, i) { ar[i] += x; }); } });
+    });
+    var gsT = s[0], gsL = s[1], gmT = s[4], gmL = s[5];
+    var div = function (a, b) { return b ? a / b : null; };
+    var gr = function (a, b) { return b ? a / b - 1 : null; };
+    var atv = div(amtT, cntT), atvL = div(amtL, cntL);
+    var py = hasArea && ar[2] ? ar[0] / ar[2] : null, pyL = hasArea && ar[3] ? ar[1] / ar[3] : null;
+    var mr = div(gmT * 100, gsT), mrL = div(gmL * 100, gsL);
+    return {
+      gsT: gsT, gsL: gsL, growth: gr(gsT, gsL),
+      mr: mr, mrL: mrL, mrD: mr != null && mrL != null ? mr - mrL : null,
+      py: py, pyL: pyL, pyG: py != null && pyL ? py / pyL - 1 : null,
+      amt: amtT, eve: hasPos ? eveT : null, eveL: hasPos ? eveL : null, eveG: hasPos && eveL ? eveT / eveL - 1 : null,
+      cnt: hasPos ? cntT : null, cntL: cntL, cntG: hasPos ? gr(cntT, cntL) : null, cntD: hasPos ? cntT - cntL : null,
+      atv: atv, atvL: atvL, atvG: atv != null && atvL ? atv / atvL - 1 : null, atvD: atv != null && atvL != null ? atv - atvL : null,
+    };
+  }
+  // 점포 범위 구매그룹 = CU 'D' 전체(설정에 없는 구매그룹 포함, 매출 0원이라도 평수가 있으면 포함)
+  function storeGroups(k) {
+    var set = {};
+    D.allGroups.forEach(function (g) { set[g] = 1; });
+    [D.sales[k], D.area[k]].forEach(function (src) { for (var p in src || {}) for (var g in src[p]) set[g] = 1; });
+    return Object.keys(set);
+  }
+  function unknownGroups(k) { return storeGroups(k).filter(function (g) { return D.allGroups.indexOf(g) < 0; }); }
+  // 범위(scope) = { codes, posKey } : 점포 전체 / CD / 구매그룹
+  function scopeStore(k) { return { codes: storeGroups(k), posKey: 'store' }; }
+  function scopeCat(id, k) {
+    var c = D.storeCats.filter(function (x) { return x[0] === id; })[0];
+    var codes = c[2].map(function (g) { return g[0]; });
+    if (id === 'etc') codes = codes.concat(unknownGroups(k));
+    return { codes: codes, posKey: id };
+  }
+  var scopePg = function (code) { return { codes: [code], posKey: code }; };
+  var M = function (k, plants, sc) { return metrics(k, plants, sc.codes, sc.posKey); };
+
+  // 순위: 값이 클수록 높은 순위, 동률 같은 순위, 값 없는 점포는 순위에서 뺀다 → {r, n}
+  function rankIn(k, plants, sc, key, me) {
+    var vals = plants.map(function (p) { return [p, M(k, [p], sc)[key]]; }).filter(function (x) { return x[1] != null && isFinite(x[1]); });
+    var mine = vals.filter(function (x) { return x[0] === me; })[0];
+    if (!mine) return { r: null, n: vals.length };
+    return { r: 1 + vals.filter(function (x) { return x[1] > mine[1]; }).length, n: vals.length };
+  }
+  var good = function (rk) { return rk.r != null && rk.r <= rk.n / 2; };
+  // ── 일별 그래프 (금년·전년 꺾은선, 날짜 위 성장율) ──
+  function dailyChart(me, cid, lym) {
+    var src = ((D.daily[me] || {})[cid]) || {};
+    if (!Object.keys(src).length) return '';
+    var map = D.mm, L = map.length, bd = Number(D.base.slice(8));
+    var wdi = function (s) { return new Date(s + 'T00:00:00Z').getUTCDay(); };
+    var md = function (s) { return Number(s.slice(5, 7)) + '/' + Number(s.slice(8)); };
+    var pts = map.map(function (r) {
+      var ty = r.d <= bd && src[r.ty] != null ? src[r.ty] : null, ly = r.ly && src[r.ly] != null ? src[r.ly] : null;
+      return { d: r.d, ty: r.ty, ly: r.ly, tyAmt: ty, lyAmt: ly, g: ty != null && ly ? ty / ly - 1 : null };
+    });
+    var COL = CHART_W ? Math.max(CHART_W >= 700 ? 30 : 40, Math.floor((CHART_W - 12) / L)) : 46, PL = 6, PR = 6, W = PL + L * COL + PR, x = function (d) { return PL + (d - 0.5) * COL; };
+    var TOP = 24, PH = 150, GY = TOP + PH + 34, DY = GY + 22, H = DY + 10;
+    var maxAmt = Math.max.apply(null, pts.map(function (p) { return Math.max(p.tyAmt || 0, p.lyAmt || 0); })) || 1;
+    var y = function (v) { return TOP + PH - (Math.max(v, 0) / maxAmt) * PH; };
+    var path = function (a) { return a.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(''); };
+    var lyP = pts.filter(function (p) { return p.lyAmt != null; }), tyP = pts.filter(function (p) { return p.tyAmt != null; });
+    var lbl = function (p, w) {
+      var v = w === 'ty' ? p.tyAmt : p.lyAmt, o = w === 'ty' ? p.lyAmt : p.tyAmt, above = o == null || v >= o;
+      return '<text class="v ' + w + '" x="' + x(p.d).toFixed(1) + '" y="' + (y(v) + (above ? -8 : 16)).toFixed(1) + '" text-anchor="middle">' + (me === 'ALL' ? (v / 1e8).toFixed(1) + '억' : man(v)) + '</text>';
+    };
+    var svg = '<svg class="' + (COL < 42 ? 'tight' : '') + '" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(NAME[me]) + ' 일별 매출, 금년과 전년">' +
+      '<rect class="bd" x="' + (PL + (bd - 1) * COL) + '" y="4" width="' + COL + '" height="' + (H - 8) + '" rx="8"/>' +
+      '<line class="ax" x1="' + PL + '" x2="' + (W - PR) + '" y1="' + (TOP + PH) + '" y2="' + (TOP + PH) + '"/>' +
+      '<path class="ly" d="' + path(lyP.map(function (p) { return [x(p.d), y(p.lyAmt)]; })) + '"/>' +
+      lyP.map(function (p) { return '<circle class="ly" cx="' + x(p.d).toFixed(1) + '" cy="' + y(p.lyAmt).toFixed(1) + '" r="3"><title>전년 ' + md(p.ly) + '(' + WD[wdi(p.ly)] + ') ' + man(p.lyAmt) + '만</title></circle>'; }).join('') +
+      '<path class="ty" d="' + path(tyP.map(function (p) { return [x(p.d), y(p.tyAmt)]; })) + '"/>' +
+      tyP.map(function (p) { return '<circle class="ty" cx="' + x(p.d).toFixed(1) + '" cy="' + y(p.tyAmt).toFixed(1) + '" r="3.5"><title>금년 ' + md(p.ty) + '(' + WD[wdi(p.ty)] + ') ' + man(p.tyAmt) + '만</title></circle>'; }).join('') +
+      lyP.map(function (p) { return lbl(p, 'ly'); }).join('') + tyP.map(function (p) { return lbl(p, 'ty'); }).join('') +
+      pts.map(function (p) { return p.g == null ? '' : '<text class="g ' + (p.g >= 0 ? 'gu' : 'gd') + '" x="' + x(p.d).toFixed(1) + '" y="' + GY + '" text-anchor="middle">' + pct(p.g) + '</text>'; }).join('') +
+      (cid === 'store' ? tyP.map(function (p) { return '<rect class="hit" data-d="' + p.d + '" tabindex="0" role="button" aria-label="' + md(p.ty) + ' CD별 성장율 보기" x="' + (PL + (p.d - 1) * COL) + '" y="0" width="' + COL + '" height="' + H + '"/>'; }).join('') : '') +
+      pts.map(function (p) { var w = wdi(p.ty); return '<text class="dt' + (w === 0 ? ' sun' : w === 6 ? ' sat' : '') + '" x="' + x(p.d).toFixed(1) + '" y="' + DY + '" text-anchor="middle">' + p.d + '(' + WD[w] + ')</text>'; }).join('') + '</svg>';
+    return '<section class="panel dc"><h3>일별 매출</h3><p class="lg"><span class="sw ty"></span>금년 <span class="sw lyl"></span>전년' +
+      (lym ? ' <span class="lym">전년 월마감 매출 <b>' + man(lym[0]) + '만원</b> · 전년 월마감 매총율 <b>' + (lym[0] ? (lym[1] / lym[0] * 100).toFixed(1) : '-') + '%</b></span>' : '') +
+      (cid === 'store' ? '<span class="tiph">날짜를 가리키거나 누르면 CD별 성장율</span>' : '') + '</p><div class="dcs"><div class="dcw" data-me="' + me + '" style="width:' + W + 'px">' + svg + '<div class="tip" hidden></div></div></div></section>';
+  }
+
+  // ── 성장율 칸 색 ──
+  function heat(v) {
+    if (v == null) return '';
+    var a = Math.min(Math.abs(v) / 0.2, 1) * 0.32 + 0.06;
+    return ' style="background:color-mix(in srgb, var(' + (v >= 0 ? '--good' : '--bad') + ') ' + (a * 100).toFixed(0) + '%, transparent)"';
+  }
+  var rkBadge = function (rk) { return rk.r == null ? '-' : '<span class="rkb ' + (good(rk) ? 'g' : 'b') + '">' + rk.r + '위</span>'; };
+  function pts(list) {
+    return list.length ? list.map(function (a) { return '<li><b>' + esc(a[0]) + '</b><span>' + esc(a[1]) + '</span></li>'; }).join('') : '<li class="muted">해당 없음</li>';
+  }
+
+
+  // ── 비교점 (보는 사람 설정, 없으면 같은 그룹) ──
+  var S = null; // 설정
+  function cmpOf(me) {
+    var c = S && S.cmp && S.cmp[me];
+    var open = OPEN();
+    if (c && c.length) { c = c.filter(function (p) { return p !== me && open.indexOf(p) >= 0; }); if (c.length) return c; }
+    return openOf(GRP[me]).filter(function (p) { return p !== me; });
+  }
+  var custom = function (me) { return !!(S && S.cmp && S.cmp[me] && S.cmp[me].length); };
+  var setOf = function (me) { return [me].concat(cmpOf(me)); };
+  var cmpName = function (me) { return custom(me) ? '비교점' : GNAME[GRP[me]] + ' 비교점'; };
+  var cmpNote = function (me) { var c = cmpOf(me); return '비교점 = ' + (custom(me) ? '내가 고른 ' : GNAME[GRP[me]] + ' 다른 ') + c.length + '개 점포 합산(' + c.map(function (p) { return NAME[p]; }).join('·') + ')'; };
+
+  // ── 공통 조각 ──
+  function badge(label, rk) {
+    if (rk.r == null) return '<span class="badge n"><span>' + label + '</span><span>-</span></span>';
+    return '<span class="badge ' + (good(rk) ? 'g' : 'b') + '"><span>' + label + ' ' + rk.n + '점 중</span><span>' + rk.r + '위</span></span>';
+  }
+  function kpi(label, val, unit, deltaV, deltaTxt, badges) {
+    var key = { '매출': 'gsT', '매출총이익률': 'mr', '객수': 'cnt', '객단가': 'atv' }[label] || '';
+    return '<div class="kpi" data-kpi="' + key + '" tabindex="0"><p class="kl">' + label + '</p><p class="kv">' + val + '<small>' + unit + '</small></p><p class="kd"><span class="' + cls(deltaV) + '">전년비 ' + deltaTxt + '</span></p>' + (badges ? '<p class="kb">' + badges + '</p>' : '') + '</div>';
+  }
+  function kpis(k, me, sc) {
+    var g = GRP[me], y = M(k, [me], sc), K = OPEN(), G = openOf(g), C = setOf(me);
+    var three = function (key) { return badge('킴스', rankIn(k, K, sc, key, me)) + badge(GNAME[g], rankIn(k, G, sc, key, me)) + badge('비교', rankIn(k, C, sc, key, me)); };
+    return '<div class="kpis" data-p="' + me + '" data-c="' + (sc.posKey === 'store' ? '' : sc.posKey) + '">' +
+      kpi('매출', man(y.gsT), '만원', y.growth, pct(y.growth), three('growth')) +
+      kpi('매출총이익률', f1(y.mr), '%', y.mrD, pp(y.mrD), three('mr')) +
+      kpi('객수', won(y.cnt), '명', y.cntG, pct(y.cntG), three('cntG')) +
+      kpi('객단가', man1(y.atv), '만원', y.atvG, pct(y.atvG), three('atv')) + '</div>';
+  }
+  function bars(k, me, sc) {
+    var rows = setOf(me).map(function (p) { return [p, M(k, [p], sc)]; });
+    rows.sort(function (a, b) { return (b[1].growth == null ? -9 : b[1].growth) - (a[1].growth == null ? -9 : a[1].growth); });
+    var mx = Math.max.apply(null, rows.map(function (r) { return Math.max(r[1].gsT, r[1].gsL); })) || 1;
+    var pr = D.per[k];
+    return '<p class="lg"><span class="sw ty"></span>금년 ' + pr.ty + ' <span class="sw ly"></span>전년 ' + pr.ly + ' · 만원 · 매출 성장율 순</p><div class="bars">' +
+      rows.map(function (r) {
+        var t = r[1];
+        return '<div class="sb' + (r[0] === me ? ' me' : '') + '"><div class="sbh"><span>' + esc(NAME[r[0]]) + '</span><b class="' + cls(t.growth) + '">' + (t.growth == null ? '전년 없음' : pct(t.growth)) + '</b></div>' +
+          '<div class="br"><span class="bar ty" style="width:' + (t.gsT / mx * 100).toFixed(1) + '%"></span><em>' + man(t.gsT) + '</em></div>' +
+          '<div class="br"><span class="bar ly" style="width:' + (t.gsL / mx * 100).toFixed(1) + '%"></span><em>' + man(t.gsL) + '</em></div></div>';
+      }).join('') + '</div>';
+  }
+  // 상세 비교: 본인 · 비교점(합산) · 킴스 합계 · 비교 순위
+  function detailTable(k, me, sc, caption) {
+    var comp = cmpOf(me), C = setOf(me);
+    var cols = [M(k, [me], sc), comp.length ? M(k, comp, sc) : null, M(k, ALL(), sc)];
+    var rk = function (key) { var r = rankIn(k, C, sc, key, me); return r.r == null ? '-' : '<span class="rkb ' + (good(r) ? 'g' : 'b') + '">' + r.r + '위</span>'; };
+    var colored = function (v, txt) { return v == null ? '-' : '<span class="' + cls(v) + '">' + txt + '</span>'; };
+    var R = [
+      [['매출', function (t) { return man(t.gsT); }, 'gsT'], ['전년 매출', function (t) { return man(t.gsL); }], ['매출 성장율', function (t) { return t.growth == null ? '-' : '<b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b>'; }, 'growth']],
+      [['매총율', function (t) { return t.mr == null ? '-' : f1(t.mr) + '%'; }, 'mr'], ['전년 매총율', function (t) { return t.mrL == null ? '-' : f1(t.mrL) + '%'; }], ['매총율 증감율', function (t) { return colored(t.mrD, pp(t.mrD)); }, 'mrD']],
+      [['객수', function (t) { return t.cnt == null ? '-' : won(t.cnt) + '명'; }, 'cnt'], ['객수 증감', function (t) { return colored(t.cntD, sgn(t.cntD) + '명'); }, 'cntG']],
+      [['객단가', function (t) { return man1(t.atv); }, 'atv'], ['객단가 증감', function (t) { return colored(t.atvD, man1s(t.atvD)); }, 'atvG']],
+      [['손실율', function () { return '-'; }], ['손실율 증감', function () { return '-'; }]],
+      [['평당매출', function (t) { return man1(t.py); }, 'py'], ['평당매출 성장율', function (t) { return colored(t.pyG, pct(t.pyG)); }, 'pyG']],
+      [['저녁장 매출', function (t) { return t.eve == null ? '-' : man(t.eve); }, 'eve'], ['저녁장 매출 성장율', function (t) { return colored(t.eveG, pct(t.eveG)); }, 'eveG'], ['저녁장 비중', function (t) { return t.eve == null || !t.amt ? '-' : f1(t.eve / t.amt * 100) + '%'; }]],
+    ];
+    return (caption ? '<h4>' + esc(caption) + '</h4>' : '') + '<table class="dt"><colgroup><col class="c0"><col><col><col><col class="cr"></colgroup>' +
+      '<thead><tr><th></th><th class="ya">' + esc(NAME[me]) + '</th><th>비교점</th><th>킴스 합계</th><th>비교 순위</th></tr></thead>' +
+      R.map(function (rows) {
+        return '<tbody>' + rows.map(function (x) {
+          return '<tr><th>' + x[0] + '</th>' + cols.map(function (t, i) { return '<td' + (i === 0 ? ' class="ya"' : '') + '>' + (t ? x[1](t) : '-') + '</td>'; }).join('') + '<td>' + (x[2] ? rk(x[2]) : '') + '</td></tr>';
+        }).join('') + '</tbody>';
+      }).join('') + '</table>';
+  }
+  // 섹션 = { id, nav(사이드바 이름), opt(켜기·끄기 키, 없으면 항상), html }
+  var sec = function (id, nav, title, body, opt, extra) {
+    return { id: id, nav: nav, opt: opt, html: '<section class="panel' + (extra ? ' ' + extra : '') + '" id="sec-' + id + '">' + (title ? '<h3>' + title + '</h3>' : '') + body + '</section>' };
+  };
+  var dailySec = function (me, cid) {
+    var h = dailyChart(me, cid, (D.lymonth[me] || {})[cid]);
+    return h ? { id: 'daily', nav: '일별 매출', opt: 'daily', html: h.replace('<section class="panel dc">', '<section class="panel dc" id="sec-daily">') } : null;
+  };
+  function gbHtml(gd, bd) {
+    return '<div class="gbi"><h4 class="up">잘한 점</h4><ul class="pts">' + pts(gd.slice(0, 6)) + '</ul><h4 class="dn">부족한 점</h4><ul class="pts">' + pts(bd.slice(0, 6)) + '</ul></div>';
+  }
+
+  // ── 점포 화면 ──
+  function storeView(k, me) {
+    var g = GRP[me], gn = GNAME[g], comp = cmpOf(me), C = setOf(me), sc = scopeStore(k);
+    var y = M(k, [me], sc), tot = y.gsT;
+    var items = [];
+    D.storeCats.forEach(function (c) {
+      var s = scopeCat(c[0], k);
+      var it = function (name, sc2, lvl) {
+        var r = M(k, [me], sc2), cp = comp.length ? M(k, comp, sc2) : null;
+        return { name: name, lvl: lvl, y: r, comp: cp ? cp.growth : null, kims: M(k, ALL(), sc2).growth, rk: rankIn(k, C, sc2, 'growth', me), share: tot ? r.gsT / tot : null };
+      };
+      items.push(it(c[1], s, 'cd'));
+      var pgs = c[2].filter(function (pg) { return C.some(function (p) { var m = M(k, [p], scopePg(pg[0])); return m.gsT || m.gsL; }); });
+      if (pgs.length > 1) pgs.forEach(function (pg) { items.push(it(pg[1], scopePg(pg[0]), 'pg')); });
+    });
+    var compAll = comp.length ? M(k, comp, sc) : null;
+    var totIt = { name: NAME[me] + ' 합계', y: y, comp: compAll ? compAll.growth : null, rk: rankIn(k, C, sc, 'growth', me) };
+    var row = function (it, isTot) {
+      var t = it.y;
+      return '<tr class="' + (isTot ? 'tot' : it.lvl) + '"><th>' + esc(it.name) + '</th><td>' + man(t.gsT) + '</td><td>' + (isTot ? '100%' : it.share == null ? '-' : f1(it.share * 100) + '%') + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td class="' + cls(it.comp) + '">' + pct(it.comp) + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td><td class="' + cls(t.cntD) + '">' + (t.cntD == null ? '-' : sgn(t.cntD) + '명') + '</td><td>' + rkBadge(it.rk) + '</td></tr>';
+    };
+    var sumTable = '<p class="note">' + esc(NAME[me]) + ' · 매출 만원 · 비교점 성장율 · 순위 = 비교 ' + C.length + '점 중</p><div class="hs"><table class="st"><thead><tr><th>CD · 구매그룹</th><th>매출</th><th>구성비</th><th>성장율</th><th>비교점</th><th>매총율 증감</th><th>객수 증감</th><th>매출 성장율 순위</th></tr></thead><tbody>' +
+      items.map(function (it) { return row(it); }).join('') + '</tbody><tfoot>' + row(totIt, true) + '</tfoot></table></div>';
+    var heatTable = '<table class="ht"><colgroup><col class="c0"><col><col><col></colgroup><thead><tr><th>CD · 구매그룹</th><th class="ya">' + esc(NAME[me]) + '</th><th>비교점</th><th>킴스 합계</th></tr></thead><tbody>' +
+      items.map(function (it, i) {
+        return (it.lvl === 'cd' && i > 0 ? '<tr class="sep"><td colspan="4"></td></tr>' : '') + '<tr class="' + it.lvl + '"><th>' + esc(it.name) + '</th><td' + heat(it.y.growth) + ' class="ya">' + pct(it.y.growth) + '</td><td' + heat(it.comp) + '>' + pct(it.comp) + '</td><td' + heat(it.kims) + '>' + pct(it.kims) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+    // 잘한 점·부족한 점 (비교 순위 상위 절반 = 잘한 점)
+    var gd = [], bd = [];
+    var cmpTxt = function (key, fmt) { return '비교점 ' + (compAll ? fmt(compAll[key]) : '-') + ' · 킴스 합계 ' + fmt(M(k, ALL(), sc)[key]); };
+    [['매출 성장율', 'growth', pct(y.growth), pct], ['매총율', 'mr', f1(y.mr) + '%', function (v) { return f1(v) + '%'; }], ['객수 증가율', 'cntG', pct(y.cntG), pct], ['객단가', 'atv', man1(y.atv) + '만', function (v) { return man1(v) + '만'; }]]
+      .forEach(function (x) {
+        var r = rankIn(k, C, sc, x[1], me);
+        if (r.r == null) return;
+        (good(r) ? gd : bd).push([x[0] + ' ' + x[2] + ', 비교 ' + r.n + '점 중 ' + r.r + '위', cmpTxt(x[1], x[3])]);
+      });
+    var leaf = items.filter(function (it, i) { return it.lvl === 'pg' || !(items[i + 1] && items[i + 1].lvl === 'pg'); })
+      .filter(function (it) { return it.y.growth != null && it.comp != null && it.y.gsL > 0; })
+      .map(function (it) { return { it: it, gap: it.y.growth - it.comp }; });
+    leaf.sort(function (a, b) { return b.gap - a.gap; });
+    leaf.filter(function (x) { return x.gap >= 0.05; }).slice(0, 3).forEach(function (x) { gd.push([x.it.name + ' 매출 ' + pct(x.it.y.growth) + ', 비교 ' + x.it.rk.n + '점 중 ' + x.it.rk.r + '위', '비교점 ' + pct(x.it.comp) + '보다 ' + (x.gap * 100).toFixed(1) + '%p 높음']); });
+    leaf.filter(function (x) { return x.gap <= -0.05; }).reverse().slice(0, 3).forEach(function (x) { bd.push([x.it.name + ' 매출 ' + pct(x.it.y.growth) + ', 비교 ' + x.it.rk.n + '점 중 ' + x.it.rk.r + '위', '비교점 ' + pct(x.it.comp) + '보다 ' + (-x.gap * 100).toFixed(1) + '%p 낮음']); });
+    var cds = items.filter(function (it) { return it.lvl === 'cd'; });
+    return {
+      eyebrow: '킴스클럽 ' + NAME[me] + '(하이퍼 전체 구매그룹) · ' + gn + ' · ' + PNAME[k],
+      h1: NAME[me],
+      sub: 'CD 매출 성장율, ' + cds.map(function (c) { return esc(c.name) + ' <span class="' + cls(c.y.growth) + '">' + pct(c.y.growth) + '</span>'; }).join(', '),
+      rows: [
+        [sec('kpi', '핵심 지표', '', kpis(k, me, sc), null, 'bare')],
+        [dailySec(me, 'store')],
+        [sec('gb', '잘한·부족한 점', '', gbHtml(gd, bd), 'gb')],
+        [sec('bars', '점포 매출', '비교 점포 매출', bars(k, me, sc), 'bars'), sec('detail', '상세 비교', '상세 비교', '<p class="note">' + esc(cmpNote(me)) + ' · 킴스 합계 = 영업중단 포함 ' + ALL().length + '점</p>' + detailTable(k, me, sc, NAME[me] + ' 합계'), 'detail')],
+        [sec('big', '큰판', 'CD·구매그룹별 큰판', sumTable, 'big'), sec('heat', '성장율 색칸표', 'CD·구매그룹 매출 성장율', heatTable, 'heat')],
+      ],
+    };
+  }
+
+  // ── CD 화면 ──
+  function mcList(items, up) {
+    if (!items.length) return '<li class="muted">해당 품목 없음</li>';
+    var mx = Math.max.apply(null, items.map(function (x) { return Math.abs(x[3]); })) || 1;
+    return items.map(function (x) { return '<li><span class="mn">' + esc(x[0]) + '</span><span class="track"><i class="' + (up ? 'bu' : 'bd') + '" style="width:' + (Math.abs(x[3]) / mx * 100).toFixed(1) + '%"></i></span><span class="mv ' + (up ? 'up' : 'dn') + '">' + sgn(x[3]) + '</span></li>'; }).join('');
+  }
+  function catView(k, me, id) {
+    var c = D.storeCats.filter(function (x) { return x[0] === id; })[0], g = GRP[me], gn = GNAME[g], G = openOf(g), comp = cmpOf(me), C = setOf(me);
+    var gcomp = G.filter(function (p) { return p !== me; }); // MC·상위 상품은 같은 그룹 기준
+    var sc = scopeCat(id, k), y = M(k, [me], sc), compT = comp.length ? M(k, comp, sc) : null, kimsT = M(k, ALL(), sc);
+    var pgList = c[2].filter(function (pg) { return C.some(function (p) { var m = M(k, [p], scopePg(pg[0])); return m.gsT || m.gsL; }); });
+    var per = pgList.length > 1 ? pgList.map(function (pg) { var s2 = scopePg(pg[0]); return { code: pg[0], name: pg[1], sc: s2, y: M(k, [me], s2), comp: comp.length ? M(k, comp, s2).growth : null, rk: rankIn(k, C, s2, 'growth', me) }; }) : [];
+    var mc = (((D.mc[k] || {})[me] || {})[id]) || { up: [], dn: [] };
+    var top = (((D.top[k] || {})[g] || {})[id]) || [];
+    var R = function (key) { return rankIn(k, C, sc, key, me); };
+    var gd = [], bd = [], vs = function (key, fmt) { return '비교점 ' + (compT ? fmt(compT[key]) : '-') + ' · 킴스 합계 ' + fmt(kimsT[key]); };
+    var rg = R('growth'), rm = R('mr'), rc = R('cntG'), ra = R('atv');
+    var at = function (r) { return '비교 ' + r.n + '점 중 ' + r.r + '위'; };
+    if (rm.r != null) (good(rm) ? gd : bd).push(['매출총이익률 ' + f1(y.mr) + '%, ' + at(rm), '전년 ' + f1(y.mrL) + '% → ' + pp(y.mrD) + ' · ' + vs('mr', function (v) { return f1(v) + '%'; })]);
+    if (rg.r != null) (good(rg) ? gd : bd).push(['매출 ' + man(y.gsT) + '만, 전년비 ' + pct(y.growth) + ', ' + at(rg), vs('growth', pct)]);
+    if (rc.r != null) (good(rc) ? gd : bd).push(['객수 ' + won(y.cnt) + '명, 증가율 ' + pct(y.cntG) + ', ' + at(rc), vs('cntG', pct)]);
+    if (ra.r != null) (good(ra) ? gd : bd).push(['객단가 ' + man1(y.atv) + '만, ' + at(ra), '전년비 ' + pct(y.atvG) + ' · ' + vs('atv', function (v) { return man1(v) + '만'; })]);
+    per.forEach(function (p) {
+      if (p.rk.r === 1) gd.push([p.name + ' 매출 성장률 ' + pct(p.y.growth) + ', 비교 ' + p.rk.n + '점 중 1위', '비교점 ' + pct(p.comp)]);
+      else if (p.rk.r != null && (p.rk.r === p.rk.n || (p.y.growth || 0) < 0)) bd.push([p.name + ' 매출 ' + pct(p.y.growth) + ', 비교 ' + p.rk.n + '점 중 ' + p.rk.r + '위', '비교점 ' + pct(p.comp)]);
+    });
+    var mcUp = mc.up.filter(function (m) { return m[4] != null && m[3] > m[4]; }).slice(0, 2);
+    if (mcUp.length) gd.push([mcUp.map(function (m) { return m[0] + ' ' + sgn(m[3]) + '만'; }).join(', '), gn + ' 다른 점포 평균 ' + mcUp.map(function (m) { return m[0] + ' ' + sgn(m[4]) + '만'; }).join(' · ')]);
+    var mcDn = mc.dn.filter(function (m) { return m[4] != null && m[3] < m[4]; }).slice(0, 2);
+    if (mcDn.length) bd.push([mcDn.map(function (m) { return m[0] + ' ' + sgn(m[3]) + '만'; }).join(', '), gn + ' 다른 점포 평균 ' + mcDn.map(function (m) { return m[0] + ' ' + sgn(m[4]) + '만'; }).join(' · ')]);
+    var others = function (t) { return gcomp.map(function (p) { return t[4][p] || 0; }); };
+    top.filter(function (t) { var o = others(t); return (t[4][me] || 0) > 0 && (t[4][me] || 0) >= Math.max.apply(null, o.concat([0])); }).slice(0, 2)
+      .forEach(function (t) { gd.push([cleanName(t[1]) + '(' + t[2] + ') ' + (t[4][me] || 0).toFixed(1) + '만, ' + gn + ' 중 최고', gn + ' 다른 점포 최고 ' + Math.max.apply(null, others(t).concat([0])).toFixed(1) + '만']); });
+    top.filter(function (t) { return !(t[4][me] > 0) && Math.max.apply(null, others(t).concat([0])) >= 100; }).slice(0, 1)
+      .forEach(function (t) { bd.push([cleanName(t[1]) + '(' + t[2] + ') ' + NAME[me] + ' 매출 0', gn + ' 다른 점포 최고 ' + Math.max.apply(null, others(t)).toFixed(1) + '만']); });
+    var seen = {};
+    var items = top.map(function (t, i) {
+      var name = cleanName(t[1]), dup = seen[name] ? ' <span class="muted">(다른 상품코드)</span>' : '';
+      seen[name] = 1;
+      var vals = G.map(function (p) { return t[4][p] || 0; }), mx = Math.max.apply(null, vals), mn = Math.min.apply(null, vals);
+      var sv = G.map(function (p, j) { var v = vals[j]; return '<span class="' + [p === me ? 'me' : '', v === mx && v > 0 ? 'hi' : v === mn && mn < mx ? 'lo' : ''].join(' ').trim() + '">' + esc(NAME[p]) + ' ' + won(v) + '</span>'; }).join('');
+      return '<li><div class="pn"><span class="rk">' + (i + 1) + '</span>' + esc(name) + dup + ' <span class="muted">(' + esc(t[2]) + ')</span></div><div class="pv">' + sv + '</div></li>';
+    }).join('');
+    var tables = per.length ? detailTable(k, me, sc, c[1] + ' 합계') + per.map(function (p) { return detailTable(k, me, p.sc, p.name + '(' + p.code + ')'); }).join('') : detailTable(k, me, sc);
+    var pr = D.per[k];
+    return {
+      eyebrow: '킴스클럽 ' + NAME[me] + ' ' + c[1] + '(' + c[2].map(function (x) { return x[1] + ' ' + x[0]; }).join(' · ') + ') · ' + PNAME[k],
+      h1: NAME[me] + ' · ' + c[1],
+      sub: '구매그룹 매출 성장율, ' + (per.length ? per.map(function (p) { return [p.name, p.y.growth]; }) : [[(pgList[0] || c[2][0])[1], y.growth]]).map(function (x) { return esc(x[0]) + ' <span class="' + cls(x[1]) + '">' + pct(x[1]) + '</span>'; }).join(', '),
+      rows: [
+        [sec('kpi', '핵심 지표', '', kpis(k, me, sc), null, 'bare')],
+        [hasData('daily', id) ? dailySec(me, id) : sec('daily', '일별 매출', '일별 매출', NOT_YET(c[1] + ' 일별'), 'daily')],
+        [sec('gb', '잘한·부족한 점', '', gbHtml(gd, bd), 'gb')],
+        [sec('bars', '점포 매출', '비교 점포 ' + c[1] + ' 매출', bars(k, me, sc), 'bars'), sec('detail', '상세 비교', '상세 비교', '<p class="note">' + esc(cmpNote(me)) + '</p>' + tables, 'detail')],
+        [sec('mc', 'MC 증감', '품목(MC)별 전년 대비 증감', '<p class="note">' + esc(NAME[me]) + ' · 매출 기준 · 만원 · 비교 = ' + gn + ' 다른 점포 평균</p>' + (hasData('mc', id) ? '<h4>증가 상위</h4><ul class="mcl">' + mcList(mc.up, true) + '</ul><h4>감소 상위</h4><ul class="mcl">' + mcList(mc.dn, false) + '</ul>' : NOT_YET(c[1] + ' MC')), 'mc'),
+          sec('top', '상위 15개 상품', gn + ' 합계 매출 상위 15개 상품', '<p class="note">' + pr.ty + ' 매출 · 만원 · 점포 중 최고값 파랑, 최저값 빨강 · 밑줄 = ' + esc(NAME[me]) + '</p>' + (hasData('top', id) ? '<ol class="prods">' + items + '</ol>' : NOT_YET(c[1] + ' 상품')), 'top')],
+      ],
+    };
+  }
+
+  // ── 전점 요약 (리더용) ──
+  function allView(k) {
+    var sc = scopeStore(k), K = OPEN(), kt = M(k, ALL(), sc);
+    var gRows = [['킴스 합계', ALL(), true]].concat(D.groups.map(function (g) { return [g[1] + ' ' + g[2].length + '점' + (g[0] === D.closed ? '<small>영업중단</small>' : ''), g[2]]; }));
+    var gt = '<p class="note">매출 만원 · 킴스 합계 = 영업중단 점포 포함 ' + ALL().length + '점</p><div class="hx"><table class="gt"><thead><tr><th>구분</th><th>매출</th><th>성장율</th><th>매총율 증감</th><th>객수 증감율</th><th>객단가 성장율</th></tr></thead><tbody>' +
+      gRows.map(function (r) { var t = M(k, r[1], sc); return '<tr' + (r[2] ? ' class="tot"' : '') + '><th>' + r[0] + '</th><td>' + man(t.gsT) + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td><td class="' + cls(t.cntG) + '">' + pct(t.cntG) + '</td><td class="' + cls(t.atvG) + '">' + pct(t.atvG) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    var openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
+    var rankTbl = openGroups.map(function (g) {
+      var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; });
+      rows.sort(function (a, b) { return (b[1].growth == null ? -9 : b[1].growth) - (a[1].growth == null ? -9 : a[1].growth); });
+      var gtot = M(k, g[2], sc);
+      return '<tbody><tr class="gh"><th colspan="6">' + g[1] + ' ' + g[2].length + '점 <span class="' + cls(gtot.growth) + '">' + pct(gtot.growth) + '</span></th></tr>' + rows.map(function (r) {
+        var t = r[1], rk = rankIn(k, K, sc, 'growth', r[0]);
+        return '<tr class="pick" data-s="' + r[0] + '" tabindex="0"><th>' + esc(NAME[r[0]]) + '</th><td>' + man(t.gsT) + '</td><td><b class="' + cls(t.growth) + '">' + (t.growth == null ? '전년 없음' : pct(t.growth)) + '</b></td><td>' + rkBadge(rk) + '</td><td class="' + cls(t.cntG) + '">' + pct(t.cntG) + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td></tr>';
+      }).join('') + '</tbody>';
+    }).join('');
+    var heatAll = '<p class="note">점포를 누르면 상세로 이동</p><table class="ht hall"><colgroup><col class="c0"><col><col><col><col><col></colgroup><thead><tr><th>점포</th><th>점포 전체</th>' + D.cats.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      openGroups.map(function (g, gi) {
+        return (gi ? '<tr class="sep"><td colspan="6"></td></tr>' : '') + g[2].map(function (p) {
+          var vals = [M(k, [p], sc).growth].concat(D.cats.map(function (c) { return M(k, [p], scopeCat(c[0], k)).growth; }));
+          return '<tr class="pick" data-s="' + p + '" tabindex="0"><th>' + esc(NAME[p]) + '</th>' + vals.map(function (v) { return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr>';
+        }).join('');
+      }).join('') + '<tr class="sep"><td colspan="6"></td></tr><tr class="cd"><th>킴스 합계</th>' + [kt.growth].concat(D.cats.map(function (c) { return M(k, ALL(), scopeCat(c[0], k)).growth; })).map(function (v) { return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr></tbody></table>';
+    return {
+      eyebrow: '킴스클럽 전점(하이퍼 전체 구매그룹) · 영업 ' + K.length + '점 · ' + PNAME[k],
+      h1: '킴스클럽 전점',
+      sub: '그룹 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
+      rows: [
+        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '만원', kt.growth, pct(kt.growth)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD)) + kpi('객수', won(kt.cnt), '명', kt.cntG, pct(kt.cntG)) + kpi('객단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG)) + '</div>', null, 'bare')],
+        [allDailySec('store', '전체')],
+        [sec('groups', '그룹별 합계', '그룹별 합계', gt)],
+        [sec('rank', '점포 순위', '점포별 매출 성장율 순위', '<p class="note">그룹 안에서 성장율 순 · 순위 = 킴스 영업 점포 중 · 점포를 누르면 상세로 이동</p><div class="hx"><table class="rt"><thead><tr><th>점포</th><th>매출</th><th>성장율</th><th>킴스 순위</th><th>객수 증감율</th><th>매총율 증감</th></tr></thead>' + rankTbl + '</table></div>'),
+          sec('cdheat', '점포×CD 성장율', '점포 × CD 매출 성장율', heatAll)],
+      ],
+    };
+  }
+
+  // ── 전점 일별 합계 (영업 점포 합산; 일별 데이터에 영업중단 점포는 없음) ──
+  function aggDaily() {
+    if (D.daily.ALL) return;
+    var agg = {}, lym = {};
+    OPEN().forEach(function (p) {
+      var dp = D.daily[p] || {};
+      for (var cat in dp) { var a = agg[cat] = agg[cat] || {}; for (var dt in dp[cat]) a[dt] = (a[dt] || 0) + dp[cat][dt]; }
+      var lp = D.lymonth[p] || {};
+      for (var c2 in lp) { var l = lym[c2] = lym[c2] || [0, 0]; l[0] += lp[c2][0]; l[1] += lp[c2][1]; }
+    });
+    D.daily.ALL = agg; D.lymonth.ALL = lym; NAME.ALL = '킴스 영업 ' + OPEN().length + '점';
+  }
+  function allDailySec(cid, cname) {
+    aggDaily();
+    if (!hasData('daily', cid)) return sec('daily', '일별 매출', '일별 매출', NOT_YET(cname + ' 일별'), 'daily');
+    var h = dailyChart('ALL', cid, (D.lymonth.ALL || {})[cid]);
+    if (!h) return null;
+    return { id: 'daily', nav: '일별 매출', opt: 'daily', html: h.replace('<section class="panel dc">', '<section class="panel dc" id="sec-daily">').replace('<h3>일별 매출</h3>', '<h3>일별 매출 <small class="h3s">영업 ' + OPEN().length + '점 합계 · 영업중단 점포 제외</small></h3>') };
+  }
+
+  // ── 전점 요약 · CD별 (리더용) ──
+  var ALL_TABS = ['store', 'nongsan', 'susan', 'chuksan', 'gongsan', 'deli'];
+  function allCatView(k, id) {
+    var c = D.storeCats.filter(function (x) { return x[0] === id; })[0], sc = scopeCat(id, k), K = OPEN(), kt = M(k, ALL(), sc);
+    var openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
+    var gRows = [['킴스 합계', ALL(), true]].concat(D.groups.map(function (g) { return [g[1] + ' ' + g[2].length + '점' + (g[0] === D.closed ? '<small>영업중단</small>' : ''), g[2]]; }));
+    var gt = '<p class="note">' + c[1] + ' 매출 만원 · 킴스 합계 = 영업중단 점포 포함 ' + ALL().length + '점</p><div class="hx"><table class="gt"><thead><tr><th>구분</th><th>매출</th><th>성장율</th><th>매총율 증감</th><th>객수 증감율</th><th>객단가 성장율</th></tr></thead><tbody>' +
+      gRows.map(function (r) { var t = M(k, r[1], sc); return '<tr' + (r[2] ? ' class="tot"' : '') + '><th>' + r[0] + '</th><td>' + man(t.gsT) + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td><td class="' + cls(t.cntG) + '">' + pct(t.cntG) + '</td><td class="' + cls(t.atvG) + '">' + pct(t.atvG) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    var rankTbl = openGroups.map(function (g) {
+      var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; });
+      rows.sort(function (a, b) { return (b[1].growth == null ? -9 : b[1].growth) - (a[1].growth == null ? -9 : a[1].growth); });
+      var gtot = M(k, g[2], sc);
+      return '<tbody><tr class="gh"><th colspan="6">' + g[1] + ' ' + g[2].length + '점 <span class="' + cls(gtot.growth) + '">' + pct(gtot.growth) + '</span></th></tr>' + rows.map(function (r) {
+        var t = r[1], rk = rankIn(k, K, sc, 'growth', r[0]);
+        return '<tr class="pick" data-s="' + r[0] + '" tabindex="0"><th>' + esc(NAME[r[0]]) + '</th><td>' + man(t.gsT) + '</td><td><b class="' + cls(t.growth) + '">' + (t.growth == null ? '전년 없음' : pct(t.growth)) + '</b></td><td>' + rkBadge(rk) + '</td><td class="' + cls(t.cntG) + '">' + pct(t.cntG) + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td></tr>';
+      }).join('') + '</tbody>';
+    }).join('');
+    // 점포 × 구매그룹 성장율 (전 점포에서 매출이 있는 구매그룹만)
+    var pgs = c[2].filter(function (pg) { var m = M(k, ALL(), scopePg(pg[0])); return m.gsT || m.gsL; });
+    var cols = [[c[1] + ' 전체', sc]].concat(pgs.length > 1 ? pgs.map(function (pg) { return [pg[1], scopePg(pg[0])]; }) : []);
+    var heatPg = '<p class="note">' + c[1] + ' 매출 성장율 · 점포를 누르면 그 점포 ' + c[1] + ' 화면으로 이동</p><div class="hx"><table class="ht hall"><colgroup><col class="c0">' + cols.map(function () { return '<col>'; }).join('') + '</colgroup><thead><tr><th>점포</th>' + cols.map(function (x) { return '<th>' + esc(x[0]) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      openGroups.map(function (g, gi) {
+        return (gi ? '<tr class="sep"><td colspan="' + (cols.length + 1) + '"></td></tr>' : '') + g[2].map(function (p) {
+          return '<tr class="pick" data-s="' + p + '" tabindex="0"><th>' + esc(NAME[p]) + '</th>' + cols.map(function (x) { var v = M(k, [p], x[1]).growth; return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr>';
+        }).join('');
+      }).join('') + '<tr class="sep"><td colspan="' + (cols.length + 1) + '"></td></tr><tr class="cd"><th>킴스 합계</th>' + cols.map(function (x) { var v = M(k, ALL(), x[1]).growth; return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr></tbody></table></div>';
+    // 구매그룹별 실적 (킴스 합계) + 그룹별 구매그룹 성장율
+    var pgPerf = '', pgGrp = '';
+    if (pgs.length > 1) {
+      var rowsP = pgs.map(function (pg) { return [pg[1] + ' <small>' + pg[0] + '</small>', scopePg(pg[0])]; }).concat([[c[1] + ' 합계', sc, true]]);
+      pgPerf = '<p class="note">킴스 합계(' + ALL().length + '점) · 매출 만원 · 구성비 = ' + c[1] + ' 안 비중</p><div class="hx"><table class="gt"><thead><tr><th>구매그룹</th><th>매출</th><th>구성비</th><th>성장율</th><th>매총율</th><th>매총율 증감</th><th>객수 증감율</th><th>객단가 성장율</th></tr></thead><tbody>' +
+        rowsP.map(function (r) { var t = M(k, ALL(), r[1]); return '<tr' + (r[2] ? ' class="tot"' : '') + '><th>' + r[0] + '</th><td>' + man(t.gsT) + '</td><td>' + (kt.gsT ? f1(t.gsT / kt.gsT * 100) + '%' : '-') + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td>' + (t.mr == null ? '-' : f1(t.mr) + '%') + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td><td class="' + cls(t.cntG) + '">' + pct(t.cntG) + '</td><td class="' + cls(t.atvG) + '">' + pct(t.atvG) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+      var gcols = [['킴스', ALL()]].concat(openGroups.map(function (g) { return [g[1], g[2]]; }));
+      pgGrp = '<p class="note">구매그룹 매출 성장율 · 그룹 합계 기준</p><div class="hx"><table class="ht pgg"><colgroup><col class="c0">' + gcols.map(function () { return '<col>'; }).join('') + '</colgroup><thead><tr><th>구매그룹</th>' + gcols.map(function (g) { return '<th>' + g[0] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        rowsP.map(function (r) { return '<tr' + (r[2] ? ' class="cd"' : '') + '><th>' + r[0].replace(/ <small>.*<\/small>/, '') + '</th>' + gcols.map(function (g) { var v = M(k, g[1], r[1]).growth; return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+    }
+    return {
+      eyebrow: '킴스클럽 전점 ' + c[1] + '(' + c[2].map(function (x) { return x[1] + ' ' + x[0]; }).join(' · ') + ') · 영업 ' + K.length + '점 · ' + PNAME[k],
+      h1: '킴스클럽 전점 · ' + c[1],
+      sub: '그룹 ' + c[1] + ' 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
+      rows: [
+        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="' + id + '">' + kpi('매출', man(kt.gsT), '만원', kt.growth, pct(kt.growth)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD)) + kpi('객수', won(kt.cnt), '명', kt.cntG, pct(kt.cntG)) + kpi('객단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG)) + '</div>', null, 'bare')],
+        pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf), sec('pggrp', '구매그룹 × 그룹', '그룹별 구매그룹 성장율', pgGrp)] : [],
+        [allDailySec(id, c[1])],
+        [sec('groups', '그룹별 합계', '그룹별 ' + c[1] + ' 합계', gt)],
+        [sec('rank', '점포 순위', '점포별 ' + c[1] + ' 매출 성장율 순위', '<p class="note">그룹 안에서 성장율 순 · 순위 = 킴스 영업 점포 중 · 점포를 누르면 그 점포 ' + c[1] + ' 화면으로 이동</p><div class="hx"><table class="rt"><thead><tr><th>점포</th><th>매출</th><th>성장율</th><th>킴스 순위</th><th>객수 증감율</th><th>매총율 증감</th></tr></thead>' + rankTbl + '</table></div>'),
+          sec('cdheat', '구매그룹 성장율', '점포 × 구매그룹 매출 성장율', heatPg)],
+      ],
+    };
+  }
+
+  // ── 접속 현황 (아티팩트 링크 + 로그인 + 편집 권한자만) ──
+  var STATS = { rows: null, names: {}, err: null, day: null };
+  var WEB = null; // 웹 모드: { admin, name, stats(): Promise<{rows,names}>, logout() }
+  function statsView() {
+    if (WEB && !STATS.rows && !STATS.loading) {
+      STATS.loading = true;
+      WEB.stats().then(function (r) { STATS.rows = r.rows || []; STATS.names = r.names || {}; STATS.loading = false; if (ST.v === 'stats') render(false); },
+        function (e) { STATS.err = (e && e.message) || '접속 기록을 불러오지 못했습니다.'; STATS.loading = false; if (ST.v === 'stats') render(false); });
+    }
+    var body;
+    if (STATS.err) body = '<p class="note">' + esc(STATS.err) + '</p>';
+    else if (!STATS.rows) body = skel(6);
+    else {
+      var byDay = {};
+      STATS.rows.forEach(function (r) { var d = r.days || {}; for (var day in d) { (byDay[day] = byDay[day] || []).push([r.id, d[day]]); } });
+      var days = Object.keys(byDay).sort().reverse().slice(0, 31);
+      if (!STATS.day && days.length) STATS.day = days[0];
+      body = !days.length ? '<p class="note">아직 기록된 접속이 없습니다.</p>' :
+        '<div class="hx"><table class="gt"><thead><tr><th>날짜</th><th>로그인 인원</th><th>접속수</th></tr></thead><tbody>' + days.map(function (d) {
+          var list = byDay[d], n = list.reduce(function (a, x) { return a + x[1]; }, 0);
+          return '<tr class="pick' + (d === STATS.day ? ' on' : '') + '" data-day="' + d + '" tabindex="0"><th>' + d + '(' + WD[new Date(d + 'T00:00:00Z').getUTCDay()] + ')</th><td>' + list.length + '명</td><td>' + n + '회</td></tr>';
+        }).join('') + '</tbody></table></div>' +
+        (STATS.day && byDay[STATS.day] ? '<h4>' + STATS.day + ' 접속한 사람</h4><ul class="who">' + byDay[STATS.day].sort(function (a, b) { return b[1] - a[1]; }).map(function (x) { return '<li><span>' + esc(STATS.names[x[0]] || '이름 확인 불가') + (WEB ? ' <small class="wid">' + esc(x[0]) + '</small>' : '') + '</span><b>' + x[1] + '회</b></li>'; }).join('') + '</ul>' : '');
+    }
+    return {
+      eyebrow: '리포트 접속 기록 · 최근 31일', h1: '접속 현황',
+      sub: '로그인 인원 = 그날 한 번 이상 연 사람 수, 접속수 = 연 횟수(같은 브라우저 창에서 다시 열면 1회로 셈)',
+      rows: [[sec('stats', '일별 접속', '일별 로그인·접속수', body + (WEB ? '<p class="note lim">로그인해서 리포트를 연 기록입니다(같은 창에서 하루 1회). 카카오톡으로 받은 파일로 본 경우는 집계되지 않습니다.</p>' : '<p class="note lim">집계되는 경우: 이 아티팩트 링크를 claude.ai에 로그인해서 Contributor(참여자) 이상 권한으로 연 경우. 보기 전용으로 공유된 사람, 로그인하지 않은 사람, 카카오톡으로 받은 HTML 파일은 집계되지 않습니다.</p>'))]],
+    };
+  }
+
+  // 불러오는 중 = 스켈레톤 줄
+  function skel(n) { var o = '<div class="skel" aria-busy="true" aria-label="불러오는 중">'; for (var i = 0; i < n; i++) o += '<span class="sk" style="width:' + (92 - (i % 3) * 14) + '%"></span>'; return o + '</div>'; }
+
+  // ── 일별 그래프 날짜 팝업: 그날 CD별 매출 성장율 (전년 비교일 = 그래프와 같은 규칙) ──
+  var TIP_CATS = [['nongsan', '농산'], ['susan', '수산'], ['chuksan', '축산'], ['gongsan', '공산'], ['living', '리빙'], ['deli', '델리']];
+  function tipHtml(me, d) {
+    var r = D.mm[d - 1], dd = D.daily[me] || {};
+    var wd = function (s) { return WD[new Date(s + 'T00:00:00Z').getUTCDay()]; };
+    var lab = function (s) { return Number(s.slice(5, 7)) + '/' + Number(s.slice(8)) + '(' + wd(s) + ')'; };
+    var rows = TIP_CATS.map(function (c) {
+      var src = dd[c[0]];
+      if (!src) return '<li><span>' + c[1] + '</span><em class="pendt">데이터 없음</em></li>';
+      var t = src[r.ty], l = r.ly ? src[r.ly] : null;
+      var g = t != null && l ? t / l - 1 : null;
+      return '<li><span>' + c[1] + '</span><b class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</b><em>' + (t == null ? '-' : man(t) + '만') + '</em></li>';
+    }).join('');
+    return '<p class="tt">' + lab(r.ty) + ' <small>전년 ' + (r.ly ? lab(r.ly) : '-') + ' 대비</small></p><ul>' + rows + '</ul>';
+  }
+  function showTip(hit) {
+    var wrap = hit.closest('.dcw'), tip = wrap && wrap.querySelector('.tip');
+    if (!tip) return;
+    var d = Number(hit.getAttribute('data-d'));
+    tip.innerHTML = tipHtml(wrap.dataset.me || ST.s, d); tip.hidden = false;
+    [].forEach.call(wrap.querySelectorAll('.hit'), function (h) { h.classList.toggle('on', h === hit); });
+    var x = Number(hit.getAttribute('x')), w = Number(hit.getAttribute('width')), W = wrap.offsetWidth, tw = tip.offsetWidth;
+    var left = x + w + 6; if (left + tw > W) left = x - tw - 6; if (left < 0) left = Math.max(0, Math.min(W - tw, x + w / 2 - tw / 2));
+    tip.style.left = left + 'px';
+  }
+  function hideTip(wrap) { if (!wrap) return; var t = wrap.querySelector('.tip'); if (t) t.hidden = true; [].forEach.call(wrap.querySelectorAll('.hit.on'), function (h) { h.classList.remove('on'); }); }
+
+  // ── KPI 카드 팝업: CD·구매그룹별 같은 지표 ──
+  var KPI_NAME = { gsT: '매출', mr: '매출총이익률', cnt: '객수', atv: '객단가' };
+  function kpiVal(t, key) {
+    if (key === 'gsT') return [man(t.gsT) + '만', t.growth, pct(t.growth)];
+    if (key === 'mr') return [t.mr == null ? '-' : f1(t.mr) + '%', t.mrD, pp(t.mrD)];
+    if (key === 'cnt') return [t.cnt == null ? '-' : won(t.cnt) + '명', t.cntG, pct(t.cntG)];
+    return [man1(t.atv) + '만', t.atvG, pct(t.atvG)];
+  }
+  function kpiPop(pAttr, cid, key) {
+    var k = ST.k, plants = pAttr === 'ALL' ? ALL() : [pAttr];
+    var cats = cid ? D.storeCats.filter(function (c) { return c[0] === cid; }) : D.storeCats;
+    var line = function (name, sc2, lvl) { var t = M(k, plants, sc2), v = kpiVal(t, key); return '<li class="' + lvl + '"><span>' + esc(name) + '</span><em>' + v[0] + '</em><b class="' + cls(v[1]) + '">' + v[2] + '</b></li>'; };
+    var rows = cats.map(function (c) {
+      var sc = scopeCat(c[0], k), t = M(k, plants, sc);
+      if (!t.gsT && !t.gsL) return '';
+      var pgs = c[2].filter(function (pg) { var m = M(k, plants, scopePg(pg[0])); return m.gsT || m.gsL; });
+      return (cid ? '' : line(c[1], sc, 'cd')) + (pgs.length > 1 || cid ? pgs.map(function (pg) { return line(pg[1], scopePg(pg[0]), 'pg'); }).join('') : '');
+    }).join('');
+    var who = pAttr === 'ALL' ? '킴스 합계' : NAME[pAttr];
+    return '<p class="kt">' + esc(who) + ' · ' + KPI_NAME[key] + ' <small>' + (cid ? '구매그룹별' : 'CD·구매그룹별') + ' · 전년비</small></p><ul>' + rows + '</ul>' +
+      (key === 'cnt' ? '<p class="kn">CD·구매그룹 객수 = 그 상품을 산 영수증 수라서 더하면 전체 객수와 다릅니다.</p>' : '');
+  }
+  var kpiShownAt = 0;
+  function showKpi(card) {
+    var doc = window.document, box = card.closest('.kpis'), pop = doc.getElementById('kpop');
+    if (!box || !card.dataset.kpi) return;
+    pop.innerHTML = kpiPop(box.dataset.p, box.dataset.c, card.dataset.kpi); pop.hidden = false;
+    var r = card.getBoundingClientRect(), z = parseFloat(doc.documentElement.style.zoom) || 1;
+    var pw = pop.offsetWidth, ph = pop.offsetHeight, vw = window.innerWidth / z, vh = window.innerHeight / z;
+    var left = Math.min(Math.max(8, r.left / z), vw - pw - 8), top = r.bottom / z + 6;
+    if (top + ph > vh - 8) top = Math.max(8, r.top / z - ph - 6);
+    pop.style.left = left + 'px'; pop.style.top = top + 'px';
+    [].forEach.call(doc.querySelectorAll('.kpi.on'), function (x) { x.classList.remove('on'); }); card.classList.add('on'); kpiShownAt = Date.now();
+  }
+  function hideKpi() { var doc = window.document, pop = doc.getElementById('kpop'); if (pop) pop.hidden = true; [].forEach.call(doc.querySelectorAll('.kpi.on'), function (x) { x.classList.remove('on'); }); }
+
+  // ── 화면 구성 ──
+  var TABS = [['store', '점포']];
+  var TAB_IDS = ['nongsan', 'susan', 'chuksan', 'gongsan', 'living', 'deli'];
+  function tabsInit() { TAB_IDS.forEach(function (id) { var c = D.storeCats.filter(function (x) { return x[0] === id; })[0]; if (c) TABS.push([c[0], c[1]]); }); }
+  var hasData = function (kind, id) { return !D.have || (D.have[kind] || []).indexOf(id) >= 0; };
+  var NOT_YET = function (what) { return '<p class="note pend">' + what + ' 데이터는 아직 받지 않았습니다. 다음 데이터 갱신부터 표시됩니다.</p>'; };
+  var OPT = [['daily', '일별 매출'], ['gb', '잘한·부족한 점'], ['bars', '점포 매출'], ['detail', '상세 비교'], ['big', '큰판'], ['heat', '성장율 색칸표'], ['mc', 'MC 증감 (CD 탭)'], ['top', '상위 15개 상품 (CD 탭)']];
+  var ST = { k: 'D', s: 'all', t: 'store', v: 'report' };
+  function view() {
+    if (ST.v === 'stats') return statsView();
+    if (ST.s === 'all') return ST.t === 'store' || ALL_TABS.indexOf(ST.t) < 0 ? allView(ST.k) : allCatView(ST.k, ST.t);
+    return ST.t === 'store' ? storeView(ST.k, ST.s) : catView(ST.k, ST.s, ST.t);
+  }
+  function visibleRows(v) {
+    var hide = (S && S.hide) || {};
+    return v.rows.map(function (r) { return r.filter(function (x) { return x && !(x.opt && hide[x.opt]); }); }).filter(function (r) { return r.length; });
+  }
+  function html() {
+    var v = view(), rows = visibleRows(v);
+    return '<header class="hd"><p class="eyebrow">' + esc(v.eyebrow) + '</p><h1>' + esc(v.h1) + '</h1><p class="sub">' + v.sub + '</p></header>' +
+      rows.map(function (r) { return '<div class="row' + (r.length > 1 ? ' split' : '') + '">' + r.map(function (x) { return x.html; }).join('') + '</div>'; }).join('');
+  }
+  var NAVOPEN = {};
+  function navHtml() {
+    var v = view(), rows = visibleRows(v), secs = [].concat.apply([], rows);
+    var toc = '<ul class="toc">' + secs.map(function (x) { return '<li><a href="#" data-sec="' + x.id + '">' + x.nav + '</a></li>'; }).join('') + '</ul>';
+    // CD 선택은 상단 아이콘으로만 — 왼쪽 메뉴는 전점 요약 / 현재 화면 목차 / 점포 목록
+    var curTab = (TABS.filter(function (x) { return x[0] === ST.t; })[0] || [0, ''])[1];
+    var allOn = ST.v === 'report' && ST.s === 'all';
+    var out = (WEB && WEB.home ? '<ul class="nv home"><li><button type="button" data-go="home">← 메뉴 화면</button></li></ul>' : '') + '<p class="nl">보기</p><ul class="nv"><li><button type="button" data-go="all"' + (allOn ? ' aria-current="page"' : '') + '>전점 요약' + (allOn && ST.t !== 'store' ? ' · ' + curTab : '') + '</button>' + (allOn ? toc : '') + '</li>';
+    if (ST.s !== 'all') {
+      var stOn = ST.v === 'report';
+      out += '<li><button type="button" data-store="' + ST.s + '"' + (stOn ? ' aria-current="page"' : '') + '>' + esc(NAME[ST.s]) + (ST.t !== 'store' ? ' · ' + curTab : '') + '</button>' + (stOn ? toc : '') + '</li>';
+    }
+    var scS = scopeStore(ST.k);
+    out += '</ul><p class="nl">점포별 실적 <small>' + PNAME[ST.k] + ' 매출 성장율</small></p>' + D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
+      var open = NAVOPEN[g[0]] != null ? NAVOPEN[g[0]] : (ST.s !== 'all' ? GRP[ST.s] === g[0] : g[0] === 'L');
+      var gt = M(ST.k, g[2], scS).growth;
+      return '<details class="ng" data-g="' + g[0] + '"' + (open ? ' open' : '') + '><summary><span>' + g[1] + ' <small>' + g[2].length + '점</small></span><b class="' + cls(gt) + '">' + pct(gt) + '</b></summary><ul class="sl">' + g[2].map(function (p) {
+        var gr = M(ST.k, [p], scS).growth, on = ST.v === 'report' && ST.s === p;
+        return '<li><button type="button" data-store="' + p + '"' + (on ? ' aria-current="page"' : '') + '><span>' + esc(NAME[p]) + '</span><b class="' + cls(gr) + '">' + (gr == null ? '전년 없음' : pct(gr)) + '</b></button></li>';
+      }).join('') + '</ul></details>';
+    }).join('') + '<ul class="nv">';
+    if (STATS.allowed) out += '</ul><p class="nl">관리</p><ul class="nv"><li><button type="button" data-go="stats"' + (ST.v === 'stats' ? ' aria-current="page"' : '') + '>접속 현황</button>' + (ST.v === 'stats' ? toc : '') + '</li>';
+    return out + '</ul>';
+  }
+  function headTitle() {
+    if (ST.v === 'stats') return '접속 현황';
+    if (ST.s === 'all') { var tt = TABS.filter(function (x) { return x[0] === ST.t; })[0]; return '킴스클럽 전점' + (ST.t !== 'store' && ALL_TABS.indexOf(ST.t) >= 0 && tt ? ' · ' + tt[1] : ''); }
+    var t = TABS.filter(function (x) { return x[0] === ST.t; })[0];
+    return NAME[ST.s] + (ST.t === 'store' ? '' : ' · ' + t[1]);
+  }
+
+  // ── 설정 (아티팩트 로그인 = 계정에 저장 + 기기, 그 외 = 기기) ──
+  var DEF = { scale: 100, mode: 'dark', store: 'all', first: 'all', per: null, cmp: {}, hide: {} };
+  var LS = 'kims-report-settings';
+  function loadLocal() { try { return JSON.parse(window.localStorage.getItem(LS) || 'null'); } catch (e) { return null; } }
+  function saveLocal() { try { window.localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
+  var CLOUD = { db: null, uid: null };
+  function saveCloud() {
+    // 웹: 아이디(이메일)별로 구글시트에 저장 → 모바일·PC 어디서 열어도 같은 설정
+    if (WEB && WEB.savePrefs) return WEB.savePrefs(JSON.stringify(S)).then(function () { return true; }, function () { return false; });
+    if (!CLOUD.db || !CLOUD.uid) return Promise.resolve(false);
+    return CLOUD.db.doc('data/users/' + CLOUD.uid + '/prefs').set({ v: JSON.stringify(S) }).then(function () { return true; }, function () { return false; });
+  }
+  function applyMode() { var r = window.document.documentElement; r.setAttribute('data-mode', S.mode || 'dark'); r.style.zoom = (S.scale && S.scale !== 100) ? S.scale / 100 : ''; }
+
+  function cmpHtml(me) {
+    var openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
+    if (me === 'all') return '<fieldset class="fs" id="fsCmp"><legend>비교점</legend><p class="hint">위 점포 선택에서 점포를 고르면 여기에 그 점포의 비교 점포 목록이 나옵니다.</p></fieldset>';
+    var cur = custom(me) ? S.cmp[me] : null;
+    return '<fieldset class="fs" id="fsCmp"><legend>비교점 <small>' + esc(NAME[me]) + ' 기준</small></legend><p class="hint">비교할 점포를 눌러 켜고 끄세요. 고르지 않으면 같은 그룹(' + GNAME[GRP[me]] + ') 다른 점포와 비교합니다.</p>' +
+      openGroups.map(function (g) {
+        return '<p class="cg">' + g[1] + '</p><div class="chips">' + g[2].filter(function (p) { return p !== me; }).map(function (p) {
+          var on = cur ? cur.indexOf(p) >= 0 : GRP[p] === GRP[me];
+          return '<label class="chip"><input type="checkbox" name="cmp" value="' + p + '"' + (on ? ' checked' : '') + '><span>' + esc(NAME[p]) + '</span></label>';
+        }).join('') + '</div>';
+      }).join('') + '<button type="button" class="lnk" id="cmpReset">같은 그룹으로 되돌리기</button></fieldset>';
+  }
+  function drawerHtml() {
+    var me = ST.s, openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
+    var opt = function (v, t, cur) { return '<option value="' + v + '"' + (v === cur ? ' selected' : '') + '>' + t + '</option>'; };
+    var radio = function (name, v, t, cur) { return '<label class="rb"><input type="radio" name="' + name + '" value="' + v + '"' + (v === cur ? ' checked' : '') + '><span>' + t + '</span></label>'; };
+    var cmp = cmpHtml(me);
+    return '<div class="dh"><h2 id="dtitle">설정</h2><button type="button" class="ib" id="dclose" aria-label="설정 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
+      '<div class="db">' +
+      '<fieldset class="fs"><legend>화면 크기</legend><div class="seg3">' + [[90, '작게'], [100, '보통'], [115, '크게'], [130, '아주 크게']].map(function (x) { return radio('scale', String(x[0]), x[1], String(S.scale || 100)); }).join('') + '</div><p class="hint">글자·표·그래프가 함께 커지고 작아집니다. 이 기기에서 바로 미리 볼 수 있고, 저장해야 유지됩니다.</p></fieldset>' +
+      '<fieldset class="fs"><legend>화면 모드</legend><div class="seg3">' + radio('mode', 'dark', '다크', S.mode) + radio('mode', 'light', '라이트', S.mode) + radio('mode', 'system', '시스템', S.mode) + '</div></fieldset>' +
+      '<fieldset class="fs"><legend>점포 선택</legend><select id="fStore" class="sel">' + opt('all', '전점 요약', me) + openGroups.map(function (g) { return '<optgroup label="' + g[1] + '">' + g[2].map(function (p) { return opt(p, NAME[p], me); }).join('') + '</optgroup>'; }).join('') + '</select></fieldset>' +
+      cmp +
+      '<fieldset class="fs"><legend>처음 열 때</legend><div class="seg3">' + radio('first', 'all', '전점 요약', S.first) + radio('first', 'last', '마지막 본 점포', S.first) + '</div>' +
+      '<p class="cg">기본 기간</p><div class="seg3">' + D.periods.map(function (p) { return radio('per', p[0], p[1], S.per || D.defPeriod); }).join('') + '</div></fieldset>' +
+      '<fieldset class="fs"><legend>보일 항목</legend><div class="chips">' + OPT.map(function (o) { return '<label class="chip"><input type="checkbox" name="show" value="' + o[0] + '"' + (S.hide[o[0]] ? '' : ' checked') + '><span>' + o[1] + '</span></label>'; }).join('') + '</div></fieldset>' +
+      '<fieldset class="fs"><legend>설정 초기화</legend><p class="hint">화면 크기·모드·비교점·보일 항목 등 모든 설정을 처음 상태로 되돌립니다.</p><button type="button" class="btn warn" id="dreset">설정 초기화</button></fieldset>' +
+      (WEB ? '<fieldset class="fs"><legend>계정</legend><p class="hint">' + esc(WEB.name || '') + ' 로그인 중</p>' + (WEB.home ? '<button type="button" class="btn" id="dhome" style="width:100%;margin-bottom:8px">메뉴 화면으로</button>' : '') + '<button type="button" class="btn" id="dlogout" style="width:100%">로그아웃</button></fieldset>' : '') +
+      '<p class="hint">' + (CLOUD.uid || WEB ? '로그인한 계정과 이 기기에 저장됩니다.' : '이 기기(브라우저)에 저장됩니다.') + '</p>' +
+      '</div><div class="df"><button type="button" class="btn" id="dcancel">취소</button><button type="button" class="btn pri" id="dsave">저장</button></div>';
+  }
+  function readDrawer() {
+    var doc = window.document, q = function (s) { return [].slice.call(doc.querySelectorAll('#drawer ' + s)); };
+    var val = function (n) { var x = q('input[name=' + n + ']:checked')[0]; return x ? x.value : null; };
+    var n = JSON.parse(JSON.stringify(S));
+    n.mode = val('mode') || n.mode; n.scale = Number(val('scale')) || 100; n.first = val('first') || n.first; n.per = val('per') || n.per;
+    n.store = doc.getElementById('fStore').value;
+    n.hide = {}; OPT.forEach(function (o) { n.hide[o[0]] = true; }); q('input[name=show]:checked').forEach(function (x) { delete n.hide[x.value]; });
+    var me = n.store;
+    if (me !== 'all' && q('input[name=cmp]').length) {
+      var picked = q('input[name=cmp]:checked').map(function (x) { return x.value; });
+      var grp = openOf(GRP[me]).filter(function (p) { return p !== me; });
+      var same = picked.length === grp.length && grp.every(function (p) { return picked.indexOf(p) >= 0; });
+      if (same || !picked.length) delete n.cmp[me]; else n.cmp[me] = picked;
+    }
+    return n;
+  }
+  var lastFocus = null;
+  function openDrawer() {
+    var doc = window.document, d = doc.getElementById('drawer');
+    lastFocus = doc.activeElement;
+    d.innerHTML = drawerHtml();
+    doc.body.classList.add('dr-open'); d.hidden = false; doc.getElementById('scrim').hidden = false;
+    window.requestAnimationFrame(function () { d.classList.add('on'); doc.getElementById('scrim').classList.add('on'); });
+    doc.getElementById('dclose').focus();
+  }
+  function closeDrawer() {
+    var doc = window.document, d = doc.getElementById('drawer'), s = doc.getElementById('scrim');
+    d.classList.remove('on'); s.classList.remove('on'); doc.body.classList.remove('dr-open');
+    window.setTimeout(function () { d.hidden = true; if (!doc.body.classList.contains('nav-open')) s.hidden = true; }, 220);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  var toastT = null;
+  function toast(msg) {
+    var t = window.document.getElementById('toast');
+    t.textContent = msg; t.hidden = false;
+    window.requestAnimationFrame(function () { t.classList.add('on'); });
+    window.clearTimeout(toastT);
+    toastT = window.setTimeout(function () { t.classList.remove('on'); window.setTimeout(function () { t.hidden = true; }, 250); }, 3000);
+  }
+  function saveDrawer() {
+    var n = readDrawer(), storeChanged = n.store !== ST.s;
+    S = n; applyMode(); saveLocal();
+    if (storeChanged) { ST.s = n.store; ST.t = 'store'; ST.v = 'report'; }
+    closeDrawer(); render(storeChanged);
+    saveCloud().then(function (ok) { toast(ok ? '설정을 저장했습니다 (계정·이 기기)' : '설정을 저장했습니다 (이 기기)'); });
+  }
+
+  // ── 사이드바 (PC 고정, 모바일 팝업) ──
+  function openNav() { var doc = window.document; doc.body.classList.add('nav-open'); doc.getElementById('scrim').hidden = false; window.requestAnimationFrame(function () { doc.getElementById('scrim').classList.add('on'); }); }
+  function closeNav() { var doc = window.document; doc.body.classList.remove('nav-open'); if (!doc.body.classList.contains('dr-open')) { doc.getElementById('scrim').classList.remove('on'); window.setTimeout(function () { doc.getElementById('scrim').hidden = true; }, 220); } }
+
+  // ── 그리기 ──
+  var spy = null, rv = null;
+  function render(toTop) {
+    var doc = window.document;
+    var main = doc.getElementById('main');
+    // 그래프 폭 = 본문 폭 − 본문 여백 − 패널 안쪽 여백
+    var cs = window.getComputedStyle(main), pad = window.innerWidth <= 600 ? 28 : 36;
+    CHART_W = main.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - pad - 2;
+    main.innerHTML = html();
+    doc.getElementById('nav').innerHTML = navHtml();
+    // 차례 등장(0.1초 간격, 9번째부터는 같이)
+    [].forEach.call(doc.querySelectorAll('#main .kpis, #main .bars, #main .pts, #main .prods, #main .mcl, #main .who, #main .row, #nav .nv'), function (box) {
+      box.classList.add('stg');
+      [].forEach.call(box.children, function (c, i) { c.style.setProperty('--i', Math.min(i, 8)); });
+    });
+    doc.getElementById('htitle').textContent = headTitle();
+    var pr = D.per[ST.k];
+    doc.getElementById('hdate').textContent = ST.v === 'stats' ? '' : pr.title.replace(/ (?:실적|누계)$/, '') + ' · ' + pr.vs;
+    [].forEach.call(doc.querySelectorAll('.seg button'), function (b) { b.setAttribute('aria-pressed', b.dataset.k === ST.k); });
+    doc.querySelector('.seg').hidden = ST.v === 'stats';
+    var cb = doc.getElementById('catbar');
+    cb.hidden = ST.v !== 'report';
+    var isAll = ST.s === 'all';
+    if (isAll && ALL_TABS.indexOf(ST.t) < 0) ST.t = 'store';
+    [].forEach.call(cb.querySelectorAll('button'), function (b) { b.hidden = isAll && ALL_TABS.indexOf(b.dataset.t) < 0; if (b.dataset.t === 'store') b.querySelector('span').textContent = isAll ? '전체' : '점포'; });
+    doc.querySelector('.app').classList.toggle('has-cats', !cb.hidden);
+    [].forEach.call(cb.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.t === ST.t); });
+    if (toTop) doc.getElementById('scroller').scrollTop = 0;
+    try { window.history.replaceState(null, '', '#' + ST.s + '-' + ST.t + '-' + ST.k); } catch (e) {}
+    S.last = ST.s; saveLocal();
+    // 현재 보고 있는 항목을 사이드바에 표시
+    hideKpi();
+    if (spy) spy.disconnect();
+    if ('IntersectionObserver' in window) {
+      spy = new window.IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          [].forEach.call(doc.querySelectorAll('.toc a'), function (a) { a.classList.toggle('on', a.dataset.sec === e.target.id.slice(4)); });
+        });
+      }, { root: doc.getElementById('scroller'), rootMargin: '-10% 0px -70% 0px' });
+      [].forEach.call(main.querySelectorAll('section[id^=sec-]'), function (s) { spy.observe(s); });
+      // 스크롤 리빌: 첫 화면 아래 섹션만, 들어오면 아래에서 살짝 올라옴 (움직임 줄이기 설정이면 끔)
+      if (rv) rv.disconnect();
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce) {
+        var scr = doc.getElementById('scroller'), limit = scr.getBoundingClientRect().bottom;
+        rv = new window.IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); rv.unobserve(e.target); } }); }, { root: scr, rootMargin: '0px 0px -8% 0px' });
+        [].forEach.call(main.querySelectorAll('.row'), function (r) { if (r.getBoundingClientRect().top > limit) { r.classList.add('rv'); rv.observe(r); } });
+      }
+    }
+  }
+  function goSec(id) {
+    var doc = window.document, el = doc.getElementById('sec-' + id), sc = doc.getElementById('scroller');
+    if (!el) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    sc.scrollTo({ top: el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 12, behavior: reduce ? 'auto' : 'smooth' });
+  }
+
+  // ── 접속 기록 (아티팩트에서만) ──
+  function kstDay() { var d = new Date(Date.now() + 9 * 3600e3); return d.toISOString().slice(0, 10); }
+  function cloudInit() {
+    var c = window.claude;
+    if (!c || !c.use) return;
+    Promise.all([c.use('db'), c.use('user')]).then(function (r) {
+      var db = r[0], user = r[1];
+      if (!db || !user) return;
+      user.id().then(function (uid) {
+        if (!uid) return;
+        CLOUD.db = db; CLOUD.uid = uid;
+        // 계정에 저장된 설정 불러오기
+        db.doc('data/users/' + uid + '/prefs').get().then(function (snap) {
+          var v = snap && snap.exists && snap.data && snap.data() ? snap.data().v : null;
+          if (v) { try { var cs = JSON.parse(v); S = merge(cs); applyMode(); saveLocal(); render(false); } catch (e) {} }
+        }, function () {});
+        // 접속 1회 기록 (같은 창에서 하루 1번)
+        var day = kstDay(), key = 'kims-visit-' + day, seen = false;
+        try { seen = window.sessionStorage.getItem(key) === '1'; } catch (e) {}
+        if (!seen) {
+          var ref = db.doc('visits/' + uid);
+          ref.get().then(function (snap) {
+            var d = (snap && snap.exists && snap.data()) || {}, days = JSON.parse(JSON.stringify(d.days || {}));
+            days[day] = (days[day] || 0) + 1;
+            var keys = Object.keys(days).sort(); while (keys.length > 120) delete days[keys.shift()];
+            return ref.set({ days: days, last: new Date().toISOString() });
+          }).then(function () { try { window.sessionStorage.setItem(key, '1'); } catch (e) {} }, function () {});
+        }
+        // 접속 현황은 편집 권한자(Editor·Owner)만
+        Promise.resolve(user.canEdit()).then(function (ok) {
+          if (!ok) return;
+          STATS.allowed = true; render(false);
+          db.collection('visits').onSnapshot(function (qs) {
+            STATS.rows = qs.docs.map(function (x) { var o = JSON.parse(JSON.stringify(x.data() || {})); o.id = x.id; return o; });
+            STATS.err = null;
+            user.profiles(STATS.rows.map(function (r) { return r.id; })).then(function (ps) {
+              STATS.rows.forEach(function (r) { STATS.names[r.id] = (ps && ps[r.id] && ps[r.id].name) || ''; });
+              if (ST.v === 'stats') render(false);
+            }, function () {});
+            if (ST.v === 'stats') render(false);
+          }, function () { STATS.err = '접속 기록을 불러오지 못했습니다.'; if (ST.v === 'stats') render(false); });
+        }, function () {});
+      });
+    }, function () {});
+  }
+  function merge(x) {
+    var n = JSON.parse(JSON.stringify(DEF));
+    if (x && typeof x === 'object') for (var k in x) n[k] = x[k];
+    n.cmp = n.cmp || {}; n.hide = n.hide || {};
+    return n;
+  }
+
+  function init(data, web) {
+    WEB = web || null;
+    if (WEB) STATS.allowed = !!WEB.admin;
+    setup(data);
+    tabsInit();
+    var doc = window.document, valid = function (s) { return s === 'all' || (NAME[s] && GRP[s] !== D.closed); };
+    S = merge(loadLocal());
+    if (WEB && WEB.prefs) { try { S = merge(JSON.parse(WEB.prefs)); } catch (e) {} } // 아이디별 설정이 기기 저장보다 우선
+    applyMode();
+    ST.k = S.per || D.defPeriod;
+    if (S.first === 'last' && valid(S.last)) ST.s = S.last;
+    var h = (window.location.hash || '').slice(1).split('-');
+    if (valid(h[0]) && h[0] !== 'all') { ST.s = h[0]; if (h[1]) ST.t = h[1]; if (D.per[h[2]]) ST.k = h[2]; }
+    if (!TABS.some(function (t) { return t[0] === ST.t; })) ST.t = 'store';
+    doc.querySelector('.seg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { ST.k = b.dataset.k; render(false); } });
+    doc.getElementById('menuBtn').addEventListener('click', openNav);
+    // 화면 폭이 바뀌면 그래프 폭을 다시 맞춤
+    var rzT = null, lastW = 0;
+    window.addEventListener('resize', function () { window.clearTimeout(rzT); rzT = window.setTimeout(function () { var w = doc.getElementById('main').clientWidth; if (w !== lastW) { lastW = w; var sc = doc.getElementById('scroller'), top = sc.scrollTop; render(false); sc.scrollTop = top; } }, 200); });
+    doc.getElementById('catbar').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b && b.dataset.t !== ST.t) { ST.t = b.dataset.t; render(true); } });
+    doc.getElementById('setBtn').addEventListener('click', openDrawer);
+    doc.getElementById('scrim').addEventListener('click', function () { if (doc.body.classList.contains('dr-open')) { applyMode(); closeDrawer(); } closeNav(); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (doc.body.classList.contains('dr-open')) { applyMode(); closeDrawer(); } else closeNav(); } });
+    doc.getElementById('drawer').addEventListener('click', function (e) {
+      var id = e.target.closest('button') && e.target.closest('button').id;
+      if (id === 'dclose' || id === 'dcancel') { applyMode(); closeDrawer(); }
+      else if (id === 'dsave') saveDrawer();
+      else if (id === 'dlogout' && WEB) WEB.logout();
+      else if (id === 'dhome' && WEB && WEB.home) { closeDrawer(); WEB.home(); }
+      else if (id === 'dreset') {
+        // 실수 방지: 한 번 더 눌러야 초기화 (3초 안에)
+        var rb = doc.getElementById('dreset');
+        if (rb.dataset.armed !== '1') { rb.dataset.armed = '1'; rb.textContent = '한 번 더 누르면 초기화됩니다'; rb.classList.add('armed'); window.setTimeout(function () { if (rb.isConnected) { rb.dataset.armed = ''; rb.textContent = '설정 초기화'; rb.classList.remove('armed'); } }, 3000); return; }
+        S = merge(null); applyMode(); saveLocal();
+        ST.k = D.defPeriod; ST.s = 'all'; ST.t = 'store'; ST.v = 'report';
+        closeDrawer(); render(true);
+        saveCloud().then(function (ok) { toast(ok ? '설정을 초기화했습니다 (계정·이 기기)' : '설정을 초기화했습니다 (이 기기)'); });
+      }
+      else if (id === 'cmpReset') [].forEach.call(doc.querySelectorAll('#drawer input[name=cmp]'), function (x) { x.checked = GRP[x.value] === GRP[doc.getElementById('fStore').value]; });
+    });
+    // 설정에서 점포를 바꾸면 비교점 목록을 그 점포 기준으로 바로 바꿈
+    doc.getElementById('drawer').addEventListener('change', function (e) {
+      if (e.target.name === 'scale') window.document.documentElement.style.zoom = Number(e.target.value) === 100 ? '' : Number(e.target.value) / 100;
+      if (e.target.id === 'fStore') { var f = doc.getElementById('fsCmp'); if (f) f.outerHTML = cmpHtml(e.target.value); }
+    });
+    doc.getElementById('nav').addEventListener('toggle', function (e) { if (e.target.dataset && e.target.dataset.g) NAVOPEN[e.target.dataset.g] = e.target.open; }, true);
+    doc.getElementById('nav').addEventListener('click', function (e) {
+      var a = e.target.closest('[data-sec]'), b = e.target.closest('button');
+      if (a) { e.preventDefault(); closeNav(); goSec(a.dataset.sec); return; }
+      if (!b) return;
+      if (b.dataset.go === 'home') { closeNav(); if (WEB && WEB.home) WEB.home(); return; }
+      if (b.dataset.store) { if (b.dataset.store !== ST.s) ST.t = 'store'; ST.s = b.dataset.store; ST.v = 'report'; }
+      else if (b.dataset.go === 'all') { ST.s = 'all'; ST.v = 'report'; ST.t = b.dataset.tab || (ALL_TABS.indexOf(ST.t) >= 0 ? ST.t : 'store'); }
+      else if (b.dataset.go === 'stats') ST.v = 'stats';
+      else if (b.dataset.tab) { ST.t = b.dataset.tab; ST.v = 'report'; }
+      closeNav(); render(true);
+    });
+    var pick = function (e) {
+      var r = e.target.closest('.pick'); if (!r) return;
+      if (r.dataset.s) { if (ST.s !== 'all' || ALL_TABS.indexOf(ST.t) < 0) ST.t = 'store'; ST.s = r.dataset.s; ST.v = 'report'; render(true); }
+      else if (r.dataset.day) { STATS.day = r.dataset.day; render(false); }
+    };
+    var mainEl = doc.getElementById('main');
+    mainEl.addEventListener('mouseover', function (e) { var c = e.target.closest && e.target.closest('.kpi[data-kpi]'); if (c && !c.classList.contains('on')) showKpi(c); });
+    var noHover = window.matchMedia && window.matchMedia('(hover: none)').matches; // 터치 기기는 누를 때만 열고 닫음
+    mainEl.addEventListener('mouseout', function (e) { if (noHover) return; var c = e.target.closest && e.target.closest('.kpi[data-kpi]'); if (c && !c.contains(e.relatedTarget)) hideKpi(); });
+    mainEl.addEventListener('focusin', function (e) { if (e.target.matches && e.target.matches('.kpi[data-kpi]:focus-visible')) showKpi(e.target); });
+    mainEl.addEventListener('focusout', function (e) { if (e.target.matches && e.target.matches('.kpi[data-kpi]')) hideKpi(); });
+    doc.getElementById('scroller').addEventListener('scroll', hideKpi, { passive: true });
+    doc.addEventListener('click', function (e) { var c = e.target.closest && e.target.closest('.kpi[data-kpi]'); if (c) { if (c.classList.contains('on') && Date.now() - kpiShownAt > 500) hideKpi(); else showKpi(c); } else hideKpi(); });
+    mainEl.addEventListener('mouseover', function (e) { var h = e.target.closest && e.target.closest('.hit'); if (h) showTip(h); });
+    mainEl.addEventListener('mouseout', function (e) { var w = e.target.closest && e.target.closest('.dcw'); if (w && !w.contains(e.relatedTarget)) hideTip(w); });
+    mainEl.addEventListener('focusin', function (e) { if (e.target.classList && e.target.classList.contains('hit')) showTip(e.target); });
+    mainEl.addEventListener('click', function (e) { var h = e.target.closest && e.target.closest('.hit'); if (h) { showTip(h); return; } [].forEach.call(doc.querySelectorAll('.dcw'), hideTip); });
+    doc.getElementById('main').addEventListener('click', pick);
+    doc.getElementById('main').addEventListener('keydown', function (e) { if (e.key === 'Enter') pick(e); });
+    render(true);
+    if (!WEB) cloudInit();
+  }
+  // 웹: 폰에 저장된 데이터로 먼저 보여준 뒤 새 데이터가 오면 바꿔 그림
+  function update(data) { setup(data); render(false); toast('최신 데이터로 바꿨습니다 · ' + D.per.D.title.replace(/ (?:실적|누계)$/, '')); }
+  function applyPrefs(str) {
+    if (!str) return;
+    var cur = JSON.stringify(S), n;
+    try { n = merge(JSON.parse(str)); } catch (e) { return; }
+    var a = JSON.parse(cur), b = JSON.parse(JSON.stringify(n)); delete a.last; delete b.last;
+    if (JSON.stringify(a) === JSON.stringify(b)) return; // 같으면 그대로
+    var storeBefore = ST.s;
+    S = n; applyMode(); saveLocal();
+    if (S.first === 'last' && S.last && S.last !== storeBefore && NAME[S.last]) { ST.s = S.last; ST.t = 'store'; }
+    render(false);
+  }
+  return { applyPrefs: applyPrefs, update: update, init: init, setup: function (d) { setup(d); S = merge(null); if (TABS.length === 1) tabsInit(); }, metrics: metrics, M: M, scopeStore: scopeStore, scopeCat: scopeCat, rankIn: rankIn, OPEN: OPEN, ALL: ALL, state: ST, html: html, navHtml: navHtml, setCmp: function (me, list) { S.cmp[me] = list; } };
+})();
+</script>
+<script>window.KIMS_API="https://script.google.com/macros/s/AKfycby4V51vRDZlyWaNZfmM3tOIjaFH-N8dMDUQlez50uqJKX0OPwQvb4NiRK11Wt9Wib90pw/exec";window.KIMS_LOGO="data:image/png;base64,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";</script>
+<script>/* 웹(GitHub Pages)용: 로그인 → 메뉴 화면(포털) → 매출 리포트 / 공지사항 / 사용자 관리
+   화면 파일에는 매출 데이터가 없고, 승인된 사람이 로그인해야 API(Apps Script)가 데이터를 내려준다.
+   주소 뒤 # 으로 화면 구분: (없음) 메뉴 화면 · #report 매출 리포트 · #notice 공지사항 · #admin 사용자 관리 */
+(function () {
+  'use strict';
+  var API = window.KIMS_API, LOGO = window.KIMS_LOGO || '', DOMAINS = ['eland.co.kr'];
+  var AK = 'kims-auth', DK = 'kims-data', PK = 'kims-portal', doc = document, root = doc.documentElement;
+  var store = function (k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); v ? localStorage.setItem(k, JSON.stringify(v)) : localStorage.removeItem(k); } catch (e) { return null; } };
+  var get = function () { return store(AK); }, put = function (v) { store(AK, v); };
+  function api(body) {
+    return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
+      .then(function (r) { if (!r.ok) throw new Error('서버 응답 오류(' + r.status + ')'); return r.json(); });
+  }
+  function authApi(body) { // 로그인이 풀렸으면 로그인 화면으로
+    var a = get() || {}; body.token = a.token;
+    return api(body).then(function (r) { if (r && r.auth === false) { signOut(true, r.err); throw new Error(r.err || '다시 로그인해 주세요'); } return r; });
+  }
+  var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+  var $ = function (id) { return doc.getElementById(id); };
+  var gate = $('gate'), portal = $('portal'), pop = $('npop');
+  var WD = ['일', '월', '화', '수', '목', '금', '토'];
+  function kst(iso, time) {
+    if (!iso) return '';
+    var d = new Date(new Date(iso).getTime() + 9 * 3600e3), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return d.getUTCFullYear() + '.' + p(d.getUTCMonth() + 1) + '.' + p(d.getUTCDate()) + '(' + WD[d.getUTCDay()] + ')' + (time ? ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes()) : '');
+  }
+  function toast(t, bad) {
+    var el = $('ptoast'); if (!el) { el = doc.createElement('div'); el.id = 'ptoast'; el.setAttribute('role', 'status'); doc.body.appendChild(el); }
+    el.textContent = t; el.className = bad ? 'bad on' : 'on'; clearTimeout(toast.t); toast.t = setTimeout(function () { el.className = bad ? 'bad' : ''; }, 3000);
+  }
+  var ICON = {
+    report: '<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+    notice: '<svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1zM17 8a5 5 0 0 1 0 8M20 5a9 9 0 0 1 0 14"/></svg>',
+    check: '<svg viewBox="0 0 24 24"><path d="M9 4h6v3H9zM7 5H5v16h14V5h-2M8.5 13l2.5 2.5 4.5-5"/></svg>',
+    soon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    users: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 4 6"/></svg>',
+    back: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
+  };
+  var logoImg = function (cls) { return LOGO ? '<img class="' + cls + '" src="' + LOGO + '" alt="킴스클럽">' : '<b class="' + cls + ' txt">KIM\'S CLUB</b>'; };
+
+  // ───────── 로그인 화면 ─────────
+  function showGate(view, msg, email) {
+    setView('gate');
+    var em = esc(email || (get() || {}).email || '');
+    var m = msg ? '<p class="gm ' + (msg.ok ? 'ok' : 'err') + '" role="status">' + esc(msg.t) + '</p>' : '';
+    var emailField = '<label>회사 이메일<input id="aEmail" type="email" autocomplete="email" inputmode="email" placeholder="이름@eland.co.kr" value="' + em + '" required></label>';
+    var f;
+    if (view === 'request') f = '<h2>열람 요청</h2><p class="gh">관리자가 승인하면 비밀번호를 설정하고 볼 수 있습니다.</p>' + m + emailField +
+      '<label>이름<input id="aName" autocomplete="name" required maxlength="40"></label>' +
+      '<label>점포·부서<input id="aStore" maxlength="40" placeholder="예: 야탑점 농산"></label>' +
+      '<label>요청 메모 <small>(선택)</small><input id="aMemo" maxlength="200"></label>' +
+      '<button class="gb pri" id="aGo" type="submit">요청 보내기</button><p class="gl"><a href="#" data-v="login">' + ICON.back + '로그인으로</a></p>';
+    else if (view === 'setpw') f = '<h2>비밀번호 설정</h2><p class="gh">승인된 이메일로 처음 한 번(또는 초기화 후) 설정합니다. 8자 이상.</p>' + m + emailField +
+      '<label>새 비밀번호<input id="aPw" type="password" autocomplete="new-password" minlength="8" required></label>' +
+      '<label>비밀번호 확인<input id="aPw2" type="password" autocomplete="new-password" minlength="8" required></label>' +
+      '<button class="gb pri" id="aGo" type="submit">설정하고 들어가기</button><p class="gl"><a href="#" data-v="login">' + ICON.back + '로그인으로</a></p>';
+    else f = '<h2>로그인</h2><p class="gh">승인된 사람만 볼 수 있습니다.</p>' + m + emailField +
+      '<label>비밀번호<input id="aPw" type="password" autocomplete="current-password" required></label>' +
+      '<button class="gb pri" id="aGo" type="submit">로그인</button>' +
+      '<div class="gl2"><a href="#" data-v="request" class="gb">처음이에요 · 열람 요청</a><a href="#" data-v="setpw" class="gb">승인받았어요 · 비밀번호 설정</a></div>' +
+      '<p class="gf"><b>비밀번호를 잊으셨나요?</b> 관리자에게 초기화를 요청하세요. 초기화되면 \'승인받았어요 · 비밀번호 설정\'에서 새로 정하면 됩니다.</p>';
+    gate.innerHTML = '<div class="gw"><section class="gbrand">' + logoImg('glogo') +
+      '<h1>킴스 매출 리포트</h1><p class="gsub">점포별 매출을 매일 아침에</p>' +
+      '<ol class="gsteps"><li><i>1</i><div><b>열람 요청</b><span>회사 이메일(@eland.co.kr)로 요청</span></div></li><li><i>2</i><div><b>승인 대기</b><span>관리자가 확인 후 승인</span></div></li><li><i>3</i><div><b>비밀번호 설정 후 이용</b><span>한 번 정하면 30일 동안 자동 로그인</span></div></li></ol></section>' +
+      '<form class="gcard" id="aForm" novalidate data-view="' + view + '">' + f + '</form></div>';
+    gate.hidden = false;
+    var first = $(em ? (view === 'request' ? 'aName' : 'aPw') : 'aEmail'); if (first && !('ontouchstart' in window)) first.focus();
+  }
+  function busy(on) { var b = $('aGo'); if (b) { if (!b.dataset.t) b.dataset.t = b.textContent; b.disabled = on; b.textContent = on ? '확인 중…' : b.dataset.t; } }
+  gate.addEventListener('click', function (e) { var a = e.target.closest('a[data-v]'); if (a) { e.preventDefault(); showGate(a.dataset.v, null, ($('aEmail') || {}).value); } });
+  gate.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = e.target.dataset.view, val = function (id) { var x = $(id); return x ? x.value.trim() : ''; };
+    var email = val('aEmail').toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showGate(v, { t: '이메일을 확인해 주세요' }, email);
+    if (v === 'request' && DOMAINS.indexOf(email.split('@')[1]) < 0) return showGate(v, { t: '회사 이메일(@' + DOMAINS.join(', @') + ')로만 요청할 수 있습니다' }, email);
+    busy(true);
+    var fail = function (view) { return function (err) { showGate(view, { t: err.message }, email); }; };
+    if (v === 'request') {
+      if (!val('aName')) return showGate('request', { t: '이름을 입력해 주세요' }, email);
+      api({ action: 'request', email: email, name: val('aName'), store: val('aStore'), memo: val('aMemo') }).then(function (r) {
+        if (!r.ok) return showGate('request', { t: r.err }, email);
+        var t = { pending: '요청했습니다. 관리자 승인 후 "비밀번호 설정"으로 들어오세요.', setpw: '이미 승인됐습니다. 비밀번호를 설정해 주세요.', ready: '이미 등록된 이메일입니다. 로그인해 주세요.', rejected: '열람 요청이 거절된 이메일입니다. 관리자에게 문의해 주세요.' }[r.state];
+        showGate(r.state === 'setpw' ? 'setpw' : 'login', { ok: r.state !== 'rejected', t: t }, email);
+      }, fail('request'));
+    } else if (v === 'setpw') {
+      if (val('aPw').length < 8) return showGate('setpw', { t: '비밀번호는 8자 이상으로 정해 주세요' }, email);
+      if (val('aPw') !== val('aPw2')) return showGate('setpw', { t: '비밀번호 확인이 맞지 않습니다' }, email);
+      api({ action: 'setPassword', email: email, password: val('aPw') }).then(function (r) {
+        if (!r.ok) return api({ action: 'status', email: email }).then(function (st) {
+          var t = { none: '열람 요청이 없는 이메일입니다. 먼저 열람 요청을 해 주세요.', pending: '아직 승인 전입니다. 관리자 승인 후 다시 시도해 주세요.', rejected: '열람 요청이 거절된 이메일입니다.' }[st.state];
+          showGate(st.state === 'none' ? 'request' : 'setpw', { t: t || r.err }, email);
+        });
+        enter(r, email);
+      }, fail('setpw'));
+    } else {
+      api({ action: 'login', email: email, password: val('aPw') }).then(function (r) {
+        if (!r.ok) return showGate('login', { t: r.err }, email);
+        enter(r, email);
+      }, fail('login'));
+    }
+  });
+  function enter(r, email) { put({ token: r.token, name: r.name, admin: r.admin, email: email }); gate.hidden = true; gate.innerHTML = ''; P = null; popShown = false; route(); }
+  function signOut(expired, msg) {
+    var a = get() || {};
+    if (!expired && a.token) api({ action: 'logout', token: a.token }).catch(function () {});
+    put({ email: a.email }); store(DK, null); store(PK, null);
+    if (started) { location.replace(location.pathname); return; } // 리포트 화면 상태까지 깨끗하게
+    P = null; showGate('login', msg ? { t: msg } : null, a.email);
+  }
+
+  // ───────── 화면 전환 ─────────
+  function setView(v) {
+    root.setAttribute('data-view', v);
+    if (v !== 'gate') gate.hidden = true;
+    portal.hidden = v !== 'portal';
+    if (v !== 'portal') closePop();
+  }
+  function route() {
+    var a = get();
+    if (!a || !a.token) return showGate('login');
+    var h = location.hash.replace(/^#/, '');
+    if (h === 'report') return openReport();
+    setView('portal');
+    var sub = h.split('/')[0];
+    PV = sub === 'notice' ? 'notice' : sub === 'admin' && a.admin ? 'admin' : 'home';
+    if (PV === 'notice' && h.split('/')[1]) OPEN[h.split('/')[1]] = true;
+    drawPortal();
+    portal.scrollTop = 0;
+    refreshPortal();
+    if (PV === 'admin') loadUsers();
+  }
+  window.addEventListener('hashchange', route);
+  var go = function (h) { if (location.hash.replace(/^#/, '') === h) route(); else location.hash = h; };
+
+  // ───────── 메뉴 화면(포털) ─────────
+  var P = null, PV = 'home', OPEN = {}, EDIT = null, USERS = null, UF = 'pending', popShown = false, MINE = {}; // MINE: 이 화면에서 직접 쓴 공지(팝업 제외)
+  var MENU = [
+    { id: 'report', t: '매출 리포트', d: '점포별 매출을 매일 아침에', icon: 'report' },
+    { id: 'notice', t: '공지사항', d: '알림과 안내', icon: 'notice' },
+    { id: 'check', t: '매장 점검 앱', d: '준비중', icon: 'check', soon: true },
+    { id: 'soon1', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
+    { id: 'soon2', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
+    { id: 'soon3', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
+    { id: 'soon4', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
+    { id: 'soon5', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
+  ];
+  function refreshPortal() {
+    if (!P) P = store(PK); // 지난번 내용 먼저
+    if (P) drawPortal();
+    return authApi({ action: 'portal' }).then(function (r) {
+      if (!r.ok) throw new Error(r.err);
+      P = r; store(PK, r);
+      var a = get() || {}; put({ token: a.token, name: r.name, admin: r.admin, email: a.email });
+      if (root.getAttribute('data-view') === 'portal') { if (PV === 'admin' && !r.admin) PV = 'home'; drawPortal(); maybePop(); }
+    }, function (err) { if (!P && root.getAttribute('data-view') === 'portal') { P = { failed: err.message }; drawPortal(); P = null; } });
+  }
+  function unread() { return P && P.notices ? P.notices.filter(function (n) { return n.unread; }) : []; }
+  function topbar() {
+    var a = get() || {};
+    return '<header class="ptop"><a href="#" class="pbrand" data-act="home">' + logoImg('plogo') + '<span>킴스 매출 리포트</span></a>' +
+      '<div class="pme"><span>' + esc((P && P.name) || a.name || '') + '님</span><button type="button" class="pbtn ghost" data-act="logout">로그아웃</button></div></header>';
+  }
+  function drawPortal() {
+    var a = get() || {}, body;
+    if (PV === 'notice') body = noticeView();
+    else if (PV === 'admin') body = adminView();
+    else body = homeView(a);
+    portal.innerHTML = topbar() + '<main class="pmain">' + body + '</main>';
+  }
+  function homeView(a) {
+    var ur = unread().length, admin = P ? P.admin : a.admin;
+    var today = kst(new Date().toISOString());
+    var noticeBox;
+    if (P && P.failed) noticeBox = '<p class="pempty err">공지를 불러오지 못했습니다 · ' + esc(P.failed) + '</p>';
+    else if (!P) noticeBox = '<div class="pskel"></div><div class="pskel"></div>';
+    else if (!P.notices.length) noticeBox = '<p class="pempty">등록된 공지가 없습니다</p>';
+    else noticeBox = '<ul class="nlist mini">' + P.notices.slice(0, 3).map(function (n) {
+      return '<li><a href="#notice/' + esc(n.id) + '">' + (n.pinned ? '<em class="tag">고정</em>' : '') + '<span class="nt">' + esc(n.title) + '</span>' + (n.unread ? '<i class="nbad">N</i>' : '') + '<time>' + kst(n.at).slice(5) + '</time></a></li>';
+    }).join('') + '</ul>';
+    return '<section class="phello"><h1>' + esc((P && P.name) || a.name || '') + '님, 안녕하세요</h1><p>' + today + '</p></section>' +
+      '<section class="pnote"><div class="phead"><h2>공지사항</h2><a href="#notice">전체 보기</a></div>' + noticeBox + '</section>' +
+      '<section><h2 class="psec">메뉴</h2><div class="pgrid">' + MENU.map(function (m, i) {
+        var badge = m.id === 'notice' && ur ? '<i class="pbadge">N ' + ur + '</i>' : '';
+        return '<button type="button" class="pcard' + (m.soon ? ' soon' : '') + '" data-menu="' + m.id + '" style="--i:' + i + '">' +
+          '<span class="pic">' + ICON[m.icon] + '</span><b>' + m.t + '</b><small>' + m.d + '</small>' + (m.soon ? '<em class="ptag">준비중</em>' : '') + badge + '</button>';
+      }).join('') + '</div></section>' +
+      (admin ? '<section><h2 class="psec">관리</h2><div class="pgrid"><button type="button" class="pcard" data-menu="admin" style="--i:8"><span class="pic">' + ICON.users + '</span><b>사용자 관리</b><small>열람 요청 승인 · 비밀번호 초기화</small>' + (P && P.pending ? '<i class="pbadge">대기 ' + P.pending + '</i>' : '') + '</button></div></section>' : '');
+  }
+  function subHead(t, extra) { return '<div class="psub"><a href="#" data-act="home" class="pback">' + ICON.back + '메뉴</a><h1>' + t + '</h1>' + (extra || '') + '</div>'; }
+
+  // ── 공지사항 ──
+  function noticeForm() {
+    var n = EDIT === 'new' ? { title: '', body: '', pinned: false, popup: true } : (P.notices.filter(function (x) { return x.id === EDIT; })[0] || {});
+    return '<form class="pform" id="nForm"><h3>' + (EDIT === 'new' ? '새 공지' : '공지 수정') + '</h3>' +
+      '<label>제목<input id="nTitle" maxlength="100" required value="' + esc(n.title) + '"></label>' +
+      '<label>내용<textarea id="nBody" rows="7" maxlength="5000">' + esc(n.body) + '</textarea></label>' +
+      '<div class="pchk"><label><input type="checkbox" id="nPin"' + (n.pinned ? ' checked' : '') + '> 맨 위에 고정</label><label><input type="checkbox" id="nPop"' + (n.popup ? ' checked' : '') + '> 팝업으로 알림</label></div>' +
+      '<p class="phint">팝업으로 알림: 아직 이 공지를 안 본 사람이 메뉴 화면에 들어오면 팝업으로 뜹니다(수정하면 다시 뜸).</p>' +
+      '<div class="prow"><button type="button" class="pbtn ghost" data-act="ncancel">취소</button><button type="submit" class="pbtn pri" id="nSave">' + (EDIT === 'new' ? '등록' : '저장') + '</button></div></form>';
+  }
+  function noticeView() {
+    var admin = P && P.admin, list;
+    if (!P) list = '<div class="pskel"></div><div class="pskel"></div><div class="pskel"></div>';
+    else if (!P.notices || !P.notices.length) list = '<p class="pempty">등록된 공지가 없습니다</p>';
+    else list = '<ul class="nlist">' + P.notices.map(function (n) {
+      var open = OPEN[n.id];
+      return '<li class="' + (open ? 'open' : '') + '"><button type="button" class="nrow" data-nid="' + esc(n.id) + '" aria-expanded="' + !!open + '">' +
+        (n.pinned ? '<em class="tag">고정</em>' : '') + '<span class="nt">' + esc(n.title) + '</span>' + (n.unread ? '<i class="nbad">N</i>' : '') + '<time>' + kst(n.at) + '</time></button>' +
+        (open ? '<div class="nbody"><p>' + esc(n.body) + '</p><p class="nmeta">' + esc(n.author) + ' · ' + kst(n.at, true) + (n.upd ? ' · 수정 ' + kst(n.upd, true) : '') + (n.popup ? ' · 팝업 알림' : '') + '</p>' +
+          (admin ? '<div class="prow end"><button type="button" class="pbtn ghost" data-act="nedit" data-id="' + esc(n.id) + '">수정</button><button type="button" class="pbtn danger" data-act="ndel" data-id="' + esc(n.id) + '">삭제</button></div>' : '') + '</div>' : '') + '</li>';
+    }).join('') + '</ul>';
+    return subHead('공지사항', admin && !EDIT ? '<button type="button" class="pbtn pri" data-act="nnew">글쓰기</button>' : '') + (EDIT && admin ? noticeForm() : '') + list;
+  }
+  function markRead(keys) {
+    if (!keys.length) return;
+    P.notices.forEach(function (n) { if (keys.indexOf(n.key) >= 0) n.unread = false; });
+    store(PK, P);
+    authApi({ action: 'noticeRead', keys: keys }).catch(function () {});
+  }
+
+  // ── 공지 팝업: 안 본 '팝업' 공지를 메뉴 화면에 들어올 때 한 번 ──
+  var popList = [], popI = 0;
+  function maybePop() {
+    if (popShown || !P || !P.notices) return;
+    popList = P.notices.filter(function (n) { return n.unread && n.popup && !MINE[n.id]; });
+    if (!popList.length) return;
+    popShown = true; popI = 0; drawPop();
+  }
+  function drawPop() {
+    var n = popList[popI]; if (!n) return closePop();
+    pop.innerHTML = '<div class="pmod" role="dialog" aria-modal="true" aria-labelledby="popT"><div class="pmh"><em class="tag red">공지</em>' + (popList.length > 1 ? '<span>' + (popI + 1) + ' / ' + popList.length + '</span>' : '') + '</div>' +
+      '<h2 id="popT">' + esc(n.title) + '</h2><time>' + kst(n.at, true) + ' · ' + esc(n.author) + '</time><div class="pmb">' + esc(n.body) + '</div>' +
+      '<div class="prow"><button type="button" class="pbtn ghost" data-pop="later">나중에 보기</button><button type="button" class="pbtn pri" data-pop="ok">' + (popI < popList.length - 1 ? '확인 · 다음' : '확인') + '</button></div></div>';
+    pop.hidden = false;
+    var b = pop.querySelector('[data-pop=ok]'); if (b) b.focus();
+  }
+  function closePop() { pop.hidden = true; pop.innerHTML = ''; }
+  pop.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pop]');
+    if (!b) { if (e.target === pop) closePop(); return; }
+    if (b.dataset.pop === 'ok') { markRead([popList[popI].key]); popI++; if (popI < popList.length) drawPop(); else { closePop(); drawPortal(); } }
+    else { closePop(); }
+  });
+  doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) closePop(); });
+
+  // ── 사용자 관리 ──
+  function loadUsers() {
+    authApi({ action: 'users' }).then(function (r) { if (!r.ok) throw new Error(r.err); USERS = r; if (PV === 'admin') drawPortal(); },
+      function (err) { USERS = { failed: err.message }; if (PV === 'admin') drawPortal(); });
+  }
+  function adminView() {
+    var body;
+    if (!USERS) body = '<div class="pskel"></div><div class="pskel"></div><div class="pskel"></div>';
+    else if (USERS.failed) body = '<p class="pempty err">불러오지 못했습니다 · ' + esc(USERS.failed) + '</p>';
+    else {
+      var rows = USERS.rows, cnt = { pending: 0, '승인': 0, '거절': 0 };
+      rows.forEach(function (u) { if (u.status === '대기') cnt.pending++; else if (cnt[u.status] != null) cnt[u.status]++; });
+      var list = rows.filter(function (u) { return UF === 'all' || (UF === 'pending' ? u.status === '대기' : u.status === UF); })
+        .sort(function (p, q) { return (q.reqAt || '').localeCompare(p.reqAt || ''); });
+      body = '<div class="pseg">' + [['pending', '승인 대기 ' + cnt.pending], ['승인', '승인 ' + cnt['승인']], ['거절', '거절 ' + cnt['거절']], ['all', '전체 ' + rows.length]].map(function (x) {
+        return '<button type="button" data-uf="' + x[0] + '"' + (UF === x[0] ? ' aria-pressed="true"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' +
+        (list.length ? '<ul class="ulist">' + list.map(function (u) {
+          var me = u.email === USERS.me, st = u.status === '승인' ? (u.hasPw ? '승인 · 사용 중' : '승인 · 비밀번호 설정 전') : u.status;
+          var btn = '';
+          if (u.status === '대기') btn = '<button type="button" class="pbtn danger" data-uop="reject">거절</button><button type="button" class="pbtn pri" data-uop="approve">승인</button>';
+          else if (u.status === '승인') btn = (me ? '' : '<button type="button" class="pbtn ghost" data-uop="reject">승인 취소</button>') + (u.hasPw ? '<button type="button" class="pbtn" data-uop="reset">비밀번호 초기화</button>' : '');
+          else btn = '<button type="button" class="pbtn pri" data-uop="approve">승인</button>';
+          return '<li data-email="' + esc(u.email) + '"><div class="uh"><b>' + esc(u.name) + (u.store ? ' <small>' + esc(u.store) + '</small>' : '') + (u.role === '관리자' ? ' <em class="tag">관리자</em>' : '') + '</b><em class="ust s' + (u.status === '승인' ? 'ok' : u.status === '거절' ? 'no' : 'wait') + '">' + st + '</em></div>' +
+            '<p class="ue">' + esc(u.email) + '</p>' + (u.memo ? '<p class="um">' + esc(u.memo) + '</p>' : '') +
+            '<p class="ud">요청 ' + (kst(u.reqAt) || '-') + (u.lastAt ? ' · 마지막 접속 ' + kst(u.lastAt, true) : '') + '</p>' +
+            (btn ? '<div class="prow end">' + btn + '</div>' : '') + '</li>';
+        }).join('') + '</ul>' : '<p class="pempty">' + (UF === 'pending' ? '승인 대기 중인 요청이 없습니다' : '해당하는 사용자가 없습니다') + '</p>');
+    }
+    return subHead('사용자 관리', '<button type="button" class="pbtn ghost" data-act="ureload">새로고침</button>') + body +
+      '<p class="phint">비밀번호 초기화: 그 사람의 로그인이 모든 기기에서 풀리고, 로그인 화면의 \'승인받았어요 · 비밀번호 설정\'에서 새로 정하게 됩니다. 구글시트 \'사용자\' 탭에서 직접 바꾼 내용도 그대로 반영됩니다.</p>';
+  }
+
+  // ── 포털 클릭 ──
+  var CONFIRM = null;
+  portal.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-act],[data-menu],[data-nid],[data-uf],[data-uop]'); if (!t) return;
+    var act = t.dataset.act;
+    if (t.tagName === 'A' && act) e.preventDefault();
+    if (act === 'home') { EDIT = null; go(''); }
+    else if (act === 'logout') signOut(false);
+    else if (t.dataset.menu) {
+      var m = t.dataset.menu;
+      if (m === 'report') go('report');
+      else if (m === 'notice') go('notice');
+      else if (m === 'admin') go('admin');
+      else toast('준비중입니다');
+    }
+    else if (t.dataset.nid) {
+      var id = t.dataset.nid; OPEN[id] = !OPEN[id];
+      var n = P && P.notices.filter(function (x) { return x.id === id; })[0];
+      if (OPEN[id] && n && n.unread) markRead([n.key]);
+      drawPortal();
+    }
+    else if (act === 'nnew') { EDIT = 'new'; drawPortal(); var f = $('nTitle'); if (f) f.focus(); }
+    else if (act === 'nedit') { EDIT = t.dataset.id; drawPortal(); portal.scrollTop = 0; }
+    else if (act === 'ncancel') { EDIT = null; drawPortal(); }
+    else if (act === 'ndel') {
+      if (CONFIRM !== 'del' + t.dataset.id) { CONFIRM = 'del' + t.dataset.id; t.textContent = '한 번 더 누르면 삭제'; setTimeout(function () { if (CONFIRM === 'del' + t.dataset.id) { CONFIRM = null; t.textContent = '삭제'; } }, 3000); return; }
+      CONFIRM = null; t.disabled = true;
+      authApi({ action: 'noticeDelete', id: t.dataset.id }).then(function (r) { if (!r.ok) throw new Error(r.err); toast('삭제했습니다'); return refreshPortal(); }, function (err) { t.disabled = false; toast(err.message, true); });
+    }
+    else if (t.dataset.uf) { UF = t.dataset.uf; drawPortal(); }
+    else if (act === 'ureload') { USERS = null; drawPortal(); loadUsers(); }
+    else if (t.dataset.uop) {
+      var li = t.closest('[data-email]'), email = li.dataset.email, op = t.dataset.uop;
+      var label = { approve: '승인', reject: t.textContent, reset: '비밀번호 초기화' }[op];
+      if (op !== 'approve' && CONFIRM !== op + email) { CONFIRM = op + email; t.textContent = '한 번 더 누르면 ' + label; setTimeout(function () { if (CONFIRM === op + email) { CONFIRM = null; t.textContent = label; } }, 3000); return; }
+      CONFIRM = null; li.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+      authApi({ action: 'userSet', email: email, op: op }).then(function (r) {
+        if (!r.ok) throw new Error(r.err);
+        toast({ approve: '승인했습니다', reject: label === '승인 취소' ? '승인을 취소했습니다' : '거절했습니다', reset: '비밀번호를 초기화했습니다' }[op]);
+        loadUsers(); refreshPortal();
+      }, function (err) { toast(err.message, true); drawPortal(); });
+    }
+  });
+  portal.addEventListener('submit', function (e) {
+    if (e.target.id !== 'nForm') return; e.preventDefault();
+    var title = $('nTitle').value.trim(), b = $('nSave');
+    if (!title) { toast('제목을 입력해 주세요', true); return; }
+    b.disabled = true; b.textContent = '저장 중…';
+    var isNew = EDIT === 'new';
+    authApi({ action: 'noticeSave', id: isNew ? '' : EDIT, title: title, body: $('nBody').value, pinned: $('nPin').checked, popup: $('nPop').checked }).then(function (r) {
+      if (!r.ok) throw new Error(r.err);
+      EDIT = null; OPEN[r.id] = true; MINE[r.id] = 1; toast(isNew ? '공지를 등록했습니다' : '공지를 수정했습니다');
+      return refreshPortal().then(function () { var n = P && P.notices && P.notices.filter(function (x) { return x.id === r.id; })[0]; if (n && n.unread) { markRead([n.key]); drawPortal(); } }); // 쓴 사람에겐 '새 공지' 표시 안 함
+    }, function (err) { b.disabled = false; b.textContent = isNew ? '등록' : '저장'; toast(err.message, true); });
+  });
+
+  // ───────── 매출 리포트 ─────────
+  var started = false, loading = false;
+  function openReport() {
+    setView('report');
+    if (started) { window.dispatchEvent(new Event('resize')); return; } // 숨겨져 있던 사이 크기 바뀐 것 반영
+    if (!loading) loadReport();
+  }
+  function start(data, a, r) {
+    var web = {
+      admin: r ? r.admin : a.admin, name: r ? r.name : a.name,
+      prefs: r ? r.prefs : null, // 아이디별 화면 설정(구글시트)
+      savePrefs: function (p) { return api({ action: 'savePrefs', token: a.token, prefs: p }).then(function (x) { if (!x.ok) throw new Error(x.err); return x; }); },
+      stats: function () { return api({ action: 'stats', token: a.token }).then(function (s) { if (!s.ok) throw new Error(s.err); return s; }); },
+      logout: function () { signOut(false); },
+      home: function () { go(''); },
+    };
+    if (!started) { started = true; window.KIMS.init(data, web); } else { window.KIMS.update(data); if (r) window.KIMS.applyPrefs(r.prefs); }
+  }
+  function loadReport() {
+    var a = get();
+    if (!a || !a.token) return showGate('login');
+    loading = true;
+    var day = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), vk = 'kims-visit-' + day, visit = true;
+    try { visit = sessionStorage.getItem(vk) !== '1'; } catch (e) {}
+    var cached = store(DK);
+    if (cached && cached.data) start(JSON.parse(cached.data), a, null); // 저장본으로 즉시 표시
+    api({ action: 'data', token: a.token, visit: visit, have: cached ? cached.ver : '' }).then(function (r) {
+      loading = false;
+      if (!r.ok) { if (r.auth === false) return signOut(true, r.err); throw new Error(r.err); }
+      try { sessionStorage.setItem(vk, '1'); } catch (e) {}
+      put({ token: a.token, name: r.name, admin: r.admin, email: a.email });
+      if (r.same && started) { window.KIMS.applyPrefs(r.prefs); return; } // 데이터는 그대로, 설정만 최신으로
+      store(DK, { ver: r.ver, data: r.data });
+      start(JSON.parse(r.data), a, r);
+    }, function (err) {
+      loading = false;
+      if (started) return; // 저장본으로 보는 중이면 그대로 둠
+      $('main').innerHTML = '<div class="gcard" style="margin:24px auto"><h2>불러오지 못했습니다</h2><p class="gm err">' + esc(err.message) + '</p><button class="gb pri" onclick="location.reload()">다시 시도</button><button class="gb" onclick="location.hash=\'\'">메뉴 화면으로</button></div>';
+    });
+  }
+
+  if (!API || /API_URL_HERE/.test(API)) { setView('gate'); gate.innerHTML = '<div class="gw one"><form class="gcard"><h2>설정 필요</h2><p class="gm err">Apps Script 웹 앱 주소가 아직 들어 있지 않습니다.</p></form></div>'; gate.hidden = false; return; }
+  route();
+})();
+</script></body></html>
