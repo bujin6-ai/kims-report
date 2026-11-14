@@ -418,9 +418,9 @@ html:not([data-view=report]) body{background:#f4f5f7}
 .pcard{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:132px;padding:16px;border-radius:16px;border:1px solid var(--pl);background:var(--ps);color:var(--pt);font:inherit;text-align:left;cursor:pointer;opacity:0;animation:pin .4s ease forwards;animation-delay:calc(var(--i)*.06s);transition:border-color .2s,box-shadow .2s,transform .2s}
 .pcard b{font-size:16px;margin-top:auto}.pcard small{color:var(--pm);font-size:12px;word-break:keep-all}
 .pic{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--prw);color:var(--pr)}#portal .pic svg{width:22px;height:22px}
-.pcard.soon{background:#fafafa;border-style:dashed}.pcard.big{grid-column:span 2;grid-row:span 2;min-height:278px;padding:24px;background:linear-gradient(135deg,#fff 0%,#fff 55%,#fdecee 100%)}.pcard.big .pic{width:60px;height:60px;border-radius:16px}#portal .pcard.big .pic svg{width:32px;height:32px}.pcard.big b{font-size:24px;letter-spacing:-.3px}.pcard.big small{font-size:14px}.pcard.big .pgo{position:absolute;top:24px;right:24px;font-size:13px;font-weight:700;color:var(--pr)}
+.pcard.soon{background:#fafafa;border-style:dashed}.pcard.big{grid-column:span 2;grid-row:span 2;min-height:278px;padding:24px;background:linear-gradient(135deg,#fff 0%,#fff 55%,#fdecee 100%)}.pcard.big .pic{width:88px;height:88px;border-radius:22px;background:linear-gradient(135deg,#fdecee,#f9d5d9)}#portal .pcard.big .pic svg{width:52px;height:52px;stroke-width:1.6}.pcard.big b{font-size:24px;letter-spacing:-.3px}.pcard.big small{font-size:14px}.pcard.big .pgo{position:absolute;top:24px;right:24px;font-size:13px;font-weight:700;color:var(--pr)}.pbase{position:absolute;right:24px;bottom:22px;display:flex;flex-direction:column;gap:0}.pbase small{align-self:flex-start;font-size:18px;color:#9ca3af;font-weight:700;line-height:1.1}.pbase b{margin:0!important;font-size:38px!important;font-weight:800;letter-spacing:-.5px;color:var(--pt);line-height:1.15}.pbase em{align-self:flex-end;font-style:normal;font-size:14px;font-weight:700;color:#9ca3af;letter-spacing:.02em}@media (max-width:820px){.pbase{right:18px;bottom:16px}.pbase b{font-size:24px!important}.pbase small{font-size:13px}.pbase em{font-size:11.5px}}
 @media (min-width:821px){.pgrid .pcard.soon:last-child{grid-column:span 2}}
-@media (max-width:820px){.pcard.big{grid-column:1/-1;grid-row:auto;min-height:170px;padding:18px}.pcard.big b{font-size:20px}}
+@media (max-width:820px){.pcard.big{grid-column:1/-1;grid-row:auto;min-height:170px;padding:18px}.pcard.big b{font-size:20px}.pcard.big .pic{width:64px;height:64px;border-radius:18px}#portal .pcard.big .pic svg{width:38px;height:38px}}
 .pcard.adm{background:#f3f5ff;border-color:#c7d0f5}.pcard.adm .pic{background:#e0e6ff;color:#3346c4}.pcard.adm .pbadge{background:#3346c4}.psec.adm{color:#3346c4}@media (hover:hover){.pcard.adm:hover{border-color:#3346c4;box-shadow:0 8px 22px rgba(51,70,196,.12)}}.pcard.soon .pic{background:#eef0f3;color:#9ca3af}.pcard.soon b{color:#6b7280}
 .ptag{position:absolute;top:14px;right:14px;font-style:normal;font-size:11px;font-weight:600;color:#6b7280;background:#eef0f3;border-radius:999px;padding:2px 8px}
 .pbadge{position:absolute;top:14px;right:14px;font-style:normal;font-size:12px;font-weight:700;color:#fff;background:var(--pr);border-radius:999px;padding:2px 8px}
@@ -1458,7 +1458,7 @@ var KIMS = (function () {
     el.textContent = t; el.className = bad ? 'bad on' : 'on'; clearTimeout(toast.t); toast.t = setTimeout(function () { el.className = bad ? 'bad' : ''; }, 3000);
   }
   var ICON = {
-    report: '<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+    report: '<svg viewBox="0 0 24 24"><path d="M3 21h18"/><rect x="4.5" y="14" width="3.2" height="5" rx=".6"/><rect x="10.4" y="11" width="3.2" height="8" rx=".6"/><rect x="16.3" y="8" width="3.2" height="11" rx=".6"/><path d="M4 10.5l5-4 4 2.5 6.5-5.5"/><path d="M16.2 3.5h3.3v3.3"/></svg>',
     notice: '<svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1zM17 8a5 5 0 0 1 0 8M20 5a9 9 0 0 1 0 14"/></svg>',
     check: '<svg viewBox="0 0 24 24"><path d="M9 4h6v3H9zM7 5H5v16h14V5h-2M8.5 13l2.5 2.5 4.5-5"/></svg>',
     soon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
@@ -1579,7 +1579,7 @@ var KIMS = (function () {
   // ───────── 메뉴 화면(포털) ─────────
   var P = null, PV = 'home', OPEN = {}, EDIT = null, USERS = null, UF = 'pending', popShown = false, MINE = {}; // MINE: 이 화면에서 직접 쓴 공지(팝업 제외)
   var MENU = [
-    { id: 'report', t: '매출 리포트', d: '점포별 매출을 매일 아침에', icon: 'report' },
+    { id: 'report', t: '매출 리포트', d: '킴스클럽 매출 실적', icon: 'report' },
     { id: 'check', t: '매장 점검 앱', d: '준비중', icon: 'check', soon: true },
     { id: 'soon1', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
     { id: 'soon2', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
@@ -1621,9 +1621,17 @@ var KIMS = (function () {
       '<section class="pnote"><div class="phead"><h2>공지사항</h2><a href="#notice">전체 보기</a></div>' + noticeBox + '</section>' +
       '<section><h2 class="psec">메뉴</h2><div class="pgrid">' + MENU.map(function (m, i) {
         return '<button type="button" class="pcard' + (m.soon ? ' soon' : ' big') + '" data-menu="' + m.id + '" style="--i:' + i + '">' +
-          '<span class="pic">' + ICON[m.icon] + '</span><b>' + m.t + '</b><small>' + m.d + '</small>' + (m.soon ? '<em class="ptag">준비중</em>' : '<span class="pgo">열기 →</span>') + '</button>';
+          '<span class="pic">' + ICON[m.icon] + '</span><b>' + m.t + '</b><small>' + m.d + '</small>' + (m.soon ? '<em class="ptag">준비중</em>' : '<span class="pgo">열기 →</span>' + (m.id === 'report' ? baseBox() : '')) + '</button>';
       }).join('') + '</div></section>' +
       (admin ? '<section><h2 class="psec adm">관리자 전용</h2><div class="pgrid"><button type="button" class="pcard adm" data-menu="notice" style="--i:6"><span class="pic">' + ICON.notice + '</span><b>공지사항 등록</b><small>공지 쓰기 · 고정 · 팝업 알림</small>' + (ur ? '<i class="pbadge">N ' + ur + '</i>' : '') + '</button><button type="button" class="pcard adm" data-menu="admin" style="--i:7"><span class="pic">' + ICON.users + '</span><b>사용자 관리</b><small>열람 요청 승인 · 비밀번호 초기화</small>' + (P && P.pending ? '<i class="pbadge">대기 ' + P.pending + '</i>' : '') + '</button></div></section>' : '');
+  }
+  // 데이터 기준일: 서버(포털 응답) → 없으면 이 기기에 저장된 리포트 데이터
+  function baseBox() {
+    var b = P && P.base;
+    if (!b) { var c = store(DK); var m = c && c.data && /"base"\s*:\s*"(\d{4}-\d{2}-\d{2})"/.exec(String(c.data).slice(0, 2000)); b = m ? m[1] : ''; }
+    if (!b) return '<span class="pbase"><small>데이터 기준일</small><b>확인 중…</b></span>';
+    var d = new Date(b + 'T00:00:00Z'), wd = WD[d.getUTCDay()];
+    return '<span class="pbase"><small>' + b.slice(2, 4) + '년</small><b>' + Number(b.slice(5, 7)) + '월 ' + Number(b.slice(8)) + '일(' + wd + ')</b><em>이날까지 데이터 반영</em></span>';
   }
   function subHead(t, extra) { return '<div class="psub"><a href="#" data-act="home" class="pback">' + ICON.back + '메뉴</a><h1>' + t + '</h1>' + (extra || '') + '</div>'; }
 
