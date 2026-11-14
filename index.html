@@ -193,7 +193,7 @@ body{background:var(--bg)}
 /* 섹션 줄: PC 50:50, 좁으면 세로 */
 .row{display:grid;gap:14px;margin-top:14px;grid-template-columns:minmax(0,1fr)}
 .panel.bare{background:none;border:0;padding:0}
-@media (min-width:1100px){.row.split{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}.row.split>.panel{height:100%;box-sizing:border-box}}
+@media (min-width:1440px){.row.split{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}.row.split>.panel{height:100%;box-sizing:border-box}}
 .gbi{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}.gbi h4{margin:0 0 4px;font-size:16px}.gbi ul{margin-bottom:0}
 @media (min-width:900px){.gbi{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}.gbi>div+div{border-left:1px solid var(--line);padding-left:28px}}
 /* 상세 비교 표 여러 개: PC에서 2열 격자, 칸 너비 고정 */
@@ -374,6 +374,8 @@ body.nav-open #nav{transform:none}
 .rt tr.gh td b{font-weight:700}
 @media (max-width:600px){.gt{table-layout:auto;letter-spacing:-.03em}.gt thead th{white-space:normal;word-break:keep-all}.gt,.rt{font-size:12px}.gt th,.gt td,.rt th,.rt td{padding:6px 3px}.gt thead th,.rt thead th{font-size:10.5px;white-space:normal;word-break:keep-all;vertical-align:bottom}.hall{font-size:11px}}
 @media (max-width:600px){.hs{overflow-x:visible;margin:0}.st{min-width:0;width:100%;table-layout:auto;white-space:normal;font-size:11px;letter-spacing:-.03em}.st th,.st td{padding:7px 2px}.st .mh{display:none}.st td{white-space:nowrap}.st tbody th,.st tfoot th{word-break:keep-all;overflow-wrap:anywhere;font-size:12px}.st thead th{font-size:10.5px;line-height:1.25;vertical-align:bottom;word-break:keep-all;white-space:normal}.st tr.pg th{padding-left:8px}.st .rkb{min-width:0;padding:1px 5px;font-size:10.5px}}
+
+@media (min-width:1024px){body{font-size:17px}.date{font-size:17px}.date b{font-size:21.5px}.tab{font-size:18px}.seg label{font-size:17px}.eyebrow{font-size:14.5px}h3{font-size:20.5px}h4{font-size:17px}.note{font-size:14.5px}.kl{font-size:15.5px}.kv{font-size:26px}.kv small{font-size:15.5px}.kd{font-size:14.5px}.badge{font-size:13px}.lg{font-size:14.5px}.sbh{font-size:17px}.br em{font-size:14.5px}.dt{font-size:15.5px}.dt thead th{font-size:14.5px}.pts li span{font-size:15.5px}.mcl li{font-size:15.5px}.pn{font-size:17px}.muted{font-size:14.5px}.pv{font-size:14.5px}.dk{font-size:14.5px}.st{font-size:15.5px}.st thead th{font-size:14.5px}.st tbody th small{font-size:13px}.ht tr.pg th{font-size:13px}.rkb{font-size:13px}.ht{font-size:14.5px}.dc text.v{font-size:13px}.dc text.v.ty{font-size:14.5px}.dc text.g{font-size:13px}.dc text.dt{font-size:13px}.ttl b{font-size:20.5px}.ttl span{font-size:14.5px}.seg button{font-size:17px}.nl{font-size:15.5px}.nv>li>button{font-size:18px}.toc a{font-size:15px}.cats button{font-size:13px}.ns{font-size:18px}.nl small{font-size:14.5px}.ng summary{font-size:17px}.ng summary b{font-size:14.5px}.sl button{font-size:17px}.sl button b{font-size:14.5px}.seg3:has(> :nth-child(4)) .rb span{font-size:15.5px}.gbi h4{font-size:19px}.h3s{font-size:14.5px}.dc svg.tight text.v,.dc svg.tight text.g,.dc svg.tight text.dt{font-size:13px}.dc svg.tight text.v.ty{font-size:13px}.tiph{font-size:13px}.tip .tt{font-size:15.5px}.tip .tt small{font-size:13px}.tip li{font-size:15.5px}.tip .tn{font-size:13px}.tip li em{font-size:13px}#kpop .kt{font-size:17px}#kpop .kt small{font-size:13px}#kpop li{font-size:15.5px}#kpop li em{font-size:14.5px}#kpop li b{font-size:15px}#kpop .kn{font-size:13px}.nojs .nojs-note{font-size:15.5px}.dh h2{font-size:21.5px}.fs legend{font-size:18px}.fs legend small{font-size:14.5px}.hint{font-size:14.5px}.cg{font-size:14.5px}.rb span{font-size:17px}.chip span{font-size:15.5px}.sel{font-size:18px}.lnk{font-size:15.5px}.btn{font-size:18px}#toast{font-size:17px}.who .wid{font-size:14px}.gt,.rt{font-size:15.5px}.gt thead th,.rt thead th{font-size:14.5px}.gt tbody th small{font-size:13px}.rt tr.gh th{font-size:15.5px}.mcl li .mtip{font-size:15px}.mcl li .mtip b{font-size:15.5px}.gt2 thead tr.g1 th{font-size:15px}.gt2 thead tr.g2 th{font-size:14px}.rt thead th small{font-size:13px}.dc svg.tight text.v,.dc svg.tight text.g,.dc svg.tight text.dt{font-size:12.5px;letter-spacing:-.04em}.dc svg.tight text.v.ty{font-size:13.5px}h1{font-size:1.9rem}}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
 html:not([data-view=report]) .app,html:not([data-view=report]) #drawer,html:not([data-view=report]) #scrim,html:not([data-view=report]) #kpop{display:none!important}
@@ -586,7 +588,8 @@ var KIMS = (function () {
       return { d: r.d, ty: r.ty, ly: r.ly, tyAmt: ty, lyAmt: ly, g: ty != null && ly ? ty / ly - 1 : null };
     });
     var COL = CHART_W ? Math.max(CHART_W >= 700 ? 30 : 40, Math.floor((CHART_W - 12) / L)) : 46, PL = 6, PR = 6, W = PL + L * COL + PR, x = function (d) { return PL + (d - 0.5) * COL; };
-    var TOP = 24, PH = 150, GY = TOP + PH + 34, DY = GY + 22, H = DY + 10;
+    var BIG = CHART_W >= 900, ST = BIG && COL < 52, TOP = BIG ? (ST ? 42 : 28) : 24, PH = BIG ? 200 : 150, GY = TOP + PH + (BIG ? (ST ? 48 : 40) : 34), DY = GY + (BIG ? (ST ? 40 : 26) : 22), H = DY + (BIG ? (ST ? 26 : 12) : 10);
+    var odd = function (p) { return ST && p.d % 2 === 1; };
     var maxAmt = Math.max.apply(null, pts.map(function (p) { return Math.max(p.tyAmt || 0, p.lyAmt || 0); })) || 1;
     var y = function (v) { return TOP + PH - (Math.max(v, 0) / maxAmt) * PH; };
     var path = function (a) { return a.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(''); };
@@ -595,17 +598,36 @@ var KIMS = (function () {
       var v = w === 'ty' ? p.tyAmt : p.lyAmt, o = w === 'ty' ? p.lyAmt : p.tyAmt, above = o == null || v >= o;
       return '<text class="v ' + w + '" x="' + x(p.d).toFixed(1) + '" y="' + (y(v) + (above ? -8 : 16)).toFixed(1) + '" text-anchor="middle">' + (me === 'ALL' ? (v / 1e8).toFixed(1) + '억' : man(v)) + '</text>';
     };
-    var svg = '<svg class="' + (COL < 42 ? 'tight' : '') + '" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(NAME[me]) + ' 일별 매출, 금년과 전년">' +
+    // PC 넓은 화면: 숫자 라벨끼리 겹치면 위/아래로 비켜 놓기(금년 먼저 자리 잡음)
+    var stLbl = function () {
+      var boxes = [], out = [];
+      var fmt = function (v) { return me === 'ALL' ? (v / 1e8).toFixed(1) + '억' : man(v); };
+      var hit = function (b) { return boxes.some(function (o) { return b.x1 < o.x2 && b.x2 > o.x1 && b.y1 < o.y2 && b.y2 > o.y1; }); };
+      var put = function (p, w) {
+        var v = w === 'ty' ? p.tyAmt : p.lyAmt, o = w === 'ty' ? p.lyAmt : p.tyAmt, up = o == null || v >= o, t = fmt(v);
+        var cw = (w === 'ty' ? 8.6 : 7.8) * t.length, h = w === 'ty' ? 15 : 14, cx = x(p.d), yy = y(v) + (up ? -8 : 16), b;
+        for (var k = 0; k < 4; k++) {
+          b = { x1: cx - cw / 2 - 1, x2: cx + cw / 2 + 1, y1: yy - h + 2, y2: yy + 2 };
+          if (!hit(b)) break;
+          yy += up ? -15 : 15;
+        }
+        yy = Math.max(13, Math.min(TOP + PH + 30, yy)); boxes.push({ x1: b.x1, x2: b.x2, y1: yy - h + 2, y2: yy + 2 });
+        out.push('<text class="v ' + w + '" x="' + cx.toFixed(1) + '" y="' + yy.toFixed(1) + '" text-anchor="middle">' + t + '</text>');
+      };
+      tyP.forEach(function (p) { put(p, 'ty'); }); lyP.forEach(function (p) { put(p, 'ly'); });
+      return out.join('');
+    };
+    var svg = '<svg class="' + (COL < 42 && !ST ? 'tight' : '') + (ST ? ' stg' : '') + '" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(NAME[me]) + ' 일별 매출, 금년과 전년">' +
       '<rect class="bd" x="' + (PL + (bd - 1) * COL) + '" y="4" width="' + COL + '" height="' + (H - 8) + '" rx="8"/>' +
       '<line class="ax" x1="' + PL + '" x2="' + (W - PR) + '" y1="' + (TOP + PH) + '" y2="' + (TOP + PH) + '"/>' +
       '<path class="ly" d="' + path(lyP.map(function (p) { return [x(p.d), y(p.lyAmt)]; })) + '"/>' +
       lyP.map(function (p) { return '<circle class="ly" cx="' + x(p.d).toFixed(1) + '" cy="' + y(p.lyAmt).toFixed(1) + '" r="3"><title>전년 ' + md(p.ly) + '(' + WD[wdi(p.ly)] + ') ' + man(p.lyAmt) + '만</title></circle>'; }).join('') +
       '<path class="ty" d="' + path(tyP.map(function (p) { return [x(p.d), y(p.tyAmt)]; })) + '"/>' +
       tyP.map(function (p) { return '<circle class="ty" cx="' + x(p.d).toFixed(1) + '" cy="' + y(p.tyAmt).toFixed(1) + '" r="3.5"><title>금년 ' + md(p.ty) + '(' + WD[wdi(p.ty)] + ') ' + man(p.tyAmt) + '만</title></circle>'; }).join('') +
-      lyP.map(function (p) { return lbl(p, 'ly'); }).join('') + tyP.map(function (p) { return lbl(p, 'ty'); }).join('') +
-      pts.map(function (p) { return p.g == null ? '' : '<text class="g ' + (p.g >= 0 ? 'gu' : 'gd') + '" x="' + x(p.d).toFixed(1) + '" y="' + GY + '" text-anchor="middle">' + pct(p.g) + '</text>'; }).join('') +
+      (ST ? stLbl() : lyP.map(function (p) { return lbl(p, 'ly'); }).join('') + tyP.map(function (p) { return lbl(p, 'ty'); }).join('')) +
+      pts.map(function (p) { return p.g == null ? '' : '<text class="g ' + (p.g >= 0 ? 'gu' : 'gd') + '" x="' + x(p.d).toFixed(1) + '" y="' + (GY + (ST && p.d % 2 === 0 ? 17 : 0)) + '" text-anchor="middle">' + pct(p.g) + '</text>'; }).join('') +
       (tyP.map(function (p) { return '<rect class="hit" data-d="' + p.d + '" tabindex="0" role="button" aria-label="' + md(p.ty) + ' 실적 보기" x="' + (PL + (p.d - 1) * COL) + '" y="0" width="' + COL + '" height="' + H + '"/>'; }).join('')) +
-      pts.map(function (p) { var w = wdi(p.ty); return '<text class="dt' + (w === 0 ? ' sun' : w === 6 ? ' sat' : '') + '" x="' + x(p.d).toFixed(1) + '" y="' + DY + '" text-anchor="middle">' + p.d + '(' + WD[w] + ')</text>'; }).join('') + '</svg>';
+      pts.map(function (p) { var w = wdi(p.ty); return '<text class="dt' + (w === 0 ? ' sun' : w === 6 ? ' sat' : '') + '" x="' + x(p.d).toFixed(1) + '" y="' + DY + '" text-anchor="middle">' + (ST ? p.d + '<tspan x="' + x(p.d).toFixed(1) + '" dy="16">' + WD[w] + '</tspan>' : p.d + '(' + WD[w] + ')') + '</text>'; }).join('') + '</svg>';
     return '<section class="panel dc"><h3>일별 매출</h3><p class="lg"><span class="sw ty"></span>금년 <span class="sw lyl"></span>전년' +
       (lym ? ' <span class="lym">전년 월마감 매출 <b>' + man(lym[0]) + '만원</b> · 전년 월마감 매총율 <b>' + (lym[0] ? (lym[1] / lym[0] * 100).toFixed(1) : '-') + '%</b></span>' : '') +
       '<span class="tiph">날짜를 가리키거나 누르면 ' + (cid === 'store' ? 'CD별 성장율' : '그날 실적') + '</span>' + '</p><div class="dcs"><div class="dcw" data-me="' + me + '" data-cid="' + cid + '" style="width:' + W + 'px">' + svg + '<div class="tip" hidden></div></div></div></section>';
