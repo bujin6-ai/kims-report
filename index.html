@@ -409,6 +409,13 @@ body.nav-open #nav{transform:none}
 @media (hover:hover){#nav .nv>li>button:not([aria-current=page]):hover,#nav .ng summary:hover,#nav .sl button:not([aria-current=page]):hover,#nav .toc a:not(.on):hover{background:var(--hov);color:var(--fg)}#nav .sl button:hover span{color:inherit}}
 @media (min-width:1024px){.body{grid-template-columns:272px minmax(0,1fr)}#nav .nv>li>button{font-size:17px;padding:10px 12px}#nav .nv.home>li>button{font-size:15px}#nav .ni{width:21px;height:21px}#nav .nl{font-size:13px}#nav .nl small{font-size:12.5px}#nav .toc a{font-size:15.5px;padding:8px 10px}#nav .toc a svg{width:19px;height:19px}#nav .ng summary{font-size:15px;padding:8px 10px}#nav .ng summary small{font-size:11.5px}#nav .ng summary b,#nav .sl button b{font-size:13px}#nav .sl button{font-size:14.5px;padding:6px 10px}#nav .nv>li>button em{font-size:13px}}
 
+/* 설정 창: PC에서 글자·버튼을 창 크기에 맞게 작게 */
+@media (min-width:1024px){#drawer{width:440px}
+#drawer .dh h2{font-size:18px}#drawer .fs legend{font-size:14.5px;margin-bottom:8px}#drawer .fs legend small{font-size:12px}
+#drawer .hint{font-size:12px;line-height:1.5}#drawer .cg{font-size:12px;margin:10px 0 6px}
+#drawer .rb span{font-size:13px;padding:6px 4px}#drawer .chip span{font-size:12.5px;padding:5px 10px}
+#drawer .sel{font-size:14px;padding:8px 34px 8px 12px}#drawer .btn{font-size:14px;padding:10px}#drawer .lnk{font-size:12.5px}
+#drawer .fs{padding-top:14px;padding-bottom:14px}#drawer .chips{gap:6px}}
 #nav{background:var(--bg)}
 #nav .ni{width:20px;height:20px;color:var(--muted)}
 #nav .toc a svg{width:18px;height:18px;color:inherit}
@@ -419,7 +426,7 @@ body.nav-open #nav{transform:none}
 #nav .toc a.on{background:none;border-color:transparent;font-weight:700}
 #nav .nv.home>li>button{background:var(--panel);border-color:var(--line)}
 @media (min-width:1024px){#nav .ni{width:21px;height:21px}#nav .toc a svg{width:19px;height:19px}}
-.dt2{max-width:none;width:100%}.dt2 th.gtc{color:var(--fg)}.dt2 tr>td:last-child,.dt2 tr>th.gtc{border-left:1px solid var(--line)}
+.dt2{max-width:none;width:100%}.dt2 th.gtc{color:var(--fg)}.dt2 tr>td:last-child,.dt2 tr>th.dist{border-left:1px solid var(--line)}
 .dt2 thead th{vertical-align:bottom}.dt2 thead th small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
 .dt2 tbody tr{border-bottom:1px solid var(--line)}.dt2 tbody tr:last-child{border-bottom:0}
 .dt2 tbody th,.dt2 tbody td{padding-top:10px;padding-bottom:10px;vertical-align:middle}
@@ -529,7 +536,13 @@ tr.dim>*{opacity:.42}
 .dtb span,.mseg span{transition:color .3s ease}
 @keyframes slR{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
 @keyframes slL{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
-.dtt[data-dir=r] .dtp{animation:slR .34s cubic-bezier(.32,.72,0,1)}.dtt[data-dir=l] .dtp{animation:slL .34s cubic-bezier(.32,.72,0,1)}
+.dtt[data-dir] .dtp{animation:none}
+.dtt[data-dir=r] .dtp tbody td:not(:last-child){animation:cellR .42s cubic-bezier(.22,.8,.24,1) both}
+.dtt[data-dir=l] .dtp tbody td:not(:last-child){animation:cellL .42s cubic-bezier(.22,.8,.24,1) both}
+.dtt[data-dir] .dtp tbody tr:nth-child(2) td{animation-delay:.02s}.dtt[data-dir] .dtp tbody tr:nth-child(3) td{animation-delay:.04s}.dtt[data-dir] .dtp tbody tr:nth-child(4) td{animation-delay:.06s}.dtt[data-dir] .dtp tbody tr:nth-child(5) td{animation-delay:.08s}.dtt[data-dir] .dtp tbody tr:nth-child(n+6) td{animation-delay:.1s}
+.dtt[data-dir] .dtp tbody td:last-child{animation:none}
+@keyframes cellR{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+@keyframes cellL{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.dtb .sgi,.mseg .sgi{transition:none}.dtt .dtp{animation:none!important}}
 /* 모든 표: 마우스를 올린 행 하이라이트(셀 색은 유지하고 위에 옅은 파랑을 덧칠) */
 #main table tbody tr>*{transition:background-color .15s,box-shadow .15s}
@@ -542,7 +555,7 @@ tr.dim>*{opacity:.42}
 #main table thead th{position:sticky;top:0;z-index:3;background:var(--panel);background-clip:padding-box}
 #main .dt thead th{box-shadow:inset 0 -1.5px 0 var(--fg)}
 #main .dt thead th.ya{background:color-mix(in srgb,var(--ac-soft) 100%,var(--panel))}
-#main .ht thead th{box-shadow:0 0 0 6px var(--panel);border-radius:0}
+#main .ht thead th{box-shadow:0 3px 0 var(--panel),3px 0 0 var(--panel),-3px 0 0 var(--panel),0 -3px 0 var(--panel);border-radius:0}
 #main .mtbl thead tr.g2 th{top:var(--g1h,31px)}}
 /* 상단 기간(월간·주간·전일): 흰 표시가 미끄러지며 이동 */
 .seg{position:relative;isolation:isolate}
@@ -618,6 +631,29 @@ tr.dim>*{opacity:.42}
 #main .mtbl thead tr.g1 th{box-shadow:inset 0 -1px 0 var(--line)!important}#main .mtbl thead tr.g1 th.g1c{box-shadow:none!important}
 #main .mtbl thead tr.g2 th{box-shadow:inset 0 -1px 0 color-mix(in srgb,var(--fg) 28%,transparent)!important}
 #main .mtbl td.gzc{text-align:right!important}#main .mtbl td.gzc b{display:inline-block;min-width:4.3em;text-align:right}#main .mtbl thead th{text-align:right}#main .mtbl thead th.g2c,#main .mtbl thead tr.g1 th{text-align:center}#main .mtbl thead th.g2c{text-align:left}
+/* 섹션 머리 고정: 제목·설명·항목 버튼·표 머리글이 함께 위에 걸림 */
+@media (min-width:1024px),(max-width:600px){
+#main .stk .sth{position:sticky;z-index:6;background:var(--panel)}
+#main .stk .mseg.sth,#main .stk .dtb.sth{z-index:6}
+#main .stk table thead th{top:var(--sth,0px)}
+#main .stk .mtbl thead{top:var(--sth,0px)}
+#main .stk .dtt table thead th{top:calc(var(--sth,0px) - 8px)}
+#main .stk .dtt .mtbl thead{top:calc(var(--sth,0px) - 8px)}}
+#main.measuring table thead th,#main.measuring table thead,#main.measuring .sth{position:static!important}
+#main.measuring,#main.measuring section,#main.measuring .row,#main.measuring .sth,#main.measuring thead,#main.measuring thead th{transform:none!important;transition:none!important;animation:none!important}
+.mcl li{grid-template-columns:7.5em minmax(0,1fr) 8.8em 5em}
+.mcl .ma{text-align:right;font-size:.88em;font-weight:600;padding-left:10px;position:relative;white-space:nowrap;align-self:stretch;display:flex;align-items:center;justify-content:flex-end}
+.mcl .ma::before{content:'';position:absolute;left:0;top:-3px;bottom:-3px;border-left:1px solid var(--line)}
+.mcl li.mch .ma::before{top:0}
+.mcl li:last-child .ma::before{bottom:0}
+.mcl li.mch{color:var(--muted);pointer-events:none;align-items:end}
+.mcl li.mch:hover{background:none}
+.mcl li.mch .mv b,.mcl li.mch .mv small{font-weight:500;color:var(--muted);opacity:1;font-size:.82em}
+.mcl li.mch .ma{font-weight:500;font-size:.75em;line-height:1.25;color:var(--muted);align-items:flex-end}
+@media (max-width:600px){.mcl li{grid-template-columns:5.4em minmax(0,1fr) 8.4em 4.6em;gap:6px}}
+.mcl .mv{display:grid;grid-template-columns:3.6em 1fr;column-gap:6px;align-items:baseline;white-space:nowrap}
+.mcl .mv b{text-align:right;font-weight:700}
+.mcl .mv small{text-align:right;font-size:.88em;font-weight:500;opacity:.8}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
@@ -1012,7 +1048,7 @@ var KIMS = (function () {
   function detailTabs(key, list) {
     if (list.length < 2) return '<div class="dts">' + list.map(function (x) { return x[1]; }).join('') + '</div>';
     var nm = 'dtt-' + key, sel = Number(TABSEL[nm]); if (!(sel >= 0 && sel < list.length)) sel = 0;
-    return '<div class="dtt">' + '<div class="dtb" role="tablist"><span class="sgi" aria-hidden="true"></span>' + list.map(function (x, i) { return '<label><input type="radio" name="' + nm + '" value="' + i + '"' + (i === sel ? ' checked' : '') + '><span>' + esc(x[0]) + '</span></label>'; }).join('') + '</div>' +
+    return '<div class="dtt">' + '<div class="dtbw"><div class="dtb" role="tablist"><span class="sgi" aria-hidden="true"></span>' + list.map(function (x, i) { return '<label><input type="radio" name="' + nm + '" value="' + i + '"' + (i === sel ? ' checked' : '') + '><span>' + esc(x[0]) + '</span></label>'; }).join('') + '</div></div>' +
       list.map(function (x, i) { return '<div class="dtp" data-i="' + i + '">' + x[1] + '</div>'; }).join('') + '</div>';
   }
   // 섹션 = { id, nav(사이드바 이름), opt(켜기·끄기 키, 없으면 항상), html }
@@ -1181,10 +1217,17 @@ var KIMS = (function () {
   }
 
   // ── CD 화면 ──
+  // 오른쪽 칸: 같은 그룹 다른 점포 — 성장율(새 데이터) 있으면 성장율, 없으면 평균 증감액
+  function mcAvg(x) {
+    if (x[5] != null && isFinite(x[5])) return '<span class="ma ' + cls(x[5]) + '">' + pct(x[5] / 100) + '</span>';
+    return '<span class="ma">-</span>';
+  }
+  function mcHasG(items) { return items.some(function (x) { return x[5] != null; }); }
+  function mcHead(items) { return '<li class="mch" aria-hidden="true"><span></span><span></span><span class="mv"><b>증감</b><small>성장율</small></span><span class="ma">' + '그룹<br>성장율' + '</span></li>'; }
   function mcList(items, up) {
     if (!items.length) return '<li class="muted">해당 품목 없음</li>';
     var mx = Math.max.apply(null, items.map(function (x) { return Math.abs(x[3]); })) || 1;
-    return items.map(function (x) { var g = x[2] ? x[1] / x[2] - 1 : null; return '<li tabindex="0"><span class="mtip" role="tooltip"><b>' + esc(x[0]) + '</b><span>금년 <em>' + bm(x[1]) + '백만</em></span><span>전년 <em>' + bm(x[2]) + '백만</em></span><span>성장율 <em class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</em></span></span><span class="mn">' + esc(x[0]) + '</span><span class="track"><i class="' + (up ? 'bu' : 'bd') + '" style="width:' + (Math.abs(x[3]) / mx * 100).toFixed(1) + '%"></i></span><span class="mv ' + (up ? 'up' : 'dn') + '">' + bms(x[3]) + '</span></li>'; }).join('');
+    return items.map(function (x) { var g = x[2] ? x[1] / x[2] - 1 : null; return '<li tabindex="0"><span class="mtip" role="tooltip"><b>' + esc(x[0]) + '</b><span>금년 <em>' + bm(x[1]) + '백만</em></span><span>전년 <em>' + bm(x[2]) + '백만</em></span><span>성장율 <em class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</em></span></span><span class="mn">' + esc(x[0]) + '</span><span class="track"><i class="' + (up ? 'bu' : 'bd') + '" style="width:' + (Math.abs(x[3]) / mx * 100).toFixed(1) + '%"></i></span><span class="mv ' + (up ? 'up' : 'dn') + '"><b>' + bms(x[3]) + '</b><small>' + (g == null ? (x[1] ? '신규' : '-') : pct(g)) + '</small></span>' + mcAvg(x) + '</li>'; }).join('');
   }
   function catView(k, me, id) {
     var c = D.storeCats.filter(function (x) { return x[0] === id; })[0], g = GRP[me], gn = GNAME[g], G = openOf(g), CC = cmpCols(me), C = setOf(me), oth = othersOf(me);
@@ -1239,7 +1282,7 @@ var KIMS = (function () {
           secG('mix', '구성비', c[1] + ' 구매그룹 구성비', mixChart(per.map(function (p) { return [p.name, p.y.gsT, p.y.gsL]; })), 'mix')] : [],
         [sec('detail', '우리점 VS 비교점', '우리점 VS 비교점' + CMPBTN, tables, 'detail')],
         [sec('gb', '잘한·부족한 점', '', gbHtml(gd, bd), 'gb')],
-        [sec('bars', '그룹 매출', gn + ' 점포 ' + c[1] + ' 매출', bars(k, me, sc), 'bars'), sec('mc', 'MC 증감', '품목(MC)별 전년 대비 증감', '<p class="note">' + esc(NAME[me]) + ' · 매출 기준 · 백만원 · 비교 = ' + gn + ' 다른 점포 평균</p>' + (hasData('mc', id) ? '<h4>증가 상위</h4><ul class="mcl">' + mcList(mc.up, true) + '</ul><h4>감소 상위</h4><ul class="mcl">' + mcList(mc.dn, false) + '</ul>' : NOT_YET(c[1] + ' MC')), 'mc')],
+        [sec('bars', '그룹 매출', gn + ' 점포 ' + c[1] + ' 매출', bars(k, me, sc), 'bars'), sec('mc', 'MC 증감', '품목(MC)별 전년 대비 증감', '<p class="note">' + esc(NAME[me]) + ' · 매출 기준 · 백만원 · 그룹 성장율 = ' + gn + ' 다른 점포 합산 전년비' + (mcHasG(mc.up.concat(mc.dn)) ? '' : ' (현재 데이터에 없어 다음 갱신부터 표시)') + '</p>' + (hasData('mc', id) ? '<h4>증가 상위</h4><ul class="mcl">' + mcHead(mc.up.concat(mc.dn)) + mcList(mc.up, true) + '</ul><h4>감소 상위</h4><ul class="mcl">' + mcHead(mc.up.concat(mc.dn)) + mcList(mc.dn, false) + '</ul>' : NOT_YET(c[1] + ' MC')), 'mc')],
         [sec('top', '상위 15개 상품', gn + ' 합계 매출 상위 15개 상품', '<p class="note">' + pr.ty + ' 매출 · 백만원 · 점포 중 최고값 파랑, 최저값 빨강 · 밑줄 = ' + esc(NAME[me]) + '</p>' + (hasData('top', id) ? '<ol class="prods">' + items + '</ol>' : NOT_YET(c[1] + ' 상품')), 'top')],
       ],
     };
@@ -1730,8 +1773,9 @@ var KIMS = (function () {
   function saveDrawer() {
     var n = readDrawer(), storeChanged = n.store !== ST.s;
     S = n; applyMode(); saveLocal();
-    if (storeChanged) { ST.s = n.store; ST.t = 'store'; ST.v = 'report'; }
-    closeDrawer(); render(storeChanged);
+    closeDrawer();
+    if (ST.v !== 'report') { if (storeChanged) { ST.s = n.store; ST.v = 'report'; } render(storeChanged); }
+    else keepRender(function () { if (storeChanged) ST.s = n.store; }); // 보던 탭·항목 유지
     saveCloud().then(function (ok) { toast(ok ? '설정을 저장했습니다 (계정·이 기기)' : '설정을 저장했습니다 (이 기기)'); });
   }
 
@@ -1759,6 +1803,38 @@ var KIMS = (function () {
     SEGANIM = false;
   }
   var placeAllSegs = function () { [].forEach.call(window.document.querySelectorAll('#main .dtb, #main .mseg'), function (b) { placeSeg(b, false); }); };
+  // 표가 있는 섹션: 스크롤하면 제목 · 설명 · (항목 버튼) · 표 머리글이 한 덩어리로 위에 걸림
+  function stickHeads() {
+    var doc = window.document;
+    var mainEl = doc.getElementById('main'); mainEl.classList.add('measuring'); // 붙어 있는 상태에서 재면 위치가 틀어지므로 잠시 고정을 풂
+    [].forEach.call(doc.querySelectorAll('#main section.panel'), function (sec) {
+      [].forEach.call(sec.querySelectorAll('.sth'), function (el) { el.classList.remove('sth'); el.style.top = ''; el.style.boxShadow = ''; el.style.transform = ''; delete el.dataset.lift; });
+      sec.classList.remove('stk'); sec.style.removeProperty('--sth'); [].forEach.call(sec.querySelectorAll('thead, thead th'), function (el) { if (el.dataset.lift) { el.style.transform = ''; delete el.dataset.lift; } });
+      var tbl = [].filter.call(sec.querySelectorAll('table'), function (t) { return t.offsetParent && t.querySelector('thead th') && !t.classList.contains('mxl'); })[0];
+      if (!tbl) return;
+      var thd = tbl.querySelector('thead'), th = [].filter.call(thd.querySelectorAll('th'), function (x) { return x.offsetParent; })[0] || thd.querySelector('th');
+      if (!(window.matchMedia && window.matchMedia('(min-width:1024px),(max-width:600px)').matches) || tbl.closest('.hx:not(.mt .hx)')) return;
+      var items = [], h3 = sec.querySelector(':scope > h3'), note = sec.querySelector(':scope > p.note'), seg = sec.querySelector('.mseg, .dtbw');
+      if (h3) items.push(h3);
+      if (note && note.compareDocumentPosition(tbl) & 4) items.push(note);
+      if (seg && seg.offsetHeight && (seg.compareDocumentPosition(tbl) & 4)) items.push(seg);
+      if (!items.length) return;
+      // 위치는 offsetTop으로 잼(등장 효과의 transform 영향 없음)
+      var at = function (el) { var t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
+      var vth = [].filter.call(thd.querySelectorAll('th'), function (x) { return x.offsetParent; })[0] || th;
+      var top0 = at(items[0]);
+      items.forEach(function (el, i) {
+        var t = at(el), next = i + 1 < items.length ? at(items[i + 1]) : at(vth), gap = Math.max(0, next - t - el.offsetHeight);
+        el.classList.add('sth'); el.style.top = Math.round(t - top0) + 'px';
+        // 아래 빈틈을 빈칸 없이 덮음(틈이 항목 높이보다 크면 그림자를 여러 겹)
+        var hgt = Math.max(1, el.offsetHeight), sh = [];
+        for (var o = Math.min(gap, hgt); sh.length < 12; o += hgt) { sh.push('0 ' + Math.ceil(Math.min(o, gap)) + 'px 0 var(--panel)'); if (o >= gap) break; }
+        el.style.boxShadow = sh.join(', ') + ', 0 -' + (i ? 1 : 12) + 'px 0 var(--panel)';
+      });
+      sec.classList.add('stk'); sec.style.setProperty('--sth', Math.round(at(vth) - top0) + 'px');
+    });
+    mainEl.classList.remove('measuring');
+  }
   function render(toTop) {
     var doc = window.document;
     var main = doc.getElementById('main');
@@ -1787,7 +1863,7 @@ var KIMS = (function () {
     doc.querySelector('.app').classList.toggle('has-cats', !cb.hidden);
     [].forEach.call(cb.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.t === ST.t); });
     if (toTop) { doc.getElementById('scroller').scrollTop = 0; main.classList.remove('fx'); void main.offsetWidth; main.classList.add('fx'); }
-    placeAllSegs(); placePeriod();
+    placeAllSegs(); placePeriod(); stickHeads(); queueLift();
     [].forEach.call(doc.querySelectorAll('#main .mtbl'), function (t) { var g = t.querySelector('tr.g1'); if (g && g.offsetHeight) t.style.setProperty('--g1h', g.offsetHeight + 'px'); });
     try { window.history.replaceState(null, '', '#' + ST.s + '-' + ST.t + '-' + ST.k); } catch (e) {}
     S.last = ST.s; saveLocal();
@@ -1811,6 +1887,72 @@ var KIMS = (function () {
         [].forEach.call(main.querySelectorAll('.row'), function (r) { if (r.getBoundingClientRect().top > limit) { r.classList.add('rv'); rv.observe(r); } });
       }
     }
+  }
+  // 점포·탭·기간을 바꿔도 보던 항목(섹션)에 그대로 머무름 — 같은 항목이 없으면 맨 위
+  // 탭을 바꾸면 순위 위치 점이 이전 자리에서 새 자리로 미끄러지듯 이동
+  function glideDots(wrap, prev, cur) {
+    var o = wrap.querySelector('.dtp[data-i="' + prev + '"]'), nw = wrap.querySelector('.dtp[data-i="' + cur + '"]');
+    if (!o || !nw || !nw.animate) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var os = o.querySelectorAll('svg.pbar'), ns = nw.querySelectorAll('svg.pbar');
+    [].forEach.call(ns, function (svg, i) {
+      var a = os[i]; if (!a) return;
+      [['circle', 'cx'], ['text.r', 'x']].forEach(function (q) {
+        var e1 = a.querySelector(q[0]), e2 = svg.querySelector(q[0]); if (!e1 || !e2) return;
+        var dx = Number(e1.getAttribute(q[1])) - Number(e2.getAttribute(q[1]));
+        if (Math.abs(dx) < 0.5) return;
+        e2.animate([{ transform: 'translateX(' + dx + 'px)' }, { transform: 'translateX(0)' }], { duration: 520, easing: 'cubic-bezier(.22,.8,.24,1)' });
+      });
+    });
+  }
+  // 표 끝에 다다르면 고정된 제목·탭·머리글이 표와 함께 위로 밀려 올라감(흰 칸이 표 끝을 가리지 않게)
+  var liftQ = false;
+  function liftHeads() {
+    liftQ = false;
+    var doc = window.document, sc = doc.getElementById('scroller'); if (!sc) return;
+    var st = sc.getBoundingClientRect().top;
+    [].forEach.call(doc.querySelectorAll('#main section.stk'), function (sec) {
+      var tbl = [].filter.call(sec.querySelectorAll('table'), function (t) { return t.offsetParent && t.querySelector('thead th') && !t.classList.contains('mxl'); })[0];
+      if (!tbl) return;
+      var sth = parseFloat(sec.style.getPropertyValue('--sth')) || 0, thd = tbl.querySelector('thead'), hh = thd ? thd.getBoundingClientRect().height : 0;
+      // 마지막 줄이 머리글 밑으로 숨기 전에 고정 묶음이 마지막 줄과 함께 올라가도록 시작점을 한 줄 앞당김
+      var rows = tbl.tBodies.length ? tbl.tBodies[tbl.tBodies.length - 1].rows : [], lr = rows.length ? rows[rows.length - 1].getBoundingClientRect().height : 0;
+      var full = sth + hh + lr, lift = Math.max(0, Math.min(full, full - (tbl.getBoundingClientRect().bottom - st)));
+      var heads = [].slice.call(sec.querySelectorAll('.sth'));
+      if (tbl.classList.contains('mtbl')) heads.push(thd); else heads = heads.concat([].slice.call(thd.querySelectorAll('th')));
+      // 항목마다: 원하는 위치(고정 위치 − lift)와 브라우저가 이미 밀어 올린 위치의 차이만큼만 더 올림
+      heads.forEach(function (el) {
+        if (!el.offsetParent && el.tagName !== 'THEAD') return;
+        var cur = parseFloat(el.dataset.lift || '0'), nat = el.getBoundingClientRect().top - cur;
+        var want = st + (parseFloat(window.getComputedStyle(el).top) || 0) - lift, d = lift ? Math.min(0, Math.round(want - nat)) : 0;
+        if (d !== cur) { el.dataset.lift = d; el.style.transform = d ? 'translateY(' + d + 'px)' : ''; }
+      });
+    });
+  }
+  function queueLift() { if (!liftQ) { liftQ = true; window.requestAnimationFrame(liftHeads); } }
+  function keepRender(change) {
+    // 화면 맨 위 근처에 보이던 항목 제목을 기준으로, 바뀐 뒤에도 같은 화면 위치에 오도록 맞춤
+    var doc = window.document, sc = doc.getElementById('scroller'), main = doc.getElementById('main');
+    var st = sc.getBoundingClientRect().top, vh = sc.clientHeight, cur = null, off = 0;
+    main.classList.add('measuring');
+    var secs = [].slice.call(doc.querySelectorAll('#main section[id^=sec-]')).map(function (x) { var r = x.getBoundingClientRect(); return { id: x.id, t: r.top - st, b: r.bottom - st }; });
+    var head = secs.filter(function (x) { return x.t >= -1 && x.t < vh * 0.5; })[0], inside = secs.filter(function (x) { return x.b > 40; })[0];
+    var pickA = sc.scrollTop < 4 ? null : (head || inside);
+    if (pickA) { cur = pickA.id; off = pickA.t; }
+    main.classList.remove('measuring');
+    change();
+    render(false);
+    var el = cur ? doc.getElementById(cur) : null;
+    if (el) {
+      main.classList.add('measuring');
+      var y = sc.scrollTop + (el.getBoundingClientRect().top - st) - off;
+      main.classList.remove('measuring');
+      sc.scrollTop = Math.max(0, y);
+    } else sc.scrollTop = 0;
+    // 지금 화면에 보이는 줄은 등장 효과 없이 바로 제자리
+    var bot = st + vh;
+    [].forEach.call(main.querySelectorAll('.row.rv'), function (r) { var q = r.getBoundingClientRect(); if (q.top < bot && q.bottom > st - 20) { r.classList.remove('rv'); if (rv) rv.unobserve(r); } });
+    main.classList.remove('fx'); void main.offsetWidth; main.classList.add('fx');
   }
   function goSec(id) {
     var doc = window.document, el = doc.getElementById('sec-' + id), sc = doc.getElementById('scroller');
@@ -1887,29 +2029,28 @@ var KIMS = (function () {
     if (!TABS.some(function (t) { return t[0] === ST.t; })) ST.t = 'store';
     doc.querySelector('.seg').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b || b.dataset.k === ST.k) return;
-      var m = doc.getElementById('main'); ST.k = b.dataset.k; SEGANIM = true; m.classList.remove('fx'); render(false); void m.offsetWidth; m.classList.add('fx');
+      keepRender(function () { ST.k = b.dataset.k; SEGANIM = true; });
     });
     doc.getElementById('main').addEventListener('change', function (e) {
       var n = e.target.name || ''; if (!/^(dtt-|ms-)/.test(n)) return;
       var box = e.target.closest('.dtb, .mseg'), wrap = e.target.closest('.dtt');
-      if (wrap) { var prev = Number(TABSEL[n] || 0), cur = Number(e.target.value); wrap.setAttribute('data-dir', cur >= prev ? 'r' : 'l'); }
+      if (wrap) {
+        var prev = Number(TABSEL[n] || 0), cur = Number(e.target.value);
+        wrap.removeAttribute('data-dir'); void wrap.offsetWidth; wrap.setAttribute('data-dir', cur >= prev ? 'r' : 'l');
+        glideDots(wrap, prev, cur);
+      }
       TABSEL[n] = e.target.value; saveTabs();
       if (box) placeSeg(box, true);
     });
-    window.addEventListener('resize', function () { placeAllSegs(); placePeriod(); });
+    window.addEventListener('resize', function () { placeAllSegs(); placePeriod(); stickHeads(); });
+    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(function () { stickHeads(); placeAllSegs(); placePeriod(); });
     doc.getElementById('menuBtn').addEventListener('click', openNav);
     // 화면 폭이 바뀌면 그래프 폭을 다시 맞춤
     var rzT = null, lastW = 0;
     window.addEventListener('resize', function () { window.clearTimeout(rzT); rzT = window.setTimeout(function () { var w = doc.getElementById('main').clientWidth; if (w !== lastW) { lastW = w; var sc = doc.getElementById('scroller'), top = sc.scrollTop; render(false); sc.scrollTop = top; } }, 200); });
     doc.getElementById('catbar').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b || b.dataset.t === ST.t) return;
-      // 탭(점포·농산·수산…)을 바꿔도 보던 항목에 그대로 머무름 — 같은 항목이 없으면 맨 위
-      var sc = doc.getElementById('scroller'), st = sc.getBoundingClientRect().top, cur = null, off = 0;
-      [].some.call(doc.querySelectorAll('#main section[id^=sec-]'), function (x) { var r = x.getBoundingClientRect(); if (r.bottom > st + 40) { cur = x.id; off = r.top - st; return true; } return false; });
-      ST.t = b.dataset.t; render(false);
-      var m = doc.getElementById('main'), el = cur && cur !== 'sec-kpi' ? doc.getElementById(cur) : null;
-      sc.scrollTop = el ? Math.max(0, el.getBoundingClientRect().top - st + sc.scrollTop - Math.min(off, 12)) : 0;
-      m.classList.remove('fx'); void m.offsetWidth; m.classList.add('fx');
+      keepRender(function () { ST.t = b.dataset.t; });
     });
     doc.getElementById('setBtn').addEventListener('click', function () { openDrawer(); });
     doc.getElementById('scrim').addEventListener('click', function () { if (doc.body.classList.contains('dr-open')) { applyMode(); closeDrawer(); } closeNav(); });
@@ -1952,11 +2093,15 @@ var KIMS = (function () {
       if (a) { e.preventDefault(); closeNav(); goSec(a.dataset.sec); return; }
       if (!b) return;
       if (b.dataset.go === 'home') { closeNav(); if (WEB && WEB.home) WEB.home(); return; }
-      if (b.dataset.store) { if (b.dataset.store !== ST.s) ST.t = 'store'; ST.s = b.dataset.store; ST.v = 'report'; }
-      else if (b.dataset.go === 'all') { ST.s = 'all'; ST.v = 'report'; ST.t = b.dataset.tab || (ALL_TABS.indexOf(ST.t) >= 0 ? ST.t : 'store'); }
-      else if (b.dataset.go === 'stats') ST.v = 'stats';
-      else if (b.dataset.tab) { ST.t = b.dataset.tab; ST.v = 'report'; }
-      closeNav(); render(true);
+      if (b.dataset.go === 'stats') { ST.v = 'stats'; closeNav(); render(true); return; }
+      var wasStats = ST.v !== 'report';
+      var chg = function () {
+        if (b.dataset.store) { ST.s = b.dataset.store; ST.v = 'report'; } // 보던 탭(농산 등) 유지
+        else if (b.dataset.go === 'all') { ST.s = 'all'; ST.v = 'report'; ST.t = b.dataset.tab || (ALL_TABS.indexOf(ST.t) >= 0 ? ST.t : 'store'); }
+        else if (b.dataset.tab) { ST.t = b.dataset.tab; ST.v = 'report'; }
+      };
+      closeNav();
+      if (wasStats) { chg(); render(true); } else keepRender(chg);
     });
     var touch = window.matchMedia && window.matchMedia('(hover: none)').matches;
     var hideQtip = function () { [].forEach.call(doc.querySelectorAll('.qtip'), function (t) { t.remove(); }); };
@@ -1976,7 +2121,7 @@ var KIMS = (function () {
         return;
       }
       hideQtip();
-      if (r.dataset.s) { if (ST.s !== 'all' || ALL_TABS.indexOf(ST.t) < 0) ST.t = 'store'; ST.s = r.dataset.s; ST.v = 'report'; render(true); }
+      if (r.dataset.s) keepRender(function () { ST.s = r.dataset.s; ST.v = 'report'; });
       else if (r.dataset.day) { STATS.day = r.dataset.day; render(false); }
     };
     var mainEl = doc.getElementById('main');
@@ -1986,6 +2131,7 @@ var KIMS = (function () {
     mainEl.addEventListener('focusin', function (e) { if (e.target.matches && e.target.matches('.kpi[data-kpi]:focus-visible')) showKpi(e.target); });
     mainEl.addEventListener('focusout', function (e) { if (e.target.matches && e.target.matches('.kpi[data-kpi]')) hideKpi(); });
     doc.getElementById('scroller').addEventListener('scroll', hideKpi, { passive: true });
+    doc.getElementById('scroller').addEventListener('scroll', queueLift, { passive: true });
     doc.addEventListener('click', function (e) { var c = e.target.closest && e.target.closest('.kpi[data-kpi]'); if (c) { if (c.classList.contains('on') && Date.now() - kpiShownAt > 500) hideKpi(); else showKpi(c); } else hideKpi(); });
     mainEl.addEventListener('mouseover', function (e) { var h = e.target.closest && e.target.closest('.hit'); if (h) showTip(h); });
     mainEl.addEventListener('mouseout', function (e) { var w = e.target.closest && e.target.closest('.dcw'); if (w && !w.contains(e.relatedTarget)) hideTip(w); });
