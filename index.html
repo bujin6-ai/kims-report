@@ -1455,10 +1455,10 @@ var KIMS = (function () {
   function route() {
     var a = get();
     if (!a || !a.token) return showGate('login');
-    var h = location.hash.replace(/^#/, '');
-    if (h === 'report') return openReport();
+    var h = location.hash.replace(/^#/, ''), sub = h.split('/')[0];
+    // 메뉴 화면: (없음) · notice · admin / 그 밖의 주소(#report, 리포트가 쓰는 #점포-탭-기간)는 리포트
+    if (h && sub !== 'notice' && sub !== 'admin') return openReport();
     setView('portal');
-    var sub = h.split('/')[0];
     PV = sub === 'notice' ? 'notice' : sub === 'admin' && a.admin ? 'admin' : 'home';
     if (PV === 'notice' && h.split('/')[1]) OPEN[h.split('/')[1]] = true;
     drawPortal();
