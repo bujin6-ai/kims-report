@@ -535,6 +535,14 @@ tr.dim>*{opacity:.42}
 #main table tbody tr>*{transition:background-color .15s,box-shadow .15s}
 @media (hover:hover){#main table tbody tr:not(.sep):hover>*{background-image:linear-gradient(color-mix(in srgb,var(--ac) 11%,transparent),color-mix(in srgb,var(--ac) 11%,transparent))}
 #main table tbody tr:not(.sep):hover>th{color:var(--ac)}}
+/* 모든 표 머리글 고정(PC·휴대폰) */
+@media (min-width:1024px),(max-width:600px){
+#main .hx,#main .hs,#main .dts,#main .dtw,#main .dtt,#main .dtp{overflow:visible}
+#main table thead th{position:sticky;top:0;z-index:3;background:var(--panel);background-clip:padding-box}
+#main .dt thead th{box-shadow:inset 0 -1.5px 0 var(--fg)}
+#main .dt thead th.ya{background:color-mix(in srgb,var(--ac-soft) 100%,var(--panel))}
+#main .ht thead th{box-shadow:0 0 0 6px var(--panel);border-radius:0}
+#main .mtbl thead tr.g2 th{top:var(--g1h,31px)}}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
