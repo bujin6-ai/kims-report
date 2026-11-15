@@ -821,6 +821,10 @@ tr.dim>*{opacity:.42}
 #nav .sddi .sl{margin:0;padding:2px 6px 6px;border:0;border-top:1px solid var(--line)}
 #nav .sddi .sl::before{display:none}
 #nav .sddi .sl button{padding-left:10px}
+.kpis>.kacc{grid-column:1/-1;order:9;margin-top:-10px}
+.kpis>.kacc.open{margin-top:0}
+.kpis>.kacc{animation:none}
+@media (max-width:600px){.kpis>.kpi:nth-child(-n+2){order:1}.kpis>.kpi:nth-child(n+3){order:3}.kpis>.kacc{order:4}.kpis[data-accrow="1"]>.kacc{order:2}}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
@@ -1968,16 +1972,19 @@ var KIMS = (function () {
       });
       var acc = doc.createElement('div'); acc.className = 'kacc' + (open ? ' open' : '');
       acc.innerHTML = '<div class="kaw"><div class="kain">' + (open ? kaccAny(box.dataset.p, box.dataset.c, open) : '') + '</div></div>';
-      box.parentNode.insertBefore(acc, box.nextSibling);
+      box.appendChild(acc); // 카드 그리드 안에 넣어, 폰(2열)에서는 누른 카드가 있는 줄 바로 아래에 펼침
+      var oc = open ? box.querySelector('.kpi[data-kpi="' + open.split(':')[0] + '"]') : null;
+      if (oc) { box.dataset.accrow = [].indexOf.call(box.querySelectorAll('.kpi'), oc) < 2 ? '1' : '2'; oc.classList.add('kop'); }
     });
   }
   function toggleAcc(btn) {
-    var card = btn.closest('.kpi'), box = card.closest('.kpis'), acc = box.nextElementSibling; if (!acc || !acc.classList.contains('kacc')) return;
+    var card = btn.closest('.kpi'), box = card.closest('.kpis'), acc = box.querySelector('.kacc'); if (!acc) return;
     var id = box.dataset.p + '|' + (box.dataset.c || ''), key = card.dataset.kpi + ':' + (btn.dataset.mode || 'cd'), was = KACC[id] === key;
     [].forEach.call(box.querySelectorAll('.kab'), function (x) { x.setAttribute('aria-expanded', 'false'); });
     [].forEach.call(box.querySelectorAll('.kpi.kop'), function (x) { x.classList.remove('kop'); });
     if (was) { delete KACC[id]; acc.classList.remove('open'); return; }
     KACC[id] = key; btn.setAttribute('aria-expanded', 'true'); card.classList.add('kop');
+    box.dataset.accrow = [].indexOf.call(box.querySelectorAll('.kpi'), card) < 2 ? '1' : '2';
     var inner = acc.querySelector('.kain'); inner.innerHTML = kaccAny(box.dataset.p, box.dataset.c, key);
     inner.classList.remove('kin'); void inner.offsetWidth; inner.classList.add('kin');
     acc.classList.add('open');
