@@ -764,7 +764,8 @@ tr.dim>*{opacity:.42}
 /* 일별 매출: 전년 월마감 강조 */
 .lym{display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin-left:10px;padding:4px 12px;border-radius:999px;background:color-mix(in srgb,var(--ac) 8%,transparent);font-size:14px;font-weight:600;color:var(--fg)}
 .lym b{font-size:17px;font-weight:800;color:var(--ac)}
-@media (max-width:600px){.lym{margin:6px 0 0;font-size:12.5px;padding:4px 10px}.lym b{font-size:14.5px}}
+@media (max-width:600px){.lym{display:flex;flex-wrap:nowrap;width:fit-content;max-width:100%;white-space:nowrap;margin:6px 0 0;gap:4px;font-size:11px;letter-spacing:-.03em;padding:4px 9px}.lym b{font-size:13px;letter-spacing:-.02em}}
+@media (max-width:370px){.lym{font-size:10px}.lym b{font-size:12px}}
 .tip ul.fut li{grid-template-columns:minmax(0,1fr) auto}.tip ul.fut em{color:var(--fg);font-weight:600}
 #kpop .kgs.one li.cd{font-weight:600;margin-top:0;padding-top:3px;border-top:0}
 #main .bigt th,#main .bigt td{padding-left:5px;padding-right:5px}
@@ -781,6 +782,45 @@ tr.dim>*{opacity:.42}
 #main .tip li em{min-width:0;white-space:nowrap}
 #main .tip li.tot>*{padding-bottom:6px;margin-bottom:2px;border-bottom:1px solid var(--line);font-weight:700}
 #main .tip .tn,#main .tip .tt small{width:0;min-width:100%;white-space:normal}
+/* 아코디언: 이름과 숫자를 붙여서(열 폭 고정, 여러 단) */
+@media (min-width:601px){
+.kacc li{grid-template-columns:7.2em 5.8em 5.8em 4.8em;justify-content:start;gap:6px}
+.kacc .kgs{columns:auto 290px;column-gap:26px;column-rule:1px solid var(--line)}
+.kacc ul{width:max-content;max-width:100%}
+.kacc li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+.kabs{position:absolute;right:10px;bottom:8px;display:flex;gap:5px}
+.kabs .kab{position:static}
+.kpi[data-kpi]{cursor:default}
+.kacc .kgs.st li.pg span{padding-left:0;color:var(--fg)}
+.kacc .kgs.st li.pg i{display:inline-block;width:1.7em;font-style:normal;color:var(--muted);font-size:11px}
+.kacc li.pick{cursor:pointer}
+@media (max-width:600px){.kabs{position:static;justify-content:flex-end;margin-top:8px}.kabs .kab{padding:3px 5px 3px 8px}.kabs .kab span{display:inline;font-size:11px}}
+.kpi.kop{border-color:var(--ac)}
+.grk li{font-size:14.5px;grid-template-columns:1.7em 9.5em minmax(0,1fr) 4.8em;padding:5px 6px}
+.grk .gn{font-weight:600;color:var(--fg)}
+.grk .gn small{font-size:11.5px;font-weight:500}
+.grk .gi{font-size:12.5px}
+.grk b{font-size:14.5px}
+@media (max-width:600px){.grk li{grid-template-columns:1.6em 7.8em minmax(0,1fr) 4.4em;font-size:14px}}
+.sdds{display:grid;gap:6px;margin:2px 0 8px}
+.sdd{scroll-margin:8px;border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden;transition:border-color .2s}
+.sdd.open{border-color:color-mix(in srgb,var(--ac) 45%,var(--line))}
+.sddb{width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;border:0;background:transparent;color:var(--fg);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:background-color .15s}
+.sddb span{flex:1;min-width:0;display:flex;align-items:baseline;gap:6px;white-space:nowrap;overflow:hidden}
+.sddb span small{font-size:11px;font-weight:600;color:var(--muted);background:var(--seg);border-radius:999px;padding:0 6px;line-height:1.6}
+.sddb span em{font-style:normal;font-size:12px;font-weight:700;color:var(--ac);overflow:hidden;text-overflow:ellipsis}
+.sddb b{font-size:12.5px;font-weight:700}.sddb b.up{color:var(--good)}.sddb b.dn{color:var(--bad)}
+.sddb .cv{width:16px;height:16px;flex:none;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s ease}
+.sdd.open .sddb .cv{transform:rotate(180deg)}
+.sdd.has:not(.open){border-color:color-mix(in srgb,var(--ac) 30%,var(--line))}
+@media (hover:hover){.sddb:hover{background:var(--hov)}}
+.sddp{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s cubic-bezier(.3,.7,.2,1)}
+.sdd.open .sddp{grid-template-rows:1fr}
+.sddi{min-height:0;overflow:hidden}
+#nav .sddi .sl{margin:0;padding:2px 6px 6px;border:0;border-top:1px solid var(--line)}
+#nav .sddi .sl::before{display:none}
+#nav .sddi .sl button{padding-left:10px}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
@@ -1563,19 +1603,19 @@ var KIMS = (function () {
   // 금년·전년·변화 3칸(매출은 성장순위까지 4칸)
   // 성장율 칸 안 ± 막대(0 기준 좌우, 표 안 최대값 기준 길이)
   var gbar = function (g, gmax) { if (g == null || !gmax) return ''; var w = Math.min(1, Math.abs(g) / gmax) * 50; return '<span class="gz"><i class="' + (g >= 0 ? 'p' : 'n') + '" style="width:' + w.toFixed(1) + '%"></i></span>'; };
-  function metricCells(t, rkHtml, gmax) {
+  function metricCells(t, rkHtml, gmax, mrRk) {
     return tdm('s', '', man(t.gsT), true) + tdm('s', 'ly', t.gsL ? man(t.gsL) : '-') + tdm('s', gmax ? 'gzc' : '', t.growth == null ? (t.gsT ? '전년 없음' : '-') : gbar(t.growth, gmax) + '<b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b>') + (rkHtml != null ? tdm('s', 'rkc', rkHtml) : '') +
-      tdm('r', '', t.mr == null ? '-' : f1(t.mr) + '%', true) + tdm('r', 'ly', t.mrL == null ? '-' : f1(t.mrL) + '%') + tdm('r', cls(t.mrD), pp(t.mrD)) +
+      tdm('r', '', t.mr == null ? '-' : f1(t.mr) + '%', true) + tdm('r', 'ly', t.mrL == null ? '-' : f1(t.mrL) + '%') + tdm('r', cls(t.mrD), pp(t.mrD)) + (mrRk != null ? tdm('r', 'rkc', mrRk) : '') +
       tdm('c', '', t.cnt == null ? '-' : won(t.cnt), true) + tdm('c', 'ly', !t.cntL ? '-' : won(t.cntL)) + tdm('c', cls(t.cntG), pct(t.cntG)) +
       tdm('a', '', man1(t.atv), true) + tdm('a', 'ly', man1(t.atvL)) + tdm('a', cls(t.atvG), pct(t.atvG));
   }
-  function metricHead(first, withRank) {
+  function metricHead(first, withRank, mrRank) {
     var g1 = function (m, n, cs) { return '<th colspan="' + cs + '" data-m="' + m + '" class="gs">' + n + '</th>'; };
     var g2 = function (m, a) { return a.map(function (n, i) { return '<th data-m="' + m + '"' + (i ? '' : ' class="gs"') + '>' + n + '</th>'; }).join(''); };
-    return '<thead><tr class="g1"><th class="g1c"></th>' + g1('s', '매출<small>(백만원)</small>', withRank ? 4 : 3) + g1('r', '매총율', 3) + g1('c', '건수<small>(일평균)</small>', 3) + g1('a', '건단가<small>(만원)</small>', 3) + '</tr>' +
-      '<tr class="g2"><th class="g2c">' + first + '</th>' + g2('s', ['금년', '전년', '성장율'].concat(withRank ? ['성장순위'] : [])) + g2('r', ['금년', '전년', '증감']) + g2('c', ['금년', '전년', '증감율']) + g2('a', ['금년', '전년', '증감율']) + '</tr></thead>';
+    return '<thead><tr class="g1"><th class="g1c"></th>' + g1('s', '매출<small>(백만원)</small>', withRank ? 4 : 3) + g1('r', '매총율', mrRank ? 4 : 3) + g1('c', '건수<small>(일평균)</small>', 3) + g1('a', '건단가<small>(만원)</small>', 3) + '</tr>' +
+      '<tr class="g2"><th class="g2c">' + first + '</th>' + g2('s', ['금년', '전년', '성장율'].concat(withRank ? ['성장순위'] : [])) + g2('r', ['금년', '전년', '증감'].concat(mrRank ? ['증감순위'] : [])) + g2('c', ['금년', '전년', '증감율']) + g2('a', ['금년', '전년', '증감율']) + '</tr></thead>';
   }
-  var RT_HEAD = metricHead('점포', true);
+  var RT_HEAD = metricHead('점포', true, true);
   function rankTblOf(k, K, sc, openGroups) {
     var gs = K.map(function (p) { return Math.abs(M(k, [p], sc).growth || 0); }).sort(function (a, b) { return a - b; });
     var gmax = gs.length ? gs[Math.floor(gs.length * 0.9)] || gs[gs.length - 1] : 0; // 상위 10% 튀는 값은 막대 끝까지
@@ -1583,9 +1623,9 @@ var KIMS = (function () {
       var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; });
       rows.sort(function (a, b) { return (b[1].gsT || 0) - (a[1].gsT || 0); }); // 그룹 안 매출 큰 순
       var gtot = M(k, g[2], sc);
-      return '<tbody><tr class="gh"><th>' + g[1] + ' ' + g[2].length + '점 합계</th>' + metricCells(gtot, '', gmax) + '</tr>' + rows.map(function (r) {
+      return '<tbody><tr class="gh"><th>' + g[1] + ' ' + g[2].length + '점 합계</th>' + metricCells(gtot, '', gmax, '') + '</tr>' + rows.map(function (r) {
         var t = r[1], rk = rankIn(k, K, sc, 'growth', r[0]);
-        return '<tr class="pick" data-s="' + r[0] + '" tabindex="0"><th>' + esc(NAME[r[0]]) + '</th>' + metricCells(t, rkBadge(rk), gmax) + '</tr>';
+        return '<tr class="pick" data-s="' + r[0] + '" tabindex="0"><th>' + esc(NAME[r[0]]) + '</th>' + metricCells(t, rkBadge(rk), gmax, rkBadge(rankIn(k, K, sc, 'mrD', r[0]))) + '</tr>';
       }).join('') + '</tbody>';
     }).join('');
   }
@@ -1899,34 +1939,52 @@ var KIMS = (function () {
     return '<p class="kt">' + esc(pAttr === 'ALL' ? '킴스 합계' : NAME[pAttr]) + ' · ' + KPI_NAME[key] + ' <small>' + (cid ? '구매그룹별' : 'CD·구매그룹별') + '</small></p><div class="kgs">' + rows + '</div>' +
       (key === 'cnt' ? '<p class="kn">CD·구매그룹 건수는 그 상품을 산 영수증 수라서 더하면 전체 건수와 다릅니다.</p>' : '');
   }
+  // 전점: 그룹별 점포 실적(금년 큰 순)
+  function kaccStores(cid, key) {
+    var k = ST.k, sc = cid ? scopeCat(cid, k) : scopeStore(k);
+    var sortV = function (t) { return key === 'gsT' ? t.gsT : key === 'mr' ? t.mr : key === 'cnt' ? t.cnt : t.atv; };
+    var head = '<li class="kh"><span>그룹 · 점포</span><em>금년</em><em>전년</em><b>' + (key === 'mr' ? '증감' : key === 'gsT' ? '성장율' : '증감율') + '</b></li>';
+    var groups = D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
+      var vt = kpiVal(M(k, g[2], sc), key);
+      var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; }).filter(function (x) { return x[1].gsT || x[1].gsL; })
+        .sort(function (a, b) { return (sortV(b[1]) || -1e15) - (sortV(a[1]) || -1e15); });
+      return '<ul class="kg">' + head + '<li class="cd"><span>' + esc(g[1]) + ' ' + g[2].length + '점</span><em>' + vt[0] + '</em><em class="ly">' + vt[3] + '</em><b class="' + cls(vt[1]) + '">' + vt[2] + '</b></li>' +
+        rows.map(function (x, i) { var v = kpiVal(x[1], key); return '<li class="pg pick" data-s="' + x[0] + '" tabindex="0"><span><i>' + (i + 1) + '</i>' + esc(NAME[x[0]]) + '</span><em>' + v[0] + '</em><em class="ly">' + v[3] + '</em><b class="' + cls(v[1]) + '">' + v[2] + '</b></li>'; }).join('') + '</ul>';
+    }).join('');
+    var cname = cid ? ((D.storeCats.filter(function (c) { return c[0] === cid; })[0] || [])[1] || '') + ' ' : '';
+    return '<p class="kt">전점포 ' + cname + KPI_NAME[key] + ' <small>그룹별 · 금년 큰 순 · 점포를 누르면 그 점포로 이동</small></p><div class="kgs st">' + groups + '</div>';
+  }
+  var kaccAny = function (p, c, v) { var a = v.split(':'); return a[1] === 'st' ? kaccStores(c, a[0]) : kaccBody(p, c, a[0]); };
   function kpiAcc() {
     var doc = window.document;
     [].forEach.call(doc.querySelectorAll('#main .kpis'), function (box) {
       var id = box.dataset.p + '|' + (box.dataset.c || ''), open = KACC[id] || '';
       [].forEach.call(box.querySelectorAll('.kpi[data-kpi]'), function (c) {
         if (!c.dataset.kpi) return;
-        var b = doc.createElement('button'); b.type = 'button'; b.className = 'kab'; b.setAttribute('aria-expanded', open === c.dataset.kpi ? 'true' : 'false');
-        b.innerHTML = '<span>' + (box.dataset.c ? '구매그룹별' : 'CD별') + '</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
-        c.appendChild(b);
+        var w = doc.createElement('div'); w.className = 'kabs';
+        var mk = function (mode, label) { return '<button type="button" class="kab" data-mode="' + mode + '" aria-expanded="' + (open === c.dataset.kpi + ':' + mode ? 'true' : 'false') + '"><span>' + label + '</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'; };
+        w.innerHTML = mk('cd', box.dataset.c ? '구매그룹별' : 'CD별') + (box.dataset.p === 'ALL' ? mk('st', '점포별') : '');
+        c.appendChild(w);
       });
       var acc = doc.createElement('div'); acc.className = 'kacc' + (open ? ' open' : '');
-      acc.innerHTML = '<div class="kaw"><div class="kain">' + (open ? kaccBody(box.dataset.p, box.dataset.c, open) : '') + '</div></div>';
+      acc.innerHTML = '<div class="kaw"><div class="kain">' + (open ? kaccAny(box.dataset.p, box.dataset.c, open) : '') + '</div></div>';
       box.parentNode.insertBefore(acc, box.nextSibling);
     });
   }
   function toggleAcc(btn) {
     var card = btn.closest('.kpi'), box = card.closest('.kpis'), acc = box.nextElementSibling; if (!acc || !acc.classList.contains('kacc')) return;
-    var id = box.dataset.p + '|' + (box.dataset.c || ''), key = card.dataset.kpi, was = KACC[id] === key;
+    var id = box.dataset.p + '|' + (box.dataset.c || ''), key = card.dataset.kpi + ':' + (btn.dataset.mode || 'cd'), was = KACC[id] === key;
     [].forEach.call(box.querySelectorAll('.kab'), function (x) { x.setAttribute('aria-expanded', 'false'); });
-    hideKpi();
+    [].forEach.call(box.querySelectorAll('.kpi.kop'), function (x) { x.classList.remove('kop'); });
     if (was) { delete KACC[id]; acc.classList.remove('open'); return; }
-    KACC[id] = key; btn.setAttribute('aria-expanded', 'true');
-    var inner = acc.querySelector('.kain'); inner.innerHTML = kaccBody(box.dataset.p, box.dataset.c, key);
+    KACC[id] = key; btn.setAttribute('aria-expanded', 'true'); card.classList.add('kop');
+    var inner = acc.querySelector('.kain'); inner.innerHTML = kaccAny(box.dataset.p, box.dataset.c, key);
     inner.classList.remove('kin'); void inner.offsetWidth; inner.classList.add('kin');
     acc.classList.add('open');
   }
   var kpiShownAt = 0;
-  function showKpi(card) {
+  function showKpi(card) { return; } // 호버 팝업은 없앰(아코디언으로 대체)
+  function showKpiOld(card) {
     var doc = window.document, box = card.closest('.kpis'), pop = doc.getElementById('kpop');
     if (!box || !card.dataset.kpi) return;
     pop.innerHTML = kpiPop(box.dataset.p, box.dataset.c, card.dataset.kpi); pop.hidden = false;
@@ -1965,7 +2023,7 @@ var KIMS = (function () {
     return '<header class="hd"><p class="eyebrow">' + esc(v.eyebrow) + '</p><h1>' + esc(v.h1) + '</h1><p class="sub">' + v.sub + '</p></header>' +
       rows.map(function (r) { return '<div class="row' + (r.length > 1 ? ' split' : '') + '">' + r.map(function (x) { return x.html; }).join('') + '</div>'; }).join('');
   }
-  var NAVOPEN = {};
+  var NAVOPEN = {}, NAVDD = '';
   var SECICON = {
     kpi: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
     daily: '<path d="M3 17l5-6 4 3 6-8 3 3"/><path d="M3 21h18"/>',
@@ -2016,14 +2074,17 @@ var KIMS = (function () {
       out += '<li>' + item('data-store="' + ST.s + '"', stOn, 'store', esc(NAME[ST.s]), ST.t !== 'store' ? curTab : '') + (stOn ? toc : '') + '</li>';
     }
     var scS = scopeStore(ST.k);
-    out += '</ul><p class="nl nl2"><span>점포별 실적</span><small>' + PNAME[ST.k] + ' 성장율</small></p>' + D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
-      var open = NAVOPEN[g[0]] != null ? NAVOPEN[g[0]] : (ST.s !== 'all' ? GRP[ST.s] === g[0] : g[0] === 'L');
-      var gt = M(ST.k, g[2], scS).growth;
-      return '<details class="ng" data-g="' + g[0] + '"' + (open ? ' open' : '') + '><summary><span>' + g[1] + '<small>' + g[2].length + '</small></span><b class="' + cls(gt) + '">' + pct(gt) + '</b></summary><ul class="sl">' + g[2].map(function (p) {
-        var gr = M(ST.k, [p], scS).growth, on = ST.v === 'report' && ST.s === p;
-        return '<li><button type="button" data-store="' + p + '"' + (on ? ' aria-current="page"' : '') + '><span>' + esc(NAME[p]) + '</span><b class="' + cls(gr) + '">' + (gr == null ? '전년 없음' : pct(gr)) + '</b></button></li>';
-      }).join('') + '</ul></details>';
-    }).join('') + '<ul class="nv">';
+    // 점포 선택: 그룹별 드롭다운 4개(대형점·중형점·소형점·초근접) — 한 번에 하나만 펼침
+    out += '</ul><p class="nl nl2"><span>점포별 실적</span><small>' + PNAME[ST.k] + ' 성장율</small></p><div class="sdds">' +
+      D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
+        var gt = M(ST.k, g[2], scS).growth, open = NAVDD === g[0], mine = ST.v === 'report' && ST.s !== 'all' && GRP[ST.s] === g[0];
+        return '<div class="sdd' + (open ? ' open' : '') + (mine ? ' has' : '') + '" data-g="' + g[0] + '"><button type="button" class="sddb" aria-expanded="' + (open ? 'true' : 'false') + '">' +
+          '<span>' + g[1] + (g[1].slice(-1) === '형' ? '점' : '') + '<small>' + g[2].length + '</small>' + (mine ? '<em>' + esc(NAME[ST.s]) + '</em>' : '') + '</span><b class="' + cls(gt) + '">' + pct(gt) + '</b>' +
+          '<svg class="cv" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="sddp"><div class="sddi"><ul class="sl">' + g[2].map(function (p) {
+            var gr = M(ST.k, [p], scS).growth, on = ST.v === 'report' && ST.s === p;
+            return '<li><button type="button" data-store="' + p + '"' + (on ? ' aria-current="page"' : '') + '><span>' + esc(NAME[p]) + '</span><b class="' + cls(gr) + '">' + (gr == null ? '전년 없음' : pct(gr)) + '</b></button></li>';
+          }).join('') + '</ul></div></div></div>';
+      }).join('') + '</div><ul class="nv">';
     if (STATS.allowed) out += '</ul><p class="nl">관리</p><ul class="nv"><li>' + item('data-go="stats"', ST.v === 'stats', 'stats', '접속 현황') + (ST.v === 'stats' ? toc : '') + '</li>';
     return out + '</ul>';
   }
@@ -2456,6 +2517,13 @@ var KIMS = (function () {
       var a = e.target.closest('[data-sec]'), b = e.target.closest('button');
       if (a) { e.preventDefault(); closeNav(); goSec(a.dataset.sec); return; }
       if (!b) return;
+      if (b.classList.contains('sddb')) {
+        var dd = b.parentNode, g0 = dd.dataset.g; NAVDD = NAVDD === g0 ? '' : g0;
+        [].forEach.call(doc.querySelectorAll('#nav .sdd'), function (x) { var o = x.dataset.g === NAVDD; x.classList.toggle('open', o); x.querySelector('.sddb').setAttribute('aria-expanded', o ? 'true' : 'false'); });
+        if (NAVDD) window.setTimeout(function () { if (dd.isConnected) dd.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 320);
+        return;
+      }
+      if (b.dataset.store && b.closest('.sdd')) NAVDD = ''; // 고르면 닫힘
       if (b.dataset.go === 'home') { closeNav(); if (WEB && WEB.home) WEB.home(); return; }
       if (b.dataset.go === 'stats') { ST.v = 'stats'; closeNav(); render(true); return; }
       var wasStats = ST.v !== 'report';
