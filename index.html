@@ -767,6 +767,20 @@ tr.dim>*{opacity:.42}
 @media (max-width:600px){.lym{margin:6px 0 0;font-size:12.5px;padding:4px 10px}.lym b{font-size:14.5px}}
 .tip ul.fut li{grid-template-columns:minmax(0,1fr) auto}.tip ul.fut em{color:var(--fg);font-weight:600}
 #kpop .kgs.one li.cd{font-weight:600;margin-top:0;padding-top:3px;border-top:0}
+#main .bigt th,#main .bigt td{padding-left:5px;padding-right:5px}
+#main .bigt{width:100%;table-layout:auto}
+.bigt .shb{width:34px}
+@media (max-width:600px){.bigt .shb{display:none}#main .bigt th,#main .bigt td{padding-left:3px;padding-right:3px}}
+/* 일별 그래프 팝업: 이름·성장율·금액을 붙여서(창 폭은 내용만큼) */
+#main .tip{width:max-content;max-width:calc(100% - 8px)}
+#main .tip ul{grid-template-columns:auto auto auto;column-gap:12px;row-gap:5px;justify-content:start}
+#main .tip ul.fut{grid-template-columns:auto auto}
+#main .tip li{display:contents}
+#main .tip li span{white-space:nowrap;padding-left:0}
+#main .tip li.pg span{padding-left:8px;color:var(--muted)}
+#main .tip li em{min-width:0;white-space:nowrap}
+#main .tip li.tot>*{padding-bottom:6px;margin-bottom:2px;border-bottom:1px solid var(--line);font-weight:700}
+#main .tip .tn,#main .tip .tt small{width:0;min-width:100%;white-space:normal}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
@@ -1412,13 +1426,16 @@ var KIMS = (function () {
     var totIt = { name: NAME[me] + ' 합계', y: y, comps: CC.map(function (cc) { return M(k, cc.plants, sc).growth; }), rk: rankIn(k, OPEN(), sc, 'growth', me) };
     var shmax = Math.max.apply(null, items.map(function (it) { return it.share || 0; }).concat([0.01]));
     var row = function (it, isTot) {
-      var t = it.y;
-      return '<tr class="' + (isTot ? 'tot' : it.lvl) + (!isTot && !(t.gsT > 0) ? ' dim' : '') + '"><th>' + esc(it.name) + '</th><td>' + man(t.gsT) + '</td><td class="mh">' + man(t.gsL) + '</td><td><b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b></td><td>' + (!isTot && !(t.gsT > 0) ? '-' : rkBadge(it.rk)) + '</td>' +
-        '<td class="sl mh">' + (t.mr == null ? '-' : f1(t.mr) + '%') + '</td><td class="mh">' + (t.mrL == null ? '-' : f1(t.mrL) + '%') + '</td><td class="' + cls(t.mrD) + '">' + pp(t.mrD) + '</td>' +
-        '<td class="sl ' + cls(t.cntG) + ' mh">' + pct(t.cntG) + '</td><td class="sl mh">' + (isTot ? '100%' : it.share == null ? '-' : '<span class="shw"><span class="shb"><i class="' + it.lvl + '" style="width:' + (it.share / shmax * 100).toFixed(1) + '%"></i></span>' + f1(it.share * 100) + '%</span>') + '</td></tr>';
+      var t = it.y, none = !isTot && !(t.gsT > 0);
+      var share = isTot ? '100%' : it.share == null ? '-' : '<span class="shw"><span class="shb"><i class="' + it.lvl + '" style="width:' + (it.share / shmax * 100).toFixed(1) + '%"></i></span>' + f1(it.share * 100) + '%</span>';
+      return '<tr class="' + (isTot ? 'tot' : it.lvl) + (none ? ' dim' : '') + '"><th>' + esc(it.name) + '</th>' + metricCells(t, none ? '-' : rkBadge(it.rk)).replace('<td data-m="r"', tdm('s', 'shc', share) + '<td data-m="r"') + '</tr>';
     };
-    var sumTable = '<p class="note">' + esc(NAME[me]) + ' · 매출 백만원 · 성장순위 = 킴스 영업 ' + OPEN().length + '점 중 매출 성장율 순위 · 건수 증감율 = 일평균 기준</p><div class="hs"><table class="st"><thead><tr><th>CD · 구매그룹</th><th>매출<small>백만원</small></th><th class="mh">전년</th><th>성장율</th><th>성장순위</th><th class="sl mh">매총율</th><th class="mh">전년</th><th>매총율 증감</th><th class="sl mh">건수 증감율</th><th class="sl mh">구성비</th></tr></thead><tbody>' +
-      row(totIt, true) + items.map(function (it) { return row(it); }).join('') + '</tbody></table></div>';
+    var g1b = function (m, n, cs) { return '<th colspan="' + cs + '" data-m="' + m + '" class="gs">' + n + '</th>'; };
+    var g2b = function (m, a) { return a.map(function (n, i) { return '<th data-m="' + m + '"' + (i ? '' : ' class="gs"') + '>' + n + '</th>'; }).join(''); };
+    var bigHead = '<thead><tr class="g1"><th class="g1c"></th>' + g1b('s', '매출<small>(백만원)</small>', 5) + g1b('r', '매총율', 3) + g1b('c', '건수<small>(일평균)</small>', 3) + g1b('a', '건단가<small>(만원)</small>', 3) + '</tr>' +
+      '<tr class="g2"><th class="g2c">CD · 구매그룹</th>' + g2b('s', ['금년', '전년', '성장율', '성장순위', '구성비']) + g2b('r', ['금년', '전년', '증감']) + g2b('c', ['금년', '전년', '증감율']) + g2b('a', ['금년', '전년', '증감율']) + '</tr></thead>';
+    var sumTable = '<p class="note">' + esc(NAME[me]) + ' · 매출 백만원 · 건수 일평균 · 건단가 만원 · 성장순위 = 킴스 영업 ' + OPEN().length + '점 중 매출 성장율 순위 · 구성비 = 점포 매출 안 비중</p>' +
+      mtab('ms-big', '<table class="st mtbl bigt">' + bigHead + '<tbody>' + row(totIt, true) + items.map(function (it) { return row(it); }).join('') + '</tbody></table>');
     var hc = 2 + CC.length;
     var heatTable = '<table class="ht"><colgroup><col class="c0">' + new Array(hc + 1).join('<col>') + '</colgroup><thead><tr><th>CD · 구매그룹</th><th class="ya">' + esc(NAME[me]) + '</th>' + CC.map(function (c) { return '<th>' + esc(c.name) + '</th>'; }).join('') + '<th>킴스 합계</th></tr></thead><tbody>' +
       items.map(function (it, i) {
@@ -1821,7 +1838,9 @@ var KIMS = (function () {
     tip.innerHTML = tipHtml(wrap.dataset.me || ST.s, d, wrap.dataset.cid || 'store'); tip.hidden = false;
     [].forEach.call(wrap.querySelectorAll('.hit'), function (h) { h.classList.toggle('on', h === hit); });
     var x = Number(hit.getAttribute('x')), w = Number(hit.getAttribute('width')), W = wrap.offsetWidth, tw = tip.offsetWidth;
-    var left = x + w + 6; if (left + tw > W) left = x - tw - 6; if (left < 0) left = Math.max(0, Math.min(W - tw, x + w / 2 - tw / 2));
+    // 가로로 스크롤되는 그래프: 지금 보이는 범위 안에 창이 다 들어오게
+    var scr = wrap.parentNode, lo = scr && scr.scrollWidth > scr.clientWidth ? scr.scrollLeft : 0, hi = scr && scr.scrollWidth > scr.clientWidth ? scr.scrollLeft + scr.clientWidth : W;
+    var left = x + w + 6; if (left + tw > hi) left = x - tw - 6; if (left < lo) left = Math.max(lo, Math.min(hi - tw, x + w / 2 - tw / 2));
     tip.style.left = left + 'px';
   }
   function hideTip(wrap) { if (!wrap) return; var t = wrap.querySelector('.tip'); if (t) t.hidden = true; [].forEach.call(wrap.querySelectorAll('.hit.on'), function (h) { h.classList.remove('on'); }); }
