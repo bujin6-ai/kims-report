@@ -804,6 +804,10 @@ tr.dim>*{opacity:.42}
 .kpis>.kacc.open{margin-top:0}
 .kpis>.kacc{animation:none}
 @media (max-width:600px){.kpis>.kpi:nth-child(-n+2){order:1}.kpis>.kpi:nth-child(n+3){order:3}.kpis>.kacc{order:4}.kpis[data-accrow="1"]>.kacc{order:2}}
+.kpi .kl{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.kach{flex:none;font-size:12px;font-weight:700;line-height:1;padding:5px 8px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.kach.up{color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}
+.kach.dn{color:var(--bad);background:color-mix(in srgb,var(--bad) 11%,transparent)}
 #ttlBtn{cursor:pointer;border-radius:10px;padding:2px 6px;margin:-2px -6px;-webkit-tap-highlight-color:transparent}
 #ttlBtn:hover,#ttlBtn[aria-expanded=true]{background:var(--hov)}
 #ttlBtn:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
@@ -975,10 +979,13 @@ var KIMS = (function () {
   // ── 지표 (점포 여러 개면 합산) ──
   function metrics(k, plants, groups, posKey) {
     var s = [0, 0, 0, 0, 0, 0], amtT = 0, cntT = 0, eveT = 0, amtL = 0, cntL = 0, eveL = 0, ar = [0, 0, 0, 0], hasArea = false, hasPos = false;
+    var tgT = 0, tgA = 0; // 목표 달성율 = 매출 ÷ 매출 목표 (영업중단 점포는 매출·목표 모두 뺌)
     var avT = 0, avL = 0; // 일평균 건수 = 점포별 (건수 ÷ 영업일수) 합 · 영업일 = 그날 매출 대형점 1천만원·그 외 100만원 이상
     plants.forEach(function (p) {
       var rows = (D.sales[k] || {})[p] || {};
       groups.forEach(function (g) { (rows[g] || []).forEach(function (v, i) { s[i] += v; }); });
+      var tr = (D.target && D.target[k] && D.target[k][p]) || {};
+      if (GRP[p] !== D.closed) groups.forEach(function (g) { tgT += tr[g] || 0; tgA += (rows[g] || [0])[0]; });
       var ps = (((D.pos[k] || {})[p] || {})[posKey]) || {};
       var dy = D.days ? (((D.days[k] || {})[p]) || [0, 0]) : null;
       if (ps.T) { hasPos = true; amtT += ps.T[0]; cntT += ps.T[1]; eveT += ps.T[3]; avT += dy ? (dy[0] ? ps.T[1] / dy[0] : 0) : ps.T[1]; }
@@ -993,6 +1000,7 @@ var KIMS = (function () {
     var mr = div(gmT * 100, gsT), mrL = div(gmL * 100, gsL);
     return {
       gsT: gsT, gsL: gsL, growth: gr(gsT, gsL),
+      tg: tgT || null, ach: tgT > 0 && tgA > 0 ? tgA / tgT : null,
       mr: mr, mrL: mrL, mrD: mr != null && mrL != null ? mr - mrL : null,
       py: py, pyL: pyL, pyG: py != null && pyL ? py / pyL - 1 : null,
       amt: amtT, eve: hasPos ? eveT : null, eveL: hasPos ? eveL : null, eveG: hasPos && eveL ? eveT / eveL - 1 : null,
@@ -1146,15 +1154,21 @@ var KIMS = (function () {
     var last = ty.length - 1;
     return '<svg class="spk" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-label="최근 ' + rows.length + '일 매출 추세"><path class="l" d="' + line(ly) + '"/><path class="t" d="' + line(ty) + '"/>' + (ty[last] != null ? '<circle cx="' + X(last).toFixed(1) + '" cy="' + Y(ty[last]).toFixed(1) + '" r="2.5"/>' : '') + '</svg><span class="spl">최근 ' + rows.length + '일</span>';
   }
-  function kpi(label, val, unit, deltaV, deltaTxt, badges, extra) {
+  // 매출 카드 오른쪽 위: 목표 대비 달성율 (목표 데이터가 없으면 표시 안 함)
+  function achTag(y) {
+    if (!y || y.ach == null) return '';
+    var a = y.ach * 100;
+    return '<span class="kach ' + (a >= 100 ? 'up' : 'dn') + '" title="목표 ' + man(y.tg) + '백만원 대비">달성 ' + a.toFixed(1) + '%</span>';
+  }
+  function kpi(label, val, unit, deltaV, deltaTxt, badges, extra, tag) {
     var key = { '매출': 'gsT', '매출총이익률': 'mr', '건수': 'cnt', '건단가': 'atv' }[label] || '';
-    return '<div class="kpi" data-kpi="' + key + '" tabindex="0"><p class="kl">' + label + '</p><p class="kv">' + val + '<small>' + unit + '</small></p><p class="kd"><span class="' + cls(deltaV) + '">전년비 ' + deltaTxt + '</span></p>' + (badges ? '<p class="kb">' + badges + '</p>' : '') + (extra ? '<div class="spw">' + extra + '</div>' : '') + '</div>';
+    return '<div class="kpi" data-kpi="' + key + '" tabindex="0"><p class="kl">' + label + (tag || '') + '</p><p class="kv">' + val + '<small>' + unit + '</small></p><p class="kd"><span class="' + cls(deltaV) + '">전년비 ' + deltaTxt + '</span></p>' + (badges ? '<p class="kb">' + badges + '</p>' : '') + (extra ? '<div class="spw">' + extra + '</div>' : '') + '</div>';
   }
   function kpis(k, me, sc) {
     var g = GRP[me], y = M(k, [me], sc), K = OPEN(), G = openOf(g), C = setOf(me);
     var three = function (key) { return badge('킴스', rankIn(k, K, sc, key, me)) + badge(GNAME[g], rankIn(k, G, sc, key, me)); };
     return '<div class="kpis" data-p="' + me + '" data-c="' + (sc.posKey === 'store' ? '' : sc.posKey) + '">' +
-      kpi('매출', man(y.gsT), '백만원', y.growth, pct(y.growth), three('growth'), spark(me, sc.posKey)) +
+      kpi('매출', man(y.gsT), '백만원', y.growth, pct(y.growth), three('growth'), spark(me, sc.posKey), achTag(y)) +
       kpi('매출총이익률', f1(y.mr), '%', y.mrD, pp(y.mrD), three('mr'), lyBars(y.mr, y.mrL, fmtMr)) +
       kpi('건수', won(y.cnt), '건/일', y.cntG, pct(y.cntG), three('cntG'), lyBars(y.cnt, y.cntL, fmtCnt)) +
       kpi('건단가', man1(y.atv), '만원', y.atvG, pct(y.atvG), three('atv'), lyBars(y.atv, y.atvL, fmtAtv)) + '</div>';
@@ -1714,7 +1728,7 @@ var KIMS = (function () {
       h1: '킴스클럽 전점',
       sub: '그룹 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
       rows: [
-        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', 'store')) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
+        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', 'store'), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
         [allDailySec('store', '전체')],
         [hourSec(k, OPEN(), 'store', '킴스 영업 점포 합계', '킴스 합계')],
         [wxSec(OPEN(), 'store', '킴스 합계')],
@@ -1783,7 +1797,7 @@ var KIMS = (function () {
       h1: '킴스클럽 전점 · ' + c[1],
       sub: '그룹 ' + c[1] + ' 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
       rows: [
-        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="' + id + '">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', id)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
+        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="' + id + '">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', id), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
         pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf)] : [],
         [allDailySec(id, c[1])],
         [hourSec(k, OPEN(), id, '킴스 영업 점포 ' + c[1] + ' 합계', c[1])],
