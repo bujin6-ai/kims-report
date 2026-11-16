@@ -2624,7 +2624,10 @@ var KIMS = (function () {
     mainEl.addEventListener('mouseover', function (e) { var h = e.target.closest && e.target.closest('.hit'); if (h) showTip(h); });
     mainEl.addEventListener('mouseout', function (e) { var w = e.target.closest && e.target.closest('.dcw'); if (w && !w.contains(e.relatedTarget)) hideTip(w); });
     mainEl.addEventListener('focusin', function (e) { if (e.target.classList && e.target.classList.contains('hit')) showTip(e.target); });
-    mainEl.addEventListener('click', function (e) { var h = e.target.closest && e.target.closest('.hit'); if (h) { showTip(h); return; } [].forEach.call(doc.querySelectorAll('.dcw'), hideTip); });
+    // 터치: 이미 열린 막대를 다시 누르면 닫음 (터치는 누르는 순간 hover 가 먼저 열어 버리므로 누르기 직전 상태를 기억)
+    var tipWasOn = null;
+    mainEl.addEventListener('pointerdown', function (e) { var h = e.target.closest && e.target.closest('.hit'); var t = h && h.closest('.dcw') && h.closest('.dcw').querySelector('.tip'); tipWasOn = e.pointerType !== 'mouse' && h && h.classList.contains('on') && t && !t.hidden ? h : null; }, true);
+    mainEl.addEventListener('click', function (e) { var h = e.target.closest && e.target.closest('.hit'); var was = tipWasOn; tipWasOn = null; if (h && h === was) { hideTip(h.closest('.dcw')); if (h.blur) h.blur(); return; } if (h) { showTip(h); return; } [].forEach.call(doc.querySelectorAll('.dcw'), hideTip); });
     doc.getElementById('main').addEventListener('click', pick);
     var placeTip = function (ifo) { var t = ifo.querySelector('.ift'); if (!t) return; t.style.left = ''; var r = t.getBoundingClientRect(), vw = window.innerWidth; if (r.right > vw - 10) t.style.left = (-8 - (r.right - vw + 10)) + 'px'; };
     doc.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.ifb'); var open = doc.querySelectorAll('.ifo.open'); [].forEach.call(open, function (x) { if (!b || x !== b.parentNode) x.classList.remove('open'); }); if (b) { e.stopPropagation(); b.parentNode.classList.toggle('open'); placeTip(b.parentNode); } });
