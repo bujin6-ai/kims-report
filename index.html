@@ -662,6 +662,7 @@ tr.dim>*{opacity:.42}
 .hrc b{font-size:10.5px;font-weight:600;white-space:nowrap;letter-spacing:-.3px}
 .hrc b.up{color:var(--good)}.hrc b.dn{color:var(--bad)}
 .hrc span{font-size:11px;color:var(--muted)}
+@media (min-width:901px){.hrc li{gap:5px}.hrc b{font-size:13.5px;font-weight:700;letter-spacing:-.2px}.hrc span{font-size:13.5px;font-weight:600;color:var(--fg)}.hrc .hb i{width:min(40%,22px)}}
 .hrl{display:flex;flex-wrap:wrap;gap:4px 14px;margin:10px 0 0;font-size:12px;color:var(--muted)}
 .hrl i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 .hrl i.t{background:var(--ac)}.hrl i.l{background:color-mix(in srgb,var(--muted) 38%,transparent)}
@@ -1228,11 +1229,11 @@ var KIMS = (function () {
     var chg = function (v, txt) { return v == null ? '' : '<small class="' + cls(v) + '">' + txt + '</small>'; };
     // [이름, 값, 변화, 순위 기준, 전년 값(마우스 올리면)]
     var R = [
-      ['매출<small>백만원</small>', function (t) { return man(t.gsT); }, function (t) { return chg(t.growth, pct(t.growth)); }, 'growth', function (t) { return '전년 ' + man(t.gsL); }],
+      ['매출<small>백만원</small>', function (t) { return t.gsT > 0 ? man(t.gsT) : '-'; }, function (t) { return chg(t.growth, pct(t.growth)); }, 'growth', function (t) { return '전년 ' + man(t.gsL); }],
       ['매총율', function (t) { return t.mr == null ? '-' : f1(t.mr) + '%'; }, function (t) { return chg(t.mrD, pp(t.mrD)); }, 'mrD', function (t) { return t.mrL == null ? '' : '전년 ' + f1(t.mrL) + '%'; }],
       ['건수<small>일평균</small>', function (t) { return t.cnt == null ? '-' : won(t.cnt) + '건'; }, function (t) { return chg(t.cntG, pct(t.cntG)); }, 'cntG', function (t) { return t.cntL == null ? '' : '전년 ' + won(t.cntL) + '건'; }],
       ['건단가<small>만원</small>', function (t) { return man1(t.atv); }, function (t) { return chg(t.atvG, pct(t.atvG)); }, 'atvG', function (t) { return t.atvL == null ? '' : '전년 ' + man1(t.atvL) + '만원'; }],
-      ['평당매출<small>만원/평</small>', function (t) { return man1(t.py); }, function (t) { return chg(t.pyG, pct(t.pyG)); }, 'pyG', function (t) { return t.pyL == null ? '' : '전년 ' + man1(t.pyL); }],
+      ['평당매출<small>만원/평</small>', function (t) { return t.gsT > 0 ? man1(t.py) : '-'; }, function (t) { return chg(t.pyG, pct(t.pyG)); }, 'pyG', function (t) { return t.pyL == null ? '' : '전년 ' + man1(t.pyL); }],
       ['저녁장 매출<small>백만원 · 17시 이후</small>', function (t) { return t.eve == null ? '-' : man(t.eve); }, function (t) { return chg(t.eveG, pct(t.eveG)); }, 'eveG', function (t) { return t.eveL == null ? '' : '전년 ' + man(t.eveL); }],
       ['저녁장 비중', function (t) { return t.eve == null || !t.amt ? '-' : f1(t.eve / t.amt * 100) + '%'; }, function () { return ''; }, null, function () { return ''; }],
     ];
