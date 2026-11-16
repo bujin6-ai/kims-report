@@ -1413,7 +1413,7 @@ var KIMS = (function () {
   // 매출 증감 기여도(폭포): 전년 매출 → 항목별 증감 → 금년 매출
   function wfChart(parts, lyTot, tyTot, what) {
     parts = parts.filter(function (p) { return (p[1] || 0) !== 0 || (p[2] || 0) !== 0; });
-    if (!lyTot || parts.length < 2) return '';
+    if (!lyTot || !parts.length) return '';
     var cum = lyTot, steps = parts.map(function (p) { var d = (p[1] || 0) - (p[2] || 0), a = cum; cum += d; return { n: p[0], d: d, a: a, b: cum }; });
     var vals = [lyTot, tyTot].concat(steps.map(function (s) { return s.b; }));
     var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), span = (hi - lo) || Math.abs(hi) * 0.1 || 1;
@@ -1629,8 +1629,8 @@ var KIMS = (function () {
         [hourSec(k, [me], id, NAME[me] + ' ' + c[1], c[1])],
         [wxSec([me], id, c[1])],
         progRow(k, y.gsT, y.gsL, (D.lymonth[me] || {})[id]),
-        per.length > 1 ? [secG('wf', '증감 기여도', '매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(per.map(function (p) { return [p.name, p.y.gsT, p.y.gsL]; }), y.gsL, y.gsT, '구매그룹'), 'wf'),
-          secG('mix', '구성비', c[1] + ' 구매그룹 구성비', mixChart(per.map(function (p) { return [p.name, p.y.gsT, p.y.gsL]; })), 'mix')] : [],
+        pgList.length ? [secG('wf', '증감 기여도', '매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(pgList.map(function (pg) { var t = M(k, [me], scopePg(pg[0])); return [pg[1], t.gsT, t.gsL]; }), y.gsL, y.gsT, '구매그룹'), 'wf'),
+          per.length < 2 ? null : secG('mix', '구성비', c[1] + ' 구매그룹 구성비', mixChart(per.map(function (p) { return [p.name, p.y.gsT, p.y.gsL]; })), 'mix')] : [],
         [sec('detail', '우리점 VS 비교점', '우리점 VS 비교점' + CMPBTN, tables, 'detail')],
         [sec('gb', '잘한·부족한 점', '', gbHtml(gd, bd), 'gb')],
         [sec('bars', '그룹 매출', gn + ' 점포 ' + c[1] + ' 매출', bars(k, me, sc), 'bars'), sec('mc', 'MC 증감', '품목(MC)별 전년 대비 증감', '<p class="note">' + esc(NAME[me]) + ' · 매출 기준 · 백만원 · 그룹 성장율 = ' + gn + ' 다른 점포 합산 전년비' + (mcHasG(mc.up.concat(mc.dn)) ? '' : ' (현재 데이터에 없어 다음 갱신부터 표시)') + '</p>' + (hasData('mc', id) ? '<h4>증가 상위</h4><ul class="mcl">' + mcHead(mc.up.concat(mc.dn)) + mcList(mc.up, true) + '</ul><h4>감소 상위</h4><ul class="mcl">' + mcHead(mc.up.concat(mc.dn)) + mcList(mc.dn, false) + '</ul>' : NOT_YET(c[1] + ' MC')), 'mc')],
@@ -1831,7 +1831,7 @@ var KIMS = (function () {
         [hourSec(k, OPEN(), id, '킴스 영업 점포 ' + c[1] + ' 합계', c[1])],
         [wxSec(OPEN(), id, '킴스 ' + c[1])],
         progRow(k, kt.gsT, kt.gsL, (aggDaily(), (D.lymonth.ALL || {})[id])),
-        [pgs.length > 1 ? secG('wf', '증감 기여도', c[1] + ' 매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(pgs.map(function (pg) { var t = M(k, ALL(), scopePg(pg[0])); return [pg[1], t.gsT, t.gsL]; }), kt.gsL, kt.gsT, '구매그룹'), 'wf') : null,
+        [pgs.length ? secG('wf', '증감 기여도', c[1] + ' 매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(pgs.map(function (pg) { var t = M(k, ALL(), scopePg(pg[0])); return [pg[1], t.gsT, t.gsL]; }), kt.gsL, kt.gsT, '구매그룹'), 'wf') : null,
           sec('grpc', '그룹 비교', '그룹별 ' + c[1] + ' 증감 비교', grpChart(k, sc), 'grpc')],
         [sec('groups', '그룹별 합계', '그룹별 ' + c[1] + ' 합계', gt)],
         [secG('grank', '성장율 순위', '점포별 ' + c[1] + ' 매출 성장율 순위', grankChart(k, sc), 'grank')],
