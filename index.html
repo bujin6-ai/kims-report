@@ -812,7 +812,10 @@ tr.dim>*{opacity:.42}
 #ttlBtn[aria-expanded=true] #htitle::after{transform:translateY(3px) rotate(-135deg)}
 #spop{position:fixed;z-index:45;width:300px;max-width:calc(100vw - 24px);max-height:min(70vh,560px);overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px;animation:spIn .16s ease-out}
 @keyframes spIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-#spop .sph{font-size:11px;font-weight:600;color:var(--muted);padding:10px 10px 4px}
+#spop .sph{position:sticky;top:-6px;z-index:1;display:flex;align-items:center;gap:6px;margin:8px -6px 4px;padding:9px 16px 7px;font-size:13px;font-weight:700;color:var(--fg);background:color-mix(in srgb,var(--fg) 5%,var(--panel));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#spop .sph::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--ac)}
+#spop .sph small{font-size:12px;font-weight:500;color:var(--muted)}
+#spop .spall{margin-bottom:2px}
 #spop button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;border:0;background:none;color:inherit;font:inherit;font-size:14px;text-align:left;padding:8px 10px;border-radius:9px;cursor:pointer}
 #spop button:hover,#spop button:focus-visible{background:var(--hov);outline:0}
 #spop button[aria-current=true]{color:var(--ac);font-weight:700}
@@ -2434,7 +2437,7 @@ var KIMS = (function () {
       var rep = ST.v === 'report';
       spop.innerHTML = btn('data-go="all"', '킴스클럽 전점', rep && ST.s === 'all', 'spall') +
         D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
-          return '<div class="sph">' + esc(g[1]) + ' ' + g[2].length + '점</div><div class="spg">' + g[2].map(function (p) { return btn('data-store="' + p + '"', esc(NAME[p]), rep && ST.s === p); }).join('') + '</div>';
+          return '<div class="sph">' + esc(g[1]) + '<small>' + g[2].length + '점</small></div><div class="spg">' + g[2].map(function (p) { return btn('data-store="' + p + '"', esc(NAME[p]), rep && ST.s === p); }).join('') + '</div>';
         }).join('');
       var r = ttlBtn.getBoundingClientRect();
       spop.hidden = false;
