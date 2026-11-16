@@ -860,6 +860,26 @@ html:not([data-view=report]) body{background:#f4f5f7}
 .gf{margin:4px 0 0;padding:12px 14px;border-radius:12px;background:var(--pb);color:var(--pm);font-size:13px;word-break:keep-all}.gf b{color:var(--pt);display:block;margin-bottom:2px}
 .gm{margin:0;padding:10px 12px;border-radius:10px;font-size:13px;word-break:keep-all}.gm.err{background:var(--prw);color:var(--pr)}.gm.ok{background:#e8f6ee;color:var(--pg)}
 @keyframes pin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.gcoachl{text-align:center;margin-top:-4px}.gcoachl a{color:var(--pr);font-weight:600}
+/* 처음 접속 안내 */
+#gcoach{position:fixed;inset:0;z-index:80;font-family:var(--font);color:#111827;opacity:0;transition:opacity .25s ease}#gcoach.on{opacity:1}
+#gcoach .cho{position:fixed;border-radius:16px;box-shadow:0 0 0 9999px rgba(17,24,39,.62);transition:left .45s cubic-bezier(.22,.8,.24,1),top .45s cubic-bezier(.22,.8,.24,1),width .45s cubic-bezier(.22,.8,.24,1),height .45s cubic-bezier(.22,.8,.24,1);cursor:pointer}
+#gcoach .cho::after{content:"";position:absolute;inset:-2px;border-radius:18px;border:2px solid #fff;animation:cring 1.6s ease-out infinite}
+@keyframes cring{0%{opacity:.95;transform:scale(1)}70%,100%{opacity:0;transform:scale(1.12,1.5)}}
+#gcoach .chand{position:fixed;width:32px;height:40px;font-size:32px;line-height:40px;text-align:center;pointer-events:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));transition:left .45s cubic-bezier(.22,.8,.24,1),top .45s cubic-bezier(.22,.8,.24,1);animation:cbobB 1s ease-in-out infinite}
+#gcoach .chand[data-at=t]{animation-name:cbobT}
+@keyframes cbobB{0%,100%{transform:translateY(6px)}50%{transform:translateY(-4px)}}
+@keyframes cbobT{0%,100%{transform:translateY(-6px)}50%{transform:translateY(4px)}}
+#gcoach .cbub{position:fixed;box-sizing:border-box;padding:18px 18px 14px;border-radius:18px;background:#fff;box-shadow:0 18px 40px rgba(0,0,0,.28);transition:left .45s cubic-bezier(.22,.8,.24,1),top .45s cubic-bezier(.22,.8,.24,1)}
+#gcoach .cbub.in>*{animation:cin .4s cubic-bezier(.22,.8,.24,1) both}#gcoach .cbub.in>:nth-child(2){animation-delay:.05s}#gcoach .cbub.in>:nth-child(3){animation-delay:.1s}#gcoach .cbub.in>:nth-child(4){animation-delay:.15s}
+@keyframes cin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#gcoach .cstep{display:flex;align-items:center;gap:5px;margin:0 0 8px;font-size:12px;color:#6b7280}#gcoach .cstep i{width:6px;height:6px;border-radius:3px;background:#e5e7eb;transition:width .3s,background-color .3s}#gcoach .cstep i.on{width:18px;background:#c41e28}#gcoach .cstep span{margin-left:auto}
+#gcoach h3{margin:0 0 6px;font-size:19px;letter-spacing:-.3px}
+#gcoach .cd{margin:0 0 14px;font-size:14.5px;line-height:1.55;color:#374151;word-break:keep-all}#gcoach .cd b{color:#c41e28}
+#gcoach .cbtn{display:flex;gap:8px;justify-content:flex-end}
+#gcoach .cbtn button{font:inherit;font-size:14px;font-weight:600;padding:10px 14px;border-radius:11px;border:0;cursor:pointer}
+#gcoach .cg{background:none;color:#6b7280;margin-right:auto}#gcoach .cg+.cg{margin-right:0}#gcoach .cp{background:#c41e28;color:#fff;min-width:76px}
+@media (prefers-reduced-motion:reduce){#gcoach .cho,#gcoach .chand,#gcoach .cbub{transition:none}#gcoach .cho::after,#gcoach .chand,#gcoach .cbub.in>*{animation:none}}
 @media (max-width:820px){.gw{display:flex;flex-direction:column;gap:0;padding:28px 16px 40px;align-items:stretch}.gbrand{display:contents}.glogo{order:1;width:min(200px,58%);margin-bottom:14px}.gbrand>h1{order:2;font-size:24px;margin:0 0 18px}.gsub{order:3;margin:2px 0 18px;font-size:14px}.gw .gcard{order:4;padding:22px 18px}.gsteps{order:5;margin-top:18px}}
 @media (hover:hover){.gb:hover{border-color:var(--pr)}.gb.pri:hover{background:#a8161f}.gl a:hover{color:var(--pr)}.gcard input:hover{border-color:#c9cdd4}}
 /* 포털 */
@@ -2716,6 +2736,7 @@ var KIMS = (function () {
       '<label>비밀번호<input id="aPw" type="password" autocomplete="current-password" required></label>' +
       '<button class="gb pri" id="aGo" type="submit">로그인</button>' +
       '<div class="gl2"><a href="#" data-v="request" class="gb">처음이에요 · 열람 요청</a><a href="#" data-v="setpw" class="gb">승인받았어요 · 비밀번호 설정</a><a href="#" data-v="status" class="gb sub">승인 요청 상태 확인</a></div>' +
+      '<p class="gl gcoachl"><a href="#" data-coach="1">처음 오셨나요? 이용 방법 보기</a></p>' +
       '<p class="gf"><b>비밀번호를 잊으셨나요?</b> 관리자에게 초기화를 요청하세요. 초기화되면 \'승인받았어요 · 비밀번호 설정\'에서 새로 정하면 됩니다.</p>';
     gate.innerHTML = '<div class="gw"><section class="gbrand">' + logoImg('glogo') +
       '<h1>데일리 매출 리포트</h1>' +
@@ -2723,9 +2744,81 @@ var KIMS = (function () {
       '<form class="gcard" id="aForm" novalidate data-view="' + view + '">' + f + '</form></div>';
     gate.hidden = false;
     var first = $(em ? (view === 'request' ? 'aName' : 'aPw') : 'aEmail'); if (first && !('ontouchstart' in window)) first.focus();
+    // 처음 접속(이 기기에서 로그인·요청한 적 없음)이면 이용 방법 안내를 자동으로 보여 줌
+    if (view === 'login' && !msg && !em && !store(CK)) setTimeout(function () { if (gate.querySelector('#aForm[data-view=login]')) coach(); }, 700);
+    else closeCoach();
+  }
+
+  // ───────── 처음 접속 안내(코치마크) ─────────
+  var CK = 'kims-coach', CO = null;
+  var COACH = [
+    { sel: 'a[data-v=request]', t: '처음 접속하셨군요!', d: '우선 <b>‘처음이에요 · 열람 요청’</b>을 눌러 이름과 점포·부서를 적어 신청해 주세요.' },
+    { sel: 'a[data-v=setpw]', t: '승인이 완료되면', d: '<b>‘승인받았어요 · 비밀번호 설정’</b>에서 비밀번호를 정하면 바로 들어갈 수 있어요. 승인됐는지는 아래 ‘승인 요청 상태 확인’에서 볼 수 있어요.' },
+    { sel: '#aGo', t: '다음부터는 로그인', d: '회사 이메일과 정한 비밀번호로 <b>로그인</b>하세요. 한 번 로그인하면 30일 동안 자동으로 들어가요.' },
+  ];
+  function coach(i) {
+    i = i || 0;
+    if (!CO) {
+      CO = doc.createElement('div'); CO.id = 'gcoach'; CO.setAttribute('role', 'dialog'); CO.setAttribute('aria-modal', 'true'); CO.setAttribute('aria-label', '이용 방법 안내');
+      CO.innerHTML = '<div class="cho"></div><div class="chand" aria-hidden="true"></div><div class="cbub" aria-live="polite"></div>';
+      doc.body.appendChild(CO);
+      CO.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-c]');
+        if (b) {
+          var c = b.getAttribute('data-c');
+          if (c === 'next') coach(CO.i + 1);
+          else if (c === 'prev') coach(CO.i - 1);
+          else if (c === 'go') { closeCoach(true); showGate('request', null, ($('aEmail') || {}).value); }
+          else closeCoach(true);
+          return;
+        }
+        // 1단계에서 밝게 비춘 버튼을 누르면 바로 열람 요청으로
+        if (e.target.closest('.cho') && CO.i === 0) { closeCoach(true); showGate('request', null, ($('aEmail') || {}).value); }
+      });
+      doc.addEventListener('keydown', coachKey);
+      window.addEventListener('resize', coachPlace); gate.addEventListener('scroll', coachPlace, { passive: true });
+      requestAnimationFrame(function () { if (CO) CO.classList.add('on'); });
+    }
+    CO.i = i;
+    var st = COACH[i], last = i === COACH.length - 1, tg = gate.querySelector(st.sel);
+    if (!tg) return closeCoach();
+    var bub = CO.querySelector('.cbub');
+    bub.innerHTML = '<p class="cstep">' + COACH.map(function (x, j) { return '<i' + (j === i ? ' class="on"' : '') + '></i>'; }).join('') + '<span>' + (i + 1) + ' / ' + COACH.length + '</span></p>' +
+      '<h3>' + st.t + '</h3><p class="cd">' + st.d + '</p>' +
+      '<div class="cbtn">' + (i ? '<button type="button" data-c="prev" class="cg">이전</button>' : '<button type="button" data-c="skip" class="cg">건너뛰기</button>') +
+      (last ? '<button type="button" data-c="close" class="cg">닫기</button><button type="button" data-c="go" class="cp">열람 요청하러 가기</button>' : '<button type="button" data-c="next" class="cp">다음</button>') + '</div>';
+    bub.classList.remove('in'); void bub.offsetWidth; bub.classList.add('in');
+    // 안내할 버튼 아래에 말풍선이 다 들어오게 스크롤
+    bub.style.width = Math.min(340, window.innerWidth - 32) + 'px';
+    var r = tg.getBoundingClientRect(), need = r.bottom + 76 + bub.offsetHeight - window.innerHeight;
+    if (r.top < 90) gate.scrollTop += r.top - 120; else if (need > 0) gate.scrollTop += need;
+    coachPlace();
+    var f = bub.querySelector('.cp'); if (f) try { f.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function coachPlace() {
+    if (!CO) return;
+    var tg = gate.querySelector(COACH[CO.i].sel); if (!tg) return;
+    var r = tg.getBoundingClientRect(), pad = 6, vw = window.innerWidth, vh = window.innerHeight;
+    var ho = CO.querySelector('.cho'), hd = CO.querySelector('.chand'), bub = CO.querySelector('.cbub');
+    ho.style.left = (r.left - pad) + 'px'; ho.style.top = (r.top - pad) + 'px'; ho.style.width = (r.width + pad * 2) + 'px'; ho.style.height = (r.height + pad * 2) + 'px';
+    var bw = Math.min(340, vw - 32); bub.style.width = bw + 'px';
+    var bh = bub.offsetHeight, below = r.bottom + 64 + bh < vh || r.top - 64 - bh < 0;
+    bub.style.left = Math.max(16, Math.min(vw - bw - 16, r.left + r.width / 2 - bw / 2)) + 'px';
+    bub.style.top = (below ? r.bottom + 58 : r.top - 58 - bh) + 'px';
+    hd.textContent = below ? '👆' : '👇'; hd.setAttribute('data-at', below ? 'b' : 't');
+    hd.style.left = (r.left + r.width * 0.8 - 16) + 'px';
+    hd.style.top = (below ? r.bottom + 6 : r.top - 46) + 'px';
+  }
+  function coachKey(e) { if (!CO) return; if (e.key === 'Escape') closeCoach(true); else if (e.key === 'ArrowRight' && CO.i < COACH.length - 1) coach(CO.i + 1); else if (e.key === 'ArrowLeft' && CO.i > 0) coach(CO.i - 1); }
+  function closeCoach(seen) {
+    if (seen) store(CK, 1);
+    if (!CO) return;
+    var el = CO; CO = null; el.classList.remove('on');
+    doc.removeEventListener('keydown', coachKey); window.removeEventListener('resize', coachPlace); gate.removeEventListener('scroll', coachPlace);
+    setTimeout(function () { el.remove(); }, 260);
   }
   function busy(on) { var b = $('aGo'); if (b) { if (!b.dataset.t) b.dataset.t = b.textContent; b.disabled = on; b.textContent = on ? '확인 중…' : b.dataset.t; } }
-  gate.addEventListener('click', function (e) { var a = e.target.closest('a[data-v]'); if (a) { e.preventDefault(); showGate(a.dataset.v, null, ($('aEmail') || {}).value); } });
+  gate.addEventListener('click', function (e) { if (e.target.closest('a[data-coach]')) { e.preventDefault(); coach(0); return; } var a = e.target.closest('a[data-v]'); if (a) { e.preventDefault(); showGate(a.dataset.v, null, ($('aEmail') || {}).value); } });
   gate.addEventListener('submit', function (e) {
     e.preventDefault();
     var v = e.target.dataset.view, val = function (id) { var x = $(id); return x ? x.value.trim() : ''; };
@@ -2782,7 +2875,7 @@ var KIMS = (function () {
   // ───────── 화면 전환 ─────────
   function setView(v) {
     root.setAttribute('data-view', v);
-    if (v !== 'gate') gate.hidden = true;
+    if (v !== 'gate') { gate.hidden = true; closeCoach(); }
     portal.hidden = v !== 'portal';
     if (v !== 'portal') closePop();
   }
