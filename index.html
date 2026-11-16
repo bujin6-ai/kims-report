@@ -1266,7 +1266,7 @@ var KIMS = (function () {
     var gp = function (v) { return v == null ? '' : (v >= 0 ? '+' : '−') + Math.round(Math.abs(v) * 100) + '<small>%</small>'; };
     var bars = rows.map(function (r) {
       var v = g(r), tip = r[0] + '시 · 금년 ' + bm(r[1]) + '백만 · 전년 ' + bm(r[2]) + '백만' + (v == null ? '' : ' · ' + pct(v));
-      return '<li tabindex="0" title="' + esc(tip) + '" data-tip="' + esc(tip) + '"><div class="hb"><i class="l" style="height:' + (r[2] / mx * 100).toFixed(1) + '%"></i><i class="t" style="height:' + (r[1] / mx * 100).toFixed(1) + '%"></i></div>' +
+      return '<li tabindex="0" title="' + esc(tip) + '" data-tip="' + esc(tip) + '"><div class="hb"><i class="t" style="height:' + (r[1] / mx * 100).toFixed(1) + '%"></i><i class="l" style="height:' + (r[2] / mx * 100).toFixed(1) + '%"></i></div>' +
         '<b class="' + cls(v) + '">' + gp(v) + '</b><span>' + r[0] + '</span></li>';
     }).join('');
     return '<p class="note">' + esc(who) + ' · POS 총판매액 기준 · 시(時) 단위 · 막대를 누르거나 마우스를 올리면 금액(백만원)</p>' +
