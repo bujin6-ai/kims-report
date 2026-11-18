@@ -348,7 +348,7 @@ body.nav-open #nav{transform:none}
 .gt tbody tr+tr th,.gt tbody tr+tr td,.rt tbody tr+tr th,.rt tbody tr+tr td{border-top:1px dashed var(--line)}
 .gt tbody th small{display:block;font-weight:400;font-size:10.5px;color:var(--muted)}
 .gt tr.tot th,.gt tr.tot td{background:var(--ac-soft);font-weight:700}
-.rt td:nth-child(4){text-align:center}.rt.tg td:nth-child(4){text-align:right}.rt td.tgc{color:var(--muted)}.rt td.tgc b{font-weight:700}.rt tr.gh td.tgc{color:inherit}
+.rt td:nth-child(4){text-align:center}.rt.tg td:nth-child(4){text-align:right}.rt td.tgc{color:var(--muted)}.rt td.tga,.rt.tg thead tr.g2 th:nth-child(3){padding-right:22px}.rt tr.gh.kt th,.rt tr.gh.kt td{background:color-mix(in srgb,var(--ac) 16%,var(--panel));font-weight:800}.rt td.tgc b{font-weight:700}.rt tr.gh td.tgc{color:inherit}
 .rt tr.gh th{background:var(--ac-soft);font-size:13px;padding-top:9px}
 .rt tr.gh th span{margin-left:6px}
 .gt thead th:first-child,.rt thead th:first-child,.st thead th:first-child{text-align:left}
@@ -809,7 +809,7 @@ tr.dim>*{opacity:.42}
 .kpis>.kacc{animation:none}
 @media (max-width:600px){.kpis>.kpi:nth-child(-n+2){order:1}.kpis>.kpi:nth-child(n+3){order:3}.kpis>.kacc{order:4}.kpis[data-accrow="1"]>.kacc{order:2}}
 .kpi .kl{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.kach{flex:none;font-size:12px;font-weight:700;line-height:1;padding:5px 8px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.kach{flex:none;font-size:14px;font-weight:800;line-height:1;padding:6px 10px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .kach.up{color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}
 .kach.dn{color:var(--bad);background:color-mix(in srgb,var(--bad) 11%,transparent)}
 #ttlBtn{cursor:pointer;border-radius:10px;padding:2px 6px;margin:-2px -6px;-webkit-tap-highlight-color:transparent}
@@ -1654,7 +1654,7 @@ var KIMS = (function () {
   // 성장율 칸 안 ± 막대(0 기준 좌우, 표 안 최대값 기준 길이)
   var gbar = function (g, gmax) { if (g == null || !gmax) return ''; var w = Math.min(1, Math.abs(g) / gmax) * 50; return '<span class="gz"><i class="' + (g >= 0 ? 'p' : 'n') + '" style="width:' + w.toFixed(1) + '%"></i></span>'; };
   function metricCells(t, rkHtml, gmax, mrRk, withTg) {
-    var tgc = withTg ? tdm('s', 'tgc', t.tg ? man(t.tg) : '-', true) + tdm('s', 'tgc', t.ach == null ? '-' : '<b class="' + (t.ach >= 1 ? 'up' : 'dn') + '">' + f1(t.ach * 100) + '%</b>') : '';
+    var tgc = withTg ? tdm('s', 'tgc', t.tg ? man(t.tg) : '-', true) + tdm('s', 'tgc tga', t.ach == null ? '-' : '<b class="' + (t.ach >= 1 ? 'up' : 'dn') + '">' + f1(t.ach * 100) + '%</b>') : '';
     return tgc + tdm('s', '', t.gsT > 0 || t.gsL > 0 ? man(t.gsT) : '-', !withTg) + tdm('s', 'ly', t.gsL ? man(t.gsL) : '-') + tdm('s', gmax ? 'gzc' : '', t.growth == null ? (t.gsT ? '전년 없음' : '-') : gbar(t.growth, gmax) + '<b class="' + cls(t.growth) + '">' + pct(t.growth) + '</b>') + (rkHtml != null ? tdm('s', 'rkc', rkHtml) : '') +
       tdm('r', '', t.mr == null ? '-' : f1(t.mr) + '%', true) + tdm('r', 'ly', t.mrL == null ? '-' : f1(t.mrL) + '%') + tdm('r', cls(t.mrD), pp(t.mrD)) + (mrRk != null ? tdm('r', 'rkc', mrRk) : '') +
       tdm('c', '', t.cnt == null ? '-' : won(t.cnt), true) + tdm('c', 'ly', !t.cntL ? '-' : won(t.cntL)) + tdm('c', cls(t.cntG), pct(t.cntG)) +
@@ -1672,7 +1672,8 @@ var KIMS = (function () {
   function rankTblOf(k, K, sc, openGroups) {
     var gs = K.map(function (p) { return Math.abs(M(k, [p], sc).growth || 0); }).sort(function (a, b) { return a - b; });
     var gmax = gs.length ? gs[Math.floor(gs.length * 0.9)] || gs[gs.length - 1] : 0; // 상위 10% 튀는 값은 막대 끝까지
-    return openGroups.map(function (g) {
+    var kt = M(k, ALL(), sc); // 맨 위: 킴스 합계(영업중단 포함 29점)
+    return '<tbody><tr class="gh kt"><th>킴스 합계 ' + ALL().length + '점</th>' + metricCells(kt, '', gmax, '', hasTg(k)) + '</tr></tbody>' + openGroups.map(function (g) {
       var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; });
       rows.sort(function (a, b) { return (b[1].gsT || 0) - (a[1].gsT || 0); }); // 그룹 안 매출 큰 순
       var gtot = M(k, g[2], sc);
