@@ -517,7 +517,7 @@ tr.pick:active>*{background-color:color-mix(in srgb,var(--ac) 12%,var(--panel))!
 #nav .nsr input{width:100%;box-sizing:border-box;padding:9px 12px 9px 34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:inherit;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
 #nav .nsr input:focus{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 18%,transparent)}
 #nav .nsrr{margin:0 0 10px;padding:4px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}#nav .nsrr button span small{font-size:11px;color:var(--muted);font-weight:500;margin-left:3px}#nav .nsrn{padding:8px 10px;font-size:13px;color:var(--muted);list-style:none}
-@keyframes fxIn{from{opacity:.25;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes fxIn{from{opacity:.6}to{opacity:1}}
 #main.fx .panel,#main.fx .kpis{animation:fxIn .35s cubic-bezier(.2,.7,.2,1)}
 tr.dim>*{opacity:.42}
 @media (prefers-reduced-motion:reduce){#main.fx .panel,#main.fx .kpis,.qtip{animation:none}}
@@ -2271,11 +2271,12 @@ var KIMS = (function () {
     main.innerHTML = html();
     noteTips(); kpiAcc();
     doc.getElementById('nav').innerHTML = navHtml();
-    // 차례 등장(0.1초 간격, 9번째부터는 같이)
-    [].forEach.call(doc.querySelectorAll('#main .kpis, #main .bars, #main .pts, #main .prods, #main .mcl, #main .who, #main .row, #nav .nv'), function (box) {
+    // 차례 등장(0.1초 간격, 9번째부터는 같이) — 처음 열 때·맨 위로 갈 때만. 탭·기간만 바꿀 때는 사이드바·본문이 다시 올라오며 깜빡이지 않게 생략
+    if (toTop || !render.done) [].forEach.call(doc.querySelectorAll('#main .kpis, #main .bars, #main .pts, #main .prods, #main .mcl, #main .who, #main .row, #nav .nv'), function (box) {
       box.classList.add('stg');
       [].forEach.call(box.children, function (c, i) { c.style.setProperty('--i', Math.min(i, 8)); });
     });
+    render.done = true;
     doc.getElementById('htitle').textContent = headTitle();
     var pr = D.per[ST.k];
     var hfull = ST.v === 'stats' ? '' : pr.title.replace(/ (?:실적|누계)$/, '') + ' · ' + pr.vs.replace(/\s*대비$/, '');
