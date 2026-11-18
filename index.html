@@ -1673,7 +1673,7 @@ var KIMS = (function () {
     var gs = K.map(function (p) { return Math.abs(M(k, [p], sc).growth || 0); }).sort(function (a, b) { return a - b; });
     var gmax = gs.length ? gs[Math.floor(gs.length * 0.9)] || gs[gs.length - 1] : 0; // 상위 10% 튀는 값은 막대 끝까지
     var kt = M(k, ALL(), sc); // 맨 위: 킴스 합계(영업중단 포함 29점)
-    return '<tbody><tr class="gh kt"><th>킴스 합계 ' + ALL().length + '점</th>' + metricCells(kt, '', gmax, '', hasTg(k)) + '</tr></tbody>' + openGroups.map(function (g) {
+    return '<tbody><tr class="gh kt"><th>킴스 합계</th>' + metricCells(kt, '', gmax, '', hasTg(k)) + '</tr></tbody>' + openGroups.map(function (g) {
       var rows = g[2].map(function (p) { return [p, M(k, [p], sc)]; });
       rows.sort(function (a, b) { return (b[1].gsT || 0) - (a[1].gsT || 0); }); // 그룹 안 매출 큰 순
       var gtot = M(k, g[2], sc);
