@@ -788,7 +788,8 @@ tr.dim>*{opacity:.42}
 .kabs{position:absolute;right:10px;bottom:8px;display:flex;gap:5px}
 .kabs .kab{position:static}
 .kpi[data-kpi]{cursor:default}
-.kacc .kgs.st li.pg span{padding-left:0;color:var(--fg)}
+.kacc .kg.ktot li.cd{background:color-mix(in srgb,var(--ac) 8%,var(--panel));border-radius:8px;font-weight:800}.kg.ktot li.cd span{font-weight:800;padding-left:6px}
+.kgs.st li.pg span{padding-left:0;color:var(--fg)}
 .kacc .kgs.st li.pg i{display:inline-block;width:1.7em;font-style:normal;color:var(--muted);font-size:11px}
 .kacc li.pick{cursor:pointer}
 @media (max-width:600px){.kabs{position:static;justify-content:flex-end;margin-top:8px}.kabs .kab{padding:3px 5px 3px 8px}.kabs .kab span{display:inline;font-size:11px}}
@@ -1548,16 +1549,39 @@ var KIMS = (function () {
       (gap != null ? '<p class="prgs">전년 같은 기간보다 <b class="' + cls(gap) + '">' + pp(gap) + '</b> ' + (gap >= 0 ? '빠름' : '느림') + (proj != null ? ' · 지금 성장율(' + pct(g) + ')이 이어지면 월말 약 <b>' + man(proj) + '백만원</b>' : '') + '</p>' : '') + '</div>';
   }
   // 점포별 매출 성장율 막대(성장율 순) — 누르면 그 점포로
-  function grankChart(k, sc) {
-    var rows = OPEN().map(function (p) { return [p, M(k, [p], sc)]; }).filter(function (x) { return x[1].growth != null && isFinite(x[1].growth) && x[1].gsT > 0; });
-    if (rows.length < 3) return '';
-    rows.sort(function (a, b) { return b[1].growth - a[1].growth; });
-    var ab = rows.map(function (x) { return Math.abs(x[1].growth); }).sort(function (a, b) { return a - b; });
+  // 점포별 순위(2026-11-22): 항목 버튼(매출·매총율·손실율·건단가·건수) → 항목별 전년 대비 변화 순위
+  //   v = 정렬 값(클수록 좋음), d = 표시 값, f = 표시 형식 · 손실율은 줄어들수록 좋음(v = −증감)
+  var GRANK = [
+    ['매출', '매출 성장율', function (t) { return t.gsT > 0 ? t.growth : null; }, function (t) { return t.growth; }, pct, 0.2],
+    ['매총율', '매총율 증감', function (t) { return t.gsT > 0 ? t.mrD : null; }, function (t) { return t.mrD; }, pp, 5],
+    ['손실율', '손실율 증감(낮을수록 좋음)', function (t) { return t.lrDn; }, function (t) { return t.lrD; }, function (v) { return pp2(v); }, 1],
+    ['건단가', '건단가 증감율', function (t) { return t.atvG; }, function (t) { return t.atvG; }, pct, 0.2],
+    ['건수', '건수 증감율', function (t) { return t.cntG; }, function (t) { return t.cntG; }, pct, 0.2],
+  ];
+  function grankOne(k, sc, g) {
+    var rows = OPEN().map(function (p) { return [p, M(k, [p], sc)]; }).map(function (x) { return [x[0], x[1], g[2](x[1]), g[3](x[1])]; })
+      .filter(function (x) { return x[2] != null && isFinite(x[2]); });
+    if (rows.length < 3) return NOT_YET(g[0] + ' 순위');
+    rows.sort(function (a, b) { return b[2] - a[2]; });
+    var ab = rows.map(function (x) { return Math.abs(x[2]); }).sort(function (a, b) { return a - b; });
     var mx = ab[Math.floor(ab.length * 0.9)] || ab[ab.length - 1] || 0.01;
-    return '<p class="note">' + PNAME[k] + ' 매출 성장율 높은 순 · 막대를 누르면 그 점포로 이동</p><ol class="grk" style="--rows:' + Math.ceil(rows.length / 2) + '">' + rows.map(function (x, i) {
-      var g = x[1].growth, w = Math.min(1, Math.abs(g) / mx) * 50, over = Math.abs(g) > mx;
-      return '<li class="pick" data-s="' + x[0] + '" tabindex="0"><span class="gi">' + (i + 1) + '</span><span class="gn">' + esc(NAME[x[0]]) + '<small>' + GNAME[GRP[x[0]]] + '</small></span><span class="gtk"><i class="' + (g >= 0 ? 'p' : 'n') + (over ? ' over' : '') + '" style="width:' + w.toFixed(1) + '%"></i></span><b class="' + cls(g) + '">' + pct(g) + '</b></li>';
+    return '<p class="note">' + PNAME[k] + ' ' + g[1] + ' 좋은 순 · 막대를 누르면 그 점포로 이동</p><ol class="grk" style="--rows:' + Math.ceil(rows.length / 2) + '">' + rows.map(function (x, i) {
+      var v = x[2], w = Math.min(1, Math.abs(v) / mx) * 50, over = Math.abs(v) > mx, good = v >= 0 ? 'up' : 'dn';
+      return '<li class="pick" data-s="' + x[0] + '" tabindex="0"><span class="gi">' + (i + 1) + '</span><span class="gn">' + esc(NAME[x[0]]) + '<small>' + GNAME[GRP[x[0]]] + '</small></span><span class="gtk"><i class="' + (v >= 0 ? 'p' : 'n') + (over ? ' over' : '') + '" style="width:' + w.toFixed(1) + '%"></i></span><b class="' + good + '">' + g[4](x[3]) + '</b></li>';
     }).join('') + '</ol>';
+  }
+  // 점포 × CD(또는 구매그룹) 표 — 항목 하나(g)의 칸 값·색. 색 = 좋은 쪽 초록(손실율은 줄면 초록), 진하기는 항목별 기준(g[5])
+  function heatGrid(k, cols, groups, g) {
+    var cell = function (t) { var v = g[2](t); if (v == null || !isFinite(v)) return '<td>-</td>'; var a = Math.min(Math.abs(v) / g[5], 1) * 0.32 + 0.06; return '<td style="background:color-mix(in srgb, var(' + (v >= 0 ? '--good' : '--bad') + ') ' + (a * 100).toFixed(0) + '%, transparent)">' + g[4](g[3](t)) + '</td>'; };
+    return '<p class="note">' + PNAME[k] + ' ' + g[1] + ' · 초록 = 좋아짐, 빨강 = 나빠짐</p><div class="hx"><table class="ht hall"><colgroup><col class="c0">' + cols.map(function () { return '<col>'; }).join('') + '</colgroup><thead><tr><th>점포</th>' + cols.map(function (x) { return '<th>' + esc(x[0]) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      groups.map(function (gr, gi) {
+        return (gi ? '<tr class="sep"><td colspan="' + (cols.length + 1) + '"></td></tr>' : '') + gr[2].map(function (p) { return '<tr><th>' + esc(NAME[p]) + '</th>' + cols.map(function (x) { return cell(M(k, [p], x[1])); }).join('') + '</tr>'; }).join('');
+      }).join('') + '<tr class="sep"><td colspan="' + (cols.length + 1) + '"></td></tr><tr class="cd"><th>킴스 합계</th>' + cols.map(function (x) { return cell(M(k, ALL(), x[1])); }).join('') + '</tr></tbody></table></div>';
+  }
+  function heatTabs(key, k, cols, groups) { return detailTabs(key, GRANK.map(function (g) { return [g[0], heatGrid(k, cols, groups, g)]; })); }
+  function grankChart(k, sc) {
+    if (OPEN().filter(function (p) { return M(k, [p], sc).gsT > 0; }).length < 3) return '';
+    return detailTabs('grank', GRANK.map(function (g) { return [g[0], grankOne(k, sc, g)]; }));
   }
   // 그룹 비교: 그룹별 매출·건수·건단가 증감
   function grpChart(k, sc) {
@@ -1864,13 +1888,7 @@ var KIMS = (function () {
       gRows.map(function (r) { var t = M(k, r[1], sc); return '<tr' + (r[2] ? ' class="tot"' : !(t.gsT > 0) ? ' class="dim"' : '') + '><th>' + r[0] + '</th>' + metricCells(t, null) + '</tr>'; }).join('') + '</tbody></table>');
     var openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
     var rankTbl = rankTblOf(k, K, sc, openGroups);
-    var heatAll = '<table class="ht hall"><colgroup><col class="c0"><col><col><col><col><col></colgroup><thead><tr><th>점포</th><th>점포 전체</th>' + D.cats.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
-      openGroups.map(function (g, gi) {
-        return (gi ? '<tr class="sep"><td colspan="6"></td></tr>' : '') + g[2].map(function (p) {
-          var vals = [M(k, [p], sc).growth].concat(D.cats.map(function (c) { return M(k, [p], scopeCat(c[0], k)).growth; }));
-          return '<tr><th>' + esc(NAME[p]) + '</th>' + vals.map(function (v) { return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr>';
-        }).join('');
-      }).join('') + '<tr class="sep"><td colspan="6"></td></tr><tr class="cd"><th>킴스 합계</th>' + [kt.growth].concat(D.cats.map(function (c) { return M(k, ALL(), scopeCat(c[0], k)).growth; })).map(function (v) { return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr></tbody></table>';
+    var heatAll = heatTabs('cdheat', k, [['점포 전체', sc]].concat(D.cats.map(function (c) { return [c[1], scopeCat(c[0], k)]; })), openGroups);
     return {
       eyebrow: '킴스클럽 전점(하이퍼 전체 구매그룹) · 영업 ' + K.length + '점 · ' + PNAME[k],
       h1: '킴스클럽 전점',
@@ -1883,10 +1901,10 @@ var KIMS = (function () {
         [secG('wf', '증감 기여도', '매출 증감 기여도 <small class="h3s">CD별</small>', wfChart(D.storeCats.map(function (c) { var t = M(k, ALL(), scopeCat(c[0], k)); return [c[1], t.gsT, t.gsL]; }), kt.gsL, kt.gsT, 'CD'), 'wf'),
           sec('grpc', '그룹 비교', '그룹별 증감 비교', grpChart(k, sc), 'grpc')],
         [sec('groups', '그룹별 합계', '그룹별 합계', gt)],
-        [secG('grank', '성장율 순위', '점포별 매출 성장율 순위', grankChart(k, sc), 'grank')],
+        [secG('grank', '점포별 순위', '점포별 순위', grankChart(k, sc), 'grank')],
         [sec('rank', '점포별 실적', '점포별 실적', rtTable(k, rankTbl))],
         [sec('quad', '건수×건단가', '건수 × 건단가 증감', quadChart(k, sc), 'quad')],
-        [sec('cdheat', '점포×CD 성장율', '점포 × CD 매출 성장율', heatAll)],
+        [sec('cdheat', '점포×CD 실적', '점포 × CD 실적', heatAll)],
       ],
     };
   }
@@ -1923,12 +1941,7 @@ var KIMS = (function () {
     // 점포 × 구매그룹 성장율 (전 점포에서 매출이 있는 구매그룹만)
     var pgs = c[2].filter(function (pg) { var m = M(k, ALL(), scopePg(pg[0])); return m.gsT || m.gsL; });
     var cols = [[c[1] + ' 전체', sc]].concat(pgs.length > 1 ? pgs.map(function (pg) { return [pg[1], scopePg(pg[0])]; }) : []);
-    var heatPg = '<p class="note">' + c[1] + ' 매출 성장율</p><div class="hx"><table class="ht hall"><colgroup><col class="c0">' + cols.map(function () { return '<col>'; }).join('') + '</colgroup><thead><tr><th>점포</th>' + cols.map(function (x) { return '<th>' + esc(x[0]) + '</th>'; }).join('') + '</tr></thead><tbody>' +
-      openGroups.map(function (g, gi) {
-        return (gi ? '<tr class="sep"><td colspan="' + (cols.length + 1) + '"></td></tr>' : '') + g[2].map(function (p) {
-          return '<tr><th>' + esc(NAME[p]) + '</th>' + cols.map(function (x) { var v = M(k, [p], x[1]).growth; return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr>';
-        }).join('');
-      }).join('') + '<tr class="sep"><td colspan="' + (cols.length + 1) + '"></td></tr><tr class="cd"><th>킴스 합계</th>' + cols.map(function (x) { var v = M(k, ALL(), x[1]).growth; return '<td' + heat(v) + '>' + pct(v) + '</td>'; }).join('') + '</tr></tbody></table></div>';
+    var heatPg = heatTabs('pgheat', k, cols, openGroups);
     // 구매그룹별 실적 (킴스 합계) + 그룹별 구매그룹 성장율
     var pgPerf = '', pgGrp = '';
     if (pgs.length > 1) {
@@ -1952,10 +1965,10 @@ var KIMS = (function () {
         [pgs.length ? secG('wf', '증감 기여도', c[1] + ' 매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(pgs.map(function (pg) { var t = M(k, ALL(), scopePg(pg[0])); return [pg[1], t.gsT, t.gsL]; }), kt.gsL, kt.gsT, '구매그룹'), 'wf') : null,
           sec('grpc', '그룹 비교', '그룹별 ' + c[1] + ' 증감 비교', grpChart(k, sc), 'grpc')],
         [sec('groups', '그룹별 합계', '그룹별 ' + c[1] + ' 합계', gt)],
-        [secG('grank', '성장율 순위', '점포별 ' + c[1] + ' 매출 성장율 순위', grankChart(k, sc), 'grank')],
+        [secG('grank', '점포별 순위', '점포별 ' + c[1] + ' 순위', grankChart(k, sc), 'grank')],
         [sec('rank', '점포별 실적', '점포별 ' + c[1] + ' 실적', rtTable(k, rankTbl))],
         [sec('quad', '건수×건단가', '건수 × 건단가 증감', quadChart(k, sc), 'quad')],
-        [sec('cdheat', '구매그룹 성장율', '점포 × 구매그룹 매출 성장율', heatPg)],
+        [sec('cdheat', '구매그룹 실적', '점포 × 구매그룹 실적', heatPg)],
       ],
     };
   }
@@ -2071,6 +2084,8 @@ var KIMS = (function () {
       var pgs = c[2].filter(function (pg) { var m = M(k, plants, scopePg(pg[0])); return m.gsT || m.gsL; });
       return '<ul class="kg">' + head + line(c[1] + (cid ? ' 합계' : ''), sc, 'cd') + (pgs.length > 1 || cid ? pgs.map(function (pg) { return line(pg[1], scopePg(pg[0]), 'pg'); }).join('') : '') + '</ul>';
     }).join('');
+    // 맨 앞에 전체 합계(점포 전체 또는 킴스 합계) — CD 탭은 'CD 합계' 줄이 이미 있어 넣지 않음
+    if (!cid) rows = '<ul class="kg ktot">' + head + line((pAttr === 'ALL' ? '킴스' : NAME[pAttr]) + ' 합계', scopeStore(k), 'cd') + '</ul>' + rows;
     return '<p class="kt">' + esc(pAttr === 'ALL' ? '킴스 합계' : NAME[pAttr]) + ' · ' + KPI_NAME[key] + ' <small>' + (cid ? '구매그룹별' : 'CD·구매그룹별') + '</small></p><div class="kgs">' + rows + '</div>' +
       (key === 'cnt' ? '<p class="kn">CD·구매그룹 건수는 그 상품을 산 영수증 수라서 더하면 전체 건수와 다릅니다.</p>' : '');
   }
@@ -2086,6 +2101,8 @@ var KIMS = (function () {
       return '<ul class="kg">' + head + '<li class="cd"><span>' + esc(g[1]) + ' ' + g[2].length + '점</span><em>' + vt[0] + '</em><em class="ly">' + vt[3] + '</em><b class="' + cls(vt[1]) + '">' + vt[2] + '</b></li>' +
         rows.map(function (x, i) { var v = kpiVal(x[1], key); return '<li class="pg pick" data-s="' + x[0] + '" tabindex="0"><span><i>' + (i + 1) + '</i>' + esc(NAME[x[0]]) + '</span><em>' + v[0] + '</em><em class="ly">' + v[3] + '</em><b class="' + cls(v[1]) + '">' + v[2] + '</b></li>'; }).join('') + '</ul>';
     }).join('');
+    var ka = kpiVal(M(k, ALL(), sc), key); // 맨 앞: 킴스 합계(영업중단 포함 전체)
+    groups = '<ul class="kg ktot">' + head + '<li class="cd"><span>킴스 합계 ' + ALL().length + '점</span><em>' + ka[0] + '</em><em class="ly">' + ka[3] + '</em><b class="' + cls(ka[1]) + '">' + ka[2] + '</b></li></ul>' + groups;
     var cname = cid ? ((D.storeCats.filter(function (c) { return c[0] === cid; })[0] || [])[1] || '') + ' ' : '';
     return '<p class="kt">전점포 ' + cname + KPI_NAME[key] + ' <small>그룹별 · 금년 큰 순 · 점포를 누르면 그 점포로 이동</small></p><div class="kgs st">' + groups + '</div>';
   }
@@ -2127,7 +2144,7 @@ var KIMS = (function () {
   function tabsInit() { TAB_IDS.forEach(function (id) { var c = D.storeCats.filter(function (x) { return x[0] === id; })[0]; if (c) TABS.push([c[0], c[1]]); }); }
   var hasData = function (kind, id) { return !D.have || (D.have[kind] || []).indexOf(id) >= 0; };
   var NOT_YET = function (what) { return '<p class="note pend">' + what + ' 데이터는 아직 받지 않았습니다. 다음 데이터 갱신부터 표시됩니다.</p>'; };
-  var OPT = [['daily', '일별 매출'], ['hour', '시간대별 매출'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출'], ['big', '큰판'], ['heat', '성장율 신호등'], ['mc', 'MC 증감 (CD 탭)'], ['top', '상위 15개 상품 (CD 탭)'], ['quad', '건수×건단가 (전점 요약)'], ['prog', '월 진도 (월간)'], ['wf', '증감 기여도'], ['mix', '구성비'], ['grank', '성장율 순위 그래프 (전점)'], ['grpc', '그룹 비교 (전점)']];
+  var OPT = [['daily', '일별 매출'], ['hour', '시간대별 매출'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출'], ['big', '큰판'], ['heat', '성장율 신호등'], ['mc', 'MC 증감 (CD 탭)'], ['top', '상위 15개 상품 (CD 탭)'], ['quad', '건수×건단가 (전점 요약)'], ['prog', '월 진도 (월간)'], ['wf', '증감 기여도'], ['mix', '구성비'], ['grank', '점포별 순위 (전점)'], ['grpc', '그룹 비교 (전점)']];
   var ST = { k: 'D', s: 'all', t: 'store', v: 'report' };
   function view() {
     if (ST.v === 'stats') return statsView();
