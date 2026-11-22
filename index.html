@@ -517,8 +517,6 @@ tr.pick:active>*{background-color:color-mix(in srgb,var(--ac) 12%,var(--panel))!
 #nav .nsr input{width:100%;box-sizing:border-box;padding:9px 12px 9px 34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:inherit;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
 #nav .nsr input:focus{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 18%,transparent)}
 #nav .nsrr{margin:0 0 10px;padding:4px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}#nav .nsrr button span small{font-size:11px;color:var(--muted);font-weight:500;margin-left:3px}#nav .nsrn{padding:8px 10px;font-size:13px;color:var(--muted);list-style:none}
-.dt .dex{display:inline-grid;place-items:center;width:22px;height:22px;margin-left:4px;padding:0;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--muted);cursor:pointer;vertical-align:middle;transition:background-color .15s,color .15s}.dt .dex:hover{background:var(--hov);color:var(--ac)}.dt .dex svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}.dt .dex[aria-expanded=true]{color:var(--ac);border-color:color-mix(in srgb,var(--ac) 45%,transparent)}.dt .dex[aria-expanded=true] svg{transform:rotate(180deg)}
-.dt tr.dsub th,.dt tr.dsub td{padding-top:4px;padding-bottom:4px;font-size:12px;background:color-mix(in srgb,var(--fg) 2.5%,transparent);border-top:1px dashed var(--line)}.dt tr.dsub th{font-weight:500;color:var(--muted);padding-left:14px}.dt tr.dsub.cd th{font-weight:700;color:var(--fg)}.dt tr.dsub.pg th{padding-left:26px}.dt tr.dsub .vv b{font-weight:600}#main .dt2 tr.dsub td .vv{flex-direction:row;align-items:baseline;flex-wrap:nowrap;gap:6px;white-space:nowrap}#main .dt2 tr.dsub td .vv>small{font-size:11.5px;min-width:3.6em}.dt tr.dsub td.ya{background:color-mix(in srgb,var(--ac) 7%,transparent)}.dt tr.dsub:not([hidden]){animation:colIn .25s ease}
 @keyframes fxIn{from{opacity:.6}to{opacity:1}}
 #main.fx .panel,#main.fx .kpis{animation:fxIn .35s cubic-bezier(.2,.7,.2,1)}
 tr.dim>*{opacity:.42}
@@ -1223,7 +1221,6 @@ var KIMS = (function () {
   function detailTable(k, me, sc, caption) {
     var CC = cmpOf(me).map(function (p) { return { name: NAME[p], plants: [p] }; }).concat([{ name: GNAME[GRP[me]] + ' 합계', plants: openOf(GRP[me]) }]);
     var cols = [M(k, [me], sc)].concat(CC.map(function (c) { return M(k, c.plants, sc); }));
-    var subs = detailSubs(k, me, sc, CC);
     var KO = OPEN();
     // 순위: 회색 글씨 'n위/전체' — 상위 5위 안은 초록, 하위 5위 안은 빨강만 색
     var rk = function (key, who) {
@@ -1244,37 +1241,12 @@ var KIMS = (function () {
     ];
     return '<div class="dtw">' + (caption ? '<h4>' + esc(caption) + '</h4>' : '') + '<table class="dt dt2 n' + cols.length + '"><colgroup><col class="c0"><col>' + cols.slice(1).map(function () { return '<col>'; }).join('') + '</colgroup>' +
       '<thead><tr><th></th><th class="ya">' + esc(NAME[me]) + '</th>' + CC.map(function (c, i) { return '<th' + (i === CC.length - 1 ? ' class="gtc"' : '') + '>' + esc(c.name) + '</th>'; }).join('') + '<th class="dist">' + esc(NAME[me]) + ' 순위 위치<small>킴스 영업 점포 중 · 증감 기준</small></th></tr></thead><tbody>' +
-      R.map(function (x, ri) {
-        var key = sc.posKey + ':' + ri, open = subs.length && DEXOPEN[key];
-        return '<tr' + (subs.length ? ' class="dexr"' : '') + '><th>' + x[0] + (subs.length ? '<button type="button" class="dex" data-dex="' + key + '" aria-expanded="' + (open ? 'true' : 'false') + '" aria-label="' + (sc.posKey === 'store' ? 'CD·구매그룹별' : '구매그룹별') + ' 보기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>' : '') + '</th>' + cols.map(function (t, i) {
+      R.map(function (x) {
+        return '<tr><th>' + x[0] + '</th>' + cols.map(function (t, i) {
           var ly = t ? x[4](t) : '';
           return '<td' + (i === 0 ? ' class="ya"' : '') + (ly ? ' title="' + esc(ly) + '"' : '') + '><span class="vv"><b>' + (t ? x[1](t) : '-') + '</b>' + (t ? x[2](t) : '') + '</span>' + (x[3] && (i === 0 || CC[i - 1].plants.length === 1) ? '<span class="crk">' + rk(x[3], i === 0 ? me : CC[i - 1].plants[0]) + '</span>' : '') + '</td>';
-        }).join('') + '<td class="dist">' + (x[3] ? dotStrip(k, sc, x[3], me) : '') + '</td></tr>' +
-          subs.map(function (s) {
-            return '<tr class="dsub ' + s.lvl + '" data-of="' + key + '"' + (open ? '' : ' hidden') + '><th>' + esc(s.name) + '</th>' + s.cols.map(function (t, i) {
-              var none = !(t.gsT > 0) && !(t.gsL > 0);
-              return '<td' + (i === 0 ? ' class="ya"' : '') + '><span class="vv"><b>' + (none ? '-' : x[1](t)) + '</b>' + (none ? '' : x[2](t)) + '</span></td>';
-            }).join('') + '<td class="dist"></td></tr>';
-          }).join('');
+        }).join('') + '<td class="dist">' + (x[3] ? dotStrip(k, sc, x[3], me) : '') + '</td></tr>';
       }).join('') + '</tbody></table></div>';
-  }
-  // 우리점 VS 비교점 펼침: 점포 합계 → CD(구매그룹 2개 이상이면 그 아래 구매그룹) / CD 합계 → 구매그룹
-  var DEXOPEN = {};
-  function detailSubs(k, me, sc, CC) {
-    var list = [];
-    var add = function (name, s2, lvl) {
-      var cs = [M(k, [me], s2)].concat(CC.map(function (c) { return M(k, c.plants, s2); }));
-      if (cs.some(function (t) { return t.gsT > 0 || t.gsL > 0; })) list.push({ name: name, lvl: lvl, cols: cs });
-    };
-    if (sc.posKey === 'store') D.storeCats.forEach(function (c) {
-      add(c[1], scopeCat(c[0], k), 'cd');
-      if (c[2].length > 1) c[2].forEach(function (pg) { add(pg[1], scopePg(pg[0]), 'pg'); });
-    });
-    else {
-      var c = D.storeCats.filter(function (x) { return x[0] === sc.posKey; })[0];
-      if (c && c[2].length > 1) c[2].forEach(function (pg) { add(pg[1], scopePg(pg[0]), 'pg'); });
-    }
-    return list;
   }
   // 순위 위치 막대: 왼쪽 = 상위(1위), 오른쪽 = 하위 — 우리점 위치에 점
   function dotStrip(k, sc, key, me) {
@@ -2694,14 +2666,6 @@ var KIMS = (function () {
     var mainEl = doc.getElementById('main');
     doc.getElementById('scroller').addEventListener('scroll', queueLift, { passive: true });
     doc.addEventListener('click', function (e) { var ab = e.target.closest && e.target.closest('.kab'); if (ab) { toggleAcc(ab); return; } });
-    // 우리점 VS 비교점: 항목 옆 화살표 → CD·구매그룹별 줄 펼치기/접기(펼친 상태는 탭·기간을 바꿔도 유지)
-    doc.addEventListener('click', function (e) {
-      var b = e.target.closest && e.target.closest('.dex'); if (!b) return;
-      var key = b.dataset.dex, on = b.getAttribute('aria-expanded') !== 'true', tb = b.closest('tbody');
-      DEXOPEN[key] = on; b.setAttribute('aria-expanded', on ? 'true' : 'false');
-      [].forEach.call(tb.querySelectorAll('tr.dsub'), function (r) { if (r.dataset.of === key) r.hidden = !on; });
-      stickHeads();
-    });
     mainEl.addEventListener('mouseover', function (e) { var h = e.target.closest && e.target.closest('.hit'); if (h) showTip(h); });
     mainEl.addEventListener('mouseout', function (e) { var w = e.target.closest && e.target.closest('.dcw'); if (w && !w.contains(e.relatedTarget)) hideTip(w); });
     mainEl.addEventListener('focusin', function (e) { if (e.target.classList && e.target.classList.contains('hit')) showTip(e.target); });
