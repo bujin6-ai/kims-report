@@ -505,7 +505,7 @@ body.nav-open #nav{transform:none}
 /* A안 미니멀: 기준선 두 줄 + 반투명 원 + 회색 구역 이름 */
 .quad .z{stroke:color-mix(in srgb,var(--fg) 18%,transparent);stroke-width:1.2}
 .quad .tk{font-size:12px;fill:color-mix(in srgb,var(--muted) 75%,transparent);font-variant-numeric:tabular-nums}.quad .ax{font-size:12.5px;fill:var(--muted);font-weight:500}
-.quad .qn text{font-size:13px;font-weight:700;fill:var(--fg)}.quad .qn .qu{fill:var(--good);font-weight:800}.quad .qn .qd{fill:var(--bad);font-weight:800}.quad .qb{stroke-width:1.3px}.quad .qb.u{fill:color-mix(in srgb,var(--good) 10%,var(--panel));stroke:color-mix(in srgb,var(--good) 55%,transparent)}.quad .qb.d{fill:color-mix(in srgb,var(--bad) 10%,var(--panel));stroke:color-mix(in srgb,var(--bad) 55%,transparent)}.quad .qn text.qk{font-weight:600;fill:var(--muted)}
+.quad .qn text{font-size:12.5px;font-weight:600;fill:var(--muted)}.quad.qm .qn text{font-size:11px}.quad .qn .qu{fill:var(--good);font-size:1.05em}.quad .qn .qd{fill:var(--bad);font-size:1.05em}.quad .qn .qk{fill:var(--fg);font-weight:800}.quad .qb{fill:color-mix(in srgb,var(--fg) 5%,var(--panel));stroke:var(--line);stroke-width:1px}.quad .qs{stroke:var(--line);stroke-width:1px}
 .quad .qp{cursor:pointer}.quad .qp circle{fill:color-mix(in srgb,var(--muted) 25%,transparent);stroke:color-mix(in srgb,var(--muted) 55%,transparent);stroke-width:1;transition:opacity .15s,fill .15s}
 .quad .qp.up circle{fill:color-mix(in srgb,#34c759 28%,transparent);stroke:color-mix(in srgb,#34c759 60%,transparent)}.quad .qp.dn circle{fill:color-mix(in srgb,#ff3b30 26%,transparent);stroke:color-mix(in srgb,#ff3b30 55%,transparent)}
 .quad .qp text{font-size:12px;font-weight:500;fill:color-mix(in srgb,var(--fg) 62%,transparent);paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
@@ -788,7 +788,8 @@ tr.dim>*{opacity:.42}
 /* 아코디언: 이름과 숫자를 붙여서(열 폭 고정, 여러 단) */
 @media (min-width:601px){
 .kacc li{grid-template-columns:7.2em 5.8em 5.8em 4.8em;justify-content:start;gap:6px}
-.kacc .kgs{columns:auto 290px;column-gap:26px;column-rule:1px solid var(--line)}
+.kacc .kgs{columns:auto 24.5em;column-gap:26px;column-rule:1px solid var(--line)}
+.kacc .kgs li{font-size:13.5px}
 .kacc ul{width:max-content;max-width:100%}
 .kacc li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
@@ -1885,20 +1886,22 @@ var KIMS = (function () {
     // 사분면 점포 수
     var cnt = { a: 0, b: 0, c: 0, d: 0 };
     pts.forEach(function (o) { cnt[o.x >= 0 ? (o.y >= 0 ? 'a' : 'd') : (o.y >= 0 ? 'b' : 'c')]++; });
-    // 구역 이름: '건수↑' '건단가↓' 테두리 배지(↑초록·↓빨강) + 점포 수
+    // 구역 이름: 회색 바탕 한 칸에 '건수 ▲ 건단가 ▼ · 3점' (▲초록·▼빨강)
     var chip = function (x, y, anchor, cls, t1, n) {
-      var fs = m ? 11 : 13, ph = fs + 9, pad = m ? 6 : 8, gap = m ? 4 : 5;
-      var parts = t1.split(' · ').map(function (s) { var up = s.indexOf('↑') >= 0; return { t: s, up: up, w: (s.length - 1) * fs * 1.02 + fs * 0.62 + pad * 2 }; });
-      var nt = n + '점', nw = String(n).length * fs * 0.62 + fs + 2;
-      var tot = parts.reduce(function (a, p) { return a + p.w + gap; }, 0) + nw;
-      var cx = anchor === 'end' ? x - tot : x, out = '<g class="qn ' + cls + '">';
-      parts.forEach(function (p) {
-        var nm = p.t.replace(/[↑↓]/, '');
-        out += '<rect class="qb ' + (p.up ? 'u' : 'd') + '" x="' + cx.toFixed(1) + '" y="' + y + '" width="' + p.w.toFixed(1) + '" height="' + ph + '" rx="' + (ph / 2) + '"/>' +
-          '<text x="' + (cx + p.w / 2).toFixed(1) + '" y="' + (y + ph / 2 + fs * 0.36).toFixed(1) + '" text-anchor="middle">' + nm + '<tspan class="' + (p.up ? 'qu' : 'qd') + '">' + (p.up ? '↑' : '↓') + '</tspan></text>';
-        cx += p.w + gap;
+      var fs = m ? 11 : 12.5, ph = fs + 10, pad = m ? 8 : 10;
+      var parts = t1.split(' · ').map(function (s) { return { nm: s.replace(/[↑↓]/, ''), up: s.indexOf('↑') >= 0 }; });
+      var tw = 0, segs = '';
+      parts.forEach(function (p, i) {
+        if (i) tw += fs * 0.7;
+        segs += '<tspan' + (i ? ' dx="' + (fs * 0.7).toFixed(1) + '"' : '') + '>' + p.nm + '</tspan><tspan class="' + (p.up ? 'qu' : 'qd') + '" dx="' + (fs * 0.2).toFixed(1) + '">' + (p.up ? '▲' : '▼') + '</tspan>';
+        tw += p.nm.length * fs * 1.0 + fs * 0.2 + fs * 0.95;
       });
-      return out + '<text class="qk" x="' + cx.toFixed(1) + '" y="' + (y + ph / 2 + fs * 0.36).toFixed(1) + '">' + nt + '</text></g>';
+      var nt = n + '점', nW = (String(n).length * 0.62 + 1) * fs, sep = fs * 1.1;
+      var w = pad * 2 + tw + sep + nW, cx = anchor === 'end' ? x - w : x, ty = (y + ph / 2 + fs * 0.36).toFixed(1);
+      return '<g class="qn ' + cls + '"><rect class="qb" x="' + cx.toFixed(1) + '" y="' + y + '" width="' + w.toFixed(1) + '" height="' + ph + '" rx="' + (ph / 2) + '"/>' +
+        '<text x="' + (cx + pad).toFixed(1) + '" y="' + ty + '">' + segs + '</text>' +
+        '<line class="qs" x1="' + (cx + pad + tw + sep / 2).toFixed(1) + '" x2="' + (cx + pad + tw + sep / 2).toFixed(1) + '" y1="' + (y + 5) + '" y2="' + (y + ph - 5) + '"/>' +
+        '<text class="qk" x="' + (cx + pad + tw + sep).toFixed(1) + '" y="' + ty + '">' + nt + '</text></g>';
     };
     // 이름표: 겹치면 오른쪽 → 왼쪽 → 위 → 아래 순으로 비켜 놓고, 그래도 겹치면 생략(마우스 올리면 보임)
     var cw = m ? 124 : 166, ch = m ? 24 : 26, cb = m ? 20 : 26;
