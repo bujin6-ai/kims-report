@@ -643,7 +643,7 @@ tr.dim>*{opacity:.42}
 /* 섹션 머리 고정: 제목·설명·항목 버튼·표 머리글이 함께 위에 걸림 */
 @media (min-width:1024px),(max-width:600px){
 #main .stk .sth{position:sticky;z-index:6;background:var(--panel)}
-#main .stk .mseg.sth,#main .stk .dtb.sth{z-index:6}
+#main .stk .mseg.sth,#main .stk .msegw.sth,#main .stk .dtb.sth{z-index:6}
 #main .stk table thead th{top:var(--sth,0px)}
 #main .stk .mtbl thead{top:var(--sth,0px)}
 #main .stk .dtt table thead th{top:calc(var(--sth,0px) - 8px)}
@@ -822,6 +822,8 @@ tr.dim>*{opacity:.42}
 .kpis>.kacc{animation:none}
 @media (max-width:600px){.kpis>.kpi:nth-child(-n+2){order:1}.kpis>.kpi:nth-child(n+3){order:3}.kpis>.kacc{order:4}.kpis[data-accrow="1"]>.kacc{order:2}}
 .kpi .kl{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.kloss{flex:none;display:inline-flex;flex-direction:column;align-items:flex-end;gap:1px;font-size:12px;font-weight:600;color:var(--muted);line-height:1.25;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.kloss b{font-size:13px;font-weight:800;color:var(--fg)}.kloss em{font-style:normal;font-weight:800}.kloss em.up{color:var(--good)}.kloss em.dn{color:var(--bad)}
+@media (max-width:600px){.kpi:has(.kloss) .kl{flex-wrap:wrap;row-gap:3px}.kloss{flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:flex-start;gap:0 5px;width:100%;font-size:10.5px}.kloss b{font-size:11px}}
 .kach{flex:none;font-size:14px;font-weight:800;line-height:1;padding:6px 10px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .kach.up{color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}
 .kach.dn{color:var(--bad);background:color-mix(in srgb,var(--bad) 11%,transparent)}
@@ -1079,6 +1081,7 @@ var KIMS = (function () {
       gsT: gsT, gsL: gsL, growth: gr(gsT, gsL),
       tg: tgT || null, ach: tgT > 0 && tgA > 0 ? tgA / tgT : null,
       mr: mr, mrL: mrL, mrD: mr != null && mrL != null ? mr - mrL : null,
+      arT: hasArea ? ar[2] : null, // 공면적×일수(평수 비중용)
       py: py, pyL: pyL, pyG: py != null && pyL ? py / pyL - 1 : null,
       amt: amtT, eve: hasPos ? eveT : null, eveL: hasPos ? eveL : null, eveG: hasPos && eveL ? eveT / eveL - 1 : null,
       cnt: hasPos ? avT : null, cntL: avL, cntG: hasPos ? gr(avT, avL) : null, cntD: hasPos ? Math.round(avT) - Math.round(avL) : null,
@@ -1232,6 +1235,11 @@ var KIMS = (function () {
     return '<svg class="spk" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-label="최근 ' + rows.length + '일 매출 추세"><path class="l" d="' + line(ly) + '"/><path class="t" d="' + line(ty) + '"/>' + (ty[last] != null ? '<circle cx="' + X(last).toFixed(1) + '" cy="' + Y(ty[last]).toFixed(1) + '" r="2.5"/>' : '') + '</svg><span class="spl">최근 ' + rows.length + '일</span>';
   }
   // 매출 카드 오른쪽 위: 목표 대비 달성율 (목표 데이터가 없으면 표시 안 함)
+  // 매출총이익률 카드 오른쪽 위: 손실율 금년 / 전년 / 증감(%p, 줄면 초록)
+  function lossTag(y) {
+    if (!y || y.lr == null) return '';
+    return '<span class="kloss" title="손실율 = (마크다운+폐기+재고차이로스) ÷ 실매출 · 하이퍼 정판율 마트"><b>손실율 ' + f2(y.lr) + '%</b><span>전년 ' + (y.lrL == null ? '-' : f2(y.lrL) + '%') + '</span>' + (y.lrD == null ? '' : '<em class="' + clsInv(y.lrD) + '">' + pp2(y.lrD) + '</em>') + '</span>';
+  }
   function achTag(y) {
     if (!y || y.ach == null) return '';
     var a = y.ach * 100;
@@ -1246,7 +1254,7 @@ var KIMS = (function () {
     var three = function (key) { return badge('킴스', rankIn(k, K, sc, key, me)) + badge(GNAME[g], rankIn(k, G, sc, key, me)); };
     return '<div class="kpis" data-p="' + me + '" data-c="' + (sc.posKey === 'store' ? '' : sc.posKey) + '">' +
       kpi('매출', man(y.gsT), '백만원', y.growth, pct(y.growth), three('growth'), spark(me, sc.posKey), achTag(y)) +
-      kpi('매출총이익률', f1(y.mr), '%', y.mrD, pp(y.mrD), three('mr'), lyBars(y.mr, y.mrL, fmtMr)) +
+      kpi('매출총이익률', f1(y.mr), '%', y.mrD, pp(y.mrD), three('mr'), lyBars(y.mr, y.mrL, fmtMr), lossTag(y)) +
       kpi('건수', won(y.cnt), '건/일', y.cntG, pct(y.cntG), three('cntG'), lyBars(y.cnt, y.cntL, fmtCnt)) +
       kpi('건단가', man1(y.atv), '만원', y.atvG, pct(y.atvG), three('atv'), lyBars(y.atv, y.atvL, fmtAtv)) + '</div>';
   }
@@ -1585,7 +1593,7 @@ var KIMS = (function () {
       var s = scopeCat(c[0], k);
       var it = function (name, sc2, lvl) {
         var r = M(k, [me], sc2);
-        return { name: name, lvl: lvl, y: r, comps: CC.map(function (cc) { return M(k, cc.plants, sc2).growth; }), bench: oth.length ? M(k, oth, sc2).growth : null, kims: M(k, ALL(), sc2).growth, rk: rankIn(k, OPEN(), sc2, 'growth', me), share: tot ? r.gsT / tot : null };
+        return { name: name, lvl: lvl, y: r, comps: CC.map(function (cc) { return M(k, cc.plants, sc2).growth; }), bench: oth.length ? M(k, oth, sc2).growth : null, kims: M(k, ALL(), sc2).growth, rk: rankIn(k, OPEN(), sc2, 'growth', me), share: tot ? r.gsT / tot : null, ashare: y.arT ? (r.arT || 0) / y.arT : null };
       };
       items.push(it(c[1], s, 'cd'));
       var pgs = c[2].filter(function (pg) { return C.some(function (p) { var m = M(k, [p], scopePg(pg[0])); return m.gsT || m.gsL; }); });
@@ -1595,14 +1603,15 @@ var KIMS = (function () {
     var shmax = Math.max.apply(null, items.map(function (it) { return it.share || 0; }).concat([0.01]));
     var row = function (it, isTot) {
       var t = it.y, none = !isTot && !(t.gsT > 0);
-      var share = isTot ? '100%' : it.share == null ? '-' : '<span class="shw"><span class="shb"><i class="' + it.lvl + '" style="width:' + (it.share / shmax * 100).toFixed(1) + '%"></i></span>' + f1(it.share * 100) + '%</span>';
-      return '<tr class="' + (isTot ? 'tot' : it.lvl) + (none ? ' dim' : '') + '"><th>' + esc(it.name) + '</th>' + metricCells(t, none ? '-' : rkBadge(it.rk)).replace('<td data-m="r"', tdm('s', 'shc', share) + '<td data-m="r"') + '</tr>';
+      var share = isTot ? '100%' : it.share == null ? '-' : f1(it.share * 100) + '%'; // 구성비 막대는 뺌(2026-11-22)
+      var ash = isTot ? (y.arT ? '100%' : '-') : it.ashare == null ? '-' : f1(it.ashare * 100) + '%'; // 평수 비중 = 공면적 비중
+      return '<tr class="' + (isTot ? 'tot' : it.lvl) + (none ? ' dim' : '') + '"><th>' + esc(it.name) + '</th>' + metricCells(t, none ? '-' : rkBadge(it.rk)).replace('<td data-m="r"', tdm('s', 'shc', share) + '<td data-m="r"') + tdm('p', '', share, true) + tdm('p', '', ash) + '</tr>';
     };
     var g1b = function (m, n, cs) { return '<th colspan="' + cs + '" data-m="' + m + '" class="gs">' + n + '</th>'; };
     var g2b = function (m, a) { return a.map(function (n, i) { return '<th data-m="' + m + '"' + (i ? '' : ' class="gs"') + '>' + n + '</th>'; }).join(''); };
     var exb = extraHead(g1b, g2b);
-    var bigHead = '<thead><tr class="g1"><th class="g1c"></th>' + g1b('s', '매출<small>(백만원)</small>', 5) + g1b('r', '매총율', 3) + g1b('c', '건수<small>(일평균)</small>', 3) + g1b('a', '건단가<small>(만원)</small>', 3) + exb[0] + '</tr>' +
-      '<tr class="g2"><th class="g2c">CD · 구매그룹</th>' + g2b('s', ['금년', '전년', '성장율', '성장순위', '구성비']) + g2b('r', ['금년', '전년', '증감']) + g2b('c', ['금년', '전년', '증감율']) + g2b('a', ['금년', '전년', '증감율']) + exb[1] + '</tr></thead>';
+    var bigHead = '<thead><tr class="g1"><th class="g1c"></th>' + g1b('s', '매출<small>(백만원)</small>', 5) + g1b('r', '매총율', 3) + g1b('c', '건수<small>(일평균)</small>', 3) + g1b('a', '건단가<small>(만원)</small>', 3) + exb[0] + g1b('p', '구성비', 2) + '</tr>' +
+      '<tr class="g2"><th class="g2c">CD · 구매그룹</th>' + g2b('s', ['금년', '전년', '성장율', '성장순위', '구성비']) + g2b('r', ['금년', '전년', '증감']) + g2b('c', ['금년', '전년', '증감율']) + g2b('a', ['금년', '전년', '증감율']) + exb[1] + g2b('p', ['매출 구성비', '평수 비중']) + '</tr></thead>';
     var sumTable = '<p class="note">' + esc(NAME[me]) + ' · 매출 백만원 · 건수 일평균 · 건단가 만원 · 성장순위 = 킴스 영업 ' + OPEN().length + '점 중 매출 성장율 순위 · 구성비 = 점포 매출 안 비중</p>' +
       mtab('ms-big', '<table class="st mtbl bigt">' + bigHead + '<tbody>' + row(totIt, true) + items.map(function (it) { return row(it); }).join('') + '</tbody></table>');
     var hc = 2 + CC.length;
@@ -1740,7 +1749,7 @@ var KIMS = (function () {
     return '<div class="mseg" role="tablist"><span class="sgi" aria-hidden="true"></span>' + MSEG.map(function (x, i) { return '<label class="mi"><input type="radio" id="' + name + '-' + x[0] + '" name="' + name + '" value="' + x[0] + '"' + ((TABSEL[name] || 's') === x[0] ? ' checked' : '') + '><span>' + x[1] + '</span></label>'; }).join('') +
       '<label class="mg g1" for="' + name + '-s"><span>매출 · 매총율 · 건수 · 건단가</span></label><label class="mg g2" for="' + name + '-l"><span>손실율 · 저녁장 매출 · 평당매출</span></label></div>';
   }
-  var mtab = function (name, table) { return '<div class="mt">' + mseg(name) + '<div class="hx">' + table + '</div></div>'; };
+  var mtab = function (name, table) { return '<div class="mt"><div class="msegw">' + mseg(name) + '</div><div class="hx">' + table + '</div></div>'; }; // .msegw = 머리글 고정 때 표 전체 폭을 덮는 틀
   var tdm = function (m, cl, html, first) { return '<td data-m="' + m + '"' + ((cl || first) ? ' class="' + [first ? 'gs' : '', cl || ''].join(' ').trim() + '"' : '') + '>' + html + '</td>'; };
   // 금년·전년·변화 3칸(매출은 성장순위까지 4칸)
   // 성장율 칸 안 ± 막대(0 기준 좌우, 표 안 최대값 기준 길이)
@@ -1867,7 +1876,7 @@ var KIMS = (function () {
       h1: '킴스클럽 전점',
       sub: '그룹 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
       rows: [
-        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', 'store'), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
+        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', 'store'), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr), lossTag(kt)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
         [allDailySec('store', '전체')],
         [hourSec(k, OPEN(), 'store', '킴스 영업 점포 합계', '킴스 합계')],
         progRow(k, kt.gsT, kt.gsL, (aggDaily(), (D.lymonth.ALL || {}).store)),
@@ -1935,7 +1944,7 @@ var KIMS = (function () {
       h1: '킴스클럽 전점 · ' + c[1],
       sub: '그룹 ' + c[1] + ' 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
       rows: [
-        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="' + id + '">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', id), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
+        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="' + id + '">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', id), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr), lossTag(kt)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
         pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf)] : [],
         [allDailySec(id, c[1])],
         [hourSec(k, OPEN(), id, '킴스 영업 점포 ' + c[1] + ' 합계', c[1])],
@@ -2334,7 +2343,7 @@ var KIMS = (function () {
       if (!tbl) return;
       var thd = tbl.querySelector('thead'), th = [].filter.call(thd.querySelectorAll('th'), function (x) { return x.offsetParent; })[0] || thd.querySelector('th');
       if (!(window.matchMedia && window.matchMedia('(min-width:1024px),(max-width:600px)').matches) || tbl.closest('.hx:not(.mt .hx)')) return;
-      var items = [], h3 = sec.querySelector(':scope > h3'), note = sec.querySelector(':scope > p.note'), seg = sec.querySelector('.mseg, .dtbw');
+      var items = [], h3 = sec.querySelector(':scope > h3'), note = sec.querySelector(':scope > p.note'), seg = sec.querySelector('.msegw, .dtbw');
       if (h3) items.push(h3);
       if (note && note.compareDocumentPosition(tbl) & 4) items.push(note);
       if (seg && seg.offsetHeight && (seg.compareDocumentPosition(tbl) & 4)) items.push(seg);
