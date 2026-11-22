@@ -454,6 +454,8 @@ body.nav-open #nav{transform:none}
 .mtbl tbody th{white-space:normal;word-break:keep-all}
 .mt:has(.mseg input[value="s"]:checked) .mtbl [data-m]:not([data-m="s"]){display:none}.mt:has(.mseg input[value="r"]:checked) .mtbl [data-m]:not([data-m="r"]){display:none}.mt:has(.mseg input[value="c"]:checked) .mtbl [data-m]:not([data-m="c"]){display:none}.mt:has(.mseg input[value="a"]:checked) .mtbl [data-m]:not([data-m="a"]){display:none}.mt:has(.mseg input[value="l"]:checked) .mtbl [data-m]:not([data-m="l"]){display:none}.mt:has(.mseg input[value="e"]:checked) .mtbl [data-m]:not([data-m="e"]){display:none}.mt:has(.mseg input[value="p"]:checked) .mtbl [data-m]:not([data-m="p"]){display:none}
 .mseg span{padding:7px 1px;font-size:12.5px;letter-spacing:-.02em}}
+.mseg .mg{display:none}
+@media (min-width:601px){.mseg .mi{display:none}.mseg .mg{display:block}.mseg{max-width:560px}.mseg .mg span{padding:8px 10px;white-space:nowrap}.mseg:has(input[value="s"]:checked) .mg.g1 span,.mseg:has(input[value="r"]:checked) .mg.g1 span,.mseg:has(input[value="c"]:checked) .mg.g1 span,.mseg:has(input[value="a"]:checked) .mg.g1 span,.mseg:has(input[value="l"]:checked) .mg.g2 span,.mseg:has(input[value="e"]:checked) .mg.g2 span,.mseg:has(input[value="p"]:checked) .mg.g2 span{color:var(--fg)}}
 /* PC: 항목이 7개라 표 하나에 다 넣으면 넘침 → 버튼으로 기본 4개(매출·매총율·건수·건단가) / 추가 3개(손실율·저녁장·평당) 묶음 전환 */
 @media (min-width:601px){
 .mseg{display:flex;gap:2px;padding:3px;margin:0 0 12px;background:var(--seg);border-radius:12px;max-width:620px}
@@ -472,9 +474,10 @@ body.nav-open #nav{transform:none}
 .dtb label:active span,.mseg label:active span{transform:scale(.97)}
 @media (max-width:600px){.mtbl [data-m]{animation:colIn .25s ease}}
 @media (prefers-reduced-motion:reduce){.dtt .dtp,.mtbl [data-m]{animation:none}}
-.dt2 td .vv{display:inline-flex;align-items:baseline;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+/* 실적 위 · 성장율 아래로 쌓기(2026-11-22, PC·폰 공통) */
+.dt2 td .vv{display:inline-flex;flex-direction:column;align-items:flex-end;gap:1px}
 .dt2 td .vv>b{display:inline;font-weight:600;color:var(--fg)}.dt2 td.ya .vv>b{font-weight:800}
-.dt2 td .vv>small{display:inline;margin:0;font-size:12.5px;font-weight:600;min-width:4.2em;text-align:right}
+.dt2 td .vv>small{display:inline;margin:0;font-size:12.5px;font-weight:600;text-align:right}
 .dt2 .crk{display:block;margin-top:3px;font-size:12px}
 @media (min-width:1024px){.dt2 td .vv>small{font-size:13.5px}.dt2 .crk{font-size:13px}}
 @media (max-width:600px){.dt2 .crk{font-size:10.5px;margin-top:1px}.dt2 td .vv{flex-direction:column;align-items:flex-end;gap:0}.dt2 td .vv>small{font-size:11px;min-width:0}}
@@ -937,8 +940,12 @@ html:not([data-view=report]) body{background:#f4f5f7}
 .nbody{padding:4px 16px 16px;background:#fafbfc}.nbody>p:first-child{margin:0 0 10px;white-space:pre-wrap;word-break:break-word;font-size:14px}
 .nmeta{margin:0;color:var(--pm);font-size:12px}
 /* 버전 표시 · 업데이트 내역 (2026-11-22) */
-.pver{margin-left:8px;display:inline-block;padding:1px 9px;border-radius:999px;border:1px solid var(--pl);background:var(--ps);color:var(--pm);font-size:12px;font-weight:700;text-decoration:none;vertical-align:1px;transition:border-color .2s,color .2s}
-.pver:hover{border-color:var(--pr);color:var(--pr)}
+.phello{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.pver{flex:none;margin:4px 0 0;padding:2px 0;border:0;background:none;color:var(--pm);font:inherit;font-size:13px;font-weight:600;letter-spacing:.2px;cursor:pointer;transition:color .2s}
+.pver:hover,.pver:focus-visible{color:var(--pr);text-decoration:underline;text-underline-offset:3px}
+.vpm h2{margin:0;font-size:18px}.vpm .pmb{white-space:normal;display:grid;gap:14px}
+.vpm section h3{margin:0 0 4px;display:flex;align-items:baseline;gap:8px;font-size:15px}.vpm section h3 time{margin-left:auto;font-size:12px;font-weight:500;color:#6b7280}
+.vpm ul{margin:0;padding-left:18px;display:grid;gap:3px;line-height:1.5}.vpe{margin:0;color:#6b7280}
 .pvrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
 .vlist{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .vlist>li{background:var(--ps);border:1px solid var(--pl);border-radius:16px;padding:14px 16px;display:grid;gap:8px}
@@ -1706,7 +1713,9 @@ var KIMS = (function () {
       g2('l', ['금년', '전년', '증감']) + g2('e', ['금년', '전년', '증감율']) + g2('p', ['금년', '전년', '증감율'])];
   }
   function mseg(name) {
-    return '<div class="mseg" role="tablist"><span class="sgi" aria-hidden="true"></span>' + MSEG.map(function (x, i) { return '<label><input type="radio" name="' + name + '" value="' + x[0] + '"' + ((TABSEL[name] || 's') === x[0] ? ' checked' : '') + '><span>' + x[1] + '</span></label>'; }).join('') + '</div>';
+    // 폰: 항목 7개 버튼(.mi) / PC: 묶음 2개 버튼(.mg — 기본 4개 · 추가 3개, 누르면 그 묶음 첫 항목을 고름)
+    return '<div class="mseg" role="tablist"><span class="sgi" aria-hidden="true"></span>' + MSEG.map(function (x, i) { return '<label class="mi"><input type="radio" id="' + name + '-' + x[0] + '" name="' + name + '" value="' + x[0] + '"' + ((TABSEL[name] || 's') === x[0] ? ' checked' : '') + '><span>' + x[1] + '</span></label>'; }).join('') +
+      '<label class="mg g1" for="' + name + '-s"><span>매출 · 매총율 · 건수 · 건단가</span></label><label class="mg g2" for="' + name + '-l"><span>손실율 · 저녁장 매출 · 평당매출</span></label></div>';
   }
   var mtab = function (name, table) { return '<div class="mt">' + mseg(name) + '<div class="hx">' + table + '</div></div>'; };
   var tdm = function (m, cl, html, first) { return '<td data-m="' + m + '"' + ((cl || first) ? ' class="' + [first ? 'gs' : '', cl || ''].join(' ').trim() + '"' : '') + '>' + html + '</td>'; };
@@ -2274,7 +2283,9 @@ var KIMS = (function () {
   // 세그먼트(탭) 선택 표시가 미끄러지듯 이동
   function placeSeg(box, anim) {
     var ind = box.querySelector('.sgi'), inp = box.querySelector('input:checked'); if (!ind || !inp) return;
-    var lb = inp.closest('label'); if (!lb || !lb.offsetWidth) return;
+    var lb = inp.closest('label');
+    if (lb && !lb.offsetWidth && box.classList.contains('mseg')) lb = box.querySelector('.mg.g' + ('lep'.indexOf(inp.value) >= 0 ? 2 : 1)); // PC: 묶음 버튼 위로
+    if (!lb || !lb.offsetWidth) return;
     if (!anim) ind.classList.add('noanim');
     ind.style.width = lb.offsetWidth + 'px'; ind.style.transform = 'translateX(' + lb.offsetLeft + 'px)'; ind.style.opacity = 1;
     if (!anim) { void ind.offsetWidth; ind.classList.remove('noanim'); }
@@ -2974,7 +2985,7 @@ var KIMS = (function () {
     // 메뉴 화면: (없음) · notice · admin / 그 밖의 주소(#report, 리포트가 쓰는 #점포-탭-기간)는 리포트
     if (h && sub !== 'notice' && sub !== 'admin' && sub !== 'version') return openReport();
     setView('portal');
-    PV = sub === 'notice' ? 'notice' : sub === 'version' ? 'version' : sub === 'admin' && a.admin ? 'admin' : 'home';
+    PV = sub === 'notice' ? 'notice' : sub === 'version' && a.admin ? 'version' : sub === 'admin' && a.admin ? 'admin' : 'home';
     if (PV === 'notice' && h.split('/')[1]) OPEN[h.split('/')[1]] = true;
     drawPortal();
     portal.scrollTop = 0;
@@ -3026,7 +3037,7 @@ var KIMS = (function () {
     else noticeBox = '<ul class="nlist mini">' + P.notices.slice(0, 3).map(function (n) {
       return '<li><a href="#notice/' + esc(n.id) + '">' + (n.pinned ? '<em class="tag">고정</em>' : '') + '<span class="nt">' + esc(n.title) + '</span>' + (n.unread ? '<i class="nbad">N</i>' : '') + '<time>' + kst(n.at).slice(5) + '</time></a></li>';
     }).join('') + '</ul>';
-    return '<section class="phello"><h1>' + esc((P && P.name) || a.name || '') + '님, 안녕하세요</h1><p>' + today + '<a href="#version" class="pver" title="업데이트 내역 보기">' + esc(curVer()) + '</a></p></section>' +
+    return '<section class="phello"><div><h1>' + esc((P && P.name) || a.name || '') + '님, 안녕하세요</h1><p>' + today + '</p></div><button type="button" class="pver" data-act="ver" title="업데이트 내역 보기">' + esc(curVer()) + '</button></section>' +
       '<section class="pnote"><div class="phead"><h2>공지사항</h2><a href="#notice">전체 보기</a></div>' + noticeBox + '</section>' +
       '<section><h2 class="psec">메뉴</h2><div class="pgrid">' + MENU.map(function (m, i) {
         return '<button type="button" class="pcard' + (m.soon ? ' soon' : ' big') + (m.id === 'report' && P && lagInfo(P.base) ? (lagInfo(P.base).pre ? ' late pre' : ' late') : '') + '" data-menu="' + m.id + '" style="--i:' + i + '">' +
@@ -3084,12 +3095,27 @@ var KIMS = (function () {
     else if (!vs) list = '<p class="pempty">업데이트 기록을 불러오지 못했습니다(서버 업데이트 전) · 현재 ' + esc(curVer()) + '</p>';
     else if (!vs.length) list = '<p class="pempty">등록된 업데이트 기록이 없습니다</p>';
     else list = '<ol class="vlist">' + vs.map(function (v, i) {
-      var lines = String(v.note || '').split(/\n+/).map(function (x) { return x.replace(/^\s*[-·•*]\s*/, '').trim(); }).filter(Boolean);
+      var lines = verLines(v.note);
       return '<li' + (i ? '' : ' class="cur"') + '><div class="vh"><b>' + esc(v.ver) + '</b>' + (i ? '' : '<em class="tag">현재</em>') + '<time>' + (v.at ? kst(v.at) : '') + '</time></div>' +
         (lines.length ? '<ul class="vn">' + lines.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p class="pempty sm">내용 없음</p>') +
         (admin ? '<div class="prow end"><span class="nmeta">' + esc(v.author || '') + (v.upd ? ' · 수정 ' + kst(v.upd, true) : '') + '</span><button type="button" class="pbtn ghost" data-act="vedit" data-id="' + esc(v.id) + '">수정</button><button type="button" class="pbtn danger" data-act="vdel" data-id="' + esc(v.id) + '">삭제</button></div>' : '') + '</li>';
     }).join('') + '</ol>';
     return subHead('버전 · 업데이트 내역', admin && !VEDIT ? '<button type="button" class="pbtn pri" data-act="vnew">새 버전</button>' : '') + (VEDIT && admin ? versionForm() : '') + list;
+  }
+  function verLines(note) { return String(note || '').split(/\n+/).map(function (x) { return x.replace(/^\s*[-·•*]\s*/, '').trim(); }).filter(Boolean); }
+  // 메인 화면 오른쪽 위 버전 문구: 관리자 → 버전 관리 화면 / 그 외 → 버전별 변경 내용만 팝업으로
+  function verPop() {
+    var vs = P && P.versions, body;
+    if (!vs) body = '<p class="vpe">현재 ' + esc(curVer()) + ' · 업데이트 내역을 불러오지 못했습니다</p>';
+    else if (!vs.length) body = '<p class="vpe">등록된 업데이트 내역이 없습니다</p>';
+    else body = vs.map(function (v) {
+      var lines = verLines(v.note);
+      return '<section><h3>' + esc(v.ver) + '<time>' + (v.at ? kst(v.at) : '') + '</time></h3>' + (lines.length ? '<ul>' + lines.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') + '</section>';
+    }).join('');
+    pop.innerHTML = '<div class="pmod vpm" role="dialog" aria-modal="true" aria-labelledby="verT"><h2 id="verT">업데이트 내역</h2><div class="pmb">' + body + '</div>' +
+      '<div class="prow end"><button type="button" class="pbtn pri" data-pop="ver-ok">닫기</button></div></div>';
+    pop.hidden = false;
+    var b = pop.querySelector('[data-pop=ver-ok]'); if (b) b.focus();
   }
 
   // ── 공지사항 ──
@@ -3163,7 +3189,7 @@ var KIMS = (function () {
   }
   pop.addEventListener('click', function (e) {
     var b = e.target.closest('[data-pop]');
-    if (b && b.dataset.pop === 'lag-ok') { closePop(); return; }
+    if (b && (b.dataset.pop === 'lag-ok' || b.dataset.pop === 'ver-ok')) { closePop(); return; }
     if (b && b.dataset.pop === 'lag-go') { closePop(); go('report'); return; }
     if (!b) { if (e.target === pop) { var lag = !!pop.querySelector('.plagm'); closePop(); if (!lag) setTimeout(maybeLag, 250); } return; }
     if (b.dataset.pop === 'ok') { markRead([popList[popI].key]); popI++; if (popI < popList.length) drawPop(); else { closePop(); drawPortal(); setTimeout(maybeLag, 250); } }
@@ -3228,6 +3254,7 @@ var KIMS = (function () {
     else if (act === 'nnew') { EDIT = 'new'; drawPortal(); var f = $('nTitle'); if (f) f.focus(); }
     else if (act === 'nedit') { EDIT = t.dataset.id; drawPortal(); portal.scrollTop = 0; }
     else if (act === 'ncancel') { EDIT = null; drawPortal(); }
+    else if (act === 'ver') { if (P ? P.admin : (get() || {}).admin) go('version'); else verPop(); }
     else if (act === 'vnew') { VEDIT = 'new'; drawPortal(); var vf = $('vNote'); if (vf) vf.focus(); }
     else if (act === 'vedit') { VEDIT = t.dataset.id; drawPortal(); portal.scrollTop = 0; }
     else if (act === 'vcancel') { VEDIT = null; drawPortal(); }
