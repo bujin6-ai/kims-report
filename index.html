@@ -842,6 +842,13 @@ tr.dim>*{opacity:.42}
 #toTop{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:35;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--fg);box-shadow:0 4px 16px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s;pointer-events:none}
 #toTop.on{opacity:1;transform:none;pointer-events:auto}
 @media (min-width:641px){#toTop{display:none}}
+/* 일별 매출 제목 옆 날씨 버튼 · 펼치는 날씨 달력 (2026-11-22) */
+.dc>h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wxb{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 12px 5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .15s ease}
+.wxb svg{flex:none}.wxb:hover{border-color:color-mix(in srgb,var(--ac) 45%,var(--line))}.wxb:active{transform:scale(.97)}
+.wxb[aria-expanded=true]{background:color-mix(in srgb,var(--ac) 12%,var(--panel));border-color:var(--ac);color:var(--ac)}
+.wxp{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);animation:tabIn .28s cubic-bezier(.2,.7,.2,1)}
+.wxp[hidden]{display:none}.wxp h4{margin:0 0 4px;font-size:15px;font-weight:800}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
@@ -929,6 +936,17 @@ html:not([data-view=report]) body{background:#f4f5f7}
 .nlist li.open .nrow{background:#fafbfc}.nlist li.open .nt{white-space:normal;font-weight:700}
 .nbody{padding:4px 16px 16px;background:#fafbfc}.nbody>p:first-child{margin:0 0 10px;white-space:pre-wrap;word-break:break-word;font-size:14px}
 .nmeta{margin:0;color:var(--pm);font-size:12px}
+/* 버전 표시 · 업데이트 내역 (2026-11-22) */
+.pver{margin-left:8px;display:inline-block;padding:1px 9px;border-radius:999px;border:1px solid var(--pl);background:var(--ps);color:var(--pm);font-size:12px;font-weight:700;text-decoration:none;vertical-align:1px;transition:border-color .2s,color .2s}
+.pver:hover{border-color:var(--pr);color:var(--pr)}
+.pvrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.vlist{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.vlist>li{background:var(--ps);border:1px solid var(--pl);border-radius:16px;padding:14px 16px;display:grid;gap:8px}
+.vlist>li.cur{border-color:color-mix(in srgb,var(--pr) 40%,var(--pl))}
+.vh{display:flex;align-items:center;gap:8px}.vh b{font-size:17px;letter-spacing:-.2px}.vh time{margin-left:auto;color:var(--pm);font-size:12px}
+.vn{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px;line-height:1.5;color:var(--pt)}
+.vlist .prow.end{align-items:center}.vlist .prow.end .nmeta{margin-right:auto}
+.pempty.sm{padding:4px 0;font-size:13px}
 .prow{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.prow.end{margin-top:10px}
 .pform{display:grid;gap:12px;background:var(--ps);border:1px solid var(--pl);border-radius:16px;padding:16px}
 .pform h3{margin:0;font-size:16px}.pform label{display:grid;gap:5px;font-size:13px;font-weight:600}
@@ -1398,15 +1416,31 @@ var KIMS = (function () {
     }).join('');
     return '<ol class="wxc">' + head + pad + days + '</ol>';
   }
-  var wxSec = function (plants, key, where) {
+  // 일별 날씨는 따로 항목으로 두지 않고 '일별 매출' 제목 옆 날씨 버튼을 누르면 그래프 아래에 펼친다(2026-11-22).
+  // 펼침 상태는 점포·탭·기간을 바꿔도 유지(WXOPEN). 닫혀 있으면 날씨를 불러오지 않는다.
+  var WXOPEN = false;
+  var WXBTN = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="8.5" cy="8.5" r="3.2" fill="#f5a623"/><g stroke="#f5a623" stroke-width="1.6" stroke-linecap="round"><path d="M8.5 2.2v1.6M2.2 8.5h1.6M4 4l1.1 1.1M13 4l-1.1 1.1"/></g><path d="M8 20h9.5a3.5 3.5 0 0 0 .4-7 4.9 4.9 0 0 0-9.4-1.2A4.1 4.1 0 0 0 8 20z" fill="#aeb7c2"/></svg>';
+  var wxInDaily = function (html, plants, key, where) {
     var p0 = plants.length === 1 ? plants[0] : null, city = p0 ? WXSTORE[p0] : 'seoul';
     var cname = city ? WXCITY[city][0] : '서울';
     var note = (p0 ? (city ? cname + ' 날씨' : '점포 위치 확인 불가 → 서울 날씨') : '여러 점포 합계 → 서울 날씨') + ' · 큰 글씨 = 금년(최고°/최저°), 작은 줄 = 전년 같은 요일 · 날짜 옆 % = 그날 ' + where + ' 매출 전년비 · 출처 Open-Meteo';
-    return sec('wx', '날씨', '일별 날씨 <small class="h3s">금년 · 전년 · 예보</small>', '<p class="note">' + note + '</p><div class="wxw" data-city="' + (city || 'seoul') + '" data-p="' + (p0 || 'ALL') + '" data-k="' + key + '"><p class="note pend">날씨를 불러오는 중…</p></div>', 'wx');
+    var btn = '<button type="button" class="wxb" aria-expanded="' + WXOPEN + '" aria-controls="wxp-daily" title="일별 날씨 보기">' + WXBTN + '<span>날씨</span></button>';
+    var pane = '<div class="wxp" id="wxp-daily"' + (WXOPEN ? '' : ' hidden') + '><h4>일별 날씨 <small class="h3s">금년 · 전년 · 예보</small></h4><p class="note">' + note + '</p><div class="wxw" data-city="' + (city || 'seoul') + '" data-p="' + (p0 || 'ALL') + '" data-k="' + key + '"><p class="note pend">날씨를 불러오는 중…</p></div></div>';
+    var i = html.indexOf('</h3>'), j = html.lastIndexOf('</section>');
+    return html.slice(0, i) + btn + html.slice(i, j) + pane + html.slice(j);
   };
   function wxFill() {
     var doc = window.document;
+    [].forEach.call(doc.querySelectorAll('#main .wxb'), function (b) {
+      if (b.dataset.on) return; b.dataset.on = '1';
+      b.addEventListener('click', function () {
+        var p = doc.getElementById(b.getAttribute('aria-controls')); if (!p) return;
+        WXOPEN = p.hidden; p.hidden = !WXOPEN; b.setAttribute('aria-expanded', WXOPEN);
+        if (WXOPEN) wxFill();
+      });
+    });
     [].forEach.call(doc.querySelectorAll('#main .wxw'), function (box) {
+      if (box.closest('[hidden]') || box.dataset.done) return; box.dataset.done = '1';
       var city = box.dataset.city, p = box.dataset.p, k = box.dataset.k, today = kstToday();
       if (p === 'ALL') aggDaily();
       var dp = (D.daily[p] || {})[k];
@@ -1418,7 +1452,7 @@ var KIMS = (function () {
   }
   var dailySec = function (me, cid) {
     var h = dailyChart(me, cid, (D.lymonth[me] || {})[cid]);
-    return h ? { id: 'daily', nav: '일별 매출', opt: 'daily', html: h.replace('<section class="panel dc">', '<section class="panel dc" id="sec-daily">') } : null;
+    return h ? { id: 'daily', nav: '일별 매출', opt: 'daily', html: wxInDaily(h.replace('<section class="panel dc">', '<section class="panel dc" id="sec-daily">'), [me], cid, cid === 'store' ? '점포' : (D.storeCats.filter(function (x) { return x[0] === cid; })[0] || [0, ''])[1]) } : null;
   };
   function gbHtml(gd, bd) {
     return '<div class="gbi"><div><h4 class="up">잘한 점</h4><ul class="pts">' + pts(gd.slice(0, 6)) + '</ul></div><div><h4 class="dn">부족한 점</h4><ul class="pts">' + pts(bd.slice(0, 6)) + '</ul></div></div>';
@@ -1571,7 +1605,6 @@ var KIMS = (function () {
         [sec('kpi', '핵심 지표', '', kpis(k, me, sc), null, 'bare')],
         [dailySec(me, 'store')],
         [hourSec(k, [me], 'store', NAME[me] + ' 전체', NAME[me])],
-        [wxSec([me], 'store', '점포')],
         progRow(k, y.gsT, y.gsL, (D.lymonth[me] || {}).store),
         [secG('wf', '증감 기여도', '매출 증감 기여도 <small class="h3s">CD별</small>', wfChart(cds.map(function (c) { return [c.name, c.y.gsT, c.y.gsL]; }), y.gsL, y.gsT, 'CD'), 'wf'),
           secG('mix', 'CD 구성비', 'CD 매출 구성비', mixChart(cds.map(function (c) { return [c.name, c.y.gsT, c.y.gsL]; })), 'mix')],
@@ -1645,7 +1678,6 @@ var KIMS = (function () {
         [sec('kpi', '핵심 지표', '', kpis(k, me, sc), null, 'bare')],
         [hasData('daily', id) ? dailySec(me, id) : sec('daily', '일별 매출', '일별 매출', NOT_YET(c[1] + ' 일별'), 'daily')],
         [hourSec(k, [me], id, NAME[me] + ' ' + c[1], c[1])],
-        [wxSec([me], id, c[1])],
         progRow(k, y.gsT, y.gsL, (D.lymonth[me] || {})[id]),
         pgList.length ? [secG('wf', '증감 기여도', '매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(pgList.map(function (pg) { var t = M(k, [me], scopePg(pg[0])); return [pg[1], t.gsT, t.gsL]; }), y.gsL, y.gsT, '구매그룹'), 'wf'),
           per.length < 2 ? null : secG('mix', '구성비', c[1] + ' 구매그룹 구성비', mixChart(per.map(function (p) { return [p.name, p.y.gsT, p.y.gsL]; })), 'mix')] : [],
@@ -1806,7 +1838,6 @@ var KIMS = (function () {
         [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', 'store'), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
         [allDailySec('store', '전체')],
         [hourSec(k, OPEN(), 'store', '킴스 영업 점포 합계', '킴스 합계')],
-        [wxSec(OPEN(), 'store', '킴스 합계')],
         progRow(k, kt.gsT, kt.gsL, (aggDaily(), (D.lymonth.ALL || {}).store)),
         [secG('wf', '증감 기여도', '매출 증감 기여도 <small class="h3s">CD별</small>', wfChart(D.storeCats.map(function (c) { var t = M(k, ALL(), scopeCat(c[0], k)); return [c[1], t.gsT, t.gsL]; }), kt.gsL, kt.gsT, 'CD'), 'wf'),
           sec('grpc', '그룹 비교', '그룹별 증감 비교', grpChart(k, sc), 'grpc')],
@@ -1836,7 +1867,7 @@ var KIMS = (function () {
     if (!hasData('daily', cid)) return sec('daily', '일별 매출', '일별 매출', NOT_YET(cname + ' 일별'), 'daily');
     var h = dailyChart('ALL', cid, (D.lymonth.ALL || {})[cid]);
     if (!h) return null;
-    return { id: 'daily', nav: '일별 매출', opt: 'daily', html: h.replace('<section class="panel dc">', '<section class="panel dc" id="sec-daily">').replace('<h3>일별 매출</h3>', '<h3>일별 매출 <small class="h3s">킴스 합계 ' + ALL().length + '점</small></h3>') };
+    return { id: 'daily', nav: '일별 매출', opt: 'daily', html: wxInDaily(h.replace('<section class="panel dc">', '<section class="panel dc" id="sec-daily">').replace('<h3>일별 매출</h3>', '<h3>일별 매출 <small class="h3s">킴스 합계 ' + ALL().length + '점</small></h3>'), OPEN(), cid, cid === 'store' ? '킴스 합계' : '킴스 ' + cname) };
   }
 
   // ── 전점 요약 · CD별 (리더용) ──
@@ -1876,7 +1907,6 @@ var KIMS = (function () {
         pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf)] : [],
         [allDailySec(id, c[1])],
         [hourSec(k, OPEN(), id, '킴스 영업 점포 ' + c[1] + ' 합계', c[1])],
-        [wxSec(OPEN(), id, '킴스 ' + c[1])],
         progRow(k, kt.gsT, kt.gsL, (aggDaily(), (D.lymonth.ALL || {})[id])),
         [pgs.length ? secG('wf', '증감 기여도', c[1] + ' 매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(pgs.map(function (pg) { var t = M(k, ALL(), scopePg(pg[0])); return [pg[1], t.gsT, t.gsL]; }), kt.gsL, kt.gsT, '구매그룹'), 'wf') : null,
           sec('grpc', '그룹 비교', '그룹별 ' + c[1] + ' 증감 비교', grpChart(k, sc), 'grpc')],
@@ -2056,7 +2086,7 @@ var KIMS = (function () {
   function tabsInit() { TAB_IDS.forEach(function (id) { var c = D.storeCats.filter(function (x) { return x[0] === id; })[0]; if (c) TABS.push([c[0], c[1]]); }); }
   var hasData = function (kind, id) { return !D.have || (D.have[kind] || []).indexOf(id) >= 0; };
   var NOT_YET = function (what) { return '<p class="note pend">' + what + ' 데이터는 아직 받지 않았습니다. 다음 데이터 갱신부터 표시됩니다.</p>'; };
-  var OPT = [['daily', '일별 매출'], ['hour', '시간대별 매출'], ['wx', '일별 날씨'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출'], ['big', '큰판'], ['heat', '성장율 신호등'], ['mc', 'MC 증감 (CD 탭)'], ['top', '상위 15개 상품 (CD 탭)'], ['quad', '건수×건단가 (전점 요약)'], ['prog', '월 진도 (월간)'], ['wf', '증감 기여도'], ['mix', '구성비'], ['grank', '성장율 순위 그래프 (전점)'], ['grpc', '그룹 비교 (전점)']];
+  var OPT = [['daily', '일별 매출'], ['hour', '시간대별 매출'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출'], ['big', '큰판'], ['heat', '성장율 신호등'], ['mc', 'MC 증감 (CD 탭)'], ['top', '상위 15개 상품 (CD 탭)'], ['quad', '건수×건단가 (전점 요약)'], ['prog', '월 진도 (월간)'], ['wf', '증감 기여도'], ['mix', '구성비'], ['grank', '성장율 순위 그래프 (전점)'], ['grpc', '그룹 비교 (전점)']];
   var ST = { k: 'D', s: 'all', t: 'store', v: 'report' };
   function view() {
     if (ST.v === 'stats') return statsView();
@@ -2730,7 +2760,7 @@ var KIMS = (function () {
 <script>window.KIMS_API="https://script.google.com/macros/s/AKfycby4V51vRDZlyWaNZfmM3tOIjaFH-N8dMDUQlez50uqJKX0OPwQvb4NiRK11Wt9Wib90pw/exec";window.KIMS_LOGO="data:image/png;base64,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";</script>
 <script>/* 웹(GitHub Pages)용: 로그인 → 메뉴 화면(포털) → 매출 리포트 / 공지사항 / 사용자 관리
    화면 파일에는 매출 데이터가 없고, 승인된 사람이 로그인해야 API(Apps Script)가 데이터를 내려준다.
-   주소 뒤 # 으로 화면 구분: (없음) 메뉴 화면 · #report 매출 리포트 · #notice 공지사항 · #admin 사용자 관리 */
+   주소 뒤 # 으로 화면 구분: (없음) 메뉴 화면 · #report 매출 리포트 · #notice 공지사항 · #admin 사용자 관리 · #version 버전·업데이트 내역 */
 (function () {
   'use strict';
   var API = window.KIMS_API, LOGO = window.KIMS_LOGO || '', DOMAINS = ['eland.co.kr'];
@@ -2767,6 +2797,7 @@ var KIMS = (function () {
     back: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
     late: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
     cloudOff: '<svg viewBox="0 0 24 24"><path d="M8.5 6.4A6 6 0 0 1 18.4 11a3.6 3.6 0 0 1 1.9 5.9M17 18H7a4.5 4.5 0 0 1-1.4-8.8"/><path d="M3 3l18 18"/></svg>',
+    ver: '<svg viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>',
     refresh: '<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.9-3M4 5v3h3M4 13a8 8 0 0 0 14.9 3M20 19v-3h-3"/></svg>',
   };
   var logoImg = function (cls) { return LOGO ? '<img class="' + cls + '" src="' + LOGO + '" alt="킴스클럽">' : '<b class="' + cls + ' txt">KIM\'S CLUB</b>'; };
@@ -2941,9 +2972,9 @@ var KIMS = (function () {
     if (!a || !a.token) return showGate('login');
     var h = location.hash.replace(/^#/, ''), sub = h.split('/')[0];
     // 메뉴 화면: (없음) · notice · admin / 그 밖의 주소(#report, 리포트가 쓰는 #점포-탭-기간)는 리포트
-    if (h && sub !== 'notice' && sub !== 'admin') return openReport();
+    if (h && sub !== 'notice' && sub !== 'admin' && sub !== 'version') return openReport();
     setView('portal');
-    PV = sub === 'notice' ? 'notice' : sub === 'admin' && a.admin ? 'admin' : 'home';
+    PV = sub === 'notice' ? 'notice' : sub === 'version' ? 'version' : sub === 'admin' && a.admin ? 'admin' : 'home';
     if (PV === 'notice' && h.split('/')[1]) OPEN[h.split('/')[1]] = true;
     drawPortal();
     portal.scrollTop = 0;
@@ -2954,7 +2985,7 @@ var KIMS = (function () {
   var go = function (h) { if (location.hash.replace(/^#/, '') === h) route(); else location.hash = h; };
 
   // ───────── 메뉴 화면(포털) ─────────
-  var P = null, PV = 'home', OPEN = {}, EDIT = null, USERS = null, UF = 'pending', popShown = false, MINE = {}; // MINE: 이 화면에서 직접 쓴 공지(팝업 제외)
+  var P = null, PV = 'home', OPEN = {}, EDIT = null, USERS = null, UF = 'pending', popShown = false, MINE = {}, VEDIT = null; // VEDIT: 수정 중인 버전 기록 · MINE: 이 화면에서 직접 쓴 공지(팝업 제외)
   var MENU = [
     { id: 'report', t: '매출 리포트', d: '킴스클럽 매출 실적', icon: 'report' },
     { id: 'check', t: '매장 점검 앱', d: '준비중', icon: 'check', soon: true },
@@ -2981,6 +3012,7 @@ var KIMS = (function () {
     var a = get() || {}, body;
     if (PV === 'notice') body = noticeView();
     else if (PV === 'admin') body = adminView();
+    else if (PV === 'version') body = versionView();
     else body = homeView(a);
     portal.innerHTML = topbar() + '<main class="pmain">' + body + '</main>';
   }
@@ -2994,13 +3026,14 @@ var KIMS = (function () {
     else noticeBox = '<ul class="nlist mini">' + P.notices.slice(0, 3).map(function (n) {
       return '<li><a href="#notice/' + esc(n.id) + '">' + (n.pinned ? '<em class="tag">고정</em>' : '') + '<span class="nt">' + esc(n.title) + '</span>' + (n.unread ? '<i class="nbad">N</i>' : '') + '<time>' + kst(n.at).slice(5) + '</time></a></li>';
     }).join('') + '</ul>';
-    return '<section class="phello"><h1>' + esc((P && P.name) || a.name || '') + '님, 안녕하세요</h1><p>' + today + '</p></section>' +
+    return '<section class="phello"><h1>' + esc((P && P.name) || a.name || '') + '님, 안녕하세요</h1><p>' + today + '<a href="#version" class="pver" title="업데이트 내역 보기">' + esc(curVer()) + '</a></p></section>' +
       '<section class="pnote"><div class="phead"><h2>공지사항</h2><a href="#notice">전체 보기</a></div>' + noticeBox + '</section>' +
       '<section><h2 class="psec">메뉴</h2><div class="pgrid">' + MENU.map(function (m, i) {
         return '<button type="button" class="pcard' + (m.soon ? ' soon' : ' big') + (m.id === 'report' && P && lagInfo(P.base) ? (lagInfo(P.base).pre ? ' late pre' : ' late') : '') + '" data-menu="' + m.id + '" style="--i:' + i + '">' +
           '<span class="pic">' + ICON[m.icon] + '</span><b>' + m.t + '</b><small>' + m.d + '</small>' + (m.soon ? '<em class="ptag">준비중</em>' : '<span class="pgo">열기 →</span>' + (m.id === 'report' ? baseBox() : '')) + '</button>';
       }).join('') + '</div></section>' +
-      (admin ? '<section><h2 class="psec adm">관리자 전용</h2><div class="pgrid"><button type="button" class="pcard adm" data-menu="notice" style="--i:6"><span class="pic">' + ICON.notice + '</span><b>공지사항 등록</b><small>공지 쓰기 · 고정 · 팝업 알림</small>' + (ur ? '<i class="pbadge">N ' + ur + '</i>' : '') + '</button><button type="button" class="pcard adm" data-menu="admin" style="--i:7"><span class="pic">' + ICON.users + '</span><b>사용자 관리</b><small>열람 요청 승인 · 비밀번호 초기화</small>' + (P && P.pending ? '<i class="pbadge">대기 ' + P.pending + '</i>' : '') + '</button></div></section>' : '');
+      (admin ? '<section><h2 class="psec adm">관리자 전용</h2><div class="pgrid"><button type="button" class="pcard adm" data-menu="notice" style="--i:6"><span class="pic">' + ICON.notice + '</span><b>공지사항 등록</b><small>공지 쓰기 · 고정 · 팝업 알림</small>' + (ur ? '<i class="pbadge">N ' + ur + '</i>' : '') + '</button><button type="button" class="pcard adm" data-menu="admin" style="--i:7"><span class="pic">' + ICON.users + '</span><b>사용자 관리</b><small>열람 요청 승인 · 비밀번호 초기화</small>' + (P && P.pending ? '<i class="pbadge">대기 ' + P.pending + '</i>' : '') + '</button>' +
+        '<button type="button" class="pcard adm" data-menu="version" style="--i:8"><span class="pic">' + ICON.ver + '</span><b>버전 관리</b><small>버전 변경 · 업데이트 내용 기록</small><i class="pbadge">' + esc(curVer()) + '</i></button></div></section>' : '');
   }
   // 데이터 기준일: 서버(포털 응답) → 없으면 이 기기에 저장된 리포트 데이터
   function baseBox() {
@@ -3031,6 +3064,33 @@ var KIMS = (function () {
     };
   }
   function subHead(t, extra) { return '<div class="psub"><a href="#" data-act="home" class="pback">' + ICON.back + '메뉴</a><h1>' + t + '</h1>' + (extra || '') + '</div>'; }
+
+  // ── 버전 · 업데이트 기록 (2026-11-22) ── 서버 '버전' 시트의 최신 행 = 현재 버전. 보기는 모두, 쓰기는 관리자
+  var FIRST_VER = 'ver1.0';
+  function curVer() { return (P && P.ver) || FIRST_VER; }
+  function nextVer() { var m = /^(.*?)(\d+)\.(\d+)$/.exec(curVer()); return m ? m[1] + m[2] + '.' + (Number(m[3]) + 1) : ''; }
+  function versionForm() {
+    var v = VEDIT === 'new' ? { ver: nextVer(), at: ymd(Date.now() + 9 * 3600e3), note: '' } : ((P.versions || []).filter(function (x) { return x.id === VEDIT; })[0] || {});
+    var at = v.at && v.at.length > 10 ? ymd(Date.parse(v.at) + 9 * 3600e3) : v.at || '';
+    return '<form class="pform" id="vForm"><h3>' + (VEDIT === 'new' ? '새 버전 기록' : '버전 기록 수정') + '</h3>' +
+      '<div class="pvrow"><label>버전<input id="vVer" maxlength="20" required placeholder="예: ver1.1" value="' + esc(v.ver) + '"></label><label>적용일<input id="vAt" type="date" required value="' + esc(at) + '"></label></div>' +
+      '<label>업데이트 내용<textarea id="vNote" rows="6" maxlength="5000" placeholder="한 줄에 하나씩 적으면 목록으로 보입니다">' + esc(v.note) + '</textarea></label>' +
+      '<p class="phint">적용일이 가장 최근인 기록이 메인 화면에 보이는 현재 버전이 됩니다.</p>' +
+      '<div class="prow"><button type="button" class="pbtn ghost" data-act="vcancel">취소</button><button type="submit" class="pbtn pri" id="vSave">' + (VEDIT === 'new' ? '등록' : '저장') + '</button></div></form>';
+  }
+  function versionView() {
+    var admin = P && P.admin, list, vs = P && P.versions;
+    if (!P) list = '<div class="pskel"></div><div class="pskel"></div>';
+    else if (!vs) list = '<p class="pempty">업데이트 기록을 불러오지 못했습니다(서버 업데이트 전) · 현재 ' + esc(curVer()) + '</p>';
+    else if (!vs.length) list = '<p class="pempty">등록된 업데이트 기록이 없습니다</p>';
+    else list = '<ol class="vlist">' + vs.map(function (v, i) {
+      var lines = String(v.note || '').split(/\n+/).map(function (x) { return x.replace(/^\s*[-·•*]\s*/, '').trim(); }).filter(Boolean);
+      return '<li' + (i ? '' : ' class="cur"') + '><div class="vh"><b>' + esc(v.ver) + '</b>' + (i ? '' : '<em class="tag">현재</em>') + '<time>' + (v.at ? kst(v.at) : '') + '</time></div>' +
+        (lines.length ? '<ul class="vn">' + lines.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p class="pempty sm">내용 없음</p>') +
+        (admin ? '<div class="prow end"><span class="nmeta">' + esc(v.author || '') + (v.upd ? ' · 수정 ' + kst(v.upd, true) : '') + '</span><button type="button" class="pbtn ghost" data-act="vedit" data-id="' + esc(v.id) + '">수정</button><button type="button" class="pbtn danger" data-act="vdel" data-id="' + esc(v.id) + '">삭제</button></div>' : '') + '</li>';
+    }).join('') + '</ol>';
+    return subHead('버전 · 업데이트 내역', admin && !VEDIT ? '<button type="button" class="pbtn pri" data-act="vnew">새 버전</button>' : '') + (VEDIT && admin ? versionForm() : '') + list;
+  }
 
   // ── 공지사항 ──
   function noticeForm() {
@@ -3149,13 +3209,14 @@ var KIMS = (function () {
     var t = e.target.closest('[data-act],[data-menu],[data-nid],[data-uf],[data-uop]'); if (!t) return;
     var act = t.dataset.act;
     if (t.tagName === 'A' && act) e.preventDefault();
-    if (act === 'home') { EDIT = null; go(''); }
+    if (act === 'home') { EDIT = null; VEDIT = null; go(''); }
     else if (act === 'logout') signOut(false);
     else if (t.dataset.menu) {
       var m = t.dataset.menu;
       if (m === 'report') go('report');
       else if (m === 'notice') go('notice');
       else if (m === 'admin') go('admin');
+      else if (m === 'version') go('version');
       else toast('준비중입니다');
     }
     else if (t.dataset.nid) {
@@ -3167,6 +3228,14 @@ var KIMS = (function () {
     else if (act === 'nnew') { EDIT = 'new'; drawPortal(); var f = $('nTitle'); if (f) f.focus(); }
     else if (act === 'nedit') { EDIT = t.dataset.id; drawPortal(); portal.scrollTop = 0; }
     else if (act === 'ncancel') { EDIT = null; drawPortal(); }
+    else if (act === 'vnew') { VEDIT = 'new'; drawPortal(); var vf = $('vNote'); if (vf) vf.focus(); }
+    else if (act === 'vedit') { VEDIT = t.dataset.id; drawPortal(); portal.scrollTop = 0; }
+    else if (act === 'vcancel') { VEDIT = null; drawPortal(); }
+    else if (act === 'vdel') {
+      if (CONFIRM !== 'vdel' + t.dataset.id) { CONFIRM = 'vdel' + t.dataset.id; t.textContent = '한 번 더 누르면 삭제'; setTimeout(function () { if (CONFIRM === 'vdel' + t.dataset.id) { CONFIRM = null; t.textContent = '삭제'; } }, 3000); return; }
+      CONFIRM = null; t.disabled = true;
+      authApi({ action: 'versionDelete', id: t.dataset.id }).then(function (r) { if (!r.ok) throw new Error(r.err); toast('삭제했습니다'); return refreshPortal(); }, function (err) { t.disabled = false; toast(err.message, true); });
+    }
     else if (act === 'ndel') {
       if (CONFIRM !== 'del' + t.dataset.id) { CONFIRM = 'del' + t.dataset.id; t.textContent = '한 번 더 누르면 삭제'; setTimeout(function () { if (CONFIRM === 'del' + t.dataset.id) { CONFIRM = null; t.textContent = '삭제'; } }, 3000); return; }
       CONFIRM = null; t.disabled = true;
@@ -3187,6 +3256,7 @@ var KIMS = (function () {
     }
   });
   portal.addEventListener('submit', function (e) {
+    if (e.target.id === 'vForm') { e.preventDefault(); return saveVersion(); }
     if (e.target.id !== 'nForm') return; e.preventDefault();
     var title = $('nTitle').value.trim(), b = $('nSave');
     if (!title) { toast('제목을 입력해 주세요', true); return; }
@@ -3198,6 +3268,17 @@ var KIMS = (function () {
       return refreshPortal().then(function () { var n = P && P.notices && P.notices.filter(function (x) { return x.id === r.id; })[0]; if (n && n.unread) { markRead([n.key]); drawPortal(); } }); // 쓴 사람에겐 '새 공지' 표시 안 함
     }, function (err) { b.disabled = false; b.textContent = isNew ? '등록' : '저장'; toast(err.message, true); });
   });
+
+  function saveVersion() {
+    var ver = $('vVer').value.trim(), at = $('vAt').value, b = $('vSave'), isNew = VEDIT === 'new';
+    if (!ver) { toast('버전을 입력해 주세요', true); return; }
+    b.disabled = true; b.textContent = '저장 중…';
+    authApi({ action: 'versionSave', id: isNew ? '' : VEDIT, ver: ver, at: at, note: $('vNote').value }).then(function (r) {
+      if (!r.ok) throw new Error(r.err);
+      VEDIT = null; toast(isNew ? '새 버전을 기록했습니다' : '버전 기록을 수정했습니다');
+      return refreshPortal();
+    }, function (err) { b.disabled = false; b.textContent = isNew ? '등록' : '저장'; toast(err.message, true); });
+  }
 
   // ───────── 매출 리포트 ─────────
   var started = false, loading = false, lastCheck = 0;
