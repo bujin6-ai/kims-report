@@ -420,7 +420,7 @@ body.nav-open #nav{transform:none}
 #nav .toc a.on{background:none;border-color:transparent;font-weight:700}
 #nav .nv.home>li>button{background:var(--panel);border-color:var(--line)}
 @media (min-width:1024px){#nav .ni{width:21px;height:21px}#nav .toc a svg{width:19px;height:19px}}
-.dt2{max-width:none;width:100%}.dt2 th.gtc{color:var(--fg)}.dt2 tr>td:last-child,.dt2 tr>th.dist{border-left:1px solid var(--line)}
+.dt2{max-width:none;width:100%}.dt2 th.gtc{color:var(--fg)}.dt2 tr>td.dist,.dt2 tr>th.dist{border-right:1px solid var(--line)}
 .dt2 thead th{vertical-align:bottom}.dt2 thead th small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
 .dt2 tbody tr{border-bottom:1px solid var(--line)}.dt2 tbody tr:last-child{border-bottom:0}
 .dt2 tbody th,.dt2 tbody td{padding-top:10px;padding-bottom:10px;vertical-align:middle}
@@ -485,7 +485,7 @@ body.nav-open #nav{transform:none}
 .kpi .spw{display:flex;align-items:flex-end;gap:6px;margin-top:8px}
 .spk{display:block;overflow:visible}.spk path{fill:none;stroke-linecap:round;stroke-linejoin:round}.spk .t{stroke:var(--ac);stroke-width:2}.spk .l{stroke:var(--ly);stroke-width:1.6;stroke-dasharray:3 3}.spk circle{fill:var(--ac)}
 .spl{font-size:11px;color:var(--muted)}
-.dt2 th.dist{width:170px}.dt2 th.dist,.dt2 td.dist{text-align:center;border-left:1px solid var(--line)}
+.dt2 th.dist{width:170px}.dt2 th.dist,.dt2 td.dist{text-align:center;border-right:1px solid var(--line)}
 .dt2 th.dist small{display:block;font-size:10.5px;font-weight:500;color:var(--muted);white-space:nowrap}.dt2 th.dist i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px 0 6px;vertical-align:0}.dt2 th.dist i.dme{background:var(--ac)}.dt2 th.dist i.dcp{background:#636366}
 .pbar{display:block;margin:0 auto;overflow:visible}.pbar line{stroke:var(--line);stroke-width:2}.pbar line.t{stroke:var(--muted);stroke-width:1.5}.pbar .e{font-size:11px;fill:var(--muted);font-weight:600}.pbar .r{font-size:11px;fill:var(--fg);font-weight:700}.pbar circle{fill:var(--fg);stroke:var(--panel);stroke-width:2}.pbar circle.hi{fill:var(--good)}.pbar circle.lo{fill:var(--bad)}.dt2 th.dist{width:200px}.dstrip{display:block;margin:0 auto;overflow:visible}.dstrip line{stroke:var(--line);stroke-width:2}.dstrip line.md{stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}
 .dstrip circle.o{fill:color-mix(in srgb,var(--muted) 45%,transparent)}.dstrip circle.c{fill:#636366;stroke:var(--panel);stroke-width:1.5}.dstrip circle.m{fill:var(--ac);stroke:var(--panel);stroke-width:2}
@@ -511,7 +511,8 @@ body.nav-open #nav{transform:none}
 @media (max-width:700px){.qlg .qh{margin-left:0}.quad.qd{display:none}.quad.qm{display:block}
 .quad.qm .tk{font-size:10px}.quad.qm .tk.in{paint-order:stroke;stroke:var(--panel);stroke-width:3px}.quad.qm .ax{font-size:10.5px}.quad.qm .qn text{font-size:11px}.quad.qm .qp text{font-size:10.5px;stroke-width:3px}}
 /* UI 보강(2026-11-14): 비교점 변경 버튼 · 머리글 고정 · 줄 강조 · 모바일 그래프 카드 · 점포 검색 · 기간 전환 효과 · 흐린 줄 */
-.cmpbtn{display:inline-flex;align-items:center;gap:5px;margin-left:10px;vertical-align:3px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ac);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s}
+.cmpbtn{display:inline-flex;align-items:center;gap:5px;margin-left:10px;vertical-align:middle;line-height:1.2;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ac);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s}
+.panel>h3:has(.cmpbtn){display:flex;align-items:center;flex-wrap:wrap}.panel>h3 .cmpbtn{margin-left:12px}
 .cmpbtn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media (hover:hover){.cmpbtn:hover{background:var(--ac-soft);border-color:color-mix(in srgb,var(--ac) 40%,transparent)}}
 #fsCmp.flash{animation:flashCmp 1.4s ease}@keyframes flashCmp{0%,40%{box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 35%,transparent);border-radius:12px}100%{box-shadow:0 0 0 0 transparent}}
@@ -850,8 +851,14 @@ tr.dim>*{opacity:.42}
 .wxb{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 12px 5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .15s ease}
 .wxb svg{flex:none}.wxb:hover{border-color:color-mix(in srgb,var(--ac) 45%,var(--line))}.wxb:active{transform:scale(.97)}
 .wxb[aria-expanded=true]{background:color-mix(in srgb,var(--ac) 12%,var(--panel));border-color:var(--ac);color:var(--ac)}
-.wxp{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);animation:tabIn .28s cubic-bezier(.2,.7,.2,1)}
-.wxp[hidden]{display:none}.wxp h4{margin:0 0 4px;font-size:15px;font-weight:800}
+.wxp{display:none!important}
+/* 날씨 팝업(#wxm, body 바로 아래) */
+.wxm{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.wxbox{position:relative;background:var(--panel);color:var(--fg);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.3);width:min(980px,100%);max-height:calc(100dvh - 32px);overflow:auto;padding:20px 20px 18px;animation:tabIn .28s cubic-bezier(.2,.7,.2,1)}
+.wxbox h4{margin:0 44px 4px 0;font-size:17px;font-weight:800}
+.wxx{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:0;background:var(--seg);color:var(--fg);display:grid;place-items:center;cursor:pointer}
+.wxx svg{stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}.wxx:hover{background:color-mix(in srgb,var(--fg) 12%,var(--panel))}
+@media (max-width:600px){.wxm{padding:8px}.wxbox{padding:14px 10px 12px;border-radius:14px;max-height:calc(100dvh - 16px)}.wxbox h4{font-size:15px}}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
@@ -1068,7 +1075,7 @@ var KIMS = (function () {
     var mr = div(gmT * 100, gsT), mrL = div(gmL * 100, gsL);
     var lr = hasLoss ? div(lo[0] * 100, lo[1]) : null, lrL = hasLoss ? div(lo[2] * 100, lo[3]) : null;
     return {
-      lr: lr, lrL: lrL, lrD: lr != null && lrL != null ? lr - lrL : null,
+      lr: lr, lrL: lrL, lrD: lr != null && lrL != null ? lr - lrL : null, lrDn: lr != null && lrL != null ? lrL - lr : null,
       gsT: gsT, gsL: gsL, growth: gr(gsT, gsL),
       tg: tgT || null, ach: tgT > 0 && tgA > 0 ? tgA / tgT : null,
       mr: mr, mrL: mrL, mrD: mr != null && mrL != null ? mr - mrL : null,
@@ -1272,19 +1279,22 @@ var KIMS = (function () {
     var R = [
       ['매출<small>백만원</small>', function (t) { return t.gsT > 0 ? man(t.gsT) : '-'; }, function (t) { return chg(t.growth, pct(t.growth)); }, 'growth', function (t) { return '전년 ' + man(t.gsL); }],
       ['매총율', function (t) { return t.mr == null ? '-' : f1(t.mr) + '%'; }, function (t) { return chg(t.mrD, pp(t.mrD)); }, 'mrD', function (t) { return t.mrL == null ? '' : '전년 ' + f1(t.mrL) + '%'; }],
+      // 손실율: 낮을수록 좋음 → 증감 색 반대, 순위는 많이 줄어든 점포가 1위(lrDn = −증감)
+      ['손실율<small>마크다운+폐기+재고차이</small>', function (t) { return t.lr == null ? '-' : f2(t.lr) + '%'; }, function (t) { return t.lrD == null ? '' : '<small class="' + clsInv(t.lrD) + '">' + pp2(t.lrD) + '</small>'; }, 'lrDn', function (t) { return t.lrL == null ? '' : '전년 ' + f2(t.lrL) + '%'; }],
       ['건수<small>일평균</small>', function (t) { return t.cnt == null ? '-' : won(t.cnt) + '건'; }, function (t) { return chg(t.cntG, pct(t.cntG)); }, 'cntG', function (t) { return t.cntL == null ? '' : '전년 ' + won(t.cntL) + '건'; }],
       ['건단가<small>만원</small>', function (t) { return man1(t.atv); }, function (t) { return chg(t.atvG, pct(t.atvG)); }, 'atvG', function (t) { return t.atvL == null ? '' : '전년 ' + man1(t.atvL) + '만원'; }],
       ['평당매출<small>만원/평</small>', function (t) { return t.gsT > 0 ? man1(t.py) : '-'; }, function (t) { return chg(t.pyG, pct(t.pyG)); }, 'pyG', function (t) { return t.pyL == null ? '' : '전년 ' + man1(t.pyL); }],
       ['저녁장 매출<small>백만원 · 17시 이후</small>', function (t) { return t.eve == null ? '-' : man(t.eve); }, function (t) { return chg(t.eveG, pct(t.eveG)); }, 'eveG', function (t) { return t.eveL == null ? '' : '전년 ' + man(t.eveL); }],
       ['저녁장 비중', function (t) { return t.eve == null || !t.amt ? '-' : f1(t.eve / t.amt * 100) + '%'; }, function () { return ''; }, null, function () { return ''; }],
     ];
-    return '<div class="dtw">' + (caption ? '<h4>' + esc(caption) + '</h4>' : '') + '<table class="dt dt2 n' + cols.length + '"><colgroup><col class="c0"><col>' + cols.slice(1).map(function () { return '<col>'; }).join('') + '</colgroup>' +
-      '<thead><tr><th></th><th class="ya">' + esc(NAME[me]) + '</th>' + CC.map(function (c, i) { return '<th' + (i === CC.length - 1 ? ' class="gtc"' : '') + '>' + esc(c.name) + '</th>'; }).join('') + '<th class="dist">' + esc(NAME[me]) + ' 순위 위치<small>킴스 영업 점포 중 · 증감 기준</small></th></tr></thead><tbody>' +
+    return '<div class="dtw">' + (caption ? '<h4>' + esc(caption) + '</h4>' : '') + '<table class="dt dt2 n' + cols.length + '"><colgroup><col class="c0"><col class="cdist"><col>' + cols.slice(1).map(function () { return '<col>'; }).join('') + '</colgroup>' +
+      // 순위 위치 막대는 항목명 바로 오른쪽(점포 열 앞)에 둔다(2026-11-22)
+      '<thead><tr><th></th><th class="dist">' + esc(NAME[me]) + ' 순위 위치<small>킴스 영업 점포 중 · 증감 기준</small></th><th class="ya">' + esc(NAME[me]) + '</th>' + CC.map(function (c, i) { return '<th' + (i === CC.length - 1 ? ' class="gtc"' : '') + '>' + esc(c.name) + '</th>'; }).join('') + '</tr></thead><tbody>' +
       R.map(function (x) {
-        return '<tr><th>' + x[0] + '</th>' + cols.map(function (t, i) {
+        return '<tr><th>' + x[0] + '</th><td class="dist">' + (x[3] ? dotStrip(k, sc, x[3], me) : '') + '</td>' + cols.map(function (t, i) {
           var ly = t ? x[4](t) : '';
           return '<td' + (i === 0 ? ' class="ya"' : '') + (ly ? ' title="' + esc(ly) + '"' : '') + '><span class="vv"><b>' + (t ? x[1](t) : '-') + '</b>' + (t ? x[2](t) : '') + '</span>' + (x[3] && (i === 0 || CC[i - 1].plants.length === 1) ? '<span class="crk">' + rk(x[3], i === 0 ? me : CC[i - 1].plants[0]) + '</span>' : '') + '</td>';
-        }).join('') + '<td class="dist">' + (x[3] ? dotStrip(k, sc, x[3], me) : '') + '</td></tr>';
+        }).join('') + '</tr>';
       }).join('') + '</tbody></table></div>';
   }
   // 순위 위치 막대: 왼쪽 = 상위(1위), 오른쪽 = 하위 — 우리점 위치에 점
@@ -1423,30 +1433,43 @@ var KIMS = (function () {
     }).join('');
     return '<ol class="wxc">' + head + pad + days + '</ol>';
   }
-  // 일별 날씨는 따로 항목으로 두지 않고 '일별 매출' 제목 옆 날씨 버튼을 누르면 그래프 아래에 펼친다(2026-11-22).
-  // 펼침 상태는 점포·탭·기간을 바꿔도 유지(WXOPEN). 닫혀 있으면 날씨를 불러오지 않는다.
-  var WXOPEN = false;
+  // 일별 날씨는 따로 항목으로 두지 않고 '일별 매출' 제목 옆 날씨 버튼을 누르면 팝업(#wxm)으로 띄운다(2026-11-22).
+  // 섹션 안 .wxp 는 팝업 내용을 담아 두는 숨김 틀. 누르기 전에는 날씨를 불러오지 않는다.
   var WXBTN = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="8.5" cy="8.5" r="3.2" fill="#f5a623"/><g stroke="#f5a623" stroke-width="1.6" stroke-linecap="round"><path d="M8.5 2.2v1.6M2.2 8.5h1.6M4 4l1.1 1.1M13 4l-1.1 1.1"/></g><path d="M8 20h9.5a3.5 3.5 0 0 0 .4-7 4.9 4.9 0 0 0-9.4-1.2A4.1 4.1 0 0 0 8 20z" fill="#aeb7c2"/></svg>';
   var wxInDaily = function (html, plants, key, where) {
     var p0 = plants.length === 1 ? plants[0] : null, city = p0 ? WXSTORE[p0] : 'seoul';
     var cname = city ? WXCITY[city][0] : '서울';
     var note = (p0 ? (city ? cname + ' 날씨' : '점포 위치 확인 불가 → 서울 날씨') : '여러 점포 합계 → 서울 날씨') + ' · 큰 글씨 = 금년(최고°/최저°), 작은 줄 = 전년 같은 요일 · 날짜 옆 % = 그날 ' + where + ' 매출 전년비 · 출처 Open-Meteo';
-    var btn = '<button type="button" class="wxb" aria-expanded="' + WXOPEN + '" aria-controls="wxp-daily" title="일별 날씨 보기">' + WXBTN + '<span>날씨</span></button>';
-    var pane = '<div class="wxp" id="wxp-daily"' + (WXOPEN ? '' : ' hidden') + '><h4>일별 날씨 <small class="h3s">금년 · 전년 · 예보</small></h4><p class="note">' + note + '</p><div class="wxw" data-city="' + (city || 'seoul') + '" data-p="' + (p0 || 'ALL') + '" data-k="' + key + '"><p class="note pend">날씨를 불러오는 중…</p></div></div>';
+    var btn = '<button type="button" class="wxb" aria-haspopup="dialog" aria-controls="wxp-daily" title="일별 날씨 보기">' + WXBTN + '<span>날씨</span></button>';
+    var pane = '<div class="wxp" id="wxp-daily" hidden><h4 id="wxmT">일별 날씨 <small class="h3s">금년 · 전년 · 예보</small></h4><p class="note">' + note + '</p><div class="wxw" data-city="' + (city || 'seoul') + '" data-p="' + (p0 || 'ALL') + '" data-k="' + key + '"><p class="note pend">날씨를 불러오는 중…</p></div></div>';
     var i = html.indexOf('</h3>'), j = html.lastIndexOf('</section>');
     return html.slice(0, i) + btn + html.slice(i, j) + pane + html.slice(j);
   };
+  function wxClose() {
+    var m = window.document.getElementById('wxm'); if (!m) return;
+    var back = m._from; m.remove(); if (back && back.isConnected) back.focus({ preventScroll: true });
+  }
+  function wxOpen(b) {
+    var doc = window.document, src = doc.getElementById(b.getAttribute('aria-controls')); if (!src) return;
+    wxClose();
+    var m = doc.createElement('div'); m.id = 'wxm'; m.className = 'wxm'; m._from = b;
+    m.innerHTML = '<div class="wxbox" role="dialog" aria-modal="true" aria-labelledby="wxmT"><button type="button" class="wxx" aria-label="닫기"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' + src.innerHTML + '</div>';
+    m.addEventListener('click', function (e) { if (e.target === m || e.target.closest('.wxx')) wxClose(); });
+    doc.body.appendChild(m);
+    m.querySelector('.wxx').focus({ preventScroll: true });
+    wxBoxes();
+  }
   function wxFill() {
     var doc = window.document;
+    if (!doc.body.dataset.wxk) { doc.body.dataset.wxk = '1'; doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') wxClose(); }); }
+    wxClose(); // 다시 그리면(점포·탭·기간 변경) 열려 있던 팝업은 닫는다
     [].forEach.call(doc.querySelectorAll('#main .wxb'), function (b) {
       if (b.dataset.on) return; b.dataset.on = '1';
-      b.addEventListener('click', function () {
-        var p = doc.getElementById(b.getAttribute('aria-controls')); if (!p) return;
-        WXOPEN = p.hidden; p.hidden = !WXOPEN; b.setAttribute('aria-expanded', WXOPEN);
-        if (WXOPEN) wxFill();
-      });
+      b.addEventListener('click', function () { wxOpen(b); });
     });
-    [].forEach.call(doc.querySelectorAll('#main .wxw'), function (box) {
+  }
+  function wxBoxes() {
+    [].forEach.call(window.document.querySelectorAll('#wxm .wxw'), function (box) {
       if (box.closest('[hidden]') || box.dataset.done) return; box.dataset.done = '1';
       var city = box.dataset.city, p = box.dataset.p, k = box.dataset.k, today = kstToday();
       if (p === 'ALL') aggDaily();
@@ -3083,10 +3106,12 @@ var KIMS = (function () {
   function versionForm() {
     var v = VEDIT === 'new' ? { ver: nextVer(), at: ymd(Date.now() + 9 * 3600e3), note: '' } : ((P.versions || []).filter(function (x) { return x.id === VEDIT; })[0] || {});
     var at = v.at && v.at.length > 10 ? ymd(Date.parse(v.at) + 9 * 3600e3) : v.at || '';
+    var lnk = VEDIT !== 'new' && P.notices ? P.notices.filter(function (n) { return n.id === 'v' + VEDIT; })[0] : null; // 이 버전에 연결된 공지
     return '<form class="pform" id="vForm"><h3>' + (VEDIT === 'new' ? '새 버전 기록' : '버전 기록 수정') + '</h3>' +
       '<div class="pvrow"><label>버전<input id="vVer" maxlength="20" required placeholder="예: ver1.1" value="' + esc(v.ver) + '"></label><label>적용일<input id="vAt" type="date" required value="' + esc(at) + '"></label></div>' +
       '<label>업데이트 내용<textarea id="vNote" rows="6" maxlength="5000" placeholder="한 줄에 하나씩 적으면 목록으로 보입니다">' + esc(v.note) + '</textarea></label>' +
-      '<p class="phint">적용일이 가장 최근인 기록이 메인 화면에 보이는 현재 버전이 됩니다.</p>' +
+      '<div class="pchk"><label><input type="checkbox" id="vNtc"' + (lnk || VEDIT === 'new' ? ' checked' : '') + '> 공지사항에도 올리기</label><label><input type="checkbox" id="vPop"' + (lnk && lnk.popup ? ' checked' : '') + '> 팝업으로 알림</label></div>' +
+      '<p class="phint">적용일이 가장 최근인 기록이 메인 화면에 보이는 현재 버전이 됩니다. 공지사항에도 올리면 \'' + '버전 업데이트 안내\' 공지가 함께 등록되고, 이 기록을 고치거나 지우면 공지도 같이 바뀝니다.</p>' +
       '<div class="prow"><button type="button" class="pbtn ghost" data-act="vcancel">취소</button><button type="submit" class="pbtn pri" id="vSave">' + (VEDIT === 'new' ? '등록' : '저장') + '</button></div></form>';
   }
   function versionView() {
@@ -3300,10 +3325,12 @@ var KIMS = (function () {
     var ver = $('vVer').value.trim(), at = $('vAt').value, b = $('vSave'), isNew = VEDIT === 'new';
     if (!ver) { toast('버전을 입력해 주세요', true); return; }
     b.disabled = true; b.textContent = '저장 중…';
-    authApi({ action: 'versionSave', id: isNew ? '' : VEDIT, ver: ver, at: at, note: $('vNote').value }).then(function (r) {
+    var ntc = $('vNtc').checked;
+    authApi({ action: 'versionSave', id: isNew ? '' : VEDIT, ver: ver, at: at, note: $('vNote').value, notice: ntc, popup: ntc && $('vPop').checked }).then(function (r) {
       if (!r.ok) throw new Error(r.err);
-      VEDIT = null; toast(isNew ? '새 버전을 기록했습니다' : '버전 기록을 수정했습니다');
-      return refreshPortal();
+      var nid = 'v' + r.id; MINE[nid] = 1; // 쓴 사람에겐 팝업·'새 공지' 표시 안 함
+      VEDIT = null; toast((isNew ? '새 버전을 기록했습니다' : '버전 기록을 수정했습니다') + (ntc ? ' · 공지사항에도 올렸습니다' : ''));
+      return refreshPortal().then(function () { var n = P && P.notices && P.notices.filter(function (x) { return x.id === nid; })[0]; if (n && n.unread) markRead([n.key]); });
     }, function (err) { b.disabled = false; b.textContent = isNew ? '등록' : '저장'; toast(err.message, true); });
   }
 
