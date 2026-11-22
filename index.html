@@ -403,6 +403,13 @@ body.nav-open #nav{transform:none}
 @media (hover:hover){#nav .nv>li>button:not([aria-current=page]):hover,#nav .ng summary:hover,#nav .sl button:not([aria-current=page]):hover,#nav .toc a:not(.on):hover{background:var(--hov);color:var(--fg)}#nav .sl button:hover span{color:inherit}}
 @media (min-width:1024px){.body{grid-template-columns:272px minmax(0,1fr)}#nav .nv>li>button{font-size:17px;padding:10px 12px}#nav .nv.home>li>button{font-size:15px}#nav .ni{width:21px;height:21px}#nav .nl{font-size:13px}#nav .nl small{font-size:12.5px}#nav .toc a{font-size:15.5px;padding:8px 10px}#nav .toc a svg{width:19px;height:19px}#nav .ng summary{font-size:15px;padding:8px 10px}#nav .ng summary small{font-size:11.5px}#nav .ng summary b,#nav .sl button b{font-size:13px}#nav .sl button{font-size:14.5px;padding:6px 10px}#nav .nv>li>button em{font-size:13px}}
 
+/* 넓은 화면(1600px 이상, 2026-11-22): 본문 폭 1,600px · 카드 6장 · 실적 표 7개 항목 한 번에(버튼 숨김) · 작은 항목 두 칸 */
+/* 손실율·저녁장 카드는 모든 화면에: 넓은 화면 6칸, PC·태블릿 3칸(3×2), 폰 2칸(2×3) */
+@media (min-width:601px) and (max-width:1599px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1600px){#main{max-width:1640px}
+.kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+.mt .msegw{display:none}.mt .mtbl [data-m]{display:table-cell!important}
+.mt .mtbl{font-size:13.5px}.mt .mtbl th,.mt .mtbl td{padding-left:6px;padding-right:6px}}
 /* 설정 창: PC에서 글자·버튼을 창 크기에 맞게 작게 */
 @media (min-width:1024px){#drawer{width:440px}
 #drawer .dh h2{font-size:18px}#drawer .fs legend{font-size:14.5px;margin-bottom:8px}#drawer .fs legend small{font-size:12px}
@@ -822,7 +829,7 @@ tr.dim>*{opacity:.42}
 .kpis>.kacc{grid-column:1/-1;order:9;margin-top:-10px}
 .kpis>.kacc.open{margin-top:0}
 .kpis>.kacc{animation:none}
-@media (max-width:600px){.kpis>.kpi:nth-child(-n+2){order:1}.kpis>.kpi:nth-child(n+3){order:3}.kpis>.kacc{order:4}.kpis[data-accrow="1"]>.kacc{order:2}}
+@media (max-width:600px){.kpis>.kpi:nth-child(-n+2){order:1}.kpis>.kpi:nth-child(n+3){order:3}.kpis>.kpi:nth-child(n+5){order:5}.kpis[data-accrow="3"]>.kacc{order:6}.kpis>.kacc{order:4}.kpis[data-accrow="1"]>.kacc{order:2}}
 .kpi .kl{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .kloss{flex:none;display:inline-flex;flex-direction:column;align-items:flex-end;gap:1px;font-size:12px;font-weight:600;color:var(--muted);line-height:1.25;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.kloss b{font-size:13px;font-weight:800;color:var(--fg)}.kloss em{font-style:normal;font-weight:800}.kloss em.up{color:var(--good)}.kloss em.dn{color:var(--bad)}
 @media (max-width:600px){.kpi:has(.kloss) .kl{flex-wrap:wrap;row-gap:3px}.kloss{flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:flex-start;gap:0 5px;width:100%;font-size:10.5px}.kloss b{font-size:11px}}
@@ -1255,6 +1262,7 @@ var KIMS = (function () {
   // 매출 카드 오른쪽 위: 목표 대비 달성율 (목표 데이터가 없으면 표시 안 함)
   // 매출총이익률 카드 오른쪽 위: 손실율 금년 / 전년 / 증감(%p, 줄면 초록)
   function lossTag(y) {
+    return ''; // 손실율 카드가 따로 생겨 매출총이익률 카드의 손실율 문구는 뺌(2026-11-22)
     if (!y || y.lr == null) return '';
     return '<span class="kloss" title="손실율 = (마크다운+폐기+재고차이로스) ÷ 실매출 · 하이퍼 정판율 마트"><b>손실율 ' + f2(y.lr) + '%</b><span>전년 ' + (y.lrL == null ? '-' : f2(y.lrL) + '%') + '</span>' + (y.lrD == null ? '' : '<em class="' + clsInv(y.lrD) + '">' + pp2(y.lrD) + '</em>') + '</span>';
   }
@@ -1267,6 +1275,12 @@ var KIMS = (function () {
     var key = { '매출': 'gsT', '매출총이익률': 'mr', '건수': 'cnt', '건단가': 'atv' }[label] || '';
     return '<div class="kpi" data-kpi="' + key + '" tabindex="0"><p class="kl">' + label + (tag || '') + '</p><p class="kv">' + val + '<small>' + unit + '</small></p><p class="kd"><span class="' + cls(deltaV) + '">전년비 ' + deltaTxt + '</span></p>' + (badges ? '<p class="kb">' + badges + '</p>' : '') + (extra ? '<div class="spw">' + extra + '</div>' : '') + '</div>';
   }
+  // 넓은 화면(1600px 이상)에서만 보이는 카드 2장: 손실율 · 저녁장 매출 (2026-11-22)
+  function kxCards(y, three) {
+    var kx = function (h) { return h.replace('class="kpi"', 'class="kpi kx"'); };
+    return kx(kpi('손실율', y.lr == null ? '-' : f2(y.lr), '%', y.lrDn, pp2(y.lrD), three ? three('lrDn') : '', y.lr == null || y.lrL == null ? '' : lyBars(y.lr, y.lrL, function (v) { return f2(v) + '%'; }))) +
+      kx(kpi('저녁장 매출', y.eve == null ? '-' : man(y.eve), '백만원', y.eveG, pct(y.eveG), three ? three('eveG') : '', y.eve == null || y.eveL == null ? '' : lyBars(y.eve, y.eveL, function (v) { return man(v) + '백만'; })));
+  }
   function kpis(k, me, sc) {
     var g = GRP[me], y = M(k, [me], sc), K = OPEN(), G = openOf(g), C = setOf(me);
     var three = function (key) { return badge('킴스', rankIn(k, K, sc, key, me)) + badge(GNAME[g], rankIn(k, G, sc, key, me)); };
@@ -1274,7 +1288,7 @@ var KIMS = (function () {
       kpi('매출', man(y.gsT), '백만원', y.growth, pct(y.growth), three('growth'), spark(me, sc.posKey), achTag(y)) +
       kpi('매출총이익률', f1(y.mr), '%', y.mrD, pp(y.mrD), three('mr'), lyBars(y.mr, y.mrL, fmtMr), lossTag(y)) +
       kpi('건수', won(y.cnt), '건/일', y.cntG, pct(y.cntG), three('cntG'), lyBars(y.cnt, y.cntL, fmtCnt)) +
-      kpi('건단가', man1(y.atv), '만원', y.atvG, pct(y.atvG), three('atv'), lyBars(y.atv, y.atvL, fmtAtv)) + '</div>';
+      kpi('건단가', man1(y.atv), '만원', y.atvG, pct(y.atvG), three('atv'), lyBars(y.atv, y.atvL, fmtAtv)) + kxCards(y, three) + '</div>';
   }
   function bars(k, me, sc) {
     var rows = setOf(me).map(function (p) { return [p, M(k, [p], sc)]; });
@@ -1935,7 +1949,7 @@ var KIMS = (function () {
       h1: '킴스클럽 전점',
       sub: '그룹 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
       rows: [
-        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', 'store'), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr), lossTag(kt)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
+        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', 'store'), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr), lossTag(kt)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + kxCards(kt) + '</div>', null, 'bare')],
         [allDailySec('store', '전체')],
         [hourSec(k, OPEN(), 'store', '킴스 영업 점포 합계', '킴스 합계')],
         progRow(k, kt.gsT, kt.gsL, (aggDaily(), (D.lymonth.ALL || {}).store)),
@@ -1999,7 +2013,7 @@ var KIMS = (function () {
       h1: '킴스클럽 전점 · ' + c[1],
       sub: '그룹 ' + c[1] + ' 매출 성장율, ' + openGroups.map(function (g) { var t = M(k, g[2], sc); return g[1] + ' <span class="' + cls(t.growth) + '">' + pct(t.growth) + '</span>'; }).join(', '),
       rows: [
-        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="' + id + '">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', id), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr), lossTag(kt)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + '</div>', null, 'bare')],
+        [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="' + id + '">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', id), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr), lossTag(kt)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + kxCards(kt) + '</div>', null, 'bare')],
         pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf)] : [],
         [allDailySec(id, c[1])],
         [hourSec(k, OPEN(), id, '킴스 영업 점포 ' + c[1] + ' 합계', c[1])],
@@ -2165,7 +2179,7 @@ var KIMS = (function () {
       acc.innerHTML = '<div class="kaw"><div class="kain">' + (open ? kaccAny(box.dataset.p, box.dataset.c, open) : '') + '</div></div>';
       box.appendChild(acc); // 카드 그리드 안에 넣어, 폰(2열)에서는 누른 카드가 있는 줄 바로 아래에 펼침
       var oc = open ? box.querySelector('.kpi[data-kpi="' + open.split(':')[0] + '"]') : null;
-      if (oc) { box.dataset.accrow = [].indexOf.call(box.querySelectorAll('.kpi'), oc) < 2 ? '1' : '2'; oc.classList.add('kop'); }
+      if (oc) { var oi = [].indexOf.call(box.querySelectorAll('.kpi'), oc); box.dataset.accrow = oi < 2 ? '1' : oi < 4 ? '2' : '3'; oc.classList.add('kop'); }
     });
   }
   function toggleAcc(btn) {
@@ -2323,8 +2337,20 @@ var KIMS = (function () {
     var hide = (S && S.hide) || {};
     return v.rows.map(function (r) { return r.filter(function (x) { return x && !(x.opt && hide[x.opt]); }); }).filter(function (r) { return r.length; });
   }
+  // 넓은 화면(1600px 이상): 이웃한 작은 항목을 둘씩 한 줄에(2026-11-22). 큰 표·일별 그래프는 한 줄 그대로
+  var PAIRS = [['hour', 'prog'], ['wf', 'mix'], ['wf', 'grpc'], ['mc', 'top'], ['gb', 'bars']];
+  function pairRows(rows) {
+    if (typeof window === 'undefined' || !(window.innerWidth >= 1600)) return rows;
+    var out = [];
+    for (var i = 0; i < rows.length; i++) {
+      var a = rows[i], b = rows[i + 1];
+      if (a.length === 1 && b && b.length === 1 && PAIRS.some(function (p) { return p[0] === a[0].id && p[1] === b[0].id; })) { out.push([a[0], b[0]]); i++; }
+      else out.push(a);
+    }
+    return out;
+  }
   function html() {
-    var v = view(), rows = visibleRows(v);
+    var v = view(), rows = pairRows(visibleRows(v));
     return '<header class="hd"><p class="eyebrow">' + esc(v.eyebrow) + '</p><h1>' + esc(v.h1) + '</h1><p class="sub">' + v.sub + '</p></header>' +
       rows.map(function (r) { return '<div class="row' + (r.length > 1 ? ' split' : '') + '">' + r.map(function (x) { return x.html; }).join('') + '</div>'; }).join('');
   }
