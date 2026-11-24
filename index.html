@@ -5103,18 +5103,23 @@ var KIMS = (function () {
     try { visit = sessionStorage.getItem(vk) !== '1'; } catch (e) {}
     var cached = store(DK);
     // 저장본으로 즉시 표시 — 지난번 받은 아이디별 설정도 같이 써서, 서버 응답 뒤 설정 때문에 다시 그리는 일이 없게
-    if (!started && cached && cached.data) start(JSON.parse(cached.data), a, cached.prefs != null ? { admin: a.admin, name: a.name, prefs: cached.prefs } : null);
+    // 2026-11-24 제이: 저장본이 어제 치(전일 기준일)가 아니면 먼저 그리지 않음 → 지난 날짜 화면이 떴다가 몇 초 뒤 바뀌는 일 없게. 서버 응답까지는 불러오는 중 화면
+    if (cached && cached.data && !cached.base) cached.base = dataBase(cached.data);
+    var useCache = function () { if (!started && cached && cached.data) start(JSON.parse(cached.data), a, cached.prefs != null ? { admin: a.admin, name: a.name, prefs: cached.prefs } : null); };
+    if (cached && cached.base && cached.base >= kstDay(-1)) useCache();
     lastCheck = Date.now();
     api({ action: 'data', token: a.token, visit: visit, have: cached ? cached.ver : '' }).then(function (r) {
       loading = false;
       if (!r.ok) { if (r.auth === false) return signOut(true, r.err); throw new Error(r.err); }
       try { sessionStorage.setItem(vk, '1'); } catch (e) {}
       put({ token: a.token, name: r.name, admin: r.admin, email: a.email });
+      if (r.same && !started && !r.data) { useCache(); if (started) window.KIMS.applyPrefs(r.prefs); return; } // 서버도 아직 같은 데이터(아침 갱신 전) → 저장본 그대로
       if (r.same && started) { if (cached && cached.prefs !== r.prefs) { cached.prefs = r.prefs; store(DK, cached); } window.KIMS.applyPrefs(r.prefs); return; } // 데이터는 그대로, 설정만 최신으로
       store(DK, { ver: r.ver, data: r.data, prefs: r.prefs, base: dataBase(r.data) });
       start(JSON.parse(r.data), a, r);
     }, function (err) {
       loading = false;
+      useCache(); // 서버에 못 닿으면 지난 저장본이라도 보여 줌
       if (started) return; // 저장본으로 보는 중이면 그대로 둠
       $('main').innerHTML = '<div class="gcard" style="margin:24px auto"><h2>불러오지 못했습니다</h2><p class="gm err">' + esc(err.message) + '</p><button class="gb pri" onclick="location.reload()">다시 시도</button><button class="gb" onclick="location.hash=\'\'">메뉴 화면으로</button></div>';
     });
