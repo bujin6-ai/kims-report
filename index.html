@@ -2917,7 +2917,8 @@ var KIMS = (function () {
     var cn = function (c) { return ((D.storeCats.filter(function (x) { return x[0] === c; })[0]) || [0, ''])[1]; };
     var fresh = cats.some(function (c) { return SFRESH[c]; }), other = cats.some(function (c) { return !SFRESH[c]; });
     var lim = fresh && other ? '신선 7일 / 그 외 60일' : fresh ? '신선 7일' : '60일';
-    var head = '<p class="sxi-chips"><span>기준 · ' + lim + '</span><span>단위 · 재고액 백만원</span></p>';
+    var mcB = cats.some(function (c) { return ['O', 'Z', 'N'].some(function (k) { return ((by[c] || {})[k] || []).some(function (r) { return r.length > 10; }); }); });
+    var head = '<p class="sxi-chips"><span>' + (mcB ? '점선 · 그룹 같은 MC 평균' : '기준 · ' + lim) + '</span><span>단위 · 재고액 백만원</span></p>';
     head += sItemFilter(t, f, by) + (f.pg && !hasPg ? '<p class="note">구매그룹별 보기는 다음 데이터 갱신부터 됩니다. 지금은 CD 전체를 보여드려요.</p>' : '');
     return head + detailTabs('sitem', SITEM.map(function (s) {
       var list = [].concat.apply([], cats.map(function (c) { return ((by[c] || {})[s[0]] || []).map(function (r) { return r.concat([c]); }); }));
@@ -2927,13 +2928,14 @@ var KIMS = (function () {
       if (!list.length) return [s[1], '<p class="note">' + s[2] + '</p><p class="pempty sm">해당 상품이 없습니다</p>'];
       var tot = list.reduce(function (x, r) { return x + r[4]; }, 0);
       var amax = Math.max.apply(null, list.map(function (r) { return Math.abs(r[4]); }).concat([1]));
-      var dmax = Math.max.apply(null, list.map(function (r) { return r[5] || 0; }).concat([100]));
+      var dmax = Math.max.apply(null, list.map(function (r) { return Math.max(r[5] || 0, r.length > 11 && r[9] > 0 ? r[9] : 0); }).concat([100]));
       var LM = Math.log(dmax * 1.05), lp = function (d) { return Math.max(0, Math.min(100, Math.log(Math.max(d, 1)) / LM * 100)); };
       var hasLr = list.some(function (r) { return r.length > 8 && r[7]; });
       var neg = s[0] === 'N';
       var th = function (k, n, sl, dir) { return '<th class="' + k + '"' + (k === (neg ? 'q' : 'a') ? ' aria-sort="' + (neg ? 'ascending' : 'descending') + '"' : '') + '><button type="button" class="sxs" data-k="' + k + '" data-n="' + sl + '" data-d="' + dir + '">' + n + '</button></th>'; };
       var body = list.map(function (r, i) {
-        var c = r[r.length - 1], L = SFRESH[c] ? 7 : 60, d = r[5], v = r[6] / 30;
+        // 2026-11-24 제이: 기준선 = 같은 그룹 같은 MC 평균 재고일수(r[9]), 하루평균 판매 = 월 누적 ÷ 영업일(r[10]). 옛 데이터는 신선 7일·그 외 60일, 30일 판매 ÷ 30
+        var c = r[r.length - 1], hasM = r.length > 11, L = hasM && r[9] > 0 ? r[9] : SFRESH[c] ? 7 : 60, d = r[5], v = hasM && r[10] != null ? r[10] : r[6] / 30;
         var lv = d == null ? 0 : d >= L * 10 ? 3 : d >= L * 3 ? 2 : d > L ? 1 : 0;
         // 판매 없음·마이너스 탭은 상품 자체가 관리 대상이라 과다 재고처럼 빨간 막대를 꽉 채워 보여줌(2026-11-24 제이 요청)
         var bw = d == null || d < 0 ? 0 : lp(d);
@@ -2945,14 +2947,14 @@ var KIMS = (function () {
           '<td class="i">' + (i + 1) + '</td><th class="n">' + esc(r[1]) + '<small>' + sub + '</small></th>' +
           '<td class="q' + (r[3] < 0 ? ' dn' : '') + '" data-l="수량">' + won(r[3]) + '</td>' +
           '<td class="a" data-l="재고액"><span class="sxi-b"><i style="width:' + (Math.abs(r[4]) / amax * 100).toFixed(1) + '%"></i></span><b' + (r[4] < 0 ? ' class="dn"' : '') + '>' + (r[4] / 1e6).toFixed(1) + '</b></td>' +
-          '<td class="d" data-l="재고일수"><span class="sxi-b lg"><i class="v' + lv + '" style="width:' + bw.toFixed(1) + '%"></i><u style="left:' + lp(L).toFixed(1) + '%" title="기준 ' + L + '일"></u></span><b class="v' + lv + '">' + (d == null || d < 0 ? (s[0] === 'Z' ? '판매 없음' : '-') : Math.round(d).toLocaleString('ko-KR') + '일') + '</b></td>' +
+          '<td class="d" data-l="재고일수"><span class="sxi-b lg"><i class="v' + lv + '" style="width:' + bw.toFixed(1) + '%"></i><u style="left:' + lp(L).toFixed(1) + '%" title="' + (hasM && r[9] > 0 ? '그룹 같은 MC 평균 ' + f1(L) + '일' : '기준 ' + L + '일') + '"></u></span><b class="v' + lv + '">' + (d == null || d < 0 ? (s[0] === 'Z' ? '판매 없음' : '-') : Math.round(d).toLocaleString('ko-KR') + '일') + '</b></td>' +
           '<td class="s" data-l="30일 판매">' + won(r[6]) + '</td><td class="v" data-l="하루평균 판매">' + f1(v) + '</td></tr>';
       }).join('');
       return [s[1], '<p class="sxi-sum"><span>표시 <b>' + list.length + '</b>개 / 상위 20</span><span>재고액 합계 <b>' + (tot / 1e6).toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '</b>백만원</span><span>정렬 · <b class="sxi-sl">' + (neg ? '수량 작은 순' : '재고액 큰 순') + '</b></span><span class="sxi-h">열 제목을 누르면 정렬이 바뀝니다</span></p>' +
         '<div class="hx sxi-w"><table class="sxi" data-k="' + (neg ? 'q' : 'a') + '" data-dir="' + (neg ? 'a' : 'd') + '"><thead><tr><th class="i">#</th><th class="n">상품</th>' +
         th('q', '수량', '수량', neg ? 'a' : 'd') + th('a', '재고액', '재고액', 'd') + th('d', '재고일수', '재고일수', 'd') + th('s', '30일 판매', '30일 판매', 'd') + th('v', '하루평균 판매', '하루평균 판매', 'd') +
         '</tr></thead><tbody>' + body + '</tbody></table></div>' +
-        '<p class="note">' + s[2] + ' · 재고일수 막대는 로그 눈금 · 세로선 = 기준(' + lim + ') · 하루평균 판매 = 30일 판매 ÷ 30 · 수량은 상품 단위 그대로' + (hasLr ? ' · 마지막 입고 = 최근 매입·점간 이동 입고일(1년 안, 없으면 -)' : '') + (hasPg ? ' · CD별 상위 40개 안에서 구매그룹을 골라 봄' : '') + '</p>'];
+        '<p class="note">' + s[2] + ' · 재고일수 막대는 로그 눈금 · ' + (mcB ? '점선 = 같은 그룹 같은 MC 평균 재고일수 · 재고일수 = 재고액 ÷ (월 누적 매출원가 ÷ 영업일) · 하루평균 판매 = 월 누적 판매 ÷ 영업일 · 과다 재고 선정은 신선 7일 / 그 외 60일 초과' : '세로선 = 기준(' + lim + ') · 하루평균 판매 = 30일 판매 ÷ 30') + ' · 수량은 상품 단위 그대로' + (hasLr ? ' · 마지막 입고 = 최근 매입·점간 이동 입고일(1년 안, 없으면 -)' : '') + (hasPg ? ' · CD별 상위 40개 안에서 구매그룹을 골라 봄' : '') + '</p>'];
     }));
   }
   // ── 재고일수 진단(2026-11-24): 큰 재고일수 카드 · 재고일수 순위 · 구매그룹 진단 · CD별 재고일수 ──
