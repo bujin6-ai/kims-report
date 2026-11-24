@@ -398,6 +398,28 @@ body.nav-open #nav{transform:none}
 @media (hover:hover){#main .sxi-more:hover{background:var(--hov);color:var(--ac)}}
 #main .dtbw.sxi-tabs{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:12px}
 #main .dtbw.sxi-tabs .dtb{margin:0}#main .dtbw.sxi-tabs .sxf{margin:0}
+body #main .sxi-so{display:none}
+@media (max-width:700px){
+body #main .sxi-chips{flex-wrap:nowrap;gap:0;margin:0 0 10px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden}
+body #main .sxi-chips span{padding:0;background:none;font-size:12px}
+body #main .sxi-chips span+span::before{content:"·";margin:0 7px}
+body #main .sxi-chips em{display:none}
+body #main .dtbw.sxi-tabs{gap:8px}
+body #main .dtbw.sxi-tabs .dtb{display:flex;flex:1 1 100%;flex-wrap:nowrap}
+body #main .dtbw.sxi-tabs .dtb label{flex:1;min-width:0}
+body #main .dtbw.sxi-tabs .dtb span{white-space:nowrap;padding:7px 4px;font-size:13px;text-align:center}
+body #main .dtbw.sxi-tabs .sxf{flex:1 1 100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px;scroll-padding:0 16px}
+body #main .dtbw.sxi-tabs .sxf::-webkit-scrollbar{display:none}
+body #main .sxf>*{flex:none}
+body #main .sxf-b{height:32px;padding:0 10px;font-size:13px}body #main .sxf-d summary{height:32px}
+body #main .sxf-m{max-width:calc(100vw - 24px);z-index:60}
+body #main .sxi-sum{flex-wrap:nowrap;justify-content:space-between;gap:10px;padding:8px 12px;font-size:13px}
+body #main .sxi-sum .sxi-h,body #main .sxi-sum .sxi-st{display:none}
+body #main .sxi-so{display:flex;align-items:center;gap:6px;flex:none}
+body #main .sxi-so>span{font-size:12px}
+body #main .sxi-sel{font:inherit;font-size:13px;font-weight:600;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:5px 26px 5px 9px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-size:13px}
+body #main .sxi thead{display:none!important}
+}
 #main .sxi-chips i.dsh{display:inline-block;width:0;height:12px;margin-right:6px;vertical-align:-1px;border-left:2px dashed var(--fg)}
 /* CD 재고액·재고일수 카드(2026-11-24 2차): 이름 · 막대(값) · 평균 3칸, 점선 범례 */
 .sdx-dg.v2 .sdx-dh,.sdx-dg.v2 .sdx-dr{grid-template-columns:72px minmax(0,1fr) 150px;gap:14px}
@@ -619,6 +641,7 @@ tr.dim>*{opacity:.42}
 #main .hrc li{position:relative}
 #main .hrc .htip{display:none;position:absolute;left:calc(100% + 6px);top:6px;z-index:8;min-width:150px;padding:8px 11px;border-radius:10px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);font-size:13px;line-height:1.45;text-align:left;pointer-events:none;flex-direction:column;gap:2px;white-space:nowrap}
 #main .hrc .htip,#main .hrc .htip *{animation:none!important;opacity:1}
+#main .hrc .htip,#main .hrc .htip *{writing-mode:horizontal-tb!important}#main .hrc .htip *{transform:none!important}
 #main .hrc .htip b{font-size:13px;color:var(--fg)}
 #main .hrc .htip>span{display:flex;align-items:center;gap:6px;color:var(--muted)}#main .hrc .htip em{margin-left:auto;padding-left:12px;font-style:normal;font-weight:700;color:var(--fg)}
 #main .hrc .htip em.up{color:var(--good)}#main .hrc .htip em.dn{color:var(--bad)}
@@ -626,6 +649,35 @@ tr.dim>*{opacity:.42}
 #main .hrc li:hover .htip,#main .hrc li:focus .htip{display:flex}
 #main .hrc li:nth-last-child(-n+4) .htip{left:auto;right:calc(100% + 6px)}
 :is(.panel,.row):has(.hrc li:hover,.hrc li:focus){position:relative;z-index:20}
+/* 터치 화면(폰·태블릿) 말풍선(2026-11-24 제이): 스크롤하려고 닿기만 해도 뜨던 것 → 톡 눌러야 열리고 다시 누르거나 다른 곳을 누르면 닫힘. 상품명·점포명을 가리지 않게 오른쪽 정렬 */
+@media (hover:none){
+#main .mcl li:is(:hover,:focus,:focus-within):not(.tipon) .mtip,#main .hrc li:is(:hover,:focus):not(.tipon) .htip,#main .sb.hasf:is(:hover,:focus):not(.tipon) .sbtip{display:none}
+#main .mcl li.tipon .mtip,#main .hrc li.tipon .htip,#main .sb.hasf.tipon .sbtip{display:flex}
+#main .mcl li .mtip{left:auto;right:0;max-width:calc(100vw - 56px)}
+#main .sb .sbtip{left:auto;right:0;max-width:calc(100vw - 56px)}
+#main .hrc{position:relative}#main .hrc li{position:static}
+#main .hrc .htip,#main .hrc li:nth-last-child(-n+4) .htip{left:50%;right:auto;top:-6px;transform:translateX(-50%)}
+#main .mcl li:hover,#main .sb.hasf:hover{background:none}#main .mcl li.tipon,#main .sb.hasf.tipon{background:var(--hov,color-mix(in srgb,var(--fg) 5%,transparent))}
+:is(.panel,.row):has(.tipon){position:relative;z-index:20}
+#main :is(.mcl li,.hrc li,.sb.hasf){-webkit-tap-highlight-color:transparent;outline:none}
+}
+/* 폰: 점포 상세 실적 표에 목표·달성율이 붙으면 오른쪽이 잘리던 것(2026-11-24 제이) → 칸 사이 여백·글자 줄여 카드 안에 맞춤 */
+@media (max-width:600px){
+#main .rt{font-size:12px;letter-spacing:-.02em}
+#main .rt th,#main .rt td{padding:6px 2px}
+#main .rt.tg td.tga,#main .rt.tg thead tr.g2 th:nth-child(3){padding-right:6px}
+#main .rt.tg tbody td:nth-child(4),#main .rt.tg thead tr.g2 th:nth-child(4){padding-left:8px}
+#main .rt tbody th,#main .rt tbody tr th{font-size:12px!important;word-break:keep-all}
+#main .rt .rkb{min-width:0;padding:1px 4px;font-size:11px!important}
+#main .rt thead tr.g2 th{font-size:10px;word-break:break-all}
+#main .rt.tg tbody td:nth-child(2),#main .rt.tg thead tr.g2 th:nth-child(2){display:none} /* 폰은 목표 금액 칸을 빼고 달성율만 */
+#main .rt tbody td>b{font-size:inherit}
+#main .rt tr.gh th{font-size:12px}
+}
+/* 폰 재고 일별·월별 그래프 가로 스크롤(2026-11-24 제이) */
+#main .sdc.sdx-hs{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:thin;padding-bottom:4px}
+#main .sdc.sdx-hs>.dcw{width:max-content}
+#main .sdc.sdx-hs svg{display:block;max-width:none}
 /* 카드 펼침 점포별: 보고 있는 점포 줄 강조(2026-11-24) */
 .kacc .kg li.me{background:var(--ac-soft)}.kacc .kg li.me span{color:var(--ac);font-weight:700}
 /* 조용히 다시 그리기(2026-11-24): 늦게 온 새 데이터·설정·창 크기 변경 때는 등장 움직임을 다시 하지 않음 */
@@ -3043,7 +3095,9 @@ var KIMS = (function () {
     var vv = v.filter(function (x) { return x != null; });
     var all = vv.concat(lv.filter(function (x) { return x != null; })), mx = Math.max.apply(null, all), mn0 = Math.min.apply(null, all), mn = Math.max(0, mn0 - (mx - mn0) * 0.6);
     var half = false; // 2026-11-24: CD별 재고일수 카드를 빼서 다시 한 줄 전체 폭
-    var W = Math.max(320, half ? Math.round(CHART_W / 2 - 30) : CHART_W), H = 220, L = 8, R = 8, T = 26, B = 30, n = ds.length, cw = (W - L - R) / n, bw = Math.max(4, Math.min(26, cw * 0.62));
+    var W = Math.max(320, half ? Math.round(CHART_W / 2 - 30) : CHART_W), H = 220, L = 8, R = 8, T = 26, B = 30, n = ds.length;
+    var HS = CHART_W < 560 && n * 24 + 16 > W; if (HS) W = n * 24 + 16; // 폰: 좁아 겹치면 가로 스크롤(2026-11-24 제이)
+    var cw = (W - L - R) / n, bw = Math.max(4, Math.min(26, cw * 0.62));
     var X = function (i) { return L + cw * (i + 0.5); }, Y = function (a) { return T + (H - T - B) * (1 - (a - mn) / ((mx - mn) || 1)); };
     var imx = v.indexOf(Math.max.apply(null, vv)), imn = v.indexOf(Math.min.apply(null, vv)), last = ds.indexOf(dk[dk.length - 1]);
     var bars = v.map(function (a, i) {
@@ -3058,7 +3112,7 @@ var KIMS = (function () {
     var hits = ds.map(function (d, i) { return v[i] == null && lv[i] == null ? '' : '<rect class="hit" data-day="' + d + '" x="' + (L + cw * i).toFixed(1) + '" y="' + T + '" width="' + cw.toFixed(1) + '" height="' + (H - B - T) + '" tabindex="0"/>'; }).join('');
     return '<p class="note">' + (t === 'store' ? '' : '이 CD ') + '단위 백만원 · 막대에 마우스를 올리면(폰은 누르면) ' + (ST.s === 'all' ? '그룹별·CD별' : 'CD별') + ' 재고액</p>' +
       '<p class="slg"><span><i class="t"></i>금년</span>' + (hasL ? '<span><i class="l"></i>전년 같은 요일</span>' : '') + '<span><i class="h"></i>최고</span><span><i class="o"></i>최저</span></p>' +
-      '<div class="sdc"><div class="dcw" data-kind="sday" data-me="' + (ST.s === 'all' ? 'ALL' : ST.s) + '" data-t="' + t + '"><svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" role="img" aria-label="당월 일별 재고액">' +
+      '<div class="sdc' + (HS ? ' sdx-hs" data-sx="' + ((L + cw * (last + 0.5)) / W).toFixed(3) : '') + '"><div class="dcw" data-kind="sday" data-me="' + (ST.s === 'all' ? 'ALL' : ST.s) + '" data-t="' + t + '"><svg viewBox="0 0 ' + W + ' ' + H + '" width="' + (HS ? W : '100%') + '" height="' + H + '" role="img" aria-label="당월 일별 재고액">' +
       '<line class="sax" x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '"/>' + bars +
       (lp ? '<path class="sll" d="' + lp + '"/>' : '') +
       lab(imx, 'hi') + (imn !== imx ? lab(imn, 'lo') : '') + (last !== imx && last !== imn ? lab(last, 'cur') : '') +
@@ -3080,7 +3134,9 @@ var KIMS = (function () {
     }
     var vals = []; rows.forEach(function (r) { if (r[1] != null) vals.push(r[1]); if (r[2] != null) vals.push(r[2]); });
     if (!vals.length) return NOT_YET('월별 재고');
-    var mx = Math.max.apply(null, vals) * 1.12, W = Math.max(320, CHART_W), H = 230, L = 8, R = 8, T = 22, B = 46, n = rows.length, cw = (W - L - R) / n, bw = Math.max(5, Math.min(22, cw * 0.32));
+    var mx = Math.max.apply(null, vals) * 1.12, W = Math.max(320, CHART_W), H = 230, L = 8, R = 8, T = 22, B = 46, n = rows.length;
+    var HS = CHART_W < 560; if (HS) W = Math.max(W, n * 60 + 16); // 폰: 월 이름·%가 겹쳐 가로 스크롤(2026-11-24 제이)
+    var cw = (W - L - R) / n, bw = Math.max(5, Math.min(22, cw * 0.32));
     var Y = function (a) { return T + (H - T - B) * (1 - Math.max(0, a) / mx); }, X = function (i) { return L + cw * (i + 0.5); };
     var noLy = rows.filter(function (r) { return r[2] == null && r[0] <= m0; }).map(function (r) { return r[0]; });
     var svg = rows.map(function (r, i) {
@@ -3098,7 +3154,7 @@ var KIMS = (function () {
     return '<p class="note">단위 백만원 · 막대에 마우스를 올리면(폰은 누르면) ' + (ST.s === 'all' ? '그룹별·CD별' : 'CD별') + ' 재고액 · ' + m0 + '월* = 기준일 ' + md(base) + ' vs 전년 같은 요일' +
       (noLy.length ? ' · 전년 ' + (noLy.length === 1 ? noLy[0] + '월' : noLy[0] + '~' + noLy[noLy.length - 1] + '월') + '은 DW에 재고 데이터가 없어 비움(2025년 9월 말부터 있음)' : '') + '</p>' +
       '<p class="slg"><span><i class="t"></i>' + y0 + '년</span><span><i class="l"></i>' + (y0 - 1) + '년</span></p>' +
-      '<div class="sdc"><div class="dcw" data-kind="smon" data-me="' + (ST.s === 'all' ? 'ALL' : ST.s) + '" data-t="' + t + '"><svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" role="img" aria-label="월별 재고액 금년 전년 비교"><line class="sax" x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '"/>' + svg + hits + '</svg><div class="tip" hidden></div></div></div>';
+      '<div class="sdc' + (HS ? ' sdx-hs" data-sx="' + (X(m0 - 1) / W).toFixed(3) : '') + '"><div class="dcw" data-kind="smon" data-me="' + (ST.s === 'all' ? 'ALL' : ST.s) + '" data-t="' + t + '"><svg viewBox="0 0 ' + W + ' ' + H + '" width="' + (HS ? W : '100%') + '" height="' + H + '" role="img" aria-label="월별 재고액 금년 전년 비교"><line class="sax" x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '"/>' + svg + hits + '</svg><div class="tip" hidden></div></div></div>';
   }
   // CD·구매그룹 표
   function sCdTable(plants, t, who) {
@@ -3197,7 +3253,7 @@ var KIMS = (function () {
     var giB = cats.some(function (c) { return ['O', 'Z', 'N'].some(function (k) { return ((by[c] || {})[k] || []).some(function (r) { return r.length > 12; }); }); });
     var gdB = cats.some(function (c) { return ['O', 'Z', 'N'].some(function (k) { return ((by[c] || {})[k] || []).some(function (r) { return r.length > 13 && r[13] > 0; }); }); });
     // 2026-11-24 제이 2차: 오른쪽 위 = 점선 설명 · CD 고르기는 과다 재고/판매 없음/마이너스 탭 옆 · 10개 + 아래 화살표로 20개까지
-    var head = '<p class="sxi-chips"><span><i class="dsh" aria-hidden="true"></i>' + (giB || mcB ? '점선 = 같은 그룹 평균' : '점선 = 기준(' + lim + ')') + '</span><span>단위 · 재고액 백만원</span></p>' +
+    var head = '<p class="sxi-chips"><span><i class="dsh" aria-hidden="true"></i>' + (giB || mcB ? '점선 = 같은 그룹 평균' : '점선 = 기준(' + lim + ')') + '</span><span>단위<em> · 재고액</em> 백만원</span></p>' +
       (f.pg && !hasPg ? '<p class="note">구매그룹별 보기는 다음 데이터 갱신부터 됩니다. 지금은 CD 전체를 보여드려요.</p>' : '');
     var filt = sItemFilter(t, f, by);
     return head + detailTabs('sitem', SITEM.map(function (s) {
@@ -3230,7 +3286,9 @@ var KIMS = (function () {
           '<td class="d" data-l="재고일수"><span class="sxi-b lg"><i class="v' + lv + '" style="width:' + bw.toFixed(1) + '%"></i><u style="left:' + lp(L).toFixed(1) + '%" title="' + (gd ? '그룹 ' + (r[12] || '') + '개점 같은 상품 평균 ' + f1(L) + '일' : hasM && r[9] > 0 ? '그룹 같은 MC 평균 ' + f1(L) + '일' : '기준 ' + L + '일') + '"></u></span><b class="v' + lv + '">' + (d == null || d < 0 ? (s[0] === 'Z' ? '판매 없음' : '-') : Math.round(d).toLocaleString('ko-KR') + '일') + '</b></td>' +
           '<td class="s" data-l="30일 판매">' + won(r[6]) + '</td><td class="v" data-l="하루평균 판매">' + f1(v) + '</td></tr>';
       }).join('');
-      return [s[1], '<p class="sxi-sum"><span>재고액 합계 <b>' + (tot / 1e6).toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '</b>백만원</span><span>정렬 · <b class="sxi-sl">' + (neg ? '수량 작은 순' : '재고액 큰 순') + '</b></span><span class="sxi-h">열 제목을 누르면 정렬이 바뀝니다</span></p>' +
+      return [s[1], '<p class="sxi-sum"><span>재고액 합계 <b>' + (tot / 1e6).toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '</b>백만원</span><span class="sxi-st">정렬 · <b class="sxi-sl">' + (neg ? '수량 작은 순' : '재고액 큰 순') + '</b></span>' +
+        // 폰: 정렬 칩 5개 대신 작은 드롭다운 하나(2026-11-24 제이 "모바일에서 너무 복잡해")
+        '<label class="sxi-so"><span>정렬</span><select class="sxi-sel" aria-label="정렬 기준">' + SXSORT.map(function (o) { var v = o[0] + ':' + o[1]; return '<option value="' + v + '"' + (v === (neg ? 'q:a' : 'a:d') ? ' selected' : '') + '>' + o[2] + '</option>'; }).join('') + '</select></label><span class="sxi-h">열 제목을 누르면 정렬이 바뀝니다</span></p>' +
         '<div class="hx sxi-w"><table class="sxi" data-k="' + (neg ? 'q' : 'a') + '" data-dir="' + (neg ? 'a' : 'd') + '"><thead><tr><th class="i">#</th><th class="n">상품</th>' +
         th('q', '수량', '수량', neg ? 'a' : 'd') + th('a', '재고액', '재고액', 'd') + th('d', '재고일수', '재고일수', 'd') + th('s', '30일 판매', '30일 판매', 'd') + th('v', '하루평균 판매', '하루평균 판매', 'd') +
         '</tr></thead><tbody>' + body + '</tbody></table></div>' +
@@ -3238,6 +3296,7 @@ var KIMS = (function () {
         '<p class="note">' + s[2] + ' · 재고일수 막대는 로그 눈금 · ' + (giB ? '재고액 점선 = 같은 그룹에서 이 상품 재고가 있는 점포들의 평균 재고액 · ' : '') + (mcB ? '재고일수 점선 = ' + (gdB ? '같은 그룹에서 이 상품 재고가 있는 점포들의 재고일수(그룹 합산 재고액 ÷ 그룹 합산 하루 매출원가), 없으면 같은 MC 평균' : '같은 그룹 같은 MC 평균 재고일수') + ' · 재고일수 = 재고액 ÷ (월 누적 매출원가 ÷ 영업일) · 하루평균 판매 = 월 누적 판매 ÷ 영업일 · 과다 재고 선정은 신선 7일 / 그 외 60일 초과' : '세로선 = 기준(' + lim + ') · 하루평균 판매 = 30일 판매 ÷ 30') + ' · 수량은 상품 단위 그대로' + (hasLr ? ' · 마지막 입고 = 최근 매입·점간 이동 입고일(1년 안, 없으면 -)' : '') + (hasPg ? ' · CD별 상위 40개 안에서 구매그룹을 골라 봄' : '') + '</p>'];
     })).replace('<div class="dtbw">', '<div class="dtbw sxi-tabs">').replace(/(<div class="dtbw sxi-tabs"><div class="dtb"[\s\S]*?<\/div>)/, function (m) { return m + filt; });
   }
+  var SXSORT = [['a', 'd', '재고액 큰 순'], ['d', 'd', '재고일수 긴 순'], ['q', 'd', '수량 많은 순'], ['q', 'a', '수량 적은 순'], ['s', 'd', '30일 판매 많은 순'], ['s', 'a', '30일 판매 적은 순'], ['v', 'd', '하루평균 판매 많은 순']];
   // ── 재고일수 진단(2026-11-24): 큰 재고일수 카드 · 재고일수 순위 · 구매그룹 진단 · CD별 재고일수 ──
   var DAYWORD = ['', '하루', '이틀', '사흘', '나흘', '닷새', '엿새', '이레'];
   var sTabName = function (t) { return (TABS.filter(function (x) { return x[0] === t; })[0] || [0, ''])[1]; };
@@ -3280,14 +3339,17 @@ var KIMS = (function () {
     // 막대 색(2026-11-24 제이): 평균 이상 빨강 · 평균 미만 파랑. 전점은 CD마다 막대 길이 기준을 따로(그룹 4줄 비교)
     var cmax = {}; rows.forEach(function (r) { var k = r.cd || ''; cmax[k] = Math.max(cmax[k] || 0, r.a, r.avgA || 0); });
     var avgN = me ? R.gn + ' 그룹 평균' : '점포 평균';
-    return '<p class="note">재고액 = 기준일 재고(원가, 백만원) · ' + (R.all ? '막대 = 그룹별 점포 평균 재고액(그 ' + R.unit + ' 재고가 있는 점포 기준) · 비율 = 같은 ' + R.unit + '의 킴스 점포 평균 대비' : '구성비 = 보이는 ' + R.unit + ' 재고액 합계 중 비중(기타 CD 제외)') + ' · 점선 = ' + (R.all ? '영업 ' + R.gc + '개점' : R.gn + ' 그룹 ' + R.gc + '개점') + '에서 같은 ' + R.unit + ' 재고가 있는 점포들의 평균 재고액' + (me ? ' · 막대 색 = 점선 이상 빨강, 미만 파랑' : '') + '</p>' +
+    return '<p class="note">재고액 = 기준일 재고(원가, 백만원) · ' + (R.all ? '막대 = 그룹별 점포 평균 재고액(그 ' + R.unit + ' 재고가 있는 점포 기준) · 비율 = 같은 ' + R.unit + '의 킴스 점포 평균 대비' : '구성비 = 보이는 ' + R.unit + ' 재고액 합계 중 비중(기타 CD 제외)') + ' · 점선 = ' + (R.all ? '영업 ' + R.gc + '개점' : R.gn + ' 그룹 ' + R.gc + '개점') + '에서 같은 ' + R.unit + ' 재고가 있는 점포들의 평균 재고액' + (me ? ' · 막대 색 = 점선 이상 빨강, 미만 파랑 · 막대 길이 = CD마다 평균(가운데 점선) 대비, 평균의 2배 이상이면 끝까지' : ' · 막대 길이는 제곱근 눈금(작은 CD도 보이게)') + '</p>' +
       sDashLg('점선 = ' + avgN + (me ? '<span class="sdx-k"><i class="hi"></i>평균 이상<i class="lo"></i>평균 미만</span>' : '')) +
       '<div class="sdx-dg v2' + (R.all ? ' all' : '') + '"><div class="sdx-dh"><span>' + (R.all ? R.unit + ' · 그룹' : R.unit) + '</span><span>재고액 <small>백만원 · ' + (R.all ? '킴스 평균 대비' : '구성비') + '</small></span><span>' + (R.all ? '킴스 점포 평균' : me ? R.gn + ' 평균' : '점포 평균') + '</span></div>' + rows.map(function (r) {
-        var amax = (cmax[r.cd || ''] || 1) * 1.15, ax = r.avgA == null ? null : (r.avgA / amax * 100).toFixed(1), hl = !me || r.avgA == null ? '' : r.a >= r.avgA ? 'hi' : 'lo'; // 전점은 합계라 평균 비교 색을 쓰지 않음
+        // 2026-11-24 제이: 공산이 커서 다른 CD 막대가 너무 짧음 → 점포 화면은 CD마다 평균(점선)을 가운데에 두고 평균 대비 길이(평균의 2배 이상이면 꽉 참), 전점은 제곱근 눈금
+        var amax = (cmax[r.cd || ''] || 1) * 1.15, rel = me && r.avgA > 0;
+        var bw = rel ? Math.min(100, r.a / r.avgA * 50) : Math.sqrt(Math.max(0, r.a) / amax) * 100;
+        var ax = r.avgA == null ? null : rel ? '50.0' : (Math.sqrt(r.avgA / amax) * 100).toFixed(1), hl = !me || r.avgA == null ? '' : r.a >= r.avgA ? 'hi' : 'lo'; // 전점은 합계라 평균 비교 색을 쓰지 않음
         var cdh = R.all && r.cd !== prev ? '<div class="sdx-cdh">' + esc(r.cd) + '</div>' : ''; prev = r.cd;
         var share = R.all ? (r.avgA ? f1(r.a / r.avgA * 100) + '%' : '-') : f1(r.a / sa * 100) + '%';
         return cdh + '<div class="sdx-dr"><b class="sxn">' + esc(r.n) + '</b>' +
-          '<span class="sxa"><i class="tr"><i class="' + hl + '" style="width:' + (r.a / amax * 100).toFixed(1) + '%"></i>' + (ax ? '<i class="avg" style="left:' + ax + '%" title="' + (me ? R.gn + ' 평균 ' : '점포 평균 ') + man(r.avgA) + '백만원"></i>' : '') + '</i><em><b>' + man(r.a) + '</b>백만 · ' + share + '</em></span>' +
+          '<span class="sxa"><i class="tr"><i class="' + hl + '" style="width:' + bw.toFixed(1) + '%"></i>' + (ax ? '<i class="avg" style="left:' + ax + '%" title="' + (me ? R.gn + ' 평균 ' : '점포 평균 ') + man(r.avgA) + '백만원"></i>' : '') + '</i><em><b>' + man(r.a) + '</b>백만 · ' + share + '</em></span>' +
           '<span class="sxt"><small class="sdx-av">' + (r.avgA == null ? '-' : man(r.avgA) + '백만') + '</small></span></div>';
       }).join('') + '</div>';
   }
@@ -3737,6 +3799,8 @@ var KIMS = (function () {
     if (toTop) { doc.getElementById('scroller').scrollTop = 0; main.classList.remove('fx'); void main.offsetWidth; main.classList.add('fx'); }
     // 화면 배치 계산을 한 번으로: 측정 모드에서 항목 버튼·고정 머리글 위치를 함께 잰 뒤 한꺼번에 씀
     var sj = measureSegs(); stickHeads(true); applySegs(sj); placePeriod(); queueLift(); wxFill();
+    // 가로 스크롤 그래프(폰 재고 일별·월별): 처음엔 최근 날짜·이번 달이 보이게
+    [].forEach.call(doc.querySelectorAll('#main .sdx-hs'), function (el) { var f = parseFloat(el.dataset.sx); if (f >= 0) el.scrollLeft = Math.max(0, f * el.scrollWidth - el.clientWidth * 0.75); });
     [].forEach.call(doc.querySelectorAll('#main .mtbl'), function (t) { var g = t.querySelector('tr.g1'); if (g && g.offsetHeight) t.style.setProperty('--g1h', g.offsetHeight + 'px'); });
     // 화면(점포·탭·기간·보기)이 바뀌면 방문 기록을 남겨 휴대폰 '뒤로가기'로 바로 전 화면에 돌아오게 함
     try {
@@ -4003,9 +4067,15 @@ var KIMS = (function () {
       var d = e.target; if (!d.classList || !d.classList.contains('sxf-d') || !d.open) return;
       [].forEach.call(doc.querySelectorAll('#main .sxf-d[open]'), function (x) { if (x !== d) x.open = false; });
       // 메뉴가 화면 오른쪽 밖으로 나가면 왼쪽으로 당김(폰 수산 메뉴 잘림, 2026-11-24)
-      var m = d.querySelector('.sxf-m'); if (m) { m.style.left = ''; var r = m.getBoundingClientRect(), vw = doc.documentElement.clientWidth, over = r.right - (vw - 12); if (over > 0) m.style.left = -Math.min(over, Math.max(0, r.left - 12)) + 'px'; }
+      var m = d.querySelector('.sxf-m');
+      if (m && window.matchMedia('(max-width:700px)').matches) { var sr = d.getBoundingClientRect(), vw0 = doc.documentElement.clientWidth; m.style.position = 'fixed'; m.style.top = (sr.bottom + 6) + 'px'; m.style.left = '12px'; var mw = m.offsetWidth; m.style.left = Math.max(12, Math.min(sr.right - mw, vw0 - 12 - mw)) + 'px'; m = null; }
+      if (m) { m.style.position = ''; m.style.top = ''; m.style.left = ''; var r = m.getBoundingClientRect(), vw = doc.documentElement.clientWidth, over = r.right - (vw - 12); if (over > 0) m.style.left = -Math.min(over, Math.max(0, r.left - 12)) + 'px'; }
     }, true);
     doc.addEventListener('click', function (e) { if (!(e.target.closest && e.target.closest('.sxf-d'))) [].forEach.call(doc.querySelectorAll('#main .sxf-d[open]'), function (x) { x.open = false; }); });
+    // 폰: 고정 위치 메뉴라 스크롤·칩 줄을 밀면 닫음
+    var sxfClose = function (e) { if (e && e.target && e.target.closest && e.target.closest('.sxf-m')) return; [].forEach.call(doc.querySelectorAll('#main .sxf-d[open]'), function (x) { x.open = false; }); };
+    doc.getElementById('scroller').addEventListener('scroll', sxfClose, { passive: true });
+    doc.getElementById('main').addEventListener('scroll', function (e) { if (e.target.classList && e.target.classList.contains('sxf')) sxfClose(); }, true);
     // 관리 필요 상품: 열 제목을 누르면 그 열로 정렬(같은 열을 다시 누르면 반대로)
     doc.getElementById('main').addEventListener('click', function (e) {
       var mb = e.target.closest && e.target.closest('.sxi-more');
@@ -4018,6 +4088,12 @@ var KIMS = (function () {
       rows.forEach(function (r, i) { r.cells[0].textContent = i + 1; r.classList.toggle('sxm', i >= 10); tb.appendChild(r); });
       [].forEach.call(tbl.querySelectorAll('.sxs'), function (x) { var h = x.parentNode; if (x === b) h.setAttribute('aria-sort', dir === 'd' ? 'descending' : 'ascending'); else h.removeAttribute('aria-sort'); });
       var sl = tbl.closest('.dtp').querySelector('.sxi-sl'); if (sl) sl.textContent = b.dataset.n + (dir === 'd' ? ' 큰 순' : ' 작은 순');
+      var se = tbl.closest('.dtp').querySelector('.sxi-sel'); if (se) { se.value = k + ':' + dir; if (se.value !== k + ':' + dir) se.selectedIndex = -1; }
+    });
+    doc.getElementById('main').addEventListener('change', function (e) {
+      if (!e.target.classList || !e.target.classList.contains('sxi-sel')) return;
+      var kv = e.target.value.split(':'), tbl = e.target.closest('.dtp').querySelector('table.sxi'), b = tbl && tbl.querySelector('.sxs[data-k="' + kv[0] + '"]'); if (!b) return;
+      tbl.dataset.k = kv[0]; tbl.dataset.dir = kv[1] === 'd' ? 'a' : 'd'; b.click();
     });
     doc.getElementById('main').addEventListener('change', function (e) {
       var n = e.target.name || ''; if (!/^(dtt-|ms-)/.test(n)) return;
@@ -4241,13 +4317,25 @@ var KIMS = (function () {
     var placeTip = function (ifo) { var t = ifo.querySelector('.ift'); if (!t) return; t.style.left = ''; var r = t.getBoundingClientRect(), vw = window.innerWidth; if (r.right > vw - 10) t.style.left = (-8 - (r.right - vw + 10)) + 'px'; };
     doc.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.ifb'); var open = doc.querySelectorAll('.ifo.open'); [].forEach.call(open, function (x) { if (!b || x !== b.parentNode) x.classList.remove('open'); }); if (b) { e.stopPropagation(); b.parentNode.classList.toggle('open'); placeTip(b.parentNode); } });
     doc.getElementById('main').addEventListener('mouseover', function (e) { var f = e.target.closest && e.target.closest('.ifo'); if (f) placeTip(f); });
+    // 터치 화면 말풍선(2026-11-24 제이): 톡 누르면 열고, 같은 줄을 다시 누르거나 다른 곳을 누르면 닫음. 스크롤하면 닫음
+    var TOUCH = window.matchMedia && window.matchMedia('(hover: none)').matches;
+    var tipOff = function (keep) { [].forEach.call(doc.querySelectorAll('#main .tipon'), function (x) { if (x !== keep) x.classList.remove('tipon'); }); };
+    if (TOUCH) {
+      doc.addEventListener('click', function (e) {
+        var row = e.target.closest && e.target.closest('#main .mcl li, #main .hrc li, #main .sb.hasf');
+        if (row && !row.querySelector('.mtip, .htip, .sbtip')) row = null;
+        tipOff(row);
+        if (row) { row.classList.toggle('tipon'); if (doc.activeElement === row) row.blur(); }
+      });
+      doc.getElementById('scroller').addEventListener('scroll', function () { tipOff(null); }, { passive: true });
+    }
     doc.getElementById('main').addEventListener('click', function (e) { var li = e.target.closest && e.target.closest('.hrc li'); if (!li) return; var box = li.closest('section'), out = box && box.querySelector('.hri'); [].forEach.call(box.querySelectorAll('.hrc li.on'), function (x) { x.classList.remove('on'); }); li.classList.add('on'); if (out) out.textContent = li.dataset.tip; });
     doc.getElementById('main').addEventListener('keydown', function (e) { if (e.key === 'Enter') pick(e); });
     render(true);
     if (!WEB) cloudInit();
   }
   // 웹: 폰에 저장된 데이터로 먼저 보여준 뒤 새 데이터가 오면 바꿔 그림
-  function update(data) { setup(data); quietRender(); toast('최신 데이터로 바꿨습니다 · ' + D.per.D.title.replace(/ (?:실적|누계)$/, '')); }
+  function update(data) { setup(data); quietRender(); } // '최신 데이터로 바꿨습니다' 알림은 제이 요청으로 뺌(2026-11-24)
   function applyPrefs(str) {
     if (!str) return;
     var cur = JSON.stringify(S), n;
