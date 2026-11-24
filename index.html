@@ -1048,17 +1048,42 @@ tr.dim>*{opacity:.42}
 .sdx-dots i.ln{position:absolute;left:0;top:50%;height:2px;margin-top:-1px;background:color-mix(in srgb,var(--muted) 70%,transparent)}
 .sdx-dots i.dt{position:absolute;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:color-mix(in srgb,var(--muted) 80%,transparent)}
 .sdx-dots p.on{color:var(--ac);font-weight:700}.sdx-dots p.on em{color:var(--fg);font-weight:700}.sdx-dots p.on i.ln,.sdx-dots p.on i.dt{background:var(--ac)}
-/* PC 사이드 메뉴: 화면 높이에 맞춰 세로로 꽉 채움(2026-11-24) — 남는 높이를 리포트 타일과 점포별 실적 줄에 나눔 */
+/* PC 사이드 메뉴(2026-11-24 다시 정리): 리포트 타일은 고정 높이, 남는 높이는 아래 카드(점포별 실적·재고 한눈에)가 채움. 점포별 실적을 펼쳐 넘치면 사이드 메뉴 전체가 스크롤(제이 OK) */
 @media (min-width:1024px){
-#nav .ncard.nrep{flex:3 1 auto;min-height:0}
-#nav .nrep .toc.tgrid{flex:1 1 auto;grid-auto-rows:minmax(32px,1fr);align-content:stretch}
+#nav .ncard.nrep{flex:none}
+#nav .nrep .toc.tgrid{grid-auto-rows:46px}
 #nav .nrep .toc.tgrid li{display:flex;min-height:0;min-width:0}
 #nav .nrep .toc.tgrid a{flex:1;min-width:0;height:auto;min-height:0}
 #nav .nrep .toc.tgrid a svg{width:17px;height:17px}
-#nav .ncard.nst{flex:1 1 auto;min-height:0}
-#nav .nst .sdds{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-evenly}
+#nav .ncard.nst{flex:1 0 auto}
+#nav .nst .sdds{flex:1 0 auto;display:flex;flex-direction:column;justify-content:space-evenly}
+#nav .nst .sdds:has(.sdd.open){justify-content:flex-start}
+#nav .nst .sdd{flex:none}
 #nav .nst .sddb{font-size:14px}
 }
+@media (min-width:1024px) and (max-height:760px){#nav .nrep .toc.tgrid{grid-auto-rows:36px}}
+/* 리포트 메뉴 = 세로 리스트(2026-11-24 제이가 시안 1 선택): 한 줄에 하나, 아이콘+이름, 지금 보는 항목은 파란 줄 */
+#nav .ncard.nrep .toc.tgrid{display:flex;flex-direction:column;gap:2px}
+#nav .ncard.nrep .toc.tgrid li{display:block;min-width:0}
+#nav .ncard.nrep .toc.tgrid a{flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;height:38px;min-height:0;padding:0 10px;border-radius:10px;background:transparent;color:var(--fg);font-size:14px;font-weight:500;letter-spacing:-.01em;white-space:nowrap;line-height:1}
+#nav .ncard.nrep .toc.tgrid a svg{width:16px;height:16px;flex:none;color:var(--muted)}
+#nav .ncard.nrep .toc.tgrid a span{overflow:hidden;text-overflow:ellipsis;min-width:0}
+#nav .ncard.nrep .toc.tgrid a.on{background:var(--ac);color:var(--on-ac);font-weight:700}#nav .ncard.nrep .toc.tgrid a.on svg{color:var(--on-ac)}
+@media (hover:hover){#nav .ncard.nrep .toc.tgrid a:not(.on):hover{background:var(--tile)}}
+@media (min-width:1024px){#nav .ncard.nrep .toc.tgrid a{height:34px}}
+@media (min-width:1024px) and (max-height:760px){#nav .ncard.nrep .toc.tgrid a{height:31px;font-size:13.5px}}
+@media (max-width:1023px){#nav .ncard.nrep .toc.tgrid a{height:44px;font-size:15px}}
+}
+/* 재고 화면 사이드 메뉴(2026-11-24): 타일은 고정 높이, 남는 높이는 '재고 한눈에' 카드가 채움 */
+#nav .nsk .nct small{font-size:11.5px;color:var(--muted);font-weight:500}
+#nav .nskv{margin:0;display:flex;align-items:baseline;gap:4px}#nav .nskv b{font-size:26px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}#nav .nskv small{font-size:13px;color:var(--muted)}
+#nav .nskl{display:flex;flex-direction:column}
+#nav .nskl p{margin:0;display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+#nav .nskl b{color:var(--fg);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}#nav .nskl b.up{color:var(--bad)}#nav .nskl b.dn{color:var(--good)}
+@media (min-width:1024px){
+#nav .ncard.nsk{flex:none}
+}
+@media (min-width:1024px) and (max-height:760px){#nav .nskv b{font-size:21px}#nav .nskl p{padding:5px 0;font-size:12.5px}}
 /* 관리 필요 상품 표(2026-11-24) */
 #sec-sitem{position:relative}
 #main .sxi-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
@@ -1564,8 +1589,8 @@ var KIMS = (function () {
       rows.map(function (r) {
         var t = r[1];
         return '<div class="sb' + (r[0] === me ? ' me' : '') + '"><div class="sbh"><span>' + esc(NAME[r[0]]) + '</span><b class="' + cls(t.growth) + '">' + (!(t.gsT > 0) && !(t.gsL > 0) ? '실적 없음' : t.growth == null ? '전년 없음' : pct(t.growth)) + '</b></div>' +
-          '<div class="br"><span class="bar ty" style="width:' + (t.gsT / mx * 100).toFixed(1) + '%"></span><em>' + (t.gsT > 0 ? man(t.gsT) : '-') + '</em></div>' +
-          '<div class="br"><span class="bar ly" style="width:' + (t.gsL / mx * 100).toFixed(1) + '%"></span><em>' + (t.gsL > 0 ? man(t.gsL) : '-') + '</em></div></div>';
+          '<div class="br"><span class="bar ty" style="width:' + (t.gsT / mx * 80).toFixed(1) + '%"></span><em>' + (t.gsT > 0 ? man(t.gsT) : '-') + '</em></div>' +
+          '<div class="br"><span class="bar ly" style="width:' + (t.gsL / mx * 80).toFixed(1) + '%"></span><em>' + (t.gsL > 0 ? man(t.gsL) : '-') + '</em></div></div>';
       }).join('') + '</div>';
   }
   // 상세 비교: 본인 · 비교 점포 각각(없으면 그룹 합계) · 킴스 합계 · 그룹 순위
@@ -1998,7 +2023,7 @@ var KIMS = (function () {
   function mcList(items, up, lim) {
     if (!items.length) return '<li class="muted">해당 품목 없음</li>';
     var mx = Math.max.apply(null, items.map(function (x) { return Math.abs(x[3]); })) || 1;
-    return items.map(function (x, i) { var g = x[2] ? x[1] / x[2] - 1 : null; return '<li tabindex="0"' + (lim != null && i >= lim ? ' class="mx"' : '') + '><span class="mtip" role="tooltip"><b>' + esc(x[0]) + '</b><span>금년 <em>' + bm(x[1]) + '백만</em></span><span>전년 <em>' + bm(x[2]) + '백만</em></span><span>성장율 <em class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</em></span></span><span class="mn">' + esc(x[0]) + '</span><span class="track"><i class="' + (up ? 'bu' : 'bd') + '" style="width:' + (Math.abs(x[3]) / mx * 100).toFixed(1) + '%"></i></span><span class="mv ' + (up ? 'up' : 'dn') + '"><b>' + bms(x[3]) + '</b><small>' + (g == null ? (x[1] ? '신규' : '-') : pct(g)) + '</small></span>' + mcAvg(x) + '</li>'; }).join('');
+    return items.map(function (x, i) { var g = x[2] ? x[1] / x[2] - 1 : null; return '<li tabindex="0"' + (lim != null && i >= lim ? ' class="mx"' : '') + '><span class="mtip" role="tooltip"><b>' + esc(x[0]) + '</b><span>금년 <em>' + bm(x[1]) + '백만</em></span><span>전년 <em>' + bm(x[2]) + '백만</em></span><span>성장율 <em class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</em></span></span><span class="mn">' + esc(x[0]) + '</span><span class="track"><i class="' + (up ? 'bu' : 'bd') + '" style="width:' + (Math.abs(x[3]) / mx * 78).toFixed(1) + '%"></i></span><span class="mv ' + (up ? 'up' : 'dn') + '"><b>' + bms(x[3]) + '</b><small>' + (g == null ? (x[1] ? '신규' : '-') : pct(g)) + '</small></span>' + mcAvg(x) + '</li>'; }).join('');
   }
   // 전점 MC 증감: 킴스 영업 점포 합계(P=ALL). 전체 탭은 CD 버튼으로 고름, CD 탭은 그 CD만
   function allMc(k, t) {
@@ -2831,7 +2856,7 @@ var KIMS = (function () {
       [sec('skpi', '재고 요약', '', sCards(plants, t, me), null, 'bare')],
     ].concat(me ? [[sec('sdrank', '재고일수 순위', '재고일수 순위 <small class="h3s">적은 순</small>', sDaysRank(t, me))]] : []).concat([ // 큰 재고일수 카드·CD별 재고일수는 제이 요청으로 뺌(2026-11-24)
       [sec('sdiag', t === 'store' ? 'CD 진단' : '구매그룹 진단', t === 'store' ? 'CD 진단' : '구매그룹 진단', sDiag(plants, t))],
-      [sec('sday', Number(S0.base.slice(5, 7)) + '월 일별 재고액', Number(S0.base.slice(5, 7)) + '월 일별 재고액 <small class="h3s">백만원</small>', sDayChart(plants, t))],
+      [sec('sday', '일별 재고액', '일별 재고액 <small class="h3s">' + Number(S0.base.slice(5, 7)) + '월 · 백만원</small>', sDayChart(plants, t))],
       [sec('smon', '월별 재고', '월별 재고액 <small class="h3s">금년 vs 전년</small>', sMonChart(plants, t))],
       [sec('scd', '재고 상세', (t === 'store' ? 'CD·구매그룹별' : '구매그룹별') + ' 재고', sCdTable(plants, t, who))],
     ]).concat(me ? [[sec('sitem', '관리 필요 상품', '관리 필요 상품', sItems(me, t))]] : [
@@ -2941,6 +2966,19 @@ var KIMS = (function () {
     var gs = D.groups.filter(function (g) { return g[0] !== D.closed; });
     var gg = gs.map(function (g) { return M(ST.k, g[2], scS).growth; });
     var gmax = Math.max.apply(null, gg.map(function (x) { return Math.abs(x || 0); }).concat([0.0001]));
+    // 재고 화면: 점포별 재고 대신 '재고 한눈에' 카드(2026-11-24) — 지금 보는 점포·CD의 재고액·재고일수·증감·순위
+    if (!showG && ST.v === 'report' && D.stock) {
+      var kp = me ? [me] : OPEN(), ky = sAgg(kp, sCodes(ST.t));
+      if (ky) {
+        var kr = function (l, v, c) { return '<p><span>' + l + '</span><b' + (c ? ' class="' + c + '"' : '') + '>' + v + '</b></p>'; };
+        var kc = function (v) { return v == null ? '' : v >= 0 ? 'up' : 'dn'; };
+        var krk = '';
+        if (me) { var kdv = function (p) { var x = sAgg([p], sCodes(ST.t)); return x && x.d; }, k1 = sRank(OPEN(), me, kdv, false), k2 = sRank(openOf(GRP[me]), me, kdv, false); if (k1.r) krk = '킴스 ' + k1.r + '위 · ' + GNAME[GRP[me]] + ' ' + k2.r + '위'; }
+        out += '<div class="ncard nsk"><p class="nct"><span>재고 한눈에</span><small>' + (ST.t === 'store' ? '' : sTabName(ST.t) + ' · ') + '기준 ' + Number(D.stock.base.slice(5, 7)) + '/' + Number(D.stock.base.slice(8)) + '</small></p>' +
+          '<p class="nskv"><b>' + man(ky.a) + '</b><small>백만원</small></p>' +
+          '<div class="nskl">' + kr('재고일수', ky.d == null ? '-' : f1(ky.d) + '일') + kr('전월말 대비', ky.gm == null ? '-' : pct(ky.gm), kc(ky.gm)) + kr('전년 같은 요일 대비', ky.gy == null ? '-' : pct(ky.gy), kc(ky.gy)) + (krk ? kr('재고일수 순위', krk) : '') + '</div></div>';
+      }
+    }
     if (showG) out += '<div class="ncard nst"><p class="nct"><span>' + (showG ? '점포별 실적' : '점포별 재고') + '</span>' + (showG ? '<small>' + PNAME[ST.k] + ' 성장율</small>' : '') + '</p><div class="sdds">' +
       gs.map(function (g, i) {
         var gt = gg[i], open = NAVDD === g[0], mine = ST.v === 'report' && me && GRP[me] === g[0];
