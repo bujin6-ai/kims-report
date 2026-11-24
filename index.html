@@ -408,6 +408,7 @@ body.nav-open #nav{transform:none}
 @media (min-width:601px) and (max-width:1599px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (min-width:1600px){#main{max-width:1640px}
 .kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+.kpis:not(:has(>.kpi:nth-child(6))){grid-template-columns:repeat(5,minmax(0,1fr))} /* 재고 화면 카드 5장: 아래 카드와 폭 맞춤(2026-11-24) */
 .mt .msegw{display:none}.mt .mtbl [data-m]{display:table-cell!important}
 .mt .mtbl{font-size:13.5px}.mt .mtbl th,.mt .mtbl td{padding-left:6px;padding-right:6px}}
 /* 설정 창: PC에서 글자·버튼을 창 크기에 맞게 작게 */
@@ -1126,6 +1127,25 @@ tr.dim>*{opacity:.42}
 #main .vst tbody th{padding:12px 6px 12px 10px;font-size:13px}#main .vst tbody th small{font-size:10.5px}
 #main .vst tbody td{padding:11px 6px}#main .vst tbody td:last-child,#main .vst thead th:last-child{padding-right:10px}
 #main .vst td>b{font-size:14.5px}#main .vst .vsc{font-size:11px;margin-top:2px}#main .vst .vsk{font-size:10.5px;padding:1px 5px;margin-top:4px}}
+/* 우리점 VS 비교점 세로폭 줄임(2026-11-24 제이: 너무 꽉 참) — 증감·순위 한 줄, 막대 양끝에 1위·n위 */
+#main .vst thead th{padding:9px 16px}
+#main .vst tbody th{padding:8px 16px;font-size:14px}#main .vst tbody th small{margin-top:1px;font-size:11.5px}
+#main .vst tbody td{padding:8px 16px}
+#main .vst td>b{font-size:17px;line-height:1.25}
+#main .vst .vsc{display:inline-block;margin-top:2px;font-size:12.5px}
+#main .vst .vsk{margin:2px 0 0 6px;padding:1px 7px;font-size:11.5px}
+#main .vst td.dist{padding:8px 20px 8px 16px}
+#main .vsr{display:flex;align-items:center;gap:8px;padding-top:15px}
+#main .vsr-t{flex:1}
+#main .vsr em{top:-22px;font-size:11.5px}
+#main .vsr-a{flex:none;font-size:11px;color:var(--muted)}
+#main .vst td.vsna{padding:10px 16px}
+@media (max-width:700px){#main .vst tbody td{padding:9px 6px}#main .vst tbody td:last-child{padding-right:10px}#main .vst .vsc{display:block}#main .vst .vsk{margin:3px 0 0;font-size:10.5px;padding:1px 5px}#main .vst td>b{font-size:14.5px}#main .vst tbody th{padding:9px 6px 9px 10px;font-size:13px}}
+/* 표 열 제목을 아래 숫자와 같은 쪽으로 정렬(2026-11-24 제이: 제목과 값 줄이 안 맞음) */
+#main table.sct thead th:not(:first-child){text-align:right}
+@media (min-width:701px){#main table.sct{table-layout:fixed;width:100%}#main table.sct thead th:first-child{width:17%}
+#main table.sct td,#main table.sct thead th{padding-left:10px;padding-right:14px}}
+#main table.mxl thead th:first-child,#main table.ht thead th:first-child{text-align:left}
 /* 관리 필요 상품 CD·구매그룹 고르기(2026-11-24) */
 #main .sxf{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
 #main .sxf-c{position:relative;display:flex;align-items:stretch;border-radius:10px;background:var(--seg)}
@@ -1211,13 +1231,34 @@ tr.dim>*{opacity:.42}
 #main .skb i.n,#main .skl i.n{background:var(--skn)}#main .skb i.s,#main .skl i.s{background:var(--sks)}#main .skb i.c,#main .skl i.c{background:var(--skc)}#main .skb i.g,#main .skl i.g{background:var(--skg)}
 #main .skb.one{margin-bottom:8px}#main .skb.one i{border-radius:5px}
 #main .skl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px;width:100%}
-#main .skl li{display:grid;grid-template-columns:8px minmax(0,1fr) auto auto;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+#main .skl li{display:grid;grid-template-columns:8px auto minmax(0,1fr) auto;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
 #main .skl li i{width:8px;height:8px;border-radius:50%}
-#main .skl li b{color:var(--fg);font-weight:700;font-variant-numeric:tabular-nums}
+#main .skl li b{color:var(--fg);font-weight:700;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 #main .skl li em{font-style:normal;font-size:11.5px;min-width:38px;text-align:right;font-variant-numeric:tabular-nums}
 #main .skn{margin:0;font-size:12.5px;color:var(--muted)}#main .skn b{color:var(--fg)}
 @media (max-width:600px){#main .skl{grid-template-columns:minmax(0,1fr);gap:4px}}
 @media (min-width:1024px){#main .skl li{font-size:13.5px}#main .skl li em{font-size:12.5px}#main .skn{font-size:13.5px}}
+@media (min-width:1600px){#main .skl{gap:5px 10px}#main .skl li{gap:4px;font-size:12.5px}#main .skl li em{min-width:0;font-size:11px}} /* 카드 5장 한 줄: SKU 숫자·비중 겹침 방지 */
+/* 관리 필요 상품 2차(2026-11-24): 재고액 숫자를 막대 바로 뒤에 · 구매그룹 드롭다운 다듬기 */
+@media (min-width:701px){#main .sxi td.a .sxi-b{width:calc(100% - 52px)}#main .sxi td.a>b{width:40px;margin-left:8px;text-align:left}#main .sxi td.a{padding-right:28px!important}#main .sxi td.d .sxi-b{width:calc(100% - 82px)}#main .sxi td.d>b{width:70px;margin-left:10px;text-align:left}}
+#main .sxf-m{min-width:230px;padding:6px;gap:1px;border-radius:14px}
+#main .sxf-m .sxf-mh{display:flex;align-items:center;gap:7px;margin:0;padding:8px 10px 8px;font-size:12.5px;font-weight:700;color:var(--fg)}
+#main .sxf-m .sxf-mh svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:var(--ac)}
+#main .sxf-m .sxf-mh small{margin-left:auto;font-size:11px;font-weight:500;color:var(--muted)}
+#main .sxf-m hr{margin:4px 6px;border:0;border-top:1px solid var(--line)}
+#main .sxf-m button{display:flex;align-items:center;gap:8px;padding:8px 10px;font-weight:500}
+#main .sxf-m button .ck{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+#main .sxf-m button[aria-current=true] .ck{opacity:1}
+#main .sxf-m button span{flex:1}
+#main .sxf-m button em{font-style:normal;min-width:26px;padding:1px 7px;border-radius:999px;background:var(--seg);font-size:11.5px;font-weight:700;color:var(--muted);text-align:center}
+#main .sxf-m button[aria-current=true] em{background:color-mix(in srgb,var(--ac) 16%,transparent);color:var(--ac)}
+#main .sxf-m button.z{color:var(--muted)}#main .sxf-m button.z em{opacity:.6}
+/* CD 진단: 그룹 같은 CD 평균 기준(2026-11-24) */
+.sdx-dh,.sdx-dr{grid-template-columns:96px minmax(0,1fr) minmax(0,1.3fr) 190px}
+.sdx-dh small{font-size:11px;color:var(--muted);font-weight:500;margin-left:4px}
+.sdx-dr .sxt{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.sdx-dr .sdx-av{font-size:11.5px;color:var(--muted);white-space:nowrap}
+@media (max-width:700px){.sdx-dr{grid-template-columns:minmax(0,1fr) auto}.sdx-dr .sxt{align-items:flex-end}}
 /* 재고 요약 한 줄(카드 위) */
 #main .ssum{margin:0 2px 12px;font-size:15px;line-height:1.5;color:var(--muted);word-break:keep-all}#main .ssum b{color:var(--fg);font-weight:700}#main .ssum b.ac{color:var(--ac)}
 @media (max-width:600px){#main .ssum{font-size:13.5px;letter-spacing:-.02em}}
@@ -1693,9 +1734,9 @@ var KIMS = (function () {
       var pos = function (r) { return ((r.r - 1) / (r.n - 1) * 100).toFixed(1); };
       var dots = rs.slice(1).map(function (r, i) { return r.r == null ? '' : '<i class="c' + (i + 1) + '" style="left:' + pos(r) + '%" title="' + esc(NAME[who[i + 1]]) + ' ' + r.r + '위"></i>'; }).reverse().join('');
       var x = pos(r0);
-      return '<div class="vsr" role="img" aria-label="' + esc(NAME[me]) + ' 영업 ' + r0.n + '점 중 ' + r0.r + '위"><div class="vsr-t"><span class="vsr-g"></span>' + dots +
+      return '<div class="vsr" role="img" aria-label="' + esc(NAME[me]) + ' 영업 ' + r0.n + '점 중 ' + r0.r + '위"><span class="vsr-a">1위</span><div class="vsr-t"><span class="vsr-g"></span>' + dots +
         '<b class="me" style="left:' + x + '%"></b><em style="left:' + Math.max(9, Math.min(91, Number(x))).toFixed(1) + '%">' + esc(short(me)) + ' ' + r0.r + '위</em></div>' +
-        '<div class="vsr-ax"><span>1위</span><span>' + r0.n + '위</span></div></div>';
+        '<span class="vsr-a">' + r0.n + '위</span></div>';
     };
     var maxN = 0, nOf = {};
     R.forEach(function (x) { if (x[3]) { var r = rankIn(k, KO, sc, x[3], me); if (r.r != null) { nOf[x[3]] = [x[0].replace(/<small>.*$/, ''), r.n]; maxN = Math.max(maxN, r.n); } } });
@@ -2646,7 +2687,7 @@ var KIMS = (function () {
       sCard('재고일수', y.d == null ? '-' : f1(y.d), '일', y.pd == null ? '전월말 -' : '전월말 ' + sDay(y.pd) + ' · ' + sDayD(y.d, y.pd), '', bd ? bd + '<small class="kbn">적은 순</small>' : '', y.pd == null ? '' : sBars(y.d, y.pd, '기준일', '전월말', fd), 'sd') +
       sCard('전년 동요일 대비', pct(y.gy), '', '재고액 금년 ÷ 전년', '', '', sBars(y.a, y.la, '금년', '전년', fm), 'sy') +
       sCard('SKU<small class="ksub">' + (me ? '재고 있는 상품 수' : '점포 평균') + '</small>', hasSku ? won(Math.round(tot)) : '-', hasSku ? '개' : '', t === 'store' ? '농산·수산·축산·공산 합계' : sTabName(t) + ' 상품', '', '', hasSku && cats.length ? skuList : '') +
-      sCard('일매출 ÷ 재고액', y.r == null ? '-' : f1(y.r * 100), y.r == null ? '' : '%', y.r == null ? '다음 데이터 갱신부터' : '전년 ' + sPct1(y.rl) + ' · ' + sPp(y.rD), '', br ? br + '<small class="kbn">높은 순</small>' : '', y.r == null ? '' : sBars(y.st1, y.sl1, '매출', '전년', fm), 'sr') +
+      sCard('일매출 ÷ 재고액<small class="ksub">월 누적 ÷ 영업일</small>', y.r == null ? '-' : f1(y.r * 100), y.r == null ? '' : '%', y.r == null ? '다음 데이터 갱신부터' : '전년 ' + sPct1(y.rl) + ' · ' + sPp(y.rD), '', br ? br + '<small class="kbn">높은 순</small>' : '', y.r == null ? '' : sBars(y.st1, y.sl1, '일매출', '전년', fm), 'sr') +
       '</div>';
   }
   // ── 카드 펼침(CD·구매그룹별 / 점포별) ──
@@ -2805,7 +2846,7 @@ var KIMS = (function () {
   var SRANK = [
     ['재고액', '재고액 큰 순', function (y) { return y.a; }, function (y) { return man(y.a) + '백만'; }, true],
     ['재고일수', '재고일수 적은 순', function (y) { return y.d; }, function (y) { return sDay(y.d); }, false],
-    ['일매출÷재고', '일매출 ÷ 재고액 높은 순(재고 대비 매출 비중)', function (y) { return y.r; }, function (y) { return sPct1(y.r); }, true],
+    ['일매출÷재고', '일매출(월 누적 매출 ÷ 영업일수) ÷ 재고액 높은 순', function (y) { return y.r; }, function (y) { return sPct1(y.r); }, true],
     ['전월말 대비', '전월말 대비 증가율 낮은 순', function (y) { return y.gm; }, function (y) { return pct(y.gm); }, false],
     ['전년 대비', '전년 같은 날 대비 증가율 낮은 순', function (y) { return y.gy; }, function (y) { return pct(y.gy); }, false],
   ];
@@ -2848,14 +2889,22 @@ var KIMS = (function () {
     if (!cds.length) return '';
     var ic = function (k) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + SXICON[k] + '</svg>'; };
     var pgName = function (c, g) { return ((pgOf(c).filter(function (x) { return x[0] === g; })[0]) || [0, ''])[1]; };
+    // 드롭다운(2026-11-24 개편): 제목 · 선택 체크 · 구매그룹별 관리 대상 상품 수(세 탭 합, 구매그룹 데이터가 있을 때만)
+    var hasPg = SXCD.some(function (c) { return ['O', 'Z', 'N'].some(function (k) { return ((by[c[0]] || {})[k] || []).some(function (r) { return r[8]; }); }); });
+    var cnt = hasPg ? function (cd, pg) { return ['O', 'Z', 'N'].reduce(function (n, k) { return n + ((by[cd] || {})[k] || []).filter(function (r) { return !pg || r[8] === pg; }).length; }, 0); } : null;
+    var item = function (cd, pg, name, cur, n) {
+      return '<button type="button" role="menuitemradio" aria-checked="' + (cur ? 'true' : 'false') + '" data-cd="' + cd + '" data-pg="' + pg + '"' + (cur ? ' aria-current="true"' : '') + (n === 0 ? ' class="z"' : '') + '>' +
+        '<svg class="ck" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>' + esc(name) + '</span>' + (n == null ? '' : '<em>' + n + '</em>') + '</button>';
+    };
     var out = t === 'store' ? '<button type="button" class="sxf-b' + (!f.cd ? ' on' : '') + '" data-cd="" data-pg="">' + ic('all') + '<span>전체</span></button>' : '';
     out += cds.map(function (c) {
       var on = (t === 'store' ? f.cd === c[0] : true), pgs = pgOf(c[0]);
       var label = c[1] + (on && f.pg ? ' · ' + esc(pgName(c[0], f.pg)) : '');
       return '<div class="sxf-c' + (on && (t === 'store' || f.pg) ? ' on' : '') + '"><button type="button" class="sxf-b" data-cd="' + c[0] + '" data-pg="">' + ic(c[0]) + '<span>' + label + '</span></button>' +
         (pgs.length > 1 ? '<details class="sxf-d"><summary aria-label="' + c[1] + ' 구매그룹 고르기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="sxf-m" role="menu">' +
-          '<button type="button" role="menuitem" data-cd="' + c[0] + '" data-pg=""' + (on && !f.pg ? ' aria-current="true"' : '') + '>' + c[1] + ' 전체</button>' +
-          pgs.map(function (g) { return '<button type="button" role="menuitem" data-cd="' + c[0] + '" data-pg="' + g[0] + '"' + (on && f.pg === g[0] ? ' aria-current="true"' : '') + '>' + esc(g[1]) + '</button>'; }).join('') + '</div></details>' : '') + '</div>';
+          '<p class="sxf-mh">' + ic(c[0]) + c[1] + ' 구매그룹' + (cnt ? '<small>관리 대상 상품 수</small>' : '') + '</p>' +
+          item(c[0], '', c[1] + ' 전체', on && !f.pg, cnt ? cnt(c[0], '') : null) + '<hr>' +
+          pgs.map(function (g) { return item(c[0], g[0], g[1], on && f.pg === g[0], cnt ? cnt(c[0], g[0]) : null); }).join('') + '</div></details>' : '') + '</div>';
     }).join('');
     return '<div class="sxf" role="group" aria-label="CD·구매그룹 고르기">' + out + '</div>';
   }
@@ -2888,7 +2937,7 @@ var KIMS = (function () {
         var lv = d == null ? 0 : d >= L * 10 ? 3 : d >= L * 3 ? 2 : d > L ? 1 : 0;
         // 판매 없음·마이너스 탭은 상품 자체가 관리 대상이라 과다 재고처럼 빨간 막대를 꽉 채워 보여줌(2026-11-24 제이 요청)
         var bw = d == null || d < 0 ? 0 : lp(d);
-        if (s[0] !== 'O') { lv = 3; bw = 100; }
+        if (s[0] !== 'O') { lv = d == null || d < 0 ? 0 : 3; bw = 100; } // 재고일수를 못 구하면 회색(2026-11-24 제이)
         // 상품명 아래 = 구매그룹 · MC · 마지막 입고일(2026-11-24 통일). 구매그룹이 없는 옛 데이터는 CD 이름
         var pg = r.length > 9 ? r[8] : null, pgn = pg ? ((pgOf(c).filter(function (x) { return x[0] === pg; })[0]) || [0, ''])[1] : '';
         var sub = [esc(pgn || cn(c)), esc(r[2]), '마지막 입고 ' + (r[7] ? ymd(r[7]) : '-')].filter(Boolean).join(' · ');
@@ -2932,28 +2981,38 @@ var KIMS = (function () {
     var g = GRP[me], gl = GNAME[g] + (GNAME[g].slice(-1) === '형' ? '점' : '') + ' 그룹';
     return strip(gl, openOf(g), true) + strip('킴스 전체', OPEN(), false) + '<p class="sdx-ax"><span>재고일수 적음</span><span>많음</span></p>';
   }
-  function sDiag(plants, t) {
+  // 2026-11-24 제이: 평균 기준 = 같은 그룹(대형·중형…) 점포들의 같은 CD(구매그룹) 재고일수(그룹 합산 재고액 ÷ 그룹 합산 하루 매출원가)
+  //   → 줄마다 점선 위치가 다름. 전점 화면(점포 없음)은 기존처럼 전체 평균 하나
+  function sDiag(plants, t, me) {
     var tot = sAgg(plants, sCodes(t)); if (!tot) return NOT_YET('재고');
     var items = t === 'store' ? D.storeCats.map(function (c) { return [c[1], catCodes(c[0])]; }) : ((D.storeCats.filter(function (c) { return c[0] === t; })[0] || [0, 0, []])[2]).map(function (g) { return [g[1], [g[0]]]; });
-    var rows = items.map(function (it) { var y = sAgg(plants, it[1]); return y && y.a > 0 ? { n: it[0], a: y.a, d: y.d } : null; }).filter(Boolean).sort(function (a, b) { return b.a - a.a; });
+    var gp = me ? openOf(GRP[me]) : null, gn = me ? GNAME[GRP[me]] + (GNAME[GRP[me]].slice(-1) === '형' ? '점' : '') : '';
+    var rows = items.map(function (it) {
+      var y = sAgg(plants, it[1]); if (!(y && y.a > 0)) return null;
+      var ga = gp && gp.length ? sAgg(gp, it[1]) : null;
+      return { n: it[0], a: y.a, d: y.d, avg: gp ? (ga ? ga.d : null) : tot.d };
+    }).filter(Boolean).sort(function (a, b) { return b.a - a.a; });
     if (!rows.length) return NOT_YET('재고');
-    var avg = tot.d, ds = rows.filter(function (r) { return r.d != null; }).map(function (r) { return r.d; });
-    var dmax = Math.max.apply(null, ds.concat([avg || 0, 0.1])), amax = Math.max.apply(null, rows.map(function (r) { return r.a; }));
+    var ds = rows.filter(function (r) { return r.d != null; }).map(function (r) { return r.d; });
+    var dmax = Math.max.apply(null, ds.concat(rows.map(function (r) { return r.avg || 0; }), [0.1])), amax = Math.max.apply(null, rows.map(function (r) { return r.a; }));
     var hi = ds.length > 1 ? Math.max.apply(null, ds) : null, lo = ds.length > 1 ? Math.min.apply(null, ds) : null;
     var tag = function (r) {
-      if (r.d == null || avg == null) return ['', '-'];
-      if (r.d === hi) return ['w', '가장 김' + (r.d >= avg * 1.5 ? ' · 평균의 ' + (Math.round(r.d / avg * 10) / 10) + '배' : '')];
-      if (r.d === lo) return ['g', '가장 짧음'];
-      return r.d < avg * 0.9 ? ['g', '평균보다 짧음'] : r.d > avg * 1.1 ? ['w', '평균보다 김'] : ['', '평균 수준'];
+      var avg = r.avg;
+      if (r.d == null || avg == null || !(avg > 0)) return ['', '-'];
+      var x = r.d / avg, times = x >= 1.5 ? ' · 평균의 ' + (Math.round(x * 10) / 10) + '배' : '';
+      if (x > 1.1) return ['w', (r.d === hi ? '가장 김' : '평균보다 김') + times];
+      if (x < 0.9) return ['g', r.d === lo ? '가장 짧음' : '평균보다 짧음'];
+      return ['', '평균 수준'];
     };
-    var avgX = avg == null ? null : (avg / dmax * 100).toFixed(1);
-    return '<p class="note">점선 = ' + (t === 'store' ? '점포 전체' : sTabName(t)) + ' 평균 ' + sDay(avg) + ' · 재고액 백만원 · 재고일수 = 재고액 ÷ 최근 30일 하루 평균 매출원가</p>' +
-      '<div class="sdx-dg"><div class="sdx-dh"><span>' + (t === 'store' ? 'CD' : '구매그룹') + '</span><span>재고액</span><span>재고일수</span><span>진단</span></div>' + rows.map(function (r) {
-        var tg = tag(r);
+    var note = gp ? '점선 = ' + gn + ' 그룹(' + gp.length + '개점)의 같은 ' + (t === 'store' ? 'CD' : '구매그룹') + ' 평균 재고일수 · 진단도 이 평균과 비교(±10% 안 = 평균 수준)'
+      : '점선 = ' + (t === 'store' ? '점포 전체' : sTabName(t)) + ' 평균 ' + sDay(tot.d);
+    return '<p class="note">' + note + ' · 재고액 백만원 · 재고일수 = 재고액 ÷ 최근 30일 하루 평균 매출원가</p>' +
+      '<div class="sdx-dg"><div class="sdx-dh"><span>' + (t === 'store' ? 'CD' : '구매그룹') + '</span><span>재고액</span><span>재고일수 <small>점선 = ' + (gp ? gn + ' 평균' : '평균') + '</small></span><span>진단</span></div>' + rows.map(function (r) {
+        var tg = tag(r), avgX = r.avg == null ? null : Math.min(100, r.avg / dmax * 100).toFixed(1);
         return '<div class="sdx-dr"><b class="sxn">' + esc(r.n) + '</b>' +
           '<span class="sxa"><i class="tr"><i style="width:' + (r.a / amax * 100).toFixed(1) + '%"></i></i><em>' + man(r.a) + '백만 · ' + f1(r.a / tot.a * 100) + '%</em></span>' +
-          '<span class="sxd"><i class="tr">' + (r.d == null ? '' : '<i class="' + tg[0] + '" style="width:' + Math.min(100, r.d / dmax * 100).toFixed(1) + '%"></i>') + (avgX ? '<i class="avg" style="left:' + avgX + '%"></i>' : '') + '</i><em class="' + tg[0] + '">' + sDay(r.d) + '</em></span>' +
-          '<span class="sxt"><span class="sdx-chip ' + tg[0] + '">' + tg[1] + '</span></span></div>';
+          '<span class="sxd"><i class="tr">' + (r.d == null ? '' : '<i class="' + tg[0] + '" style="width:' + Math.min(100, r.d / dmax * 100).toFixed(1) + '%"></i>') + (avgX ? '<i class="avg" style="left:' + avgX + '%" title="' + (gp ? gn + ' 평균 ' : '평균 ') + sDay(r.avg) + '"></i>' : '') + '</i><em class="' + tg[0] + '">' + sDay(r.d) + '</em></span>' +
+          '<span class="sxt"><span class="sdx-chip ' + tg[0] + '">' + tg[1] + '</span>' + (gp ? '<small class="sdx-av">' + gn + ' ' + sDay(r.avg) + '</small>' : '') + '</span></div>';
       }).join('') + '</div>';
   }
   function sCdDots(plants, t) {
@@ -2976,7 +3035,7 @@ var KIMS = (function () {
     head.rows = [
       [sec('skpi', '재고 요약', '', sCards(plants, t, me), null, 'bare')],
     ].concat(me ? [[sec('sdrank', '재고일수 순위', '재고일수 순위 <small class="h3s">적은 순</small>', sDaysRank(t, me))]] : []).concat([ // 큰 재고일수 카드·CD별 재고일수는 제이 요청으로 뺌(2026-11-24)
-      [sec('sdiag', t === 'store' ? 'CD 진단' : '구매그룹 진단', t === 'store' ? 'CD 진단' : '구매그룹 진단', sDiag(plants, t))],
+      [sec('sdiag', t === 'store' ? 'CD 진단' : '구매그룹 진단', t === 'store' ? 'CD 진단' : '구매그룹 진단', sDiag(plants, t, me))],
       [sec('sday', '일별 재고액', '일별 재고액 <small class="h3s">' + Number(S0.base.slice(5, 7)) + '월 · 백만원</small>', sDayChart(plants, t))],
       [sec('smon', '월별 재고', '월별 재고액 <small class="h3s">금년 vs 전년</small>', sMonChart(plants, t))],
       [sec('scd', '재고 상세', (t === 'store' ? 'CD·구매그룹별' : '구매그룹별') + ' 재고', sCdTable(plants, t, who))],
