@@ -661,6 +661,14 @@ tr.dim>*{opacity:.42}
 :is(.panel,.row):has(.tipon){position:relative;z-index:20}
 #main :is(.mcl li,.hrc li,.sb.hasf){-webkit-tap-highlight-color:transparent;outline:none}
 }
+/* MC 증감 말풍선(2026-11-25 제이): 줄에 마우스를 올려도 안 뜨고, 막대 그래프를 눌러야 열림·다시 누르면 닫힘 */
+#main .mcl li .mtip{display:none}#main .mcl li.tipon .mtip{display:flex}
+#main .mcl li:hover{background:none}#main .mcl li.tipon{background:var(--hov,color-mix(in srgb,var(--fg) 5%,transparent));z-index:30}
+#main .mcl li:is(:hover,:focus-within):not(.tipon){z-index:auto}
+#main .mcl .track{cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;border-radius:4px}
+#main .mcl .track:hover i,#main .mcl li.tipon .track i{filter:brightness(1.15)}
+#main .mcl .track:focus-visible{outline:2px solid var(--line)}
+:is(.panel,.row):has(.mcl li.tipon){position:relative;z-index:20}
 /* 폰: 점포 상세 실적 표에 목표·달성율이 붙으면 오른쪽이 잘리던 것(2026-11-24 제이) → 칸 사이 여백·글자 줄여 카드 안에 맞춤 */
 @media (max-width:600px){
 #main .rt{font-size:12px;letter-spacing:-.02em}
@@ -1073,6 +1081,14 @@ tr.dim>*{opacity:.42}
 .mcmore[aria-expanded=true] svg{transform:rotate(180deg)}.mcmore:hover{color:var(--ac);border-color:var(--ac)}
 .mtbl td.tga + td{padding-left:26px}.mtbl.tg tr.g2 th.gs[data-m="s"] + th + th{padding-left:26px}
 .kpend{color:var(--muted);font-weight:600;font-size:.86em;white-space:nowrap;cursor:help}
+.vst td.haspt{cursor:help}.vst td.haspt>b{text-decoration:underline dotted color-mix(in srgb,var(--muted) 60%,transparent);text-decoration-thickness:1px;text-underline-offset:5px}
+.ptip{position:fixed;z-index:60;min-width:300px;max-width:calc(100vw - 16px);padding:10px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);font-size:13px;color:var(--fg);pointer-events:none}
+.ptip .pt-h{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin:0 0 6px}.ptip .pt-h b{font-size:14px}.ptip .pt-h span{color:var(--muted);font-size:12px}
+.ptip table{border-collapse:collapse;width:100%}.ptip th,.ptip td{padding:4px 6px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ptip thead th{color:var(--muted);font-weight:600;font-size:12px;border-bottom:1px solid var(--line)}.ptip thead th small{font-weight:500;margin-left:2px}
+.ptip tbody th{text-align:left;font-weight:600}.ptip tbody td small{color:var(--muted);font-size:11px;margin-left:5px}
+.ptip tr.pt-t th,.ptip tr.pt-t td{border-top:1px solid var(--line);font-weight:700}.ptip td.up{color:var(--good)}.ptip td.dn{color:var(--bad)}
+.ptip .pt-n{margin:6px 0 0;color:var(--muted);font-size:11px}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 /* 사이드 메뉴 카드형(2026-11-24): 로고·현재 점포 카드 / 리포트 목차 2열 타일 / 점포별 실적 그룹 막대 / 맨 아래 메인 화면 */
 #nav{--navbg:color-mix(in srgb,#5b6b8c 9%,var(--bg));--tile:color-mix(in srgb,var(--fg) 5%,var(--panel));background:var(--navbg);display:flex;flex-direction:column;gap:10px;padding:10px 10px 16px}
@@ -1948,6 +1964,47 @@ var KIMS = (function () {
     o.fs = tt ? o.fT / tt : null; o.fg = o.fL > 0 ? o.fT / o.fL - 1 : null; o.dg = o.dL > 0 ? o.dT / o.dL - 1 : null;
     return o;
   }
+  // 사입형태(2026-11-25 제이): paph[K][P][구매그룹][코드] = [매출 금년, 전년, 매총 금년, 전년] — 직매입은 없음(합계 − 나머지)
+  var PAPH_NM = { '00002': '수수료매입', '00003': '임대을', '00004': '임대갑', '0': '지정되지않음' };
+  var PAPH_ORD = ['직매입', '수수료매입', '임대을', '임대갑', '지정되지않음'];
+  function paphOf(k, plants, codes) {
+    if (!D.paph || !D.paph[k]) return null;
+    var by = {}, tot = [0, 0, 0, 0];
+    plants.forEach(function (p) {
+      var sr = (D.sales[k] || {})[p] || {}, fr = D.paph[k][p] || {};
+      codes.forEach(function (g) {
+        var s = sr[g]; if (s) { tot[0] += s[0]; tot[1] += s[1]; tot[2] += s[4]; tot[3] += s[5]; }
+        var f = fr[g]; if (f) Object.keys(f).forEach(function (c) { var nm = PAPH_NM[c] || ('사입형태 ' + c), o = by[nm] || (by[nm] = [0, 0, 0, 0]); f[c].forEach(function (v, i) { o[i] += v; }); });
+      });
+    });
+    var etc = [0, 0, 0, 0]; Object.keys(by).forEach(function (nm) { by[nm].forEach(function (v, i) { etc[i] += v; }); });
+    by['직매입'] = tot.map(function (v, i) { return v - etc[i]; });
+    if (!by['수수료매입']) by['수수료매입'] = [0, 0, 0, 0];
+    if (!by['지정되지않음']) by['지정되지않음'] = [0, 0, 0, 0];
+    var names = Object.keys(by).sort(function (a, b) { var x = PAPH_ORD.indexOf(a), y = PAPH_ORD.indexOf(b); return (x < 0 ? 9 : x) - (y < 0 ? 9 : y); });
+    return { tot: tot, rows: names.map(function (nm) { return [nm].concat(by[nm]); }) };
+  }
+  // 상세 비교표 칸에 마우스를 올리면 뜨는 사입형태 표(HTML) — kind 'gs' 매출, 'mr' 매총율
+  function paphTip(k, plants, codes, kind, title) {
+    var x = paphOf(k, plants, codes); if (!x || !(x.tot[0] || x.tot[1])) return '';
+    var shr = function (v, t) { return t ? f1(v / t * 100) + '%' : '-'; };
+    var head, body;
+    if (kind === 'gs') {
+      head = '<tr><th>사입형태</th><th>실적<small>(비중)</small></th><th>전년<small>(비중)</small></th><th>성장율</th></tr>';
+      body = x.rows.concat([['합계'].concat(x.tot)]).map(function (r) {
+        var g = r[2] > 0 && r[1] > 0 ? r[1] / r[2] - 1 : null;
+        return '<tr' + (r[0] === '합계' ? ' class="pt-t"' : '') + '><th>' + r[0] + '</th><td>' + man(r[1]) + '<small>' + shr(r[1], x.tot[0]) + '</small></td><td>' + man(r[2]) + '<small>' + shr(r[2], x.tot[1]) + '</small></td><td class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</td></tr>';
+      }).join('');
+    } else {
+      head = '<tr><th>사입형태</th><th>매총율<small>(이익 비중)</small></th><th>전년<small>(이익 비중)</small></th><th>증감</th></tr>';
+      body = x.rows.concat([['합계'].concat(x.tot)]).map(function (r) {
+        var m = r[1] > 0 ? r[3] / r[1] * 100 : null, mL = r[2] > 0 ? r[4] / r[2] * 100 : null, d = m != null && mL != null ? m - mL : null;
+        return '<tr' + (r[0] === '합계' ? ' class="pt-t"' : '') + '><th>' + r[0] + '</th><td>' + (m == null ? '-' : f1(m) + '%') + '<small>' + shr(r[3], x.tot[2]) + '</small></td><td>' + (mL == null ? '-' : f1(mL) + '%') + '<small>' + shr(r[4], x.tot[3]) + '</small></td><td class="' + cls(d) + '">' + (d == null ? '-' : pp(d)) + '</td></tr>';
+      }).join('');
+    }
+    return '<p class="pt-h"><b>' + esc(title) + '</b><span>' + (kind === 'gs' ? '매출 · 백만원' : '매출총이익률') + '</span></p><table><thead>' + head + '</thead><tbody>' + body + '</tbody></table>' +
+      '<p class="pt-n">지정되지않음 = 상품코드 없이 구매그룹에 붙은 금액(하루 이틀 늦게 반영) · 직매입 = 합계 − 나머지</p>';
+  }
   function bars(k, me, sc) {
     var rows = setOf(me).map(function (p) { return [p, M(k, [p], sc), tradeOf(k, p, sc.codes)]; });
     rows.sort(function (a, b) { return (b[1].gsT || 0) - (a[1].gsT || 0); }); // 매출 큰 순
@@ -2034,7 +2091,9 @@ var KIMS = (function () {
         var btn = subs.length ? '<button type="button" class="dex" data-dex="' + key + '" aria-expanded="' + (open ? 'true' : 'false') + '" aria-label="' + (sc.posKey === 'store' ? 'CD·구매그룹별' : '구매그룹별') + ' 보기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>' : '';
         return '<tr' + (subs.length ? ' class="dexr"' : '') + '><th><span class="dexh">' + x[0] + '</span>' + btn + '</th><td class="dist">' + (x[3] ? strip(x[3]) : '') + '</td>' + cols.map(function (t, i) {
           var ly = t ? x[4](t) : '', single = i === 0 || CC[i - 1].plants.length === 1;
-          return '<td class="' + (i === 0 ? 'ya' : i === ncol - 1 ? 'gtc' : '') + '"' + (ly ? ' title="' + esc(ly) + '"' : '') + '><b>' + vals[i] + '</b>' + (t ? x[2](t) : '') + '</td>'; // 2026-11-25 제이: 숫자 아래 순위 배지 없앰(가독성)
+          // 매출·매총율 칸: 마우스를 올리면 사입형태(직매입·수수료매입·지정되지않음) 표 (2026-11-25 제이) — 표가 뜨면 전년 값 title 은 뺌(표에 전년이 있음)
+          var pt = ri < 2 && t ? paphTip(k, i === 0 ? [me] : CC[i - 1].plants, sc.codes, ri === 0 ? 'gs' : 'mr', (i === 0 ? NAME[me] : CC[i - 1].name) + (caption && caption !== NAME[me] + ' 합계' ? ' · ' + caption : '')) : '';
+          return '<td class="' + (i === 0 ? 'ya' : i === ncol - 1 ? 'gtc' : '') + (pt ? ' haspt' : '') + '"' + (pt ? ' data-pt="' + esc(pt) + '" tabindex="0"' : ly ? ' title="' + esc(ly) + '"' : '') + '><b>' + vals[i] + '</b>' + (t ? x[2](t) : '') + '</td>'; // 2026-11-25 제이: 숫자 아래 순위 배지 없앰(가독성)
         }).join('') + '</tr>' + subs.map(function (s) {
           return '<tr class="dsub ' + s.lvl + '" data-of="' + key + '"' + (open ? '' : ' hidden') + '><th>' + esc(s.name) + '</th><td class="dist"></td>' + s.cols.map(function (c, i) {
             var none = !c || (!(c.gsT > 0) && !(c.gsL > 0)), v = none ? '-' : x[1](c), ly = none ? '' : x[4](c);
@@ -2464,7 +2523,7 @@ var KIMS = (function () {
   function mcList(items, up, lim) {
     if (!items.length) return '<li class="muted">해당 품목 없음</li>';
     var mx = Math.max.apply(null, items.map(function (x) { return Math.abs(x[3]); })) || 1;
-    return items.map(function (x, i) { var g = x[2] ? x[1] / x[2] - 1 : null; return '<li tabindex="0"' + (lim != null && i >= lim ? ' class="mx"' : '') + '><span class="mtip" role="tooltip"><b>' + esc(x[0]) + '</b><span>금년 <em>' + bm(x[1]) + '백만</em></span><span>전년 <em>' + bm(x[2]) + '백만</em></span><span>성장율 <em class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</em></span></span><span class="mn">' + esc(x[0]) + '</span><span class="track"><i class="' + (up ? 'bu' : 'bd') + '" style="width:' + (Math.abs(x[3]) / mx * 78).toFixed(1) + '%"></i></span><span class="mv ' + (up ? 'up' : 'dn') + '"><b>' + bms(x[3]) + '</b><small>' + (g == null ? (x[1] ? '신규' : '-') : pct(g)) + '</small></span>' + mcAvg(x) + '</li>'; }).join('');
+    return items.map(function (x, i) { var g = x[2] ? x[1] / x[2] - 1 : null; return '<li' + (lim != null && i >= lim ? ' class="mx"' : '') + '><span class="mtip" role="tooltip"><b>' + esc(x[0]) + '</b><span>금년 <em>' + bm(x[1]) + '백만</em></span><span>전년 <em>' + bm(x[2]) + '백만</em></span><span>성장율 <em class="' + cls(g) + '">' + (g == null ? '-' : pct(g)) + '</em></span></span><span class="mn">' + esc(x[0]) + '</span><span class="track" tabindex="0" role="button" aria-label="' + esc(x[0]) + ' 실적 보기"><i class="' + (up ? 'bu' : 'bd') + '" style="width:' + (Math.abs(x[3]) / mx * 78).toFixed(1) + '%"></i></span><span class="mv ' + (up ? 'up' : 'dn') + '"><b>' + bms(x[3]) + '</b><small>' + (g == null ? (x[1] ? '신규' : '-') : pct(g)) + '</small></span>' + mcAvg(x) + '</li>'; }).join('');
   }
   // 전점 MC 증감: 킴스 영업 점포 합계(P=ALL). 전체 탭은 CD 버튼으로 고름, CD 탭은 그 CD만
   function allMc(k, t) {
@@ -4323,6 +4382,28 @@ var KIMS = (function () {
       else if (r.dataset.day) { STATS.day = r.dataset.day; render(false); }
     };
     var mainEl = doc.getElementById('main');
+    // 사입형태 표(상세 비교 매출·매총율 칸): PC = 마우스 올리면, 휴대폰 = 칸을 누르면. 표 밖(overflow 잘림) 대신 화면 위에 띄움
+    var ptCell = null;
+    var hidePt = function () { ptCell = null; [].forEach.call(doc.querySelectorAll('.ptip'), function (t) { t.remove(); }); };
+    var showPt = function (c) {
+      if (ptCell === c) return;
+      hidePt(); ptCell = c;
+      var tip = doc.createElement('div'); tip.className = 'ptip'; tip.setAttribute('role', 'tooltip'); tip.innerHTML = c.getAttribute('data-pt');
+      doc.body.appendChild(tip);
+      var r = c.getBoundingClientRect(), vw = doc.documentElement.clientWidth, vh = doc.documentElement.clientHeight, w = tip.offsetWidth, h = tip.offsetHeight;
+      var left = Math.max(8, Math.min(vw - w - 8, r.right - w)), top = r.bottom + 6;
+      if (top + h > vh - 8) top = Math.max(8, r.top - h - 6);
+      tip.style.left = left + 'px'; tip.style.top = top + 'px';
+    };
+    var ptOf = function (e) { return e.target && e.target.closest ? e.target.closest('[data-pt]') : null; };
+    if (!touch) {
+      mainEl.addEventListener('mouseover', function (e) { var c = ptOf(e); if (c) showPt(c); });
+      mainEl.addEventListener('mouseout', function (e) { var c = ptOf(e); if (c && !(e.relatedTarget && c.contains(e.relatedTarget))) hidePt(); });
+      mainEl.addEventListener('focusin', function (e) { var c = ptOf(e); if (c) showPt(c); }); // 키보드(Tab)로 칸에 오면
+      mainEl.addEventListener('focusout', function (e) { if (ptOf(e)) hidePt(); });
+    }
+    doc.addEventListener('click', function (e) { var c = ptOf(e); if (touch && c) { if (ptCell === c) hidePt(); else showPt(c); } else if (!c) hidePt(); });
+    doc.getElementById('scroller').addEventListener('scroll', function () { if (ptCell) hidePt(); }, { passive: true });
     doc.getElementById('scroller').addEventListener('scroll', queueLift, { passive: true });
     doc.addEventListener('click', function (e) { var ab = e.target.closest && e.target.closest('.kab'); if (ab) { toggleAcc(ab); return; } });
     // 우리점 VS 비교점: 지표 옆 화살표 → CD·구매그룹별 줄 펼치기/접기(펼친 상태는 탭·기간을 바꿔도 유지)
@@ -4345,11 +4426,15 @@ var KIMS = (function () {
     doc.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.ifb'); var open = doc.querySelectorAll('.ifo.open'); [].forEach.call(open, function (x) { if (!b || x !== b.parentNode) x.classList.remove('open'); }); if (b) { e.stopPropagation(); b.parentNode.classList.toggle('open'); placeTip(b.parentNode); } });
     doc.getElementById('main').addEventListener('mouseover', function (e) { var f = e.target.closest && e.target.closest('.ifo'); if (f) placeTip(f); });
     // 터치 화면 말풍선(2026-11-24 제이): 톡 누르면 열고, 같은 줄을 다시 누르거나 다른 곳을 누르면 닫음. 스크롤하면 닫음
+    // MC 증감(2026-11-25 제이): 마우스만 올려도 뜨던 말풍선 → 막대 그래프를 누르면 열리고 다시 누르면 닫힘(PC·폰 공통). 다른 곳을 누르면 닫힘
+    var mcTip = function (tr) { var li = tr && tr.closest('li'); [].forEach.call(doc.querySelectorAll('#main .mcl li.tipon'), function (x) { if (x !== li) x.classList.remove('tipon'); }); if (li) li.classList.toggle('tipon'); };
+    doc.addEventListener('click', function (e) { var tr = e.target.closest && e.target.closest('#main .mcl .track'); if (!tr && e.target.closest && e.target.closest('#main .mcl li.tipon .mtip')) return; mcTip(tr); });
+    doc.getElementById('main').addEventListener('keydown', function (e) { var tr = e.target.closest && e.target.closest('.mcl .track'); if (tr && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); mcTip(tr); } });
     var TOUCH = window.matchMedia && window.matchMedia('(hover: none)').matches;
     var tipOff = function (keep) { [].forEach.call(doc.querySelectorAll('#main .tipon'), function (x) { if (x !== keep) x.classList.remove('tipon'); }); };
     if (TOUCH) {
       doc.addEventListener('click', function (e) {
-        var row = e.target.closest && e.target.closest('#main .mcl li, #main .hrc li, #main .sb.hasf');
+        var row = e.target.closest && e.target.closest('#main .hrc li, #main .sb.hasf');
         if (row && !row.querySelector('.mtip, .htip, .sbtip')) row = null;
         tipOff(row);
         if (row) { row.classList.toggle('tipon'); if (doc.activeElement === row) row.blur(); }
