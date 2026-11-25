@@ -1951,7 +1951,7 @@ var KIMS = (function () {
   function detailTable(k, me, sc, caption) {
     var CC = cmpOf(me).map(function (p) { return { name: NAME[p], plants: [p] }; }).concat([{ name: GNAME[GRP[me]] + ' 합계', plants: openOf(GRP[me]) }]);
     var cols = [M(k, [me], sc)].concat(CC.map(function (c) { return M(k, c.plants, sc); }));
-    var subs = detailSubs(k, me, sc, CC);
+    var subs = []; // 2026-11-25 제이: 펼침 화살표(드롭다운) 없앰 — 점포·CD 모두(detailSubs는 다시 쓸 수 있게 남겨 둠)
     var KO = OPEN();
     // 순위: 회색 글씨 'n위/전체' — 상위 5위 안은 초록, 하위 5위 안은 빨강만 색
     var rk = function (key, who) {
@@ -2012,7 +2012,7 @@ var KIMS = (function () {
         var btn = subs.length ? '<button type="button" class="dex" data-dex="' + key + '" aria-expanded="' + (open ? 'true' : 'false') + '" aria-label="' + (sc.posKey === 'store' ? 'CD·구매그룹별' : '구매그룹별') + ' 보기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>' : '';
         return '<tr' + (subs.length ? ' class="dexr"' : '') + '><th><span class="dexh">' + x[0] + '</span>' + btn + '</th><td class="dist">' + (x[3] ? strip(x[3]) : '') + '</td>' + cols.map(function (t, i) {
           var ly = t ? x[4](t) : '', single = i === 0 || CC[i - 1].plants.length === 1;
-          return '<td class="' + (i === 0 ? 'ya' : i === ncol - 1 ? 'gtc' : '') + '"' + (ly ? ' title="' + esc(ly) + '"' : '') + '><b>' + vals[i] + '</b>' + (t ? x[2](t) : '') + (x[3] && single ? badgeOf(x[3], i === 0 ? me : CC[i - 1].plants[0]) : '') + '</td>';
+          return '<td class="' + (i === 0 ? 'ya' : i === ncol - 1 ? 'gtc' : '') + '"' + (ly ? ' title="' + esc(ly) + '"' : '') + '><b>' + vals[i] + '</b>' + (t ? x[2](t) : '') + '</td>'; // 2026-11-25 제이: 숫자 아래 순위 배지 없앰(가독성)
         }).join('') + '</tr>' + subs.map(function (s) {
           return '<tr class="dsub ' + s.lvl + '" data-of="' + key + '"' + (open ? '' : ' hidden') + '><th>' + esc(s.name) + '</th><td class="dist"></td>' + s.cols.map(function (c, i) {
             var none = !c || (!(c.gsT > 0) && !(c.gsL > 0)), v = none ? '-' : x[1](c), ly = none ? '' : x[4](c);
@@ -2020,7 +2020,7 @@ var KIMS = (function () {
           }).join('') + '</tr>';
         }).join('');
       }).join('') + '</tbody></table></div>' +
-      '<p class="vsf">순위 위치 막대의 초록 구간 = 상위 1/3 · 순위 배지 초록 = 상위 1/3, 주황 = 하위 1/3' + (foot.length ? ' · ' + foot.join(' · ') : '') + ' · 값에 마우스를 올리면 전년 값</p></div>';
+      '<p class="vsf">순위 위치 막대의 초록 구간 = 상위 1/3' + (foot.length ? ' · ' + foot.join(' · ') : '') + ' · 값에 마우스를 올리면 전년 값</p></div>';
   }
   // 우리점 VS 비교점 펼침(2026-11-24 제이, 11/21 1ac46f5 방식 재사용): 점포 합계 → CD(구매그룹 2개 이상이면 그 아래 구매그룹) / CD 합계 → 구매그룹
   var DEXOPEN = {};
@@ -3816,7 +3816,12 @@ var KIMS = (function () {
       spy = new window.IntersectionObserver(function (es) {
         es.forEach(function (e) {
           if (!e.isIntersecting) return;
-          [].forEach.call(doc.querySelectorAll('.toc a'), function (a) { a.classList.toggle('on', a.dataset.sec === e.target.id.slice(4)); });
+          // PC에서 두 섹션이 한 줄에 나란히 있으면 둘 다 표시(2026-11-25 제이: CD 매출 증감 + 매출 구성비)
+          var top = function (x) { var t = 0; while (x) { t += x.offsetTop; x = x.offsetParent; } return t; }; // offsetTop = 등장 효과(transform) 영향 없음
+          var t0 = top(e.target), on = {};
+          [].forEach.call(main.querySelectorAll('section[id^=sec-]'), function (x) { if (x.offsetHeight && Math.abs(top(x) - t0) < 8) on[x.id.slice(4)] = 1; });
+          on[e.target.id.slice(4)] = 1;
+          [].forEach.call(doc.querySelectorAll('.toc a'), function (a) { a.classList.toggle('on', !!on[a.dataset.sec]); });
         });
       }, { root: doc.getElementById('scroller'), rootMargin: '-10% 0px -70% 0px' });
       [].forEach.call(main.querySelectorAll('section[id^=sec-]'), function (s) { spy.observe(s); });
