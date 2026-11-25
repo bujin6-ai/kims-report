@@ -1350,7 +1350,7 @@ tr.dim>*{opacity:.42}
 #main .sxi th.n{grid-row:1}#main .sxi td.a{grid-row:2}#main .sxi td.d{grid-row:3}#main .sxi td.q{grid-column:2;grid-row:4}#main .sxi td.s{grid-column:3;grid-row:4}#main .sxi td.v{grid-column:4;grid-row:4}
 #main .sxi td.q,#main .sxi td.s,#main .sxi td.v{font-size:13px}
 #main .sxi td.q::before,#main .sxi td.s::before,#main .sxi td.v::before{content:attr(data-l) " ";font-size:12px;color:var(--muted)}
-#main .sxi td.v::before{content:"일평균 "}#main .sxi td.v{text-align:right!important;white-space:nowrap}
+#main .sxi td.v::before{content:"일평균 판매 "}#main .sxi td.v{text-align:right!important;white-space:nowrap}
 }
 /* SKU 카드(2026-11-24) */
 #main .spw:has(.skw){display:block;width:100%}#main .skw{display:block;width:100%;margin-top:auto}
@@ -3253,7 +3253,7 @@ var KIMS = (function () {
     var giB = cats.some(function (c) { return ['O', 'Z', 'N'].some(function (k) { return ((by[c] || {})[k] || []).some(function (r) { return r.length > 12; }); }); });
     var gdB = cats.some(function (c) { return ['O', 'Z', 'N'].some(function (k) { return ((by[c] || {})[k] || []).some(function (r) { return r.length > 13 && r[13] > 0; }); }); });
     // 2026-11-24 제이 2차: 오른쪽 위 = 점선 설명 · CD 고르기는 과다 재고/판매 없음/마이너스 탭 옆 · 10개 + 아래 화살표로 20개까지
-    var head = '<p class="sxi-chips"><span><i class="dsh" aria-hidden="true"></i>' + (giB || mcB ? '점선 = 같은 그룹 평균' : '점선 = 기준(' + lim + ')') + '</span><span>단위<em> · 재고액</em> 백만원</span></p>' +
+    var head = '<p class="sxi-chips"><span><i class="dsh" aria-hidden="true"></i>' + (giB || gdB ? '점선 = 그룹 내 같은 상품 평균' : mcB ? '점선 = 같은 그룹 평균' : '점선 = 기준(' + lim + ')') + '</span><span>단위<em> · 재고액</em> 백만원</span></p>' +
       (f.pg && !hasPg ? '<p class="note">구매그룹별 보기는 다음 데이터 갱신부터 됩니다. 지금은 CD 전체를 보여드려요.</p>' : '');
     var filt = sItemFilter(t, f, by);
     return head + detailTabs('sitem', SITEM.map(function (s) {
@@ -4607,6 +4607,7 @@ var KIMS = (function () {
       P = r; store(PK, r);
       var a = get() || {}; put({ token: a.token, name: r.name, admin: r.admin, email: a.email });
       if (root.getAttribute('data-view') === 'portal') { if (PV === 'admin' && !r.admin) PV = 'home'; drawPortal(); maybePop(); maybeLag(); }
+      prefetchReport(); // 실적 데이터를 미리 받아 둠
     }, function (err) { if (!P && root.getAttribute('data-view') === 'portal') { P = { failed: err.message }; drawPortal(); P = null; } });
   }
   function unread() { return P && P.notices ? P.notices.filter(function (n) { return n.unread; }) : []; }
@@ -5095,29 +5096,49 @@ var KIMS = (function () {
     if (!started) { started = true; window.KIMS.init(data, web); } else { window.KIMS.update(data); if (r) window.KIMS.applyPrefs(r.prefs); }
   }
   function dataBase(txt) { var m = /"base"\s*:\s*"(\d{4}-\d{2}-\d{2})"/.exec(String(txt || '').slice(0, 2000)); return m ? m[1] : ''; } // 데이터 기준일(전일)
+  // 2026-11-25 제이 "메인 → 실적 첫 로딩이 길어짐": 아침 첫 접속은 폰 저장본이 전날 치라 서버 응답(수 초)을 기다려야 함
+  //   → 메인 화면이 뜨면 뒤에서 미리 받아 둠(받는 중에 실적을 누르면 같은 요청을 이어서 기다림)
+  var PEND = null;
+  function fetchData(a, quiet) { // quiet = 미리 받기(실적을 아직 안 봤으니 접속 기록은 남기지 않음)
+    if (PEND) return PEND;
+    var day = kstDay(0), vk = 'kims-visit-' + day, visit = !quiet;
+    if (visit) try { visit = sessionStorage.getItem(vk) !== '1'; } catch (e) {}
+    var cached = store(DK);
+    PEND = api({ action: 'data', token: a.token, visit: visit, have: cached ? cached.ver : '' }).then(function (r) {
+      PEND = null;
+      if (r.ok) {
+        if (visit) try { sessionStorage.setItem(vk, '1'); } catch (e) {}
+        if (!r.same && r.data) store(DK, { ver: r.ver, data: r.data, prefs: r.prefs, base: dataBase(r.data) });
+        else if (r.same && cached && cached.prefs !== r.prefs) { cached.prefs = r.prefs; store(DK, cached); }
+      }
+      return r;
+    }, function (err) { PEND = null; throw err; });
+    return PEND;
+  }
+  function prefetchReport() {
+    var a = get(); if (!a || !a.token || started || loading || PEND || haveToday()) return;
+    fetchData(a, true).then(null, function () {});
+  }
   function loadReport() {
     var a = get();
     if (!a || !a.token) return showGate('login');
     loading = true;
-    var day = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10), vk = 'kims-visit-' + day, visit = true;
-    try { visit = sessionStorage.getItem(vk) !== '1'; } catch (e) {}
     var cached = store(DK);
     // 저장본으로 즉시 표시 — 지난번 받은 아이디별 설정도 같이 써서, 서버 응답 뒤 설정 때문에 다시 그리는 일이 없게
     // 2026-11-24 제이: 저장본이 어제 치(전일 기준일)가 아니면 먼저 그리지 않음 → 지난 날짜 화면이 떴다가 몇 초 뒤 바뀌는 일 없게. 서버 응답까지는 불러오는 중 화면
     if (cached && cached.data && !cached.base) cached.base = dataBase(cached.data);
-    var useCache = function () { if (!started && cached && cached.data) start(JSON.parse(cached.data), a, cached.prefs != null ? { admin: a.admin, name: a.name, prefs: cached.prefs } : null); };
+    var useCache = function () { var c = store(DK); if (!started && c && c.data) start(JSON.parse(c.data), a, c.prefs != null ? { admin: a.admin, name: a.name, prefs: c.prefs } : null); };
     if (cached && cached.base && cached.base >= kstDay(-1)) useCache();
     lastCheck = Date.now();
-    api({ action: 'data', token: a.token, visit: visit, have: cached ? cached.ver : '' }).then(function (r) {
+    var joined = !!PEND;
+    fetchData(a).then(function (r) {
+      if (joined) fetchData(a).then(null, function () {}); // 미리 받기에 합류했으면 접속 기록만 따로 남김(데이터는 같아서 가벼움)
       loading = false;
       if (!r.ok) { if (r.auth === false) return signOut(true, r.err); throw new Error(r.err); }
-      try { sessionStorage.setItem(vk, '1'); } catch (e) {}
       put({ token: a.token, name: r.name, admin: r.admin, email: a.email });
-      if (r.same && !started && !r.data) { useCache(); if (started) window.KIMS.applyPrefs(r.prefs); return; } // 서버도 아직 같은 데이터(아침 갱신 전) → 저장본 그대로
-      if (r.same && started) { if (cached && cached.prefs !== r.prefs) { cached.prefs = r.prefs; store(DK, cached); } window.KIMS.applyPrefs(r.prefs); return; } // 데이터는 그대로, 설정만 최신으로
-      store(DK, { ver: r.ver, data: r.data, prefs: r.prefs, base: dataBase(r.data) });
+      if (r.same || !r.data) { useCache(); if (started) window.KIMS.applyPrefs(r.prefs); return; } // 데이터는 그대로(또는 미리 받아 둔 것), 설정만 최신으로
       start(JSON.parse(r.data), a, r);
-    }, function (err) {
+    }).then(null, function (err) {
       loading = false;
       useCache(); // 서버에 못 닿으면 지난 저장본이라도 보여 줌
       if (started) return; // 저장본으로 보는 중이면 그대로 둠
