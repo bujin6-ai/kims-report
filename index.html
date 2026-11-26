@@ -544,7 +544,7 @@ body.nav-open #nav{transition-timing-function:cubic-bezier(0,0,.2,1)}
 .quad .qp text{font-size:12px;font-weight:500;fill:color-mix(in srgb,var(--fg) 62%,transparent);paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
 .quad .qp.nl text{opacity:0;pointer-events:none}
 @media (hover:hover){.quad:hover .qp circle{opacity:.35}.quad .qp:hover circle{opacity:1}.quad .qp.up:hover circle{fill:#34c759}.quad .qp.dn:hover circle{fill:#ff3b30}.quad .qp:hover text{opacity:1;font-weight:700;fill:var(--fg)}}
-.qlg{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:4px 0 14px;font-size:13px;color:var(--muted)}
+.qlg{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:4px 0 6px;font-size:13px;color:var(--muted)}
 .qlg span{display:inline-flex;align-items:center;gap:6px}.qlg i{display:inline-block;width:10px;height:10px;border-radius:50%}.qlg i.u{background:color-mix(in srgb,#34c759 35%,transparent);border:1px solid #34c759}.qlg i.d{background:color-mix(in srgb,#ff3b30 30%,transparent);border:1px solid #ff3b30}
 .qlg i.sz{width:14px;height:14px;border:1.5px solid var(--muted);background:none;box-shadow:inset 0 0 0 3px var(--panel),inset 0 0 0 10px color-mix(in srgb,var(--muted) 35%,transparent)}.qlg .qh{margin-left:auto}
 .quad.qm{display:none}
@@ -1026,6 +1026,7 @@ tr.dim>*{opacity:.42}
 @media (max-width:600px){.kpis>.kpi:nth-child(-n+2){order:1}.kpis>.kpi:nth-child(n+3){order:3}.kpis>.kpi:nth-child(n+5){order:5}.kpis[data-accrow="3"]>.kacc{order:6}.kpis>.kacc{order:4}.kpis[data-accrow="1"]>.kacc{order:2}}
 .kpi .kl{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .kpi .kl .ifo{margin-right:auto}.kpi .kl .ksub{margin-left:0}
+.kpi .kl .kasof{font-size:11px;font-weight:600;color:var(--muted);background:color-mix(in srgb,var(--muted) 12%,transparent);padding:2px 7px;border-radius:999px;white-space:nowrap}
 .kloss{flex:none;display:inline-flex;flex-direction:column;align-items:flex-end;gap:1px;font-size:12px;font-weight:600;color:var(--muted);line-height:1.25;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.kloss b{font-size:13px;font-weight:800;color:var(--fg)}.kloss em{font-style:normal;font-weight:800}.kloss em.up{color:var(--good)}.kloss em.dn{color:var(--bad)}
 @media (max-width:600px){.kpi:has(.kloss) .kl{flex-wrap:wrap;row-gap:3px}.kloss{flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:flex-start;gap:0 5px;width:100%;font-size:11px}.kloss b{font-size:11px}}
 .kach{flex:none;font-size:14px;font-weight:800;line-height:1;padding:6px 10px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -1725,12 +1726,19 @@ var KIMS = (function () {
     if (src) {
       r = true;
       var rows = src[k] || {};
-      for (var p in rows) { for (var g in rows[p]) { if ((rows[p][g] || [])[idx] > 0) { r = false; break; } } if (!r) break; }
+      for (var p in rows) { if (p === '_') continue; for (var g in rows[p]) { if ((rows[p][g] || [])[idx] > 0) { r = false; break; } } if (!r) break; }
     }
     return (PEND.m[id] = r);
   }
   // 손실율·평당매출 금년 칸 글자: 값 없음 → 원천 미집계면 '집계 전', 아니면 '-'
   var PEND_HTML = function (src) { return '<span class="kpend" title="' + src + '에 이 기간 데이터가 아직 들어오지 않았습니다(전일분은 하루 정도 늦게 반영). 다음 갱신 때 채워집니다.">집계 전</span>'; };
+  // 손실율을 실제로 계산한 기간(2026-11-26 제이): 정판율 마트에 아직 안 들어온 날은 빼고 계산 → 카드 오른쪽 위·표 머리에 'MM/DD~MM/DD 기준'
+  function lossRng(k) {
+    var r = D.loss && D.loss[k] && D.loss[k]._ && D.loss[k]._.rng; if (!r || !(r[1] >= r[0])) return '';
+    var md = function (n) { n = String(n); return +n.slice(4, 6) + '/' + +n.slice(6, 8); };
+    return (r[0] === r[1] ? md(r[1]) : md(r[0]) + '~' + md(r[1])) + ' 기준';
+  }
+  function lossAsOf(k) { var t = lossRng(k); return t ? '<span class="kasof" title="손실율은 정판율 마트에 들어온 날까지만 계산합니다(전일분은 하루 정도 늦게 반영). 전년도 같은 요일 구간">' + t + '</span>' : ''; }
   function lrTxt(t) { return t.lr == null ? (t.lrW ? PEND_HTML('정판율 마트') : '-') : f2(t.lr) + '%'; }
   function pyTxt(t) { return t.py == null || !(t.gsT > 0) ? (t.pyW ? PEND_HTML('면적 매출 마트') : '-') : man1(t.py); }
 
@@ -1940,9 +1948,9 @@ var KIMS = (function () {
     return '<div class="kpi" data-kpi="' + key + '" tabindex="0"><p class="kl">' + label + kTip(label) + (tag || '') + '</p><p class="kv">' + val + '<small>' + unit + '</small></p><p class="kd"><span class="' + cls(deltaV) + '">전년비 ' + deltaTxt + '</span></p>' + (badges ? '<p class="kb">' + badges + '</p>' : '') + (extra ? '<div class="spw">' + extra + '</div>' : '') + '</div>';
   }
   // 넓은 화면(1600px 이상)에서만 보이는 카드 2장: 손실율 · 저녁장 매출 (2026-11-22)
-  function kxCards(y, three) {
+  function kxCards(y, three, k) {
     var kx = function (h) { return h.replace('class="kpi"', 'class="kpi kx"'); };
-    return kx(kpi('손실율', y.lr == null ? lrTxt(y) : f2(y.lr), y.lr == null ? '' : '%', y.lrDn, pp2(y.lrD), three ? three('lrDn') : '', y.lr == null || y.lrL == null ? '' : lyBars(y.lr, y.lrL, function (v) { return f2(v) + '%'; }))) +
+    return kx(kpi('손실율', y.lr == null ? lrTxt(y) : f2(y.lr), y.lr == null ? '' : '%', y.lrDn, pp2(y.lrD), three ? three('lrDn') : '', y.lr == null || y.lrL == null ? '' : lyBars(y.lr, y.lrL, function (v) { return f2(v) + '%'; }), y.lr == null ? '' : lossAsOf(k))) +
       kx(kpi('저녁장 매출', y.eve == null ? '-' : man(y.eve), '백만원', y.eveG, pct(y.eveG), three ? three('eveG') : '', y.eve == null || y.eveL == null ? '' : lyBars(y.eve, y.eveL, function (v) { return man(v) + '백만'; })));
   }
   function kpis(k, me, sc) {
@@ -1952,7 +1960,7 @@ var KIMS = (function () {
       kpi('매출', man(y.gsT), '백만원', y.growth, pct(y.growth), three('growth'), spark(me, sc.posKey), achTag(y)) +
       kpi('매출총이익률', f1(y.mr), '%', y.mrD, pp(y.mrD), three('mr'), lyBars(y.mr, y.mrL, fmtMr), lossTag(y)) +
       kpi('건수', won(y.cnt), '건/일', y.cntG, pct(y.cntG), three('cntG'), lyBars(y.cnt, y.cntL, fmtCnt)) +
-      kpi('건단가', man1(y.atv), '만원', y.atvG, pct(y.atvG), three('atv'), lyBars(y.atv, y.atvL, fmtAtv)) + kxCards(y, three) + '</div>';
+      kpi('건단가', man1(y.atv), '만원', y.atvG, pct(y.atvG), three('atv'), lyBars(y.atv, y.atvL, fmtAtv)) + kxCards(y, three, k) + '</div>';
   }
   // 직매입·수수료(2026-11-24 제이): trade[K][P][구매그룹][상품유형 이름] = [금년, 전년]. 이름에 특정·수수료·위탁·임대가 들어가면 수수료 매출, 나머지는 직매입
   var TRADE_FEE = /특정|수수료|위탁|임대|특매/;
@@ -2609,7 +2617,7 @@ var KIMS = (function () {
       tdm('p', '', pyTxt(t), true) + tdm('p', 'ly', t.pyL == null ? '-' : man1(t.pyL)) + tdm('p', cls(t.pyG), pct(t.pyG));
   }
   function extraHead(g1, g2) {
-    return [g1('l', '손실율', 3) + g1('e', '저녁장 매출<small>(백만원)</small>', 3) + g1('p', '평당매출<small>(만원)</small>', 3),
+    return [g1('l', '손실율' + (lossRng(ST.k) ? '<small>(' + lossRng(ST.k) + ')</small>' : ''), 3) + g1('e', '저녁장 매출<small>(백만원)</small>', 3) + g1('p', '평당매출<small>(만원)</small>', 3),
       g2('l', ['금년', '전년', '증감']) + g2('e', ['금년', '전년', '증감율']) + g2('p', ['금년', '전년', '증감율'])];
   }
   function mseg(name) {
@@ -2723,7 +2731,8 @@ var KIMS = (function () {
           '<text x="' + (lb ? lb[0] : cx + rad(o) + 4).toFixed(1) + '" y="' + (lb ? lb[1] : cy + 5).toFixed(1) + '" text-anchor="' + (lb ? lb[2] : 'start') + '">' + esc(NAME[o.p]) + '</text></g>';
       }).join('') + '</svg>';
     };
-    var svg = build(1100, 480, 64, 24, 44, 48, false) + build(360, 440, 6, 6, 34, 40, true);
+    // 2026-11-26 제이 "상단 문구와 그래프 사이 빈 공간·배율": 위 여백 44→10(구역 이름표가 그래프 맨 위에 붙음), PC 그림 폭 1100→1200·높이 480→430(넓은 화면에서 글자·그림이 덜 커지게)
+    var svg = build(1200, 430, 64, 24, 10, 46, false) + build(360, 410, 6, 6, 10, 40, true);
     return '<p class="qlg"><span><i class="u"></i>매출 증가</span><span><i class="d"></i>매출 감소</span><span><i class="sz"></i>원이 클수록 매출 큼</span><span class="qh">오른쪽일수록 건수 증가 · 위쪽일수록 건단가 증가 · 점을 누르면 그 점포로 이동</span></p><div class="quadw">' + svg + '</div>';
   }
 
@@ -4427,8 +4436,18 @@ var KIMS = (function () {
     doc.getElementById('main').addEventListener('mouseover', function (e) { var f = e.target.closest && e.target.closest('.ifo'); if (f) placeTip(f); });
     // 터치 화면 말풍선(2026-11-24 제이): 톡 누르면 열고, 같은 줄을 다시 누르거나 다른 곳을 누르면 닫음. 스크롤하면 닫음
     // MC 증감(2026-11-25 제이): 마우스만 올려도 뜨던 말풍선 → 막대 그래프를 누르면 열리고 다시 누르면 닫힘(PC·폰 공통). 다른 곳을 누르면 닫힘
-    var mcTip = function (tr) { var li = tr && tr.closest('li'); [].forEach.call(doc.querySelectorAll('#main .mcl li.tipon'), function (x) { if (x !== li) x.classList.remove('tipon'); }); if (li) li.classList.toggle('tipon'); };
-    doc.addEventListener('click', function (e) { var tr = e.target.closest && e.target.closest('#main .mcl .track'); if (!tr && e.target.closest && e.target.closest('#main .mcl li.tipon .mtip')) return; mcTip(tr); });
+    // 2026-11-26 제이: 말풍선이 줄 왼쪽 끝에 떠서 누른 곳과 멀었음 → 누른 자리(가로) 바로 위에 띄움(화면 밖으로 나가지 않게)
+    var mcTip = function (tr, e) {
+      var li = tr && tr.closest('li'); [].forEach.call(doc.querySelectorAll('#main .mcl li.tipon'), function (x) { if (x !== li) x.classList.remove('tipon'); });
+      if (!li || !li.classList.toggle('tipon')) return;
+      var t = li.querySelector('.mtip'); if (!t) return;
+      var r = li.getBoundingClientRect(), x = e && e.clientX ? e.clientX : tr.getBoundingClientRect().left + 24;
+      t.style.right = 'auto'; t.style.left = '0px';
+      var w = t.offsetWidth, vw = doc.documentElement.clientWidth;
+      var left = Math.max(8 - r.left, Math.min(x - r.left - w / 2, vw - 8 - w - r.left));
+      t.style.left = Math.round(left) + 'px';
+    };
+    doc.addEventListener('click', function (e) { var tr = e.target.closest && e.target.closest('#main .mcl .track'); if (!tr && e.target.closest && e.target.closest('#main .mcl li.tipon .mtip')) return; mcTip(tr, e); });
     doc.getElementById('main').addEventListener('keydown', function (e) { var tr = e.target.closest && e.target.closest('.mcl .track'); if (tr && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); mcTip(tr); } });
     var TOUCH = window.matchMedia && window.matchMedia('(hover: none)').matches;
     var tipOff = function (keep) { [].forEach.call(doc.querySelectorAll('#main .tipon'), function (x) { if (x !== keep) x.classList.remove('tipon'); }); };
