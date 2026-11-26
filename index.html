@@ -1082,9 +1082,18 @@ tr.dim>*{opacity:.42}
 .dkt{position:fixed;bottom:0;left:50%;z-index:33;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 14px calc(env(safe-area-inset-bottom,0px));font:inherit;font-size:12px;font-weight:600;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;box-shadow:0 -4px 14px rgba(17,24,39,.08);transform:translate(-50%,100%);transition:transform .22s cubic-bezier(.32,.72,0,1);cursor:pointer}
 .dkt[hidden]{display:none}.dkt.on{transform:translate(-50%,0)}.dkt svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 @media (prefers-reduced-motion:reduce){.dock,.dkt{transition:none}}
-.app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"menu title set"}
-@media (max-width:640px){.app.docked .hdr{grid-template-areas:"menu title set" "seg seg seg"}#toTop{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
+.app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr) auto;grid-template-areas:"menu title crumb . set"}
+.crumb{grid-area:crumb;display:none;align-items:center;gap:8px;justify-self:center;padding:7px 16px;font-size:14px;font-weight:600;color:var(--muted);background:var(--ac-soft);border-radius:999px;white-space:nowrap}
+.app.docked .crumb{display:inline-flex}.crumb:empty{display:none!important}
+.crumb b{color:var(--fg);font-weight:800}.crumb i{font-style:normal;color:color-mix(in srgb,var(--muted) 70%,transparent);font-weight:400}
+.crumb button{font:inherit;color:var(--ac);background:none;border:0;padding:0;cursor:pointer}@media (hover:hover){.crumb button:hover{text-decoration:underline;text-underline-offset:3px}}
+@media (max-width:900px){.app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"menu title crumb set"}.crumb{font-size:13px;padding:6px 12px}}
+@media (max-width:640px){.app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"menu title set" "seg seg seg"}.app.docked .crumb{display:none}#toTop{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
 .nojs .dock,.nojs .dkt{display:none!important}
+/* 2026-11-26 제이: 하단 막대 반투명(뒤 내용이 흐리게 비침) */
+.dock,.dkt{background:color-mix(in srgb,var(--panel) 68%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);border-color:color-mix(in srgb,var(--line) 80%,transparent)}
+.dock .dkp .seg{background:color-mix(in srgb,var(--seg) 70%,transparent)}
+.dock .dkc .cats button[aria-pressed=true]{background:color-mix(in srgb,var(--ac-soft) 85%,transparent)}
 /* 일별 매출 제목 옆 날씨 버튼 · 펼치는 날씨 달력 (2026-11-22) */
 .dc>h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .wxb{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 12px 5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .15s ease}
@@ -1707,6 +1716,7 @@ html:not([data-view=report]) body{background:#f4f5f7}
 <header class="hdr">
 <button type="button" class="ib menu" id="menuBtn" aria-label="메뉴 열기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <div class="ttl" id="ttlBtn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-controls="spop" title="점포 선택"><b id="htitle">킴스 매출 리포트</b><span id="hdate"></span></div>
+<nav class="crumb" id="crumb" aria-label="현재 위치"></nav>
 <nav class="cats" id="catbar" aria-label="카테고리" hidden><button type="button" data-t="store" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.6-5h14.8L21 9M3 9h18M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0M5 12v8h14v-8M10 20v-5h4v5"/></svg><span>점포</span></button><button type="button" data-t="nongsan" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.5c-1.6-1.1-3.7-1.3-5.2 0-2.1 1.7-2.4 5-1.2 7.9 1.1 2.9 3.3 5.4 5.3 4.9.4-.1.7-.3 1.1-.3s.7.2 1.1.3c2 .5 4.2-2 5.3-4.9 1.2-2.9.9-6.2-1.2-7.9-1.5-1.3-3.6-1.1-5.2 0zM12 7.5c0-1.9.5-3.3 1.6-4.2"/><path d="M12.8 5.6c1.3-1.6 3.4-2 4.7-1.4-.4 1.8-2.5 2.7-4.7 1.4z"/></svg><span>농산</span></button><button type="button" data-t="susan" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7l4 5-4 5M6 12c3-4 7-6 10-6 3 0 5 3 6 6-1 3-3 6-6 6-3 0-7-2-10-6z"/><circle cx="17" cy="11" r=".9"/></svg><span>수산</span></button><button type="button" data-t="chuksan" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3.5a5.5 5.5 0 015.5 5.5c0 4-4.5 6.5-7.5 6.5l-4 4a2 2 0 11-2.8-2.8 2 2 0 11-1.2-3.4l4-4C9 6 11 3.5 15 3.5z"/></svg><span>축산</span></button><button type="button" data-t="gongsan" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/></svg><span>공산</span></button><button type="button" data-t="living" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11V8a2 2 0 012-2h10a2 2 0 012 2v3M3 13a2 2 0 014 0v2h10v-2a2 2 0 014 0v5H3zM6 18v2M18 18v2"/></svg><span>리빙</span></button><button type="button" data-t="deli" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11h18a9 9 0 01-18 0zM8 3.5c0 1.5 1 1.5 1 3M12 3c0 1.5 1 1.5 1 3M16 3.5c0 1.5 1 1.5 1 3"/></svg><span>델리</span></button></nav>
 <nav class="seg" aria-label="기간"><span class="sgi" aria-hidden="true"></span><button type="button" data-k="M">월간</button><button type="button" data-k="W">주간</button><button type="button" data-k="D">전일</button></nav>
 <button type="button" class="ib set" id="setBtn" aria-label="설정 열기"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
@@ -3991,6 +4001,20 @@ var KIMS = (function () {
     doc.querySelector('.app').classList.toggle('has-cats', !cb.hidden);
     [].forEach.call(cb.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.t === ST.t); });
     if (window.kimsDock) window.kimsDock(!cb.hidden);
+    // 위쪽 바 현재 위치(2026-11-26 제이): 전점 > 야탑점 > 축산 — 앞 단계를 누르면 그 화면으로
+    var crumb = doc.getElementById('crumb');
+    if (crumb) {
+      var tb = [].filter.call(cb.querySelectorAll('button'), function (b) { return b.dataset.t === ST.t; })[0], tn = tb ? tb.querySelector('span').textContent : '';
+      var cr = [];
+      if (MODE === 'stock') cr.push(['', '재고']);
+      if (ST.v === 'stats') cr.push(['', '접속 현황']);
+      else {
+        cr.push(['all', '전점']);
+        if (ST.s !== 'all') cr.push(['store', NAME[ST.s]]);
+        if (ST.t !== 'store' && tn) cr.push(['', tn]);
+      }
+      crumb.innerHTML = cr.map(function (c, i) { var last = i === cr.length - 1; return (i ? '<i aria-hidden="true">›</i>' : '') + (last || !c[0] ? '<b' + (last ? ' aria-current="page"' : '') + '>' + esc(c[1]) + '</b>' : '<button type="button" data-cr="' + c[0] + '">' + esc(c[1]) + '</button>'); }).join('');
+    }
     if (toTop) { doc.getElementById('scroller').scrollTop = 0; main.classList.remove('fx'); void main.offsetWidth; main.classList.add('fx'); }
     // 화면 배치 계산을 한 번으로: 측정 모드에서 항목 버튼·고정 머리글 위치를 함께 잰 뒤 한꺼번에 씀
     var sj = measureSegs(); stickHeads(true); applySegs(sj); placePeriod(); queueLift(); wxFill();
@@ -4394,6 +4418,11 @@ var KIMS = (function () {
     // 화면 폭이 바뀌면 그래프 폭을 다시 맞춤
     var rzT = null, lastW = 0;
     window.addEventListener('resize', function () { window.clearTimeout(rzT); rzT = window.setTimeout(function () { var w = doc.getElementById('main').clientWidth; if (w !== lastW) { lastW = w; var sc = doc.getElementById('scroller'), top = sc.scrollTop; quietRender(); sc.scrollTop = top; } }, 200); });
+    var crumbEl = doc.getElementById('crumb');
+    if (crumbEl) crumbEl.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-cr]'); if (!b) return;
+      keepRender(function () { if (b.dataset.cr === 'all') { ST.s = 'all'; if (ALL_TABS.indexOf(ST.t) < 0) ST.t = 'store'; } else ST.t = 'store'; });
+    });
     doc.getElementById('catbar').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b || b.dataset.t === ST.t) return;
       keepRender(function () { ST.t = b.dataset.t; });
