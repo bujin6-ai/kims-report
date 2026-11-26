@@ -4470,7 +4470,35 @@ var KIMS = (function () {
   'use strict';
   var API = window.KIMS_API, LOGO = window.KIMS_LOGO || '', PLOGO = window.KIMS_PLOGO || '', DOMAINS = ['eland.co.kr'];
   var AK = 'kims-auth', DK = 'kims-data', PK = 'kims-portal', doc = document, root = doc.documentElement;
-  var store = function (k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); v ? localStorage.setItem(k, JSON.stringify(v)) : localStorage.removeItem(k); } catch (e) { return null; } };
+  var lsStore = function (k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); v ? localStorage.setItem(k, JSON.stringify(v)) : localStorage.removeItem(k); } catch (e) { return null; } };
+  // 2026-11-26 제이 "실적 화면이 매번 4초": 실적 데이터(약 3MB, 점점 커짐)는 브라우저 기본 저장소(localStorage, 약 5MB 한도) 에 넣으면
+  //   한도를 넘을 때 조용히 실패 → 저장본이 안 남아 열 때마다 서버에서 새로 받았음. 실적 데이터만 IndexedDB(수백 MB까지)에 저장하고,
+  //   화면 코드는 그대로 store(DK) 로 쓰도록 메모리에 올려 둠(시작할 때 한 번 읽음). IndexedDB 를 못 쓰는 브라우저는 예전처럼 localStorage
+  var IDB = null, MEM, MEMOK = false;
+  function idbOpen() {
+    return new Promise(function (ok) {
+      try { var q = indexedDB.open('kims', 1); q.onupgradeneeded = function () { q.result.createObjectStore('kv'); }; q.onsuccess = function () { ok(q.result); }; q.onerror = q.onblocked = function () { ok(null); }; } catch (e) { ok(null); }
+    });
+  }
+  function idbDo(mode, fn) { return new Promise(function (ok) { try { var t = IDB.transaction('kv', mode), st = t.objectStore('kv'), q = fn(st); t.oncomplete = function () { ok(q && q.result); }; t.onerror = t.onabort = function () { ok(undefined); }; } catch (e) { ok(undefined); } }); }
+  function dataInit() { // 시작할 때 한 번: IndexedDB 에서 저장본을 꺼내 메모리에(예전 localStorage 저장본은 옮기고 지움). 1.5초 넘게 걸리면 그냥 진행
+    var done = idbOpen().then(function (db) {
+      if (!db) return; IDB = db;
+      return idbDo('readonly', function (st) { return st.get('data'); }).then(function (v) {
+        var old = lsStore('kims-data');
+        if (!v && old) { v = old; idbDo('readwrite', function (st) { return st.put(old, 'data'); }); }
+        if (old) lsStore('kims-data', null); // 자리를 비워 둠(로그인·설정 저장이 막히지 않게)
+        MEM = v || null; MEMOK = true;
+      });
+    });
+    return Promise.race([done, new Promise(function (ok) { setTimeout(ok, 1500); })]);
+  }
+  var store = function (k, v) {
+    if (k !== 'kims-data' || !IDB || !MEMOK) return lsStore(k, v);
+    if (v === undefined) return MEM;
+    MEM = v || null;
+    idbDo('readwrite', function (st) { return v ? st.put(v, 'data') : st.delete('data'); });
+  };
   var get = function () { return store(AK); }, put = function (v) { store(AK, v); };
   function api(body) {
     return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
@@ -4716,7 +4744,7 @@ var KIMS = (function () {
     if (P) drawPortal();
     return authApi({ action: 'portal' }).then(function (r) {
       if (!r.ok) throw new Error(r.err);
-      P = r; store(PK, r);
+      P = r; store(PK, r); SRV = { base: r.base || '', at: Date.now() };
       var a = get() || {}; put({ token: a.token, name: r.name, admin: r.admin, email: a.email });
       if (root.getAttribute('data-view') === 'portal') { if (PV === 'admin' && !r.admin) PV = 'home'; drawPortal(); maybePop(); maybeLag(); }
       prefetchReport(); // 실적 데이터를 미리 받아 둠
@@ -5171,6 +5199,10 @@ var KIMS = (function () {
 
   // ───────── 매출 리포트 ─────────
   var started = false, loading = false, lastCheck = 0;
+  // 2026-11-26 제이 "실적 첫 화면 로딩 4초": 전일 데이터가 아직 안 올라온 아침(서버도 같은 기준일)에는 저장본을 두고도 서버 응답(3~4초)을 기다렸음
+  //   → 메뉴 화면에서 방금(10분 안) 서버에 물어본 기준일과 저장본 기준일이 같으면 바로 그림(서버에 더 새 데이터가 없으니 화면이 바뀔 일 없음)
+  var SRV = null;
+  function srvSame(c) { return !!(SRV && SRV.base && c && c.base && c.base >= SRV.base && Date.now() - SRV.at < 10 * 60e3); }
   // ── 자동 최신화: 로그아웃하지 않아도 화면을 다시 볼 때(앱 전환·탭 복귀)와 열어 둔 동안 5분마다 새 데이터·기준일 확인 ──
   var FRESH_MS = 5 * 60e3;
   // ── 하루 한 번만 갱신(2026-11-24 제이): 아침에 전일 데이터가 들어오면 그날은 더 확인하지 않음 ──
@@ -5246,7 +5278,7 @@ var KIMS = (function () {
     // 2026-11-24 제이: 저장본이 어제 치(전일 기준일)가 아니면 먼저 그리지 않음 → 지난 날짜 화면이 떴다가 몇 초 뒤 바뀌는 일 없게. 서버 응답까지는 불러오는 중 화면
     if (cached && cached.data && !cached.base) cached.base = dataBase(cached.data);
     var useCache = function () { var c = store(DK); if (!started && c && c.data) start(JSON.parse(c.data), a, c.prefs != null ? { admin: a.admin, name: a.name, prefs: c.prefs } : null); };
-    if (cached && cached.base && cached.base >= kstDay(-1)) useCache();
+    if (cached && cached.base && (cached.base >= kstDay(-1) || srvSame(cached))) useCache();
     lastCheck = Date.now();
     var joined = !!PEND;
     fetchData(a).then(function (r) {
@@ -5265,6 +5297,6 @@ var KIMS = (function () {
   }
 
   if (!API || /API_URL_HERE/.test(API)) { setView('gate'); gate.innerHTML = '<div class="gw one"><form class="gcard"><h2>설정 필요</h2><p class="gm err">Apps Script 웹 앱 주소가 아직 들어 있지 않습니다.</p></form></div>'; gate.hidden = false; return; }
-  route();
+  dataInit().then(route, route);
 })();
 </script></body></html>
