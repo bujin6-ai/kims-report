@@ -1061,6 +1061,21 @@ tr.dim>*{opacity:.42}
 #toTop{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:35;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--fg);box-shadow:0 4px 16px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s;pointer-events:none}
 #toTop.on{opacity:1;transform:none;pointer-events:auto}
 @media (min-width:641px){#toTop{display:none}}
+/* 하단 독(2026-11-26 제이) — 점포·CD·기간을 화면 아래 가운데로. 아래로 스크롤하면 숨고 작은 탭만 남음 */
+.dock{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:50%;z-index:34;display:flex;align-items:center;gap:6px;max-width:calc(100vw - 24px);padding:6px 8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;box-shadow:0 8px 28px rgba(17,24,39,.14),0 2px 6px rgba(17,24,39,.06);transform:translateX(-50%);transition:transform .22s cubic-bezier(.32,.72,0,1),opacity .22s;white-space:nowrap}
+.dock[hidden]{display:none}.dock.off{transform:translate(-50%,calc(100% + 30px));opacity:0;pointer-events:none}
+.dock .dks{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 12px;font:inherit;font-size:14px;font-weight:700;color:var(--ac);background:var(--ac-soft);border:0;border-radius:999px;cursor:pointer}
+.dock .dks svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.dock .dks .cv{width:14px;height:14px}
+.dock .dsep{width:1px;height:26px;background:var(--line)}
+.dock .dkc .cats{display:flex;gap:2px;grid-area:auto;overflow:visible}.dock .dkc .cats button{min-width:48px;padding:4px 5px 3px;font-size:11px}.dock .dkc .cats svg{width:20px;height:20px}
+.dock .dkp .seg{margin:0;min-width:200px}
+.dock.ph .dks,.dock.ph .dsep,.dock.ph .dkp{display:none}.dock.ph{padding:4px 6px;gap:0}.dock.ph .dkc .cats button{min-width:44px;padding:4px 2px 3px}
+.dkt{position:fixed;bottom:0;left:50%;z-index:33;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 14px calc(env(safe-area-inset-bottom,0px));font:inherit;font-size:12px;font-weight:600;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;box-shadow:0 -4px 14px rgba(17,24,39,.08);transform:translate(-50%,100%);transition:transform .22s cubic-bezier(.32,.72,0,1);cursor:pointer}
+.dkt[hidden]{display:none}.dkt.on{transform:translate(-50%,0)}.dkt svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:reduce){.dock,.dkt{transition:none}}
+.app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"menu title set"}
+@media (max-width:640px){.app.docked .hdr{grid-template-areas:"menu title set" "seg seg seg"}#toTop{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
+.nojs .dock,.nojs .dkt{display:none!important}
 /* 일별 매출 제목 옆 날씨 버튼 · 펼치는 날씨 달력 (2026-11-22) */
 .dc>h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .wxb{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 12px 5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .15s ease}
@@ -1421,7 +1436,7 @@ tr.dim>*{opacity:.42}
 @media (min-width:1024px){#main .ssum{font-size:17px}}
 
 /* ── 로그인·메뉴 화면(밝은 화면 고정) ── */
-html:not([data-view=report]) .app,html:not([data-view=report]) #drawer,html:not([data-view=report]) #scrim,html:not([data-view=report]) #spop,html:not([data-view=report]) #toTop{display:none!important}
+html:not([data-view=report]) .app,html:not([data-view=report]) #drawer,html:not([data-view=report]) #scrim,html:not([data-view=report]) #spop,html:not([data-view=report]) #toTop,html:not([data-view=report]) #dock,html:not([data-view=report]) #dockTab{display:none!important}
 html:not([data-view=report]) body{background:#f4f5f7}
 #gate,#portal{--pb:#f4f5f7;--ps:#fff;--pl:#e5e7eb;--pt:#111827;--pm:#6b7280;--pr:#c41e28;--prw:#fdecee;--pg:#0f8a4f;--pw:#b45309;position:fixed;inset:0;z-index:60;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--pb);color:var(--pt);font-family:var(--font);font-size:15px;line-height:1.5;color-scheme:light}
 #gate[hidden],#portal[hidden],#npop[hidden]{display:none}
@@ -1689,6 +1704,8 @@ html:not([data-view=report]) body{background:#f4f5f7}
 </header>
 <div class="body"><nav id="nav" aria-label="리포트 메뉴"></nav><div id="scroller"><main id="main"><div class="skel" aria-busy="true" aria-label="불러오는 중" style="padding-top:18px"><span class="sk ttl2"></span><span class="sk" style="width:55%"></span><div class="skg"><span class="sk kp"></span><span class="sk kp"></span><span class="sk kp"></span><span class="sk kp"></span></div><span class="sk blk"></span><span class="sk blk"></span></div></main></div></div>
 </div>
+<div id="dock" class="dock" role="toolbar" aria-label="점포·카테고리·기간" hidden><button type="button" id="dockStore" class="dks" aria-haspopup="true" aria-expanded="false" aria-controls="spop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.5-5h-13zM5 10v9h14v-9M9 19v-5h6v5"/></svg><span>킴스 전점</span><svg class="cv" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><span class="dsep dsep1"></span><div class="dkc"></div><span class="dsep dsep2"></span><div class="dkp"></div></div>
+<button type="button" id="dockTab" class="dkt" aria-label="아래 메뉴 열기" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg><span></span></button>
 <div id="spop" role="menu" aria-label="점포 선택" hidden></div>
 <button type="button" id="toTop" aria-label="맨 위로" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14l6-6 6 6"/></svg></button>
 <div id="scrim" hidden></div>
@@ -2797,7 +2814,7 @@ var KIMS = (function () {
   }
 
   // ── 전점 요약 · CD별 (리더용) ──
-  var ALL_TABS = ['store', 'nongsan', 'susan', 'chuksan', 'gongsan', 'deli'];
+  var ALL_TABS = ['store', 'nongsan', 'susan', 'chuksan', 'gongsan', 'living', 'deli']; // 2026-11-26 제이: 전점에도 리빙
   function allCatView(k, id) {
     var c = D.storeCats.filter(function (x) { return x[0] === id; })[0], sc = scopeCat(id, k), K = OPEN(), kt = M(k, ALL(), sc);
     var openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
@@ -3914,6 +3931,7 @@ var KIMS = (function () {
     [].forEach.call(cb.querySelectorAll('button'), function (b) { b.hidden = isAll && ALL_TABS.indexOf(b.dataset.t) < 0; if (b.dataset.t === 'store') b.querySelector('span').textContent = isAll ? '전체' : '점포'; });
     doc.querySelector('.app').classList.toggle('has-cats', !cb.hidden);
     [].forEach.call(cb.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.t === ST.t); });
+    if (window.kimsDock) window.kimsDock(!cb.hidden);
     if (toTop) { doc.getElementById('scroller').scrollTop = 0; main.classList.remove('fx'); void main.offsetWidth; main.classList.add('fx'); }
     // 화면 배치 계산을 한 번으로: 측정 모드에서 항목 버튼·고정 머리글 위치를 함께 잰 뒤 한꺼번에 씀
     var sj = measureSegs(); stickHeads(true); applySegs(sj); placePeriod(); queueLift(); wxFill();
@@ -4226,8 +4244,8 @@ var KIMS = (function () {
     doc.getElementById('menuBtn').addEventListener('click', openNav);
     // 제목을 누르면 전점·점포 선택 메뉴
     var ttlBtn = doc.getElementById('ttlBtn'), spop = doc.getElementById('spop');
-    var closeSpop = function () { if (spop.hidden) return; spop.hidden = true; ttlBtn.setAttribute('aria-expanded', 'false'); var sw = doc.querySelector('#nav .nsw[aria-expanded=true]'); if (sw) sw.setAttribute('aria-expanded', 'false'); };
-    var openSpop = function (anchor) {
+    var closeSpop = function () { if (spop.hidden) return; spop.hidden = true; ttlBtn.setAttribute('aria-expanded', 'false'); var dsb = doc.getElementById('dockStore'); if (dsb) dsb.setAttribute('aria-expanded', 'false'); var sw = doc.querySelector('#nav .nsw[aria-expanded=true]'); if (sw) sw.setAttribute('aria-expanded', 'false'); };
+    var openSpop = function (anchor, up) {
       var btn = function (attr, label, cur, cl) { return '<button type="button" role="menuitem" ' + attr + (cl ? ' class="' + cl + '"' : '') + ' aria-current="' + (cur ? 'true' : 'false') + '"><span>' + label + '</span></button>'; };
       var rep = ST.v === 'report';
       spop.innerHTML = btn('data-go="all"', '킴스클럽 전점', rep && ST.s === 'all', 'spall') +
@@ -4240,7 +4258,8 @@ var KIMS = (function () {
       var lx = anchor ? r.right + 8 : r.left;
       if (anchor && lx + spop.offsetWidth > window.innerWidth - 12) lx = r.right - spop.offsetWidth;
       spop.style.left = Math.max(12, Math.min(lx, window.innerWidth - spop.offsetWidth - 12)) + 'px';
-      spop.style.top = Math.max(12, Math.min(anchor ? r.top : r.bottom + 6, window.innerHeight - spop.offsetHeight - 12)) + 'px';
+      spop.style.top = Math.max(12, Math.min(up ? r.top - spop.offsetHeight - 8 : anchor ? r.top : r.bottom + 6, window.innerHeight - spop.offsetHeight - 12)) + 'px';
+      if (up) spop.style.left = Math.max(12, Math.min(r.left, window.innerWidth - spop.offsetWidth - 12)) + 'px';
       (anchor || ttlBtn).setAttribute('aria-expanded', 'true');
       var cur = spop.querySelector('[aria-current=true]') || spop.querySelector('button');
       if (cur) { cur.scrollIntoView({ block: 'nearest' }); cur.focus({ preventScroll: true }); }
@@ -4265,6 +4284,53 @@ var KIMS = (function () {
     toTop.hidden = false;
     scr.addEventListener('scroll', function () { toTop.classList.toggle('on', scr.scrollTop > 600); closeSpop(); tocNow(); }, { passive: true });
     toTop.addEventListener('click', function () { scr.scrollTo({ top: 0, behavior: 'smooth' }); });
+    // ── 하단 독(2026-11-26 제이): 점포·CD를 바꾸려고 화면 오른쪽 위 끝까지 가던 것 → 화면 아래 가운데 떠 있는 막대 ──
+    //   PC: 점포 선택 · CD · 기간 / 휴대폰(640px 이하): CD 만(기간은 위쪽에 그대로)
+    //   자동 숨김: 아래로 스크롤하면 숨고 작은 탭만 남음 → 위로 스크롤·화면 맨 아래로 마우스·탭 누르기·맨 위/맨 아래 도착 때 다시 보임
+    //   점포 목록이 열려 있거나 마우스·포커스가 독 위에 있으면 숨지 않음
+    (function () {
+      var dock = doc.getElementById('dock'), dtab = doc.getElementById('dockTab'), dst = doc.getElementById('dockStore');
+      if (!dock) return;
+      var cats = doc.getElementById('catbar'), seg = doc.querySelector('.hdr .seg') || doc.querySelector('.seg'), hdr = doc.querySelector('.hdr'), setB = doc.getElementById('setBtn');
+      var phone = window.matchMedia('(max-width: 640px)'), on = false, hid = false, lastY = 0, hover = false, keep = 0; // keep = 일부러 연 뒤 잠깐(0.8초) 숨기지 않음
+      var place = function () { // 막대·탭을 리포트 본문(사이드바 오른쪽) 가운데에
+        var r = scr.getBoundingClientRect(); var cx = Math.round(r.left + r.width / 2);
+        dock.style.left = cx + 'px'; dtab.style.left = cx + 'px';
+      };
+      var arrange = function () { // 버튼을 독으로 옮김(이벤트는 그대로 따라감)
+        dock.querySelector('.dkc').appendChild(cats);
+        if (phone.matches) { if (seg.parentNode !== hdr) hdr.insertBefore(seg, setB); dock.classList.add('ph'); }
+        else { dock.querySelector('.dkp').appendChild(seg); dock.classList.remove('ph'); }
+        placePeriod();
+      };
+      var show = function (hold) { if (hold) keep = Date.now() + 800; if (!on || !hid) return; hid = false; dock.classList.remove('off'); dtab.classList.remove('on'); };
+      var hide = function () { if (!on || hid || hover || Date.now() < keep || !spop.hidden || dock.contains(doc.activeElement)) return; hid = true; dock.classList.add('off'); dtab.classList.add('on'); };
+      var label = function () {
+        var tt = [].filter.call(cats.querySelectorAll('button'), function (b) { return b.getAttribute('aria-pressed') === 'true'; })[0];
+        var store = ST.s === 'all' ? '킴스 전점' : NAME[ST.s] || '';
+        dst.querySelector('span').textContent = store;
+        var cd = tt ? tt.querySelector('span').textContent : '';
+        dtab.querySelector('span').textContent = phone.matches ? (cd || '카테고리') : store + ' · ' + (cd && cd !== '점포' && cd !== '전체' ? cd + ' · ' : '') + (PNAME[ST.k] || '');
+      };
+      window.kimsDock = function (vis) {
+        on = vis; doc.querySelector('.app').classList.toggle('docked', vis);
+        dock.hidden = !vis; dtab.hidden = !vis;
+        if (vis) { arrange(); place(); label(); } else { hid = false; dock.classList.remove('off'); dtab.classList.remove('on'); }
+      };
+      phone.addEventListener ? phone.addEventListener('change', function () { if (on) { arrange(); label(); } }) : phone.addListener(function () { if (on) { arrange(); label(); } });
+      window.addEventListener('resize', function () { if (on) place(); });
+      scr.addEventListener('scroll', function () {
+        var y = scr.scrollTop, d = y - lastY; lastY = y;
+        if (y < 80 || y + scr.clientHeight >= scr.scrollHeight - 40) return show(false);
+        if (d > 6) hide(); else if (d < -6) show(false);
+      }, { passive: true });
+      doc.addEventListener('mousemove', function (e) { if (on && hid && e.clientY > window.innerHeight - 90) show(true); }, { passive: true });
+      dock.addEventListener('mouseenter', function () { hover = true; });
+      dock.addEventListener('mouseleave', function () { hover = false; });
+      dtab.addEventListener('click', function (e) { e.stopPropagation(); show(true); });
+      dst.addEventListener('click', function (e) { e.stopPropagation(); if (spop.hidden) { openSpop(dst, true); dst.setAttribute('aria-expanded', 'true'); } else closeSpop(); });
+      if (!cats.hidden) window.kimsDock(true); // 첫 화면이 이미 그려졌으면 바로
+    })();
     // 화면 폭이 바뀌면 그래프 폭을 다시 맞춤
     var rzT = null, lastW = 0;
     window.addEventListener('resize', function () { window.clearTimeout(rzT); rzT = window.setTimeout(function () { var w = doc.getElementById('main').clientWidth; if (w !== lastW) { lastW = w; var sc = doc.getElementById('scroller'), top = sc.scrollTop; quietRender(); sc.scrollTop = top; } }, 200); });
