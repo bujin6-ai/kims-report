@@ -2486,8 +2486,9 @@ var KIMS = (function () {
   // ── 성장율 레이더(2026-11-26 제이: 월 진도 대신 · 2차: 시간대 매출 옆 반 폭, 우리점·그룹 평균·전점 평균 3가지) ──
   //   축 = CD(점포·전점 화면) 또는 구매그룹(CD 화면, 3개 이상일 때)
   //   ax = [[이름, 값0, 값1, 값2], …], names = [이름0, 이름1, 이름2] — 0 빨강 실선, 1 회색 면, 2 파랑 점선 · 범위를 벗어난 값은 끝에 붙이고 숫자로
-  function radarChart(ax, names) {
+  function radarChart(ax, names, tblAx) { // tblAx = 표에만 쓸 줄(그래프보다 많을 때 — 델리·리빙은 표에만, 2026-11-26)
     ax = ax.filter(function (x) { return x[1] != null && isFinite(x[1]); });
+    tblAx = tblAx || ax;
     if (ax.length < 3) return '';
     var S = names.length, ok = function (v) { return v != null && isFinite(v); }, vals = [];
     ax.forEach(function (x) { for (var q = 1; q <= S; q++) if (ok(x[q])) vals.push(x[q]); });
@@ -2519,7 +2520,7 @@ var KIMS = (function () {
     var cols = one ? [0] : names.map(function (nm, q) { return q; });
     var kc = ['ka', 'kb', 'kc'];
     var tbl = '<table class="rdt"><thead><tr><th></th>' + cols.map(function (q) { return '<th><i class="' + kc[q] + '"></i>' + esc(names[q]) + (one ? ' 성장율' : '') + '</th>'; }).join('') + (one ? '' : '<th>그룹 대비</th>') + '</tr></thead><tbody>' +
-      ax.map(function (x) {
+      tblAx.map(function (x) {
         var d = !one && ok(x[2]) ? (x[1] - x[2]) * 100 : null;
         return '<tr><th>' + esc(x[0]) + '</th>' + cols.map(function (q) { var v = x[q + 1]; return '<td' + (q === 0 ? ' class="' + cls(v) + '"' : '') + '>' + (ok(v) ? pct(v) : '-') + '</td>'; }).join('') + (one ? '' : '<td class="' + cls(d) + '">' + (d == null ? '-' : pp(d)) + '</td>') + '</tr>';
       }).join('') + '</tbody></table>';
@@ -2537,9 +2538,13 @@ var KIMS = (function () {
       var pgs = c ? c[2].filter(function (pg) { var m = M(k, plants, scopePg(pg[0])); return m.gsT || m.gsL; }) : [];
       if (pgs.length >= 3) { ax = pgs.map(function (pg) { return row(pg[1], scopePg(pg[0])); }); what = '구매그룹'; }
     }
-    if (!ax) ax = cats.map(function (c) { return row(c[1], scopeCat(c[0], k)); });
+    var tblAx = null;
+    if (!ax) { // CD 축: 델리·리빙은 성장율이 크게 튀어 그래프에서 빼고 아래 표에만(2026-11-26 제이)
+      tblAx = cats.map(function (c) { return row(c[1], scopeCat(c[0], k)); });
+      ax = tblAx.filter(function (x, i) { return cats[i][0] !== 'living' && cats[i][0] !== 'deli'; });
+    }
     var names = store ? [nameA, nameB, '전점 평균'] : [nameA, '전년'];
-    var h = radarChart(ax, names);
+    var h = radarChart(ax, names, tblAx);
     var note = '<p class="note">' + PNAME[k] + ' 매출 성장율 · ' + what + '별 · ' + (store ? '빨강 = ' + esc(nameA) + ', 회색 = ' + esc(nameB) + '(같은 그룹 영업 점포 합계), 파랑 점선 = 전점 평균(킴스 전점 합계)' : '빨강 = 킴스 전점, 회색 0% 선 = 전년과 같음') + ' · 바깥으로 갈수록 성장율 높음</p>';
     return h ? sec('radar', '성장율 비교', '<small class="h3s">' + what + '별</small>', note + h, 'radar') : null;
   }
