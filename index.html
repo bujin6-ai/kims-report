@@ -775,6 +775,15 @@ tr.dim>*{opacity:.42}
 .prgl{display:flex;flex-wrap:wrap;gap:4px 16px;margin:12px 0 4px;font-size:13px;color:var(--muted)}.prgl span{display:inline-flex;align-items:center;gap:6px}
 .prgl i{display:inline-block;width:12px;height:4px;border-radius:2px}.prgl i.c1{background:var(--ac)}.prgl i.c2{width:2px;height:12px;background:var(--muted)}.prgl i.c3{width:2px;height:14px;background:var(--fg)}
 .prgs{margin:6px 0 0;font-size:14px}.prgs b{font-weight:700}
+.rdw{display:flex;flex-wrap:wrap;align-items:center;gap:8px 28px}.rdw{justify-content:center}.rdw .radar{flex:0 1 440px;width:100%;max-width:460px;height:auto;display:block;overflow:visible}
+.radar .rg{fill:none;stroke:var(--line);stroke-width:1}.radar .rz{fill:none;stroke:color-mix(in srgb,var(--fg) 35%,transparent);stroke-width:1.2;stroke-dasharray:4 3}.radar .rs{stroke:var(--line);stroke-width:1}
+.radar .rt{font-size:10px;fill:var(--muted)}.radar .rt.z{font-weight:700;fill:var(--fg)}
+.radar .pb{fill:color-mix(in srgb,var(--muted) 14%,transparent);stroke:color-mix(in srgb,var(--muted) 80%,transparent);stroke-width:1.6}.radar .pa{fill:color-mix(in srgb,#d32f2f 10%,transparent);stroke:#d32f2f;stroke-width:2.4;stroke-linejoin:round}
+.radar .ra{fill:#d32f2f}.radar .ra.over{fill:var(--panel);stroke:#d32f2f;stroke-width:2}
+.radar .rl{font-size:13px;font-weight:700;fill:var(--fg)}.radar .rl tspan{font-size:12px;font-weight:600}.radar .rl tspan.up{fill:var(--good)}.radar .rl tspan.dn{fill:var(--bad)}
+.rdt{flex:0 1 420px;min-width:0;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.rdt th,.rdt td{padding:6px 8px;text-align:right;white-space:nowrap;border-top:1px solid var(--line)}
+.rdt thead th{border-top:0;font-size:12px;color:var(--muted);font-weight:600}.rdt tr>th:first-child{text-align:left;font-weight:600}.rdt td.up{color:var(--good)}.rdt td.dn{color:var(--bad)}
+.rdt i{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}.rdt i.ka{background:#d32f2f}.rdt i.kb{background:var(--muted)}
 .prg:has(.prgcd) .prgb{cursor:pointer}.prgt{margin:8px 0 0;font-size:12px;color:var(--muted)}.prg.open .prgt{display:none}
 .prgcd{margin-top:12px;overflow-x:auto}.prgcd table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
 .prgcd th,.prgcd td{padding:7px 8px;text-align:right;white-space:nowrap;border-top:1px solid var(--line)}.prgcd thead th{font-size:12px;font-weight:600;color:var(--muted);border-top:0}
@@ -2464,6 +2473,55 @@ var KIMS = (function () {
 
   var secG = function (id, nav, title, body, opt) { return body ? sec(id, nav, title, body, opt) : null; };
   // 2026-11-24: 주간·전일 화면에도 월 진도(값은 언제나 이번 달 누계) — mt = 월 누계 M('M', …)
+  // ── 성장율 레이더(2026-11-26 제이: 월 진도 대신) ──
+  //   축 = CD(점포·전점 화면) 또는 구매그룹(CD 화면, 3개 이상일 때) · 빨강 = 우리(점포/킴스), 회색 = 비교(그룹 합계 / 전점은 전년 = 0%)
+  //   ax = [[이름, 우리 성장율, 비교 성장율], …] · 범위를 벗어난 값은 끝에 붙이고 숫자로 표시
+  function radarChart(ax, nameA, nameB) {
+    ax = ax.filter(function (x) { return x[1] != null && isFinite(x[1]); });
+    if (ax.length < 3) return '';
+    var vals = []; ax.forEach(function (x) { vals.push(x[1]); if (x[2] != null && isFinite(x[2])) vals.push(x[2]); });
+    var lo = Math.max(-0.6, Math.min(-0.1, Math.min.apply(null, vals) - 0.05)), hi = Math.min(0.6, Math.max(0.1, Math.max.apply(null, vals) + 0.05));
+    var st = hi - lo > 0.6 ? 0.2 : 0.1; lo = Math.floor(lo / st) * st; hi = Math.ceil(hi / st) * st;
+    var W = 380, H = 330, cx = W / 2, cy = H / 2 + 6, R = 116, n = ax.length;
+    var ang = function (i) { return -Math.PI / 2 + i * 2 * Math.PI / n; };
+    var rr = function (v) { return R * (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo); };
+    var pt = function (i, v) { var a = ang(i), r = rr(v); return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+    var poly = function (vs) { return vs.map(function (v, i) { var p = pt(i, v == null || !isFinite(v) ? 0 : v); return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); };
+    var rings = '';
+    for (var t = lo + st; t <= hi + 1e-9; t += st) {
+      var tv = Math.round(t * 100) / 100, z = Math.abs(tv) < 1e-9;
+      rings += '<polygon class="' + (z ? 'rz' : 'rg') + '" points="' + poly(ax.map(function () { return tv; })) + '"/>';
+      var lp = pt(0, tv); rings += '<text class="rt' + (z ? ' z' : '') + '" x="' + (lp[0] - 5).toFixed(1) + '" y="' + (lp[1] + 11).toFixed(1) + '" text-anchor="end">' + (z ? '0%' : (tv > 0 ? '+' : '−') + Math.abs(Math.round(tv * 100)) + '%') + '</text>';
+    }
+    var spokes = ax.map(function (x, i) { var p = pt(i, hi); return '<line class="rs" x1="' + cx + '" y1="' + cy + '" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) + '"/>'; }).join('');
+    var labels = ax.map(function (x, i) {
+      var a = ang(i), p = [cx + (R + 18) * Math.cos(a), cy + (R + 18) * Math.sin(a)], c = Math.cos(a), anc = Math.abs(c) < 0.25 ? 'middle' : c > 0 ? 'start' : 'end';
+      var dy = Math.sin(a) < -0.5 ? -4 : Math.sin(a) > 0.5 ? 12 : 4;
+      return '<text class="rl" x="' + p[0].toFixed(1) + '" y="' + (p[1] + dy).toFixed(1) + '" text-anchor="' + anc + '">' + esc(x[0]) + '<tspan class="' + cls(x[1]) + '" dx="4">' + pct(x[1]) + '</tspan></text>';
+    }).join('');
+    var dots = ax.map(function (x, i) { var p = pt(i, x[1]), over = x[1] > hi || x[1] < lo; return '<circle class="ra' + (over ? ' over' : '') + '" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + (over ? 4.5 : 3) + '"><title>' + esc(x[0]) + ' · ' + nameA + ' ' + pct(x[1]) + (x[2] != null ? ' · ' + nameB + ' ' + pct(x[2]) : '') + '</title></circle>'; }).join('');
+    var svg = '<svg class="radar" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(nameA) + '와 ' + esc(nameB) + ' 성장율 비교">' + rings + spokes +
+      '<polygon class="pb" points="' + poly(ax.map(function (x) { return x[2]; })) + '"/><polygon class="pa" points="' + poly(ax.map(function (x) { return x[1]; })) + '"/>' + dots + labels + '</svg>';
+    var one = nameB === '전년'; // 전점: 비교 = 전년(0%)이라 성장율 칸만
+    var tbl = '<table class="rdt"><thead><tr><th></th><th><i class="ka"></i>' + esc(nameA) + (one ? ' 성장율' : '') + '</th>' + (one ? '' : '<th><i class="kb"></i>' + esc(nameB) + '</th><th>차이</th>') + '</tr></thead><tbody>' +
+      ax.map(function (x) { var d = x[2] != null && isFinite(x[2]) ? (x[1] - x[2]) * 100 : null; return '<tr><th>' + esc(x[0]) + '</th><td class="' + cls(x[1]) + '">' + pct(x[1]) + '</td>' + (one ? '' : '<td>' + (x[2] == null ? '-' : pct(x[2])) + '</td><td class="' + cls(d) + '">' + (d == null ? '-' : pp(d)) + '</td>') + '</tr>'; }).join('') + '</tbody></table>';
+    return '<div class="rdw">' + svg + tbl + '</div>';
+  }
+  // 레이더 섹션: 점포(CD 축 · 우리점 vs 그룹 합계) / 점포 CD(구매그룹 3개 이상이면 구매그룹 축, 아니면 CD 축) / 전점(킴스 vs 전년 0%)
+  function radarRow(k, plants, cmpPlants, nameA, nameB, id) {
+    var cats = D.storeCats.filter(function (c) { return c[0] !== 'etc'; });
+    var g = function (pl, sc2) { return pl ? M(k, pl, sc2).growth : 0; };
+    var ax = null, what = 'CD';
+    if (id && id !== 'store') {
+      var c = D.storeCats.filter(function (x) { return x[0] === id; })[0];
+      var pgs = c ? c[2].filter(function (pg) { var m = M(k, plants, scopePg(pg[0])); return m.gsT || m.gsL; }) : [];
+      if (pgs.length >= 3) { ax = pgs.map(function (pg) { var s2 = scopePg(pg[0]); return [pg[1], g(plants, s2), g(cmpPlants, s2)]; }); what = '구매그룹'; }
+    }
+    if (!ax) ax = cats.map(function (c) { var s2 = scopeCat(c[0], k); return [c[1], g(plants, s2), g(cmpPlants, s2)]; });
+    var h = radarChart(ax, nameA, nameB);
+    var note = '<p class="note">' + PNAME[k] + ' 매출 성장율 · ' + what + '별 · 빨강 = ' + esc(nameA) + ', 회색 = ' + esc(nameB) + (cmpPlants ? '' : '(0% 선 = 전년과 같음)') + ' · 바깥으로 갈수록 성장율 높음</p>';
+    return h ? [sec('radar', '성장율 비교', (cmpPlants ? '그룹 평균 대비' : '전년 대비') + ' <small class="h3s">' + what + '별</small>', note + h, 'radar')] : [];
+  }
   // 2026-11-26 제이: 막대를 누르면 CD별 진도(점포 전체 탭만 · 전년 월마감이 CD별로만 있어 구매그룹은 없음) — plants·lyKey = 월마감 찾을 점포(lymonth 키)
   var progRow = function (k, mt, lym, plants, lyKey) {
     var cds = null;
@@ -2515,7 +2573,7 @@ var KIMS = (function () {
         [sec('kpi', '핵심 지표', '', kpis(k, me, sc), null, 'bare')],
         [dailySec(me, 'store')],
         [hourSec(k, [me], 'store', NAME[me] + ' 전체', NAME[me])],
-        progRow(k, M('M', [me], scopeStore('M')), (D.lymonth[me] || {}).store, [me], me),
+        radarRow(k, [me], openOf(g), NAME[me], gn + ' 평균', 'store'),
         [secG('wf', 'CD 매출 증감', '매출 증감 기여도 <small class="h3s">CD별</small>', wfChart(cds.map(function (c) { return [c.name, c.y.gsT, c.y.gsL]; }), y.gsL, y.gsT, 'CD'), 'wf'),
           secG('mix', '매출 구성비', 'CD 매출 구성비', mixChart(cds.map(function (c) { return [c.name, c.y.gsT, c.y.gsL]; })), 'mix')],
         [sec('detail', '우리점 VS 비교점', '우리점 VS 비교점' + VSSUB + CMPBTN, '<div class="dts">' + detailTable(k, me, sc, NAME[me] + ' 합계') + '</div>', 'detail')],
@@ -2623,7 +2681,7 @@ var KIMS = (function () {
         [sec('kpi', '핵심 지표', '', kpis(k, me, sc), null, 'bare')],
         [hasData('daily', id) ? dailySec(me, id) : sec('daily', '일별 매출', '일별 매출', NOT_YET(c[1] + ' 일별'), 'daily')],
         [hourSec(k, [me], id, NAME[me] + ' ' + c[1], c[1])],
-        progRow(k, M('M', [me], scopeCat(id, 'M')), (D.lymonth[me] || {})[id]),
+        radarRow(k, [me], openOf(GRP[me]), NAME[me], GNAME[GRP[me]] + ' 평균', id),
         pgList.length ? [secG('wf', 'CD 매출 증감', '매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(pgList.map(function (pg) { var t = M(k, [me], scopePg(pg[0])); return [pg[1], t.gsT, t.gsL]; }), y.gsL, y.gsT, '구매그룹'), 'wf'),
           per.length < 2 ? null : secG('mix', '매출 구성비', c[1] + ' 구매그룹 구성비', mixChart(per.map(function (p) { return [p.name, p.y.gsT, p.y.gsL]; })), 'mix')] : [],
         [sec('detail', '우리점 VS 비교점', '우리점 VS 비교점' + VSSUB + CMPBTN, tables, 'detail')],
@@ -2781,7 +2839,7 @@ var KIMS = (function () {
         [sec('kpi', '킴스 합계', '', '<div class="kpis" data-p="ALL" data-c="">' + kpi('매출', man(kt.gsT), '백만원', kt.growth, pct(kt.growth), '', spark('ALL', 'store'), achTag(kt)) + kpi('매출총이익률', f1(kt.mr), '%', kt.mrD, pp(kt.mrD), '', lyBars(kt.mr, kt.mrL, fmtMr), lossTag(kt)) + kpi('건수', won(kt.cnt), '건/일', kt.cntG, pct(kt.cntG), '', lyBars(kt.cnt, kt.cntL, fmtCnt)) + kpi('건단가', man1(kt.atv), '만원', kt.atvG, pct(kt.atvG), '', lyBars(kt.atv, kt.atvL, fmtAtv)) + kxCards(kt, null, k) + '</div>', null, 'bare')],
         [allDailySec('store', '전체')],
         [hourSec(k, OPEN(), 'store', '킴스 영업 점포 합계', '킴스 합계')],
-        progRow(k, M('M', ALL(), scopeStore('M')), (aggDaily(), (D.lymonth.ALL || {}).store), ALL(), 'ALL'),
+        radarRow(k, ALL(), null, '킴스 전점', '전년', 'store'),
         [secG('wf', 'CD 매출 증감', '매출 증감 기여도 <small class="h3s">CD별</small>', wfChart(D.storeCats.map(function (c) { var t = M(k, ALL(), scopeCat(c[0], k)); return [c[1], t.gsT, t.gsL]; }), kt.gsL, kt.gsT, 'CD'), 'wf'),
           sec('grpc', '그룹 증감 기여', '그룹별 증감 비교', grpChart(k, sc), 'grpc')],
         [secG('grank', '점포 실적 순위', '점포별 순위', grankChart(k, sc), 'grank')],
@@ -2842,7 +2900,7 @@ var KIMS = (function () {
         pgs.length > 1 ? [sec('pgperf', '구매그룹별 실적', c[2].length ? pgs.map(function (x) { return x[1]; }).join('·') + ' 실적' : '', pgPerf)] : [],
         [allDailySec(id, c[1])],
         [hourSec(k, OPEN(), id, '킴스 영업 점포 ' + c[1] + ' 합계', c[1])],
-        progRow(k, M('M', ALL(), scopeCat(id, 'M')), (aggDaily(), (D.lymonth.ALL || {})[id])),
+        radarRow(k, ALL(), null, '킴스 전점', '전년', id),
         [pgs.length ? secG('wf', 'CD 매출 증감', c[1] + ' 매출 증감 기여도 <small class="h3s">구매그룹별</small>', wfChart(pgs.map(function (pg) { var t = M(k, ALL(), scopePg(pg[0])); return [pg[1], t.gsT, t.gsL]; }), kt.gsL, kt.gsT, '구매그룹'), 'wf') : null,
           sec('grpc', '그룹 증감 기여', '그룹별 ' + c[1] + ' 증감 비교', grpChart(k, sc), 'grpc')],
         [secG('grank', '점포 실적 순위', '점포별 ' + c[1] + ' 순위', grankChart(k, sc), 'grank')],
@@ -3510,7 +3568,7 @@ var KIMS = (function () {
     return head;
   }
   var NOT_YET = function (what) { return '<p class="note pend">' + what + ' 데이터는 아직 받지 않았습니다. 다음 데이터 갱신부터 표시됩니다.</p>'; };
-  var OPT = [['daily', '일별 매출'], ['hour', '시간대 매출'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출 성장율'], ['heat', '실적 신호등 (점포)'], ['mc', 'MC 증감'], ['top', '상위15개 상품 (CD 탭)'], ['quad', '건수×건단가 현황 (전점)'], ['prog', '월 진도'], ['wf', 'CD 매출 증감'], ['mix', '매출 구성비'], ['grank', '점포 실적 순위 (전점)'], ['grpc', '그룹 증감 기여 (전점)']];
+  var OPT = [['daily', '일별 매출'], ['hour', '시간대 매출'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출 성장율'], ['heat', '실적 신호등 (점포)'], ['mc', 'MC 증감'], ['top', '상위15개 상품 (CD 탭)'], ['quad', '건수×건단가 현황 (전점)'], ['radar', '성장율 비교'], ['wf', 'CD 매출 증감'], ['mix', '매출 구성비'], ['grank', '점포 실적 순위 (전점)'], ['grpc', '그룹 증감 기여 (전점)']];
   // 재고 화면 전용 보일 항목(2026-11-24) — 매출 OPT 와 키가 겹치지 않게 s 로 시작
   var SOPT = [['sdrank', '재고일수 순위 (점포)'], ['sdamt', 'CD 재고액'], ['sdiag', 'CD 재고일수 진단'], ['sday', '일별 재고액'], ['smon', '월별 재고'], ['scd', '재고 상세'], ['sitem', '관리 필요 상품 (점포)'], ['srank', '점포 재고 순위 (전점)']];
   var ST = { k: 'D', s: 'all', t: 'store', v: 'report' };
@@ -3559,6 +3617,7 @@ var KIMS = (function () {
     cdheat: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/>',
     pgperf: '<path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/>',
     prog: '<path d="M3 12h18"/><path d="M3 12h11" stroke-width="3.2"/><path d="M17 8v8"/>',
+    radar: '<path d="M12 3l8.5 6.2-3.2 10H6.7L3.5 9.2z"/><path d="M12 8l4 3-1.5 4.5h-5L8 11z"/>',
     wf: '<path d="M4 20V9M9 9V5M14 5v6M19 11v9"/><path d="M4 9h5M9 5h5M14 11h5" stroke-dasharray="2 2"/>',
     mix: '<rect x="3" y="6" width="18" height="5" rx="1"/><rect x="3" y="14" width="18" height="5" rx="1"/><path d="M10 6v5M15 6v5M8 14v5M16 14v5"/>',
     grank: '<path d="M12 4v16"/><path d="M12 6h7M12 10h5M12 14H8M12 18H5"/>',
@@ -4019,6 +4078,7 @@ var KIMS = (function () {
     var T = {
       daily: ['날짜별 실매출 · 실선 = 금년, 점선 = 전년 같은 요일', '날짜 위 % = 그날 전년 같은 요일 대비 증감율(금년 ÷ 전년 − 1)', '금년은 1일~기준일, 전년은 이번 달 말일까지 그림', SALES_BASE],
       hour: ['시간대(정시 기준 1시간)별 POS 총판매액 합계 · 금년 vs 전년 같은 기간', 'POS 총판매액은 영수증 금액 기준이라 실매출과 조금 다를 수 있음', per],
+      radar: ['축 = CD(CD 화면은 구매그룹이 3개 이상일 때 구매그룹) · 값 = 매출 성장율(금년 ÷ 전년 − 1)', '점포: 빨강 = 우리 점포, 회색 = 같은 그룹 영업 점포 합계 · 전점: 빨강 = 킴스 전점, 회색 = 전년(0%)', '바깥으로 갈수록 성장율이 높음 · 범위를 벗어난 값은 끝에 붙이고 숫자로 표시', per],
       prog: ['진도율 = 이번 달 1일~기준일 실매출 ÷ 전년 같은 달 월마감 실매출', '회색 눈금 = 전년 같은 기간(같은 날까지)의 진도율 · 검은 눈금 = 달 경과율(지난 날 수 ÷ 이번 달 날 수)', '월말 예상 = 전년 월마감 × (1 + 지금까지의 전년비 성장율)', '주간·전일 화면에서도 언제나 이번 달 누계로 계산'],
       wf: ['전년 매출에서 출발해 ' + cdw + '별 증감(금년 − 전년)을 차례로 더하면 금년 매출이 됨 · 단위 백만원', '초록 = 늘어남, 빨강 = 줄어듦', per],
       mix: [cdw + '별 매출 ÷ 전체 매출 = 구성비 · 위 = 금년, 아래 = 전년', '구성비가 늘면 그 ' + cdw + '의 비중이 커진 것', per],
