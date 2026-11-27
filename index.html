@@ -775,6 +775,16 @@ tr.dim>*{opacity:.42}
 .prgl{display:flex;flex-wrap:wrap;gap:4px 16px;margin:12px 0 4px;font-size:13px;color:var(--muted)}.prgl span{display:inline-flex;align-items:center;gap:6px}
 .prgl i{display:inline-block;width:12px;height:4px;border-radius:2px}.prgl i.c1{background:var(--ac)}.prgl i.c2{width:2px;height:12px;background:var(--muted)}.prgl i.c3{width:2px;height:14px;background:var(--fg)}
 .prgs{margin:6px 0 0;font-size:14px}.prgs b{font-weight:700}
+.hdw{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}.hdt{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 8px;font-size:14px;font-weight:700}.hdt small{font-size:12px;font-weight:500;color:var(--muted)}
+.hdt .hds{margin-left:auto;display:inline-flex;gap:12px;font-size:12px}.hdt .hds b.up{color:var(--good)}.hdt .hds b.dn{color:var(--bad)}
+.hdc{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:4px}
+.hdc li{display:grid;grid-template-rows:64px 64px auto;justify-items:center;min-width:0}
+.hdc .hdu,.hdc .hdd{position:relative;width:100%;display:flex;flex-direction:column;align-items:center}.hdc .hdu{justify-content:flex-end;border-bottom:1px solid color-mix(in srgb,var(--fg) 30%,transparent)}.hdc .hdd{justify-content:flex-start}
+.hdc i{display:block;width:58%;max-width:26px;min-height:2px;border-radius:4px 4px 0 0;background:color-mix(in srgb,var(--good) 55%,transparent)}.hdc .hdd i{border-radius:0 0 4px 4px;background:color-mix(in srgb,var(--bad) 50%,transparent)}
+.hdc li.hmx.up i{background:var(--good)}.hdc li.hmx.dn i{background:var(--bad)}
+.hdc em{font-style:normal;font-size:11px;font-weight:600;white-space:nowrap;margin:2px 0;font-variant-numeric:tabular-nums}.hdc li.up em{color:var(--good)}.hdc li.dn em{color:var(--bad)}.hdc li.hmx em{font-weight:800}
+.hdc b{font-size:12px;font-weight:600;color:var(--muted);margin-top:4px}
+@media (max-width:640px){.hdc li{grid-template-rows:48px 48px auto}.hdc em{font-size:9px}.hdt .hds{margin-left:0}}
 .rdw{display:flex;flex-direction:column;align-items:center;gap:6px}.rdw .radar{width:100%;max-width:540px;height:auto;display:block;overflow:visible}
 .radar .rg{fill:none;stroke:var(--line);stroke-width:1}.radar .rz{fill:none;stroke:color-mix(in srgb,var(--fg) 35%,transparent);stroke-width:1.2;stroke-dasharray:4 3}.radar .rs{stroke:var(--line);stroke-width:1}
 .radar .rt{font-size:10px;fill:var(--muted)}.radar .rt.z{font-weight:700;fill:var(--fg)}
@@ -1621,12 +1631,24 @@ html:not([data-view=report]) body{background:#f4f5f7}
 .hic{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:var(--qbw);color:var(--qb)}#portal .hic svg{width:21px;height:21px}
 .hgo{position:absolute;top:18px;right:20px;font-size:13px;font-weight:700;color:var(--qb)}
 .hct{display:grid;gap:2px;margin-top:auto}.hct b{font-size:17px;letter-spacing:-.3px}.hct small{color:var(--pm);font-size:12.5px}
-.hcard.rep{grid-column:span 2;grid-row:span 2;min-height:312px;padding:22px 24px;animation:pin .4s ease forwards,hfloat 4s ease-in-out .5s infinite}
+.hcard.rep{grid-column:span 2;grid-row:span 2;min-height:312px;padding:22px 24px;animation:pin .4s ease forwards;transition:translate .22s cubic-bezier(.32,.72,0,1),box-shadow .22s,border-color .22s}
 .hcard.rep .hic{width:56px;height:56px;border-radius:15px;background:var(--prw);color:var(--pr)}#portal .hcard.rep .hic svg{width:26px;height:26px}
 .hcard.rep .hgo{top:24px;right:24px;color:var(--pr)}
 .hcard.rep .hct b{font-size:22px}.hcard.rep .hct small{font-size:14px}
 .hdate{display:flex;align-items:baseline;justify-content:space-between;width:100%;margin-top:18px;padding-top:16px;border-top:1px solid var(--pl)}.hdate small{color:var(--pm);font-size:13px}.hdate b{font-size:23px;font-weight:800;letter-spacing:-.5px}
 .hcard.rep .plag{position:static;margin-top:12px;width:100%}
+/* 2026-11-27 제이: 매출 리포트 카드 — 떠다니던 움직임(hfloat) 대신 ①마우스 올리면 살짝 떠오름 ②들어올 때 7일 선이 한 번 그려짐 ④새 실적 NEW ⑤제목 샤이니 */
+@media (hover:hover){.hcard.rep:hover{translate:0 -3px;box-shadow:0 14px 30px rgba(196,30,40,.14),0 3px 8px rgba(17,24,39,.06)}}
+.hcard.rep:active{translate:0 -1px}
+#portal .h7 svg path.t{stroke-dasharray:1;stroke-dashoffset:1;animation:h7draw .9s cubic-bezier(.4,0,.2,1) .35s forwards}
+#portal .h7 svg circle{opacity:0;animation:h7dot .3s ease 1.05s forwards}
+#portal.calm .h7 svg path.t{stroke-dashoffset:0;animation:none}#portal.calm .h7 svg circle{opacity:1;animation:none}
+@keyframes h7draw{to{stroke-dashoffset:0}}@keyframes h7dot{to{opacity:1}}
+.hnew{display:inline-flex;align-items:center;margin-left:6px;padding:1px 6px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.3px;color:#fff;background:var(--pr);border-radius:999px;vertical-align:1px;animation:hnew 1.6s ease-in-out infinite}
+@keyframes hnew{0%,100%{opacity:1}50%{opacity:.45}}
+.shiny{background:linear-gradient(100deg,currentColor 0%,currentColor 40%,color-mix(in srgb,var(--pr) 55%,#fff) 50%,currentColor 60%,currentColor 100%);background-size:250% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shiny 4.5s ease-in-out 1s infinite}
+@keyframes shiny{0%{background-position:100% 0}35%,100%{background-position:0 0}}
+@media (prefers-reduced-motion:reduce){.hcard.rep,.hcard.rep:hover{translate:none}#portal .h7 svg path.t{stroke-dashoffset:0;animation:none}#portal .h7 svg circle{opacity:1;animation:none}.hnew,.shiny{animation:none}}
 .h7{display:block;width:100%;margin-top:14px;text-align:left}.h7h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.h7h small{color:var(--pm);font-size:12.5px}
 .h7h b{font-size:16px;font-weight:800;letter-spacing:-.2px;white-space:nowrap}.h7h b i{font-style:normal;font-size:11.5px;font-weight:600;color:var(--pm);margin-left:2px}.h7h em{font-style:normal;font-size:12px;font-weight:700;margin-left:6px}.h7h em.up{color:#16a34a}.h7h em.dn{color:#dc2626}
 #portal .h7 svg{display:block;width:100%;height:58px;margin-top:4px;overflow:visible;stroke:none}.h7 svg path{fill:none;stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}.h7 svg path.t{stroke:var(--pr)}.h7 svg path.l{stroke:#c4c8cf;stroke-dasharray:4 3;stroke-width:1.5}.h7 svg circle{fill:var(--pr)}
@@ -1711,7 +1733,7 @@ html:not([data-view=report]) body{background:#f4f5f7}
 @keyframes qup{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.hcard,.hacard{animation:none!important;opacity:1}}
 /* 메뉴 화면을 같은 화면 안에서 다시 그릴 때(공지·반영일 새로 받음 등)는 카드가 사라졌다 나타나지 않게(2026-11-24 깜빡임) — 매출 리포트 카드 떠오르기는 유지 */
-#portal.calm .hcard,#portal.calm .hacard{animation:none;opacity:1}#portal.calm .hcard.rep{animation:hfloat 4s ease-in-out .5s infinite}
+#portal.calm .hcard,#portal.calm .hacard{animation:none;opacity:1}#portal.calm .hcard.rep{animation:none}
 @media (prefers-reduced-motion:reduce){#portal.calm .hcard.rep{animation:none}}
 </style></head><body><div class="app">
 <header class="hdr">
@@ -2229,7 +2251,17 @@ var KIMS = (function () {
       (hi && hi[1] > 0 ? '<span>가장 많이 늘어난 시간 <b class="up">' + hi[0] + '시 ' + bms(hi[1]) + '백만</b></span>' : '') +
       (lo && lo[1] < 0 ? '<span>가장 많이 줄어든 시간 <b class="dn">' + lo[0] + '시 ' + bms(lo[1]) + '백만</b></span>' : '') + '</p>' +
       '<ol class="hrc" style="--n:' + rows.length + '">' + bars + '</ol><p class="hri" aria-live="polite"></p>' +
-      '<p class="hrl"><span><i class="t"></i>금년</span><span><i class="l"></i>전년</span><span>막대 아래 % = 전년 대비 증감</span><span>합계 ' + bm(tT) + ' / ' + bm(tL) + '백만</span></p>';
+      '<p class="hrl"><span><i class="t"></i>금년</span><span><i class="l"></i>전년</span><span>막대 아래 % = 전년 대비 증감</span><span>합계 ' + bm(tT) + ' / ' + bm(tL) + '백만</span></p>' + hourDiff(rows, hi, lo);
+  }
+  // 시간대별 증감(금년 − 전년, 백만원) — 가운데 선 위 = 늘어난 시간(초록), 아래 = 줄어든 시간(빨강), 가장 큰 증가·감소는 진하게(2026-11-27 제이: 아래 빈 곳 채움)
+  function hourDiff(rows, hi, lo) {
+    var d = rows.map(function (r) { return [r[0], r[1] - r[2]]; }), mx = Math.max.apply(null, d.map(function (x) { return Math.abs(x[1]); })) || 1;
+    var up = d.reduce(function (a, x) { return a + Math.max(0, x[1]); }, 0), dn = d.reduce(function (a, x) { return a + Math.min(0, x[1]); }, 0);
+    return '<div class="hdw"><p class="hdt">시간대별 증감 <small>금년 − 전년 · 백만원</small><span class="hds"><b class="up">늘어난 시간 합 ' + bms(up) + '</b><b class="dn">줄어든 시간 합 ' + bms(dn) + '</b></span></p>' +
+      '<ol class="hdc" style="--n:' + d.length + '">' + d.map(function (x) {
+        var h = (Math.abs(x[1]) / mx * 100).toFixed(1), pos = x[1] >= 0, top = (hi && x[0] === hi[0] && x[1] > 0) || (lo && x[0] === lo[0] && x[1] < 0);
+        return '<li class="' + (pos ? 'up' : 'dn') + (top ? ' hmx' : '') + '" title="' + x[0] + '시 ' + bms(x[1]) + '백만"><span class="hdu">' + (pos ? '<em>' + bms(x[1]) + '</em><i style="height:' + h + '%"></i>' : '') + '</span><span class="hdd">' + (pos ? '' : '<i style="height:' + h + '%"></i><em>' + bms(x[1]) + '</em>') + '</span><b>' + x[0] + '</b></li>';
+      }).join('') + '</ol></div>';
   }
   var hourSec = function (k, plants, key, who, what) {
     var h = hourChart(k, plants, key, who);
@@ -2535,11 +2567,7 @@ var KIMS = (function () {
     var g = function (pl, sc2) { return pl ? M(k, pl, sc2).growth : 0; };
     var row = function (nm, s2) { return store ? [nm, g(plants, s2), g(grpPlants, s2), g(ALL(), s2)] : [nm, g(plants, s2), 0]; };
     var ax = null, what = 'CD';
-    if (id && id !== 'store') {
-      var c = D.storeCats.filter(function (x) { return x[0] === id; })[0];
-      var pgs = c ? c[2].filter(function (pg) { var m = M(k, plants, scopePg(pg[0])); return m.gsT || m.gsL; }) : [];
-      if (pgs.length >= 3) { ax = pgs.map(function (pg) { return row(pg[1], scopePg(pg[0])); }); what = '구매그룹'; }
-    }
+    // 2026-11-27 제이: CD 탭(농산 등)도 점포·다른 CD 탭과 같게 CD 축(구매그룹 축 안 씀)
     var tblAx = null;
     if (!ax) { // CD 축(2026-11-26 제이 3차): 농산·수산·축산·공산·델리 + 점포(전체) — 리빙은 크게 튀어 아래 표에만
       var allRow = row(store ? '점포' : '전체', scopeStore(k));
@@ -3052,14 +3080,14 @@ var KIMS = (function () {
     var rows = cats.map(function (c) {
       var sc = scopeCat(c[0], k), t = M(k, plants, sc);
       if (!t.gsT && !t.gsL) return '';
-      var pgs = key === 'lrDn' ? [] : c[2].filter(function (pg) { var m = M(k, plants, scopePg(pg[0])); return m.gsT || m.gsL; }); // 손실율은 CD까지만 데이터가 있음
+      var pgs = c[2].filter(function (pg) { var m = M(k, plants, scopePg(pg[0])); return m.gsT || m.gsL; }); // 손실율도 구매그룹까지(2026-11-26 쿼리 추가)
       return '<ul class="kg">' + head + line(c[1] + (cid ? ' 합계' : ''), sc, 'cd') + (pgs.length > 1 || cid ? pgs.map(function (pg) { return line(pg[1], scopePg(pg[0]), 'pg'); }).join('') : '') + '</ul>';
     }).join('');
     // 맨 앞에 전체 합계(점포 전체 또는 킴스 합계) — CD 탭은 'CD 합계' 줄이 이미 있어 넣지 않음
     if (!cid) rows = '<ul class="kg ktot">' + head + line((pAttr === 'ALL' ? '킴스' : NAME[pAttr]) + ' 합계', scopeStore(k), 'cd') + '</ul>' + rows;
     return '<p class="kt">' + esc(pAttr === 'ALL' ? '킴스 합계' : NAME[pAttr]) + ' · ' + KPI_NAME[key] + ' <small>' + (cid ? '구매그룹별' : 'CD·구매그룹별') + '</small></p><div class="kgs">' + rows + '</div>' +
       (key === 'cnt' ? '<p class="kn">CD·구매그룹 건수는 그 상품을 산 영수증 수라서 더하면 전체 건수와 다릅니다.</p>' : '') +
-      (key === 'lrDn' ? '<p class="kn">손실율 = (마크다운+폐기+재고차이) ÷ 실매출 · CD별까지만 있고 구매그룹별 손실율은 데이터에 없습니다.</p>' : '') +
+      (key === 'lrDn' ? '<p class="kn">손실율 = (마크다운+폐기+재고차이) ÷ 실매출 · 정판율 마트(상품 기준 구매그룹)' + (lossRng(k) ? ' · ' + lossRng(k) : '') + '</p>' : '') +
       (key === 'eveG' ? '<p class="kn">저녁장 = 17시 이후 POS 매출</p>' : '');
   }
   // 전점: 그룹별 점포 실적(금년 큰 순)
@@ -5001,8 +5029,8 @@ var KIMS = (function () {
     var ur = unread().length, qo = P && P.inq ? P.inq.open : 0;
     var menu = '<div class="hgrid">' +
       '<button type="button" class="hcard rep' + (L ? ' late' : '') + '" data-menu="report" style="--i:0"><span class="hic">' + ICON.bars + '</span><span class="hgo">열기 →</span>' +
-        '<span class="hct"><b>매출 리포트</b><small>킴스클럽 매출 실적</small></span>' + week7() +
-        '<span class="hdate"><small>최근 반영일</small><b>' + (sb ? dLab(sb, true) : '확인 중…') + '</b></span>' +
+        '<span class="hct"><b class="shiny">매출 리포트</b><small>킴스클럽 매출 실적</small></span>' + week7() +
+        '<span class="hdate"><small>최근 반영일' + (sb && sb > (store(SEENK) || '') ? '<i class="hnew" title="새 실적이 들어왔어요(리포트를 열면 사라짐)">NEW</i>' : '') + '</small><b>' + (sb ? dLab(sb, true) : '확인 중…') + '</b></span>' +
         (L ? '<span class="plag' + (L.pre ? ' pre' : '') + '">' + ICON.late + '<span>' + L.short + (L.pre ? ' 실적은 오전 9시에 반영돼요' : ' 실적은 서버 문제로 반영이 늦어지고 있어요') + '</span></span>' : '') + '</button>' +
       '<button type="button" class="hcard stk" data-menu="stock" style="--i:1"><span class="hic">' + ICON.stock + '</span><span class="hgo">열기 →</span><span class="hct"><b>재고 데이터</b><small>점포·CD·구매그룹 재고</small></span></button>' +
       '<button type="button" class="hcard soon" data-menu="soon1" style="--i:2"><span class="hct"><b>준비중</b><small>새 메뉴 자리</small></span></button>' +
@@ -5043,7 +5071,7 @@ var KIMS = (function () {
     var g = last.l ? last.v / last.l - 1 : null;
     var lab = function (iso) { var x = new Date(iso + 'T00:00:00Z'); return (x.getUTCMonth() + 1) + '/' + x.getUTCDate() + '(' + WD[x.getUTCDay()] + ')'; };
     return '<span class="h7"><span class="h7h"><small>최근 7일 매출 · ' + esc(name) + '</small><b>' + man(last.v) + '<i>백만</i>' + (g == null ? '' : '<em class="' + (g >= 0 ? 'up' : 'dn') + '">' + (g >= 0 ? '+' : '−') + Math.abs(g * 100).toFixed(1) + '%</em>') + '</b></span>' +
-      '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-label="최근 7일 매출 선 그래프"><path class="l" d="' + path('l') + '"/><path class="t" d="' + path('v') + '"/>' +
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-label="최근 7일 매출 선 그래프"><path class="l" d="' + path('l') + '"/><path class="t" pathLength="1" d="' + path('v') + '"/>' +
       pts.map(function (p, i) { return '<circle cx="' + X(i).toFixed(1) + '" cy="' + Y(p.v).toFixed(1) + '" r="' + (i === pts.length - 1 ? 3.2 : 2) + '"/>'; }).join('') + '</svg>' +
       '<span class="h7x"><span>' + lab(pts[0].dt) + '</span><span class="h7k"><i class="t"></i>금년<i class="l"></i>전년 같은 요일</span><span>' + lab(last.dt) + '</span></span></span>';
   }
@@ -5470,7 +5498,10 @@ var KIMS = (function () {
   doc.addEventListener('visibilitychange', function () { if (!doc.hidden) checkFresh(); });
   window.addEventListener('focus', function () { checkFresh(); });
   setInterval(function () { checkFresh(true); }, FRESH_MS);
+  // 2026-11-27 제이: 메뉴 카드 'NEW' — 리포트를 열면 그 기준일을 본 것으로 저장
+  var SEENK = 'kims-seen-base';
   function openReport() {
+    try { var sb0 = salesBase(); if (sb0 && sb0 > (store(SEENK) || '')) store(SEENK, sb0); } catch (e) {}
     setView('report');
     if (started) { if (window.kimsMode) window.kimsMode(/^#?stk/.test(location.hash) ? 'stock' : 'sales', true); window.dispatchEvent(new Event('resize')); checkFresh(); return; } // 숨겨져 있던 사이 크기 바뀐 것 반영 + 새 데이터 확인
     if (!loading) loadReport();
