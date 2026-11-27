@@ -1113,10 +1113,10 @@ tr.dim>*{opacity:.42}
 @media (max-width:640px){.app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"menu title set" "seg seg seg"}.app.docked .crumb{display:none}#toTop{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
 .nojs .dock,.nojs .dkt{display:none!important}
 /* 2026-11-26 제이: 하단 막대 반투명 → 2차: 더 불투명(92%, 뒤 글자가 안 비치게) */
-.dock,.dkt{background:color-mix(in srgb,var(--panel) 38%,transparent);-webkit-backdrop-filter:blur(10px) saturate(1.6);backdrop-filter:blur(10px) saturate(1.6);border-color:color-mix(in srgb,var(--line) 60%,transparent)} /* 2026-11-27 제이: 아래 독 투명하게(뒤 내용이 비쳐 보임) */
-.dock .dks{background:color-mix(in srgb,var(--ac-soft) 70%,transparent)}
-.dock .dkp .seg{background:color-mix(in srgb,var(--seg) 60%,transparent)}
-.dock .dkc .cats button[aria-pressed=true]{background:color-mix(in srgb,var(--ac-soft) 70%,transparent)}
+.dock,.dkt{background:color-mix(in srgb,var(--panel) 18%,transparent);-webkit-backdrop-filter:blur(4px) saturate(1.4);backdrop-filter:blur(4px) saturate(1.4);box-shadow:0 4px 16px rgba(17,24,39,.08);border-color:color-mix(in srgb,var(--line) 60%,transparent)} /* 2026-11-27 제이: 아래 독 투명하게(뒤 내용이 비쳐 보임) */
+.dock .dks{background:color-mix(in srgb,var(--ac-soft) 55%,transparent)}
+.dock .dkp .seg{background:color-mix(in srgb,var(--seg) 40%,transparent)}
+.dock .dkc .cats button[aria-pressed=true]{background:color-mix(in srgb,var(--ac-soft) 55%,transparent)}
 /* 일별 매출 제목 옆 날씨 버튼 · 펼치는 날씨 달력 (2026-11-22) */
 .dc>h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .wxb{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 12px 5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .15s ease}
@@ -3837,8 +3837,8 @@ var KIMS = (function () {
   var IVIEW = [['pg', '구매그룹'], ['m1', 'MCH1'], ['mc', 'MC'], ['item', '상품만 보기']];
   var ILV = { pg: ['pg', 'm1', 'mc'], m1: ['m1', 'mc'], mc: ['mc'], item: [] };
   var ILVN = { pg: '구매그룹', m1: 'MCH1', mc: 'MC' };
-  // MCH1 이름: DW(NDW.GOLD)에 MCH1 이름 표가 없어 코드만 있음 — 이름을 받으면 { '0101': '한우', … } 로 채우면 'MCH1 0101 한우'로 보임
-  var MCH1_NM = {};
+  // MCH1 이름: DW(NDW.GOLD)에 MCH1 이름 표가 없어 제이가 준 표를 씀 — 없는 코드는 코드만 보임
+  var MCH1_NM = {"1001":"기타식품","1101":"조미식품","1102":"장류","1103":"소스류","1104":"식용유지류","1105":"분말류","1106":"즉석식품","1107":"통조림","1108":"영유아식","1199":"선물세트(일반)","1201":"면류","1202":"커피/코코아","1203":"차류","1204":"과자/스넥","1205":"초코렛/캔디/껌","1206":"빵","1207":"탄산음료","1208":"전통-과즙음료","1209":"기능성음료","1210":"생수","1211":"두유","1212":"주류","1213":"주류선물세트","1299":"차류선물세트","1301":"유제품","1302":"육가공","1303":"어육제품","1304":"김치","1305":"반찬류","1306":"냉장면","1307":"냉동식품(일반)","1308":"냉동식품(빙과)","1403":"구강용품","1404":"훼이셜케어","1405":"헤어케어","1406":"바디케어","1407":"주방세제","1408":"세탁세제","1409":"섬유유연제","1411":"세정제","1412":"롤화장지","1413":"티슈류","1414":"물티슈","1415":"키친타올","1416":"여성위생대","1417":"기저귀","1502":"청소생활용품","1503":"비식품선물세트","1504":"유아용품","1505":"방탈취제","1506":"주방잡화","1507":"애완용품","1508":"위생/건강용품","1509":"살방충제","1510":"면도용품","1511":"일회/야외용품","1701":"영양보충용","1702":"전통건강식품","1703":"개별인정 건강기능식품","1704":"건강기능식품","1705":"웰빙식품세트","1901":"식음료","3101":"조리용품","3102":"식탁용품","3103":"저장용품","3104":"균일가","3202":"침구","3301":"욕실용품","3302":"청소용품","3303":"세탁용품","3304":"수납용품","3305":"가구","3306":"인테리어용품","3401":"자동차외장용품","3402":"카인테리어용품","3403":"차량관리용품","3404":"차량관리기타","3405":"전기용품","3406":"건전지","3407":"조명","3408":"공구","3501":"TV","3502":"음향기기","3504":"냉장고","3507":"렌지/세척기","3508":"주방가전","3509":"생활건강가전","3510":"계절가전","3512":"디지털가전","3515":"전산소품","3601":"사무용품","3603":"필기류","3604":"화방용품","3701":"남아완구","3702":"블록","3703":"하비용품","3704":"여아완구","3705":"유아완구","3801":"자전거","3810":"탁구","3811":"키즈스포츠","3812":"피트니스","3814":"스키","3815":"건강","3816":"등산","3818":"특정","3901":"양말/스타킹","3904":"신변잡화","4002":"란제리/이지웨어","4003":"언더웨어","0201":"엽채류","0202":"근채류","0203":"과채류","0204":"나물류","0205":"버섯류","0206":"난류","0207":"가공식품류(야채)","0208":"수수료(야채)","0209":"특수야채","0101":"과실류","0102":"과채류","0103":"수입과일","0104":"친환경","0301":"선어류","0302":"해물,연체,갑각류","0303":"반건,가공,포장","0401":"한우","0402":"돈육","0403":"계육","0404":"수입육","0405":"양념가공","0499":"수수료(정육)","0501":"건어일반","0502":"가공식품(건어)","0503":"건강식품","0601":"양곡","2AD3":"잡화류","2BH2":"청소"}; // 2026-11-27 제이가 준 MCH1 이름표(138개)
   var m1Label = function (k) { return k === '-' ? 'MCH1 없음' : 'MCH1 ' + k + (MCH1_NM[k] ? ' ' + MCH1_NM[k] : ''); };
   var setN = function (o) { return Object.keys(o || {}).length; };
   // 탭(CD) · 구매그룹 · MCH1 · MC 로 좁힌 상품 — 요약·목록 공용. lvl 1 = MCH1·MC 조건 빼고, 2 = MC 조건만 빼고
