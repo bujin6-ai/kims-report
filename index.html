@@ -2269,9 +2269,8 @@ var KIMS = (function () {
     // 2026-11-27 제이: 위(증가)·아래(감소) 칸 높이 = 증가 최대·감소 최대 비율 → 감소가 크면 시간 줄이 자동으로 아래로, 작으면 위로 붙음
     var d = rows.map(function (r) { return [r[0], r[1] - r[2]]; });
     var pM = Math.max.apply(null, d.map(function (x) { return x[1]; }).concat([0])), nM = -Math.min.apply(null, d.map(function (x) { return x[1]; }).concat([0])), sc = (pM + nM) || 1;
-    var up = d.reduce(function (a, x) { return a + Math.max(0, x[1]); }, 0), dn = d.reduce(function (a, x) { return a + Math.min(0, x[1]); }, 0);
     var fr = function (v) { return (Math.abs(v) / sc).toFixed(4); };
-    return '<div class="hdw"><p class="hdt">시간대별 증감 <small>금년 − 전년 · 백만원</small><span class="hds"><b class="up">늘어난 시간 합 ' + bms(up) + '</b><b class="dn">줄어든 시간 합 ' + bms(dn) + '</b></span></p>' +
+    return '<div class="hdw"><p class="hdt">시간대별 증감 <small>금년 − 전년 · 백만원</small></p>' +
       '<ol class="hdc" style="--n:' + d.length + ';--pu:' + fr(pM) + ';--nu:' + fr(nM) + '">' + d.map(function (x) {
         var pos = x[1] >= 0, top = (hi && x[0] === hi[0] && x[1] > 0) || (lo && x[0] === lo[0] && x[1] < 0), bar = '<i style="--f:' + fr(x[1]) + '"></i>';
         return '<li class="' + (pos ? 'up' : 'dn') + (top ? ' hmx' : '') + '" title="' + x[0] + '시 ' + bms(x[1]) + '백만"><span class="hdu">' + (pos ? '<em>' + bms(x[1]) + '</em>' + bar : '') + '</span><span class="hdd">' + (pos ? '' : bar + '<em>' + bms(x[1]) + '</em>') + '</span><b>' + x[0] + '</b></li>';
