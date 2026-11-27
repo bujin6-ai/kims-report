@@ -1113,9 +1113,10 @@ tr.dim>*{opacity:.42}
 @media (max-width:640px){.app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"menu title set" "seg seg seg"}.app.docked .crumb{display:none}#toTop{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
 .nojs .dock,.nojs .dkt{display:none!important}
 /* 2026-11-26 제이: 하단 막대 반투명 → 2차: 더 불투명(92%, 뒤 글자가 안 비치게) */
-.dock,.dkt{background:var(--panel);-webkit-backdrop-filter:none;backdrop-filter:none;border-color:var(--line)} /* 2026-11-27 제이: 아래 독 불투명 */
-.dock .dkp .seg{background:var(--seg)}
-.dock .dkc .cats button[aria-pressed=true]{background:var(--ac-soft)}
+.dock,.dkt{background:color-mix(in srgb,var(--panel) 38%,transparent);-webkit-backdrop-filter:blur(10px) saturate(1.6);backdrop-filter:blur(10px) saturate(1.6);border-color:color-mix(in srgb,var(--line) 60%,transparent)} /* 2026-11-27 제이: 아래 독 투명하게(뒤 내용이 비쳐 보임) */
+.dock .dks{background:color-mix(in srgb,var(--ac-soft) 70%,transparent)}
+.dock .dkp .seg{background:color-mix(in srgb,var(--seg) 60%,transparent)}
+.dock .dkc .cats button[aria-pressed=true]{background:color-mix(in srgb,var(--ac-soft) 70%,transparent)}
 /* 일별 매출 제목 옆 날씨 버튼 · 펼치는 날씨 달력 (2026-11-22) */
 .dc>h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .wxb{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 12px 5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .15s ease}
@@ -1154,6 +1155,33 @@ tr.dim>*{opacity:.42}
 .ptip tr.pt-t th,.ptip tr.pt-t td{border-top:1px solid var(--line);font-weight:700}.ptip td.up{color:var(--good)}.ptip td.dn{color:var(--bad)}
 .ptip .pt-n{margin:6px 0 0;color:var(--muted);font-size:11px}
 /* ── 상품 상세(2026-11-27) ── */
+#main .itbl tbody tr.igr{cursor:pointer}
+#main .itbl tbody tr.igr th b::before{content:'';display:inline-block;width:6px;height:6px;margin:0 8px 2px 1px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .2s}
+#main .itbl tbody tr.igr.op th b::before{transform:rotate(45deg);margin-bottom:4px}
+#main .itbl tbody tr.igr.d0 th,#main .itbl tbody tr.igr.d0 td{background:color-mix(in srgb,var(--ac) 6%,var(--panel));font-weight:600}
+#main .itbl tbody tr.igr.d1 th,#main .itbl tbody tr.igr.d1 td{background:color-mix(in srgb,var(--ac) 3%,var(--panel))}
+#main .itbl tbody tr.igr th small{padding-left:16px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:320px}
+#main .itbl tbody tr.d1 th{padding-left:28px}#main .itbl tbody tr.d2 th{padding-left:48px}#main .itbl tbody tr.d3 th{padding-left:68px}
+#main .itbl tbody tr.lvm td{padding:2px 8px 8px 48px;text-align:left}#main .itbl tbody tr.lvm.d0 td{padding-left:8px;text-align:center}
+@media (hover:hover){#main .itbl tbody tr.igr:hover th,#main .itbl tbody tr.igr:hover td{background:color-mix(in srgb,var(--ac) 10%,var(--panel))}}
+#main .itbl thead th.srt{padding:0}#main .itbl thead th.srt button{display:inline-flex;align-items:center;justify-content:flex-end;gap:3px;width:100%;height:100%;min-height:30px;padding:6px 8px;border:0;background:none;color:inherit;font:inherit;font-weight:inherit;text-align:inherit;cursor:pointer;line-height:1.25}
+#main .itbl thead th.srt.cn button{justify-content:flex-start}#main .itbl thead th.ck{vertical-align:bottom;text-align:right}
+#main .itbl thead th.srt .sa{font-style:normal;font-size:8px;letter-spacing:-1px;color:var(--muted);opacity:.45}
+#main .itbl thead th.srt.on{color:var(--ac)}#main .itbl thead th.srt.on .sa{color:var(--ac);opacity:1;font-size:10px;letter-spacing:0}
+@media (hover:hover){#main .itbl thead th.srt button:hover{color:var(--ac)}#main .itbl thead th.srt button:hover .sa{opacity:1}}
+#main .itbl thead th.srt button:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+#main .itlb small{display:block;margin-top:2px;color:var(--muted);font-size:10px;font-weight:500;line-height:1.25}
+#main .ims{position:relative}
+#main .imsb{display:inline-flex;align-items:center;gap:6px;height:36px;max-width:240px;padding:0 10px 0 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;cursor:pointer}
+#main .imsb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#main .imsb svg{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+#main .imsb[aria-expanded=true] svg{transform:rotate(180deg)}#main .imsb.on{border-color:var(--ac);color:var(--ac);background:var(--ac-soft);font-weight:600}
+#main .imsp{position:absolute;top:calc(100% + 6px);left:0;z-index:20;width:300px;max-width:calc(100vw - 32px);padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:0 12px 32px rgba(17,24,39,.18)}
+#main .imsp input[type=search]{width:100%;box-sizing:border-box;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;outline:0}#main .imsp input[type=search]:focus{border-color:var(--ac)}
+#main .imsa{display:flex;gap:4px;margin:8px 0 6px}#main .imsa button{height:26px;padding:0 8px;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--muted);font:inherit;font-size:12px;font-weight:600;cursor:pointer}#main .imsa .imsok{margin-left:auto;color:#fff;background:var(--ac);border-color:var(--ac)}
+#main .imsl{list-style:none;margin:0;padding:0;max-height:280px;overflow-y:auto}
+#main .imsl label{display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:7px;font-size:13px;cursor:pointer}#main .imsl label:hover{background:var(--hov)}
+#main .imsl input{width:16px;height:16px;margin:0;accent-color:var(--ac);flex:none}#main .imsl .imsn{padding:10px 6px;color:var(--muted);font-size:13px}
+#main .itview .itlb{align-self:center}
 #nav .nbtns button:first-child:nth-last-child(3){grid-column:1/-1}
 #main .itks{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media (max-width:900px){#main .itks{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -1178,7 +1206,17 @@ tr.dim>*{opacity:.42}
 #main .itclr{height:30px;padding:0 10px;border:0;background:none;color:var(--ac);font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 #main .itsc{margin:0 0 8px;font-size:13px;font-weight:700;color:var(--ac)}
 #main .itrh{margin:16px 0 8px;font-size:15px;font-weight:700}#main .itrh small{margin-left:6px;color:var(--muted);font-size:12px;font-weight:500}
-#main .itr .kv span.up{color:var(--good)}#main .itr .kv span.dn{color:var(--bad)}
+#main .itk .kl small{margin-left:4px;color:var(--muted);font-size:11px;font-weight:500}
+#main .itks2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media (max-width:900px){#main .itks2{grid-template-columns:1fr}}
+#main .ikw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:16px;align-items:center}
+#main .irks{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;padding-left:16px;border-left:1px solid var(--line)}#main .irh{grid-column:1/-1;margin:0;font-size:12px;font-weight:700;color:var(--muted)}#main .irh small{font-weight:500;font-size:11px;margin-left:3px}
+@media (max-width:520px){#main .ikw{grid-template-columns:1fr}#main .irks{padding:10px 0 0;border-left:0;border-top:1px solid var(--line)}}
+#main .irk{display:flex;flex-direction:column;gap:2px;min-width:0}#main .irk+.irk{padding-left:12px;border-left:1px dashed var(--line)}
+#main .irk>span{color:var(--muted);font-size:12px;font-weight:600}
+#main .irk>b{font-size:22px;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums}#main .irk>b small{margin-left:2px;font-size:12px;font-weight:500;color:var(--muted)}
+#main .irk>b em{font-style:normal}#main .irk>b em.up{color:var(--good)}#main .irk>b em.dn{color:var(--bad)}
+#main .irk>small{color:var(--fg);font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#main .itrn{margin:8px 2px 0;color:var(--muted);font-size:12px}
 @media (max-width:640px){#main .itlb{display:none}#main .itpgl{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}#main .itpgl::-webkit-scrollbar{display:none}#main .itfl select{flex:1 1 0;min-width:0;max-width:none}#main .itamt{flex:1 1 100%;box-sizing:border-box;min-width:0}#main .itamt input{flex:1 1 0;min-width:0;width:auto}}
 #main .itq{flex:1 1 260px;display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
 #main .itq svg{width:16px;height:16px;flex:none;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
@@ -1213,7 +1251,7 @@ tr.dim>*{opacity:.42}
 #main .itbl thead th{position:sticky;top:0;background:var(--panel);box-shadow:0 1px 0 var(--line);color:var(--muted);font-size:12px;font-weight:600;z-index:1}
 #main .itbl thead tr.g1 th{border-bottom:0;color:var(--fg);height:30px;box-sizing:border-box;box-shadow:none}#main .itbl thead tr.g2 th{top:30px}#main .itbl thead th small{font-weight:500;color:var(--muted);margin-left:3px}
 #main .itbl thead tr.g1 th[rowspan]{text-align:left;vertical-align:bottom}
-#main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:1px solid var(--line)}
+#main .itbl .cq+.cs,#main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:1px solid var(--line)}
 #main .itbl tbody th{text-align:left;max-width:320px;white-space:normal;font-weight:400}
 #main .itbl tbody th b{display:block;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 #main .itbl tbody th small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
@@ -1246,7 +1284,8 @@ tr.dim>*{opacity:.42}
 @media (max-width:700px){
 #main .itcols{display:flex}
 #main .itsel{flex:1 1 100%}#main .itsel select{flex:1;max-width:none}
-#main .itw[data-col=s] .cm,#main .itw[data-col=s] .ck,#main .itw[data-col=m] .cs,#main .itw[data-col=m] .ck,#main .itw[data-col=k] .cs,#main .itw[data-col=k] .cm{display:none}
+#main .itw[data-col] .cq,#main .itw[data-col] .cs,#main .itw[data-col] .cm,#main .itw[data-col] .ck{display:none}#main .itw[data-col=q] .cq,#main .itw[data-col=s] .cs,#main .itw[data-col=m] .cm,#main .itw[data-col=k] .ck{display:table-cell}
+#main .itbl tbody tr.d1 th{padding-left:14px}#main .itbl tbody tr.d2 th{padding-left:24px}#main .itbl tbody tr.d3 th{padding-left:34px}#main .itbl tbody tr.lvm td{padding-left:24px}#main .itbl tbody tr.igr th small{padding-left:0;white-space:normal}#main .itlb small{display:none}
 #main .itbl{font-size:12px}#main .itbl th,#main .itbl td{padding:6px 4px}#main .itbl tbody th{max-width:36vw;padding-left:8px}#main .itbl thead th small{display:none}#main .itbl tbody tr.tot th small{display:block;margin:0}
 #main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:0}
 #main .itdl{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -3762,7 +3801,7 @@ var KIMS = (function () {
   // ── 상품 상세(2026-11-27 제이) ── 메인 메뉴 '상품 상세' → MODE 'item' · 주소 #itm-점포-탭-기간
   //   점포를 고르면 그 점포 상품 데이터(약 1만 개, 0.5MB 압축)만 서버에서 받아 옴(WEB.item) — 한 번 받은 점포는 이 기기에 저장
   //   행 = [상품코드, 상품명, MC 번호, 구매그룹(상품 기준), M·W·D × (매출 금년·전년, 수량 금년·전년, 매출총이익 금년·전년), 재고액, 재고수량, 하루 매출원가]
-  var ITC = {}, IT = { q: '', flt: 'all', pg: '', m1: '', mc: '', amin: '', amax: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, grp: true, og: {}, om: {}, mlim: {} }; // grp = MCH1 › MC › 상품 묶어 보기(og·om 펼친 묶음, mlim MC 안 보이는 상품 수)
+  var ITC = {}, IT = { q: '', flt: 'all', pgs: {}, m1s: {}, mcs: {}, amin: '', amax: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, view: 'm1', og: {}, mlim: {} }; // view = 보기 방식(ILV) · og 펼친 묶음 경로 · mlim 묶음 안 보이는 상품 수 · pgs/m1s/mcs 여러 개 고른 조건
   var IOFF = { M: 4, W: 10, D: 16 }, ISA = 22;
   var pgCat = function (pg) { for (var i = 0; i < D.storeCats.length; i++) if (D.storeCats[i][2].some(function (g) { return g[0] === pg; })) return D.storeCats[i][0]; return 'etc'; };
   var pgName = function (pg) { for (var i = 0; i < D.storeCats.length; i++) { var g = D.storeCats[i][2].filter(function (x) { return x[0] === pg; })[0]; if (g) return g[1]; } return pg || '-'; };
@@ -3786,26 +3825,50 @@ var KIMS = (function () {
   }
   // 상품 하나의 기간 값: [매출 금년, 전년, 수량 금년, 전년, 매출총이익 금년, 전년]
   var iv = function (r, k) { var o = IOFF[k]; return r.slice(o, o + 6); };
-  var iDays = function (r) { return r[ISA] && r[ISA + 2] > 0 ? r[ISA] / r[ISA + 2] : null; }; // 재고가 없으면 -
   var iGr = function (t, l) { return l > 0 ? t / l - 1 : null; };
   var iMr = function (a, g) { return a > 0 ? g / a : null; };
-  var chun = function (v) { return v == null ? '-' : Math.round(v / 1000).toLocaleString('ko-KR'); }; // 천원
+  var manw = function (v) { return v == null ? '-' : Math.round(v / 10000).toLocaleString('ko-KR'); }; // 만원(2026-11-27 제이: 천원 → 만원)
   var qn = function (v) { return v == null ? '-' : (Math.abs(v - Math.round(v)) < 0.05 ? Math.round(v) : Math.round(v * 10) / 10).toLocaleString('ko-KR'); };
   var IFLT = [['all', '전체'], ['up', '매출 증가'], ['dn', '매출 감소']]; // 신규·판매 중단·재고만·마이너스 재고는 2026-11-27 제이 요청으로 뺌
-  var ISORT = [['aT', '매출 큰 순'], ['aD', '매출 증감액'], ['g', '매출 성장율'], ['q', '판매수량'], ['mr', '매총율'], ['sa', '재고액'], ['sd', '재고일수'], ['nm', '상품명']];
-  // 탭(CD) · 구매그룹 · MCH1 · MC 로 좁힌 상품 — 요약·목록 공용(2026-11-27 제이). lvl 1 = MCH1·MC 빼고, 2 = MC 만 빼고
+  // 정렬: 표 머리 이름을 누르면 그 항목으로(같은 이름을 다시 누르면 방향 바꿈) · 아래 select 는 휴대폰용
+  var ISORT = [['aT', '매출 큰 순'], ['aL', '전년 매출'], ['aD', '매출 증감액'], ['g', '매출 성장율'], ['q', '판매수량'], ['qg', '판매수량 증감'], ['mr', '매총율'], ['mrD', '매총율 증감'], ['sq', '재고수량'], ['nm', '이름']];
+  var ISUP = { nm: 1 }; // 처음 누르면 작은 것(가나다)부터인 항목
+  // 보기 방식(2026-11-27 제이): 구매그룹 › MCH1 › MC › 상품 / MCH1 › MC › 상품 / MC › 상품 / 상품만
+  var IVIEW = [['pg', '구매그룹'], ['m1', 'MCH1'], ['mc', 'MC'], ['item', '상품만 보기']];
+  var ILV = { pg: ['pg', 'm1', 'mc'], m1: ['m1', 'mc'], mc: ['mc'], item: [] };
+  var ILVN = { pg: '구매그룹', m1: 'MCH1', mc: 'MC' };
+  // MCH1 이름: DW(NDW.GOLD)에 MCH1 이름 표가 없어 코드만 있음 — 이름을 받으면 { '0101': '한우', … } 로 채우면 'MCH1 0101 한우'로 보임
+  var MCH1_NM = {};
+  var m1Label = function (k) { return k === '-' ? 'MCH1 없음' : 'MCH1 ' + k + (MCH1_NM[k] ? ' ' + MCH1_NM[k] : ''); };
+  var setN = function (o) { return Object.keys(o || {}).length; };
+  // 탭(CD) · 구매그룹 · MCH1 · MC 로 좁힌 상품 — 요약·목록 공용. lvl 1 = MCH1·MC 조건 빼고, 2 = MC 조건만 빼고
   function itemScope(c, lvl) {
-    var t = ST.t, d = c.d, pg = IT.pg, m1 = lvl === 1 ? '' : IT.m1, mc = lvl ? '' : IT.mc;
+    var t = ST.t, d = c.d, pgs = IT.pgs, m1 = lvl === 1 ? {} : IT.m1s, mc = lvl ? {} : IT.mcs, hp = setN(pgs), h1 = setN(m1), hc = setN(mc);
     return d.rows.filter(function (r) {
       if (t !== 'store' && c.cat[r[3]] !== t) return false;
-      if (pg && r[3] !== pg) return false;
-      if (m1 || mc) { var m = mcOf(d, r[2]); if (m1 && (m[1] || '-') !== m1) return false; if (mc && (m[2] || m[0] || '-') !== mc) return false; }
+      if (hp && !pgs[r[3]]) return false;
+      if (h1 || hc) { var m = mcOf(d, r[2]); if (h1 && !m1[m[1] || '-']) return false; if (hc && !mc[m[2] || m[0] || '-']) return false; }
       return true;
     });
   }
+  function rowVal(r, k, key) {
+    var v = iv(r, k);
+    switch (key) {
+      case 'aL': return v[1];
+      case 'aD': return v[0] - v[1];
+      case 'g': return iGr(v[0], v[1]);
+      case 'q': return v[2];
+      case 'qg': return iGr(v[2], v[3]);
+      case 'mr': return iMr(v[0], v[4]);
+      case 'mrD': var a = iMr(v[0], v[4]), b = iMr(v[1], v[5]); return a == null || b == null ? null : a - b;
+      case 'sq': return r[ISA + 1];
+      default: return v[0];
+    }
+  }
+  var cmpBy = function (dir, val) { return function (a, b) { var x = val(a), y = val(b); if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1; return dir < 0 ? y - x : x - y; }; };
   function itemRows(c, k) {
     var d = c.d, q = IT.q.replace(/\s/g, '').toLowerCase(), f = IT.flt;
-    var amin = IT.amin === '' ? null : Number(IT.amin) * 1000, amax = IT.amax === '' ? null : Number(IT.amax) * 1000; // 입력은 천원
+    var amin = IT.amin === '' ? null : Number(IT.amin) * 10000, amax = IT.amax === '' ? null : Number(IT.amax) * 10000; // 입력은 만원
     var out = itemScope(c).filter(function (r) {
       var v = iv(r, k);
       if (amin != null && isFinite(amin) && !(v[0] >= amin)) return false;
@@ -3817,184 +3880,199 @@ var KIMS = (function () {
       return true;
     });
     var key = IT.sort, dir = IT.dir;
-    var val = function (r) {
-      var v = iv(r, k);
-      switch (key) {
-        case 'aD': return v[0] - v[1];
-        case 'g': return iGr(v[0], v[1]);
-        case 'q': return v[2];
-        case 'mr': return iMr(v[0], v[4]);
-        case 'sa': return r[ISA];
-        case 'sd': return iDays(r);
-        default: return v[0];
-      }
-    };
     // dir: -1 = 큰 것(가나다 끝)부터, 1 = 작은 것(가나다)부터 · 값이 없는 상품은 늘 맨 아래
     if (key === 'nm') out.sort(function (a, b) { return dir * String(a[1]).localeCompare(String(b[1]), 'ko'); });
-    else out.sort(function (a, b) { var x = val(a), y = val(b); if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1; return dir < 0 ? y - x : x - y; });
+    else out.sort(cmpBy(dir, function (r) { return rowVal(r, k, key); }));
     return out;
   }
   function itemTotals(rows, k) {
-    var s = [0, 0, 0, 0, 0, 0], sa = 0, dc = 0;
-    rows.forEach(function (r) { var v = iv(r, k); for (var i = 0; i < 6; i++) s[i] += v[i]; sa += r[ISA]; dc += r[ISA + 2]; });
-    return { a: s[0], al: s[1], q: s[2], ql: s[3], g: s[4], gl: s[5], sa: sa, dc: dc, d: sa && dc > 0 ? sa / dc : null };
+    var s = [0, 0, 0, 0, 0, 0], sa = 0, sq = 0;
+    rows.forEach(function (r) { var v = iv(r, k); for (var i = 0; i < 6; i++) s[i] += v[i]; sa += r[ISA]; sq += r[ISA + 1]; });
+    return { a: s[0], al: s[1], q: s[2], ql: s[3], g: s[4], gl: s[5], sa: sa, sq: sq };
   }
-  var ICOLS = [['s', '매출'], ['m', '수량·매총'], ['k', '재고']];
+  // 휴대폰에서 보는 항목(한 번에 한 묶음)
+  var ICOLS = [['q', '판매수량'], ['s', '매출'], ['m', '매총율'], ['k', '재고']];
   // MC 정보: [MC 이름, MCH1, MC 코드] (v1 데이터는 이름 문자열만)
   var mcOf = function (d, i) { var m = d.mc[i]; return typeof m === 'string' ? [m, '', ''] : m || ['', '', '']; };
   var tv = function (t) { return [t.a, t.al, t.q, t.ql, t.g, t.gl]; };
-  // 묶음(MCH1·MC) 줄 정렬 값 — 상품 정렬과 같은 기준을 합계에 적용
+  // 묶음(구매그룹·MCH1·MC) 줄 정렬 값 — 상품 정렬과 같은 기준을 합계에 적용
   function aggVal(t) {
     switch (IT.sort) {
+      case 'aL': return t.al;
       case 'aD': return t.a - t.al;
       case 'g': return iGr(t.a, t.al);
       case 'q': return t.q;
+      case 'qg': return iGr(t.q, t.ql);
       case 'mr': return iMr(t.a, t.g);
-      case 'sa': return t.sa;
-      case 'sd': return t.d;
+      case 'mrD': var a = iMr(t.a, t.g), b = iMr(t.al, t.gl); return a == null || b == null ? null : a - b;
+      case 'sq': return t.sq;
       default: return t.a;
     }
   }
   function sortAgg(list) {
-    var dir = IT.dir;
-    if (IT.sort === 'nm') return list.sort(function (a, b) { return dir * String(a.nm || a.k).localeCompare(String(b.nm || b.k), 'ko'); });
-    return list.sort(function (a, b) { var x = aggVal(a.t), y = aggVal(b.t); if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1; return dir < 0 ? y - x : x - y; });
+    if (IT.sort === 'nm') { var dir = IT.dir; return list.sort(function (a, b) { return dir * String(a.nm || a.k).localeCompare(String(b.nm || b.k), 'ko'); }); }
+    return list.sort(cmpBy(IT.dir, function (g) { return aggVal(g.t); }));
+  }
+  // 묶음 열쇠·이름
+  var grpKey = function (d, lvl, r) { if (lvl === 'pg') return r[3] || '-'; var m = mcOf(d, r[2]); return lvl === 'm1' ? (m[1] || '-') : (m[2] || m[0] || '-'); };
+  var grpName = function (d, lvl, key, r) { if (lvl === 'pg') return key === '-' ? '구매그룹 없음' : pgName(key); if (lvl === 'm1') return m1Label(key); return mcOf(d, r[2])[0] || key; };
+  // 펼친 묶음 경로 모두(모두 펼치기)
+  function itemAllPaths(c) {
+    var d = c.d, lv = ILV[IT.view] || [], o = {};
+    itemRows(c, ST.k).forEach(function (r) { var p = ''; lv.forEach(function (lvl) { p += '/' + lvl + ':' + grpKey(d, lvl, r); o[p] = 1; }); });
+    return o;
   }
   function itemTable(c) {
-    var k = ST.k, rows = itemRows(c, k), tot = itemTotals(rows, k), d = c.d, grp = IT.grp, auto = !!IT.q.replace(/\s/g, '');
+    var k = ST.k, rows = itemRows(c, k), tot = itemTotals(rows, k), d = c.d, lv = ILV[IT.view] || [], auto = !!IT.q.replace(/\s/g, '');
     var gcls = function (v) { return v == null ? '' : v >= 0 ? 'up' : 'dn'; };
-    var line = function (nm, sub, v, sa, sq, days, attr, cl) {
+    // 칸 순서(2026-11-27 제이): 판매수량(수량·증감) | 매출 만원(금년·전년·성장율) | 매총율(매총율·증감) | 전일 마감 재고수량
+    var line = function (nm, sub, v, sq, attr, cl) {
       var g = iGr(v[0], v[1]), mr = iMr(v[0], v[4]), mrl = iMr(v[1], v[5]), qg = iGr(v[2], v[3]);
       return '<tr' + (attr || '') + (cl ? ' class="' + cl + '"' : '') + '><th scope="row"><b>' + nm + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</th>' +
-        '<td class="cs">' + chun(v[0]) + '</td><td class="cs ly">' + chun(v[1]) + '</td><td class="cs ' + gcls(g) + '">' + (v[1] > 0 ? pct(g) : v[0] ? '신규' : '-') + '</td>' +
-        '<td class="cm">' + qn(v[2]) + '</td><td class="cm ' + gcls(qg) + '">' + (v[3] > 0 ? pct(qg) : '-') + '</td><td class="cm">' + (mr == null ? '-' : f1(mr * 100) + '%') + '</td><td class="cm ' + (mr == null || mrl == null ? '' : gcls(mr - mrl)) + '">' + (mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100)) + '</td>' +
-        '<td class="ck">' + chun(sa) + '</td><td class="ck' + (sq < 0 ? ' dn' : '') + '">' + qn(sq) + '</td><td class="ck">' + (days == null ? '-' : f1(days)) + '</td></tr>';
+        '<td class="cq">' + qn(v[2]) + '</td><td class="cq ' + gcls(qg) + '">' + (v[3] > 0 ? pct(qg) : '-') + '</td>' +
+        '<td class="cs">' + manw(v[0]) + '</td><td class="cs ly">' + manw(v[1]) + '</td><td class="cs ' + gcls(g) + '">' + (v[1] > 0 ? pct(g) : v[0] ? '신규' : '-') + '</td>' +
+        '<td class="cm">' + (mr == null ? '-' : f1(mr * 100) + '%') + '</td><td class="cm ' + (mr == null || mrl == null ? '' : gcls(mr - mrl)) + '">' + (mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100)) + '</td>' +
+        '<td class="ck' + (sq < 0 ? ' dn' : '') + '">' + qn(sq) + '</td></tr>';
     };
-    var prod = function (r, lv) {
+    var NC = 9;
+    var prod = function (r, dep) {
       var on = IT.open[r[0]], v = iv(r, k), m = mcOf(d, r[2]);
-      var tr = line(esc(r[1] || r[0]), esc(r[0].replace(/^0+(?=\d{6})/, '')) + (grp ? '' : ' · ' + esc(m[0] || '-')), v, r[ISA], r[ISA + 1], iDays(r), ' data-im="' + esc(r[0]) + '" tabindex="0" aria-expanded="' + (on ? 'true' : 'false') + '"', 'lv' + lv + (on ? ' on' : ''));
+      var tr = line(esc(r[1] || r[0]), esc(r[0].replace(/^0+(?=\d{6})/, '')) + (lv.indexOf('mc') < 0 ? ' · ' + esc(m[0] || '-') : ''), v, r[ISA + 1], ' data-im="' + esc(r[0]) + '" tabindex="0" aria-expanded="' + (on ? 'true' : 'false') + '"', 'lp d' + dep + (on ? ' on' : ''));
       if (!on) return tr;
       var det = ['M', 'W', 'D'].map(function (kk) {
         var x = iv(r, kk), g = iGr(x[0], x[1]), mr = iMr(x[0], x[4]);
-        return '<li><span>' + PNAME[kk] + ' <small>' + esc(d.per[kk][0]) + '</small></span><b>' + chun(x[0]) + '<small>천원</small></b><em class="' + gcls(g) + '">' + (x[1] > 0 ? pct(g) : x[0] ? '신규' : '-') + '</em><i>' + qn(x[2]) + '개 · 전년 ' + qn(x[3]) + '</i><i>매총율 ' + (mr == null ? '-' : f1(mr * 100) + '%') + '</i></li>';
+        return '<li><span>' + PNAME[kk] + ' <small>' + esc(d.per[kk][0]) + '</small></span><b>' + manw(x[0]) + '<small>만원</small></b><em class="' + gcls(g) + '">' + (x[1] > 0 ? pct(g) : x[0] ? '신규' : '-') + '</em><i>판매 ' + qn(x[2]) + '개 · 전년 ' + qn(x[3]) + '</i><i>매총율 ' + (mr == null ? '-' : f1(mr * 100) + '%') + '</i></li>';
       }).join('');
-      return tr + '<tr class="itd"><td colspan="11"><ul class="itdl">' + det + '<li class="stk"><span>재고 <small>' + esc(d.sbase || d.base) + '</small></span><b>' + chun(r[ISA]) + '<small>천원</small></b><em>' + qn(r[ISA + 1]) + '개</em><i>재고일수 ' + (iDays(r) == null ? '-' : f1(iDays(r)) + '일') + '</i><i>' + esc(pgName(r[3])) + (m[1] ? ' · MCH1 ' + esc(m[1]) : '') + (m[2] ? ' · MC ' + esc(m[2]) : '') + '</i></li></ul></td></tr>';
+      return tr + '<tr class="itd"><td colspan="' + NC + '"><ul class="itdl">' + det + '<li class="stk"><span>전일 마감 재고 <small>' + esc(d.sbase || d.base) + '</small></span><b>' + qn(r[ISA + 1]) + '<small>개</small></b><i>' + esc(pgName(r[3])) + (m[1] ? ' · ' + esc(m1Label(m[1])) : '') + (m[2] ? ' · MC ' + esc(m[2]) : '') + '</i></li></ul></td></tr>';
     };
-    var head = '<thead><tr class="g1"><th rowspan="2" scope="col">' + (grp ? 'MCH1 › MC › 상품' : '상품') + '</th><th colspan="3" class="cs">매출 <small>천원</small></th><th colspan="4" class="cm">수량 · 매총율</th><th colspan="3" class="ck">재고 <small>기준일</small></th></tr>' +
-      '<tr class="g2"><th class="cs">금년</th><th class="cs">전년</th><th class="cs">성장율</th><th class="cm">수량</th><th class="cm">증감</th><th class="cm">매총율</th><th class="cm">증감</th><th class="ck">재고액<small>천원</small></th><th class="ck">수량</th><th class="ck">일수</th></tr></thead>';
-    var body = line('합계 <small>' + won(rows.length) + '개</small>', '', tv(tot), tot.sa, null, tot.d, '', 'tot'), more = '';
-    if (!grp) {
-      var shown = rows.slice(0, IT.lim);
-      body += shown.map(function (r) { return prod(r, 0); }).join('');
-      if (rows.length > shown.length) more = '<button type="button" class="itmore" data-imore="1">' + won(Math.min(200, rows.length - shown.length)) + '개 더 보기 <small>(' + won(shown.length) + ' / ' + won(rows.length) + ')</small></button>';
-    } else {
-      // MCH1 › MC › 상품 (2026-11-27 제이): 상품은 이미 정렬된 순서 그대로 묶음 안에 들어감 · 검색 중에는 모두 펼침
-      var G = {}, gl = [];
-      rows.forEach(function (r) {
-        var m = mcOf(d, r[2]), g1 = m[1] || '-', g2 = m[2] || m[0] || '-';
-        var g = G[g1] || (G[g1] = { k: g1, rows: [], M: {} }); g.rows.push(r);
-        var mm = g.M[g2] || (g.M[g2] = { k: g2, nm: m[0] || '-', rows: [] }); mm.rows.push(r);
-      });
-      Object.keys(G).forEach(function (key) {
-        var g = G[key]; g.t = itemTotals(g.rows, k);
-        g.ml = sortAgg(Object.keys(g.M).map(function (x) { var mm = g.M[x]; mm.t = itemTotals(mm.rows, k); return mm; }));
-        gl.push(g);
-      });
-      sortAgg(gl);
-      body += gl.map(function (g) {
-        var on1 = auto || IT.og[g.k], top = g.ml.slice().sort(function (a, b) { return b.t.a - a.t.a; }).slice(0, 3).map(function (x) { return esc(x.nm); });
-        var sub = top.join(' · ') + (g.ml.length > 3 ? ' 외 ' + (g.ml.length - 3) : '') + ' · 상품 ' + won(g.rows.length) + '개';
-        var out = line(g.k === '-' ? 'MCH1 없음' : 'MCH1 ' + esc(g.k), sub, tv(g.t), g.t.sa, null, g.t.d, ' data-ig="' + esc(g.k) + '" tabindex="0" aria-expanded="' + (on1 ? 'true' : 'false') + '"', 'lv1' + (on1 ? ' op' : ''));
-        if (!on1) return out;
-        return out + g.ml.map(function (mm) {
-          var key = g.k + '|' + mm.k, on2 = auto || IT.om[key], lim = IT.mlim[key] || 50;
-          var o2 = line(esc(mm.nm), 'MC ' + esc(mm.k) + ' · 상품 ' + won(mm.rows.length) + '개', tv(mm.t), mm.t.sa, null, mm.t.d, ' data-imc="' + esc(key) + '" tabindex="0" aria-expanded="' + (on2 ? 'true' : 'false') + '"', 'lv2' + (on2 ? ' op' : ''));
-          if (!on2) return o2;
-          var ps = mm.rows.slice(0, lim);
-          return o2 + ps.map(function (r) { return prod(r, 3); }).join('') +
-            (mm.rows.length > ps.length ? '<tr class="lvm"><td colspan="11"><button type="button" class="itmore sm" data-imore="' + esc(key) + '">' + won(Math.min(100, mm.rows.length - ps.length)) + '개 더 보기 <small>(' + won(ps.length) + ' / ' + won(mm.rows.length) + ')</small></button></td></tr>' : '');
-        }).join('');
+    var arr = function (key) { var on = IT.sort === key; return '<i class="sa' + (on ? ' on' : '') + '" aria-hidden="true">' + (on ? (IT.dir < 0 ? '▼' : '▲') : '▲▼') + '</i>'; };
+    var sh = function (key, txt, cl, extra) {
+      var on = IT.sort === key;
+      return '<th scope="col" class="' + cl + ' srt' + (on ? ' on' : '') + '"' + (extra || '') + ' aria-sort="' + (on ? (IT.dir < 0 ? 'descending' : 'ascending') : 'none') + '"><button type="button" data-isort="' + key + '" title="' + esc(String(txt).replace(/<[^>]+>/g, ' ')) + ' 순으로 정렬">' + txt + arr(key) + '</button></th>';
+    };
+    var title = lv.length ? lv.map(function (x) { return ILVN[x]; }).join(' › ') + ' › 상품' : '상품';
+    var head = '<thead><tr class="g1">' + sh('nm', title, 'cn', ' rowspan="2"') + '<th colspan="2" class="cq">판매수량</th><th colspan="3" class="cs">매출 <small>만원</small></th><th colspan="2" class="cm">매총율</th>' + sh('sq', '전일 마감<br>재고수량', 'ck', ' rowspan="2"') + '</tr>' +
+      '<tr class="g2">' + sh('q', '수량', 'cq') + sh('qg', '증감', 'cq') + sh('aT', '금년', 'cs') + sh('aL', '전년', 'cs') + sh('g', '성장율', 'cs') + sh('mr', '매총율', 'cm') + sh('mrD', '증감', 'cm') + '</tr></thead>';
+    var body = line('합계 <small>' + won(rows.length) + '개</small>', '', tv(tot), tot.sq, '', 'tot');
+    var tree = function (rs, dep, path) {
+      if (dep >= lv.length) {
+        var lim = path ? (IT.mlim[path] || 50) : IT.lim, ps = rs.slice(0, lim), step = path ? 100 : 200;
+        return ps.map(function (r) { return prod(r, dep); }).join('') +
+          (rs.length > ps.length ? '<tr class="lvm d' + dep + '"><td colspan="' + NC + '"><button type="button" class="itmore' + (path ? ' sm' : '') + '" data-imore="' + esc(path || '1') + '">' + won(Math.min(step, rs.length - ps.length)) + '개 더 보기 <small>(' + won(ps.length) + ' / ' + won(rs.length) + ')</small></button></td></tr>' : '');
+      }
+      var lvl = lv[dep], G = {}, list = [];
+      rs.forEach(function (r) { var key = grpKey(d, lvl, r), g = G[key]; if (!g) { g = G[key] = { k: key, nm: grpName(d, lvl, key, r), rows: [] }; list.push(g); } g.rows.push(r); });
+      list.forEach(function (g) { g.t = itemTotals(g.rows, k); });
+      sortAgg(list);
+      return list.map(function (g) {
+        var p = path + '/' + lvl + ':' + g.k, on = auto || IT.og[p], sub;
+        if (lvl === 'mc') sub = 'MC ' + esc(g.k) + ' · 상품 ' + won(g.rows.length) + '개';
+        else {
+          var nx = lv[dep + 1], sb = {}; g.rows.forEach(function (r) { var kk = grpKey(d, nx, r); sb[kk] = sb[kk] || { nm: grpName(d, nx, kk, r), a: 0 }; sb[kk].a += iv(r, k)[0]; });
+          var top = Object.keys(sb).sort(function (a, b) { return sb[b].a - sb[a].a; });
+          sub = top.slice(0, 3).map(function (x) { return esc(sb[x].nm); }).join(' · ') + (top.length > 3 ? ' 외 ' + (top.length - 3) : '') + ' · 상품 ' + won(g.rows.length) + '개';
+        }
+        var o = line(esc(g.nm), sub, tv(g.t), g.t.sq, ' data-ig="' + esc(p) + '" tabindex="0" aria-expanded="' + (on ? 'true' : 'false') + '"', 'igr d' + dep + ' g' + lvl + (on ? ' op' : ''));
+        return on ? o + tree(g.rows, dep + 1, p) : o;
       }).join('');
-    }
-    return '<div class="itw' + (grp ? ' tree' : '') + '" data-col="' + IT.col + '"><table class="itbl">' + head + '<tbody>' + body + '</tbody></table></div>' + (rows.length ? more : '<p class="itnone">조건에 맞는 상품이 없습니다.</p>');
+    };
+    body += tree(rows, 0, '');
+    return '<div class="itw' + (lv.length ? ' tree' : '') + '" data-col="' + IT.col + '"><table class="itbl">' + head + '<tbody>' + body + '</tbody></table></div>' + (rows.length ? '' : '<p class="itnone">조건에 맞는 상품이 없습니다.</p>');
   }
   // 구매그룹 버튼 아이콘 = 그 구매그룹이 속한 CD 아이콘(아래 독의 CD 버튼 그림을 그대로 씀)
   var pgIcon = function (cat) {
     var el = typeof window !== 'undefined' && window.document.querySelector('#catbar [data-t="' + cat + '"] svg');
     return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (el ? el.innerHTML : SXICON.all) + '</svg>';
   };
-  // 상품 목록 조건(2026-11-27 제이 개편): 검색·정렬 / 구매그룹 버튼 / MCH1·MC·매출액 범위·증감 / 보기 방식
+  // MCH1·MC 여러 개 고르기(2026-11-27 제이): 버튼을 누르면 위에 검색칸 + 체크 목록 · 검색을 바꿔도 고른 것은 그대로
+  var IMS = { open: '', q: '', opts: {} };
+  var IMSL = { m1: 'MCH1', mc: 'MC' };
+  function imsList(id) {
+    var sel = id === 'm1' ? IT.m1s : IT.mcs, q = IMS.q.replace(/\s/g, '').toLowerCase(), o = IMS.opts[id] || [];
+    var vis = o.filter(function (x) { return !q || (x[1] + x[0]).replace(/\s/g, '').toLowerCase().indexOf(q) >= 0; });
+    vis.sort(function (a, b) { return (sel[b[0]] ? 1 : 0) - (sel[a[0]] ? 1 : 0); }); // 고른 것을 위로
+    return vis.length ? vis.map(function (x) { return '<li><label><input type="checkbox" data-imsv="' + id + '" value="' + esc(x[0]) + '"' + (sel[x[0]] ? ' checked' : '') + '><span>' + esc(x[1]) + '</span></label></li>'; }).join('') : '<li class="imsn">맞는 항목이 없습니다</li>';
+  }
+  function imsLabel(id) {
+    var sel = id === 'm1' ? IT.m1s : IT.mcs, n = setN(sel), o = IMS.opts[id] || [];
+    if (!n) return IMSL[id] + ' 전체';
+    if (n === 1) { var k0 = Object.keys(sel)[0], x = o.filter(function (y) { return y[0] === k0; })[0]; return x ? x[1] : IMSL[id] + ' ' + k0; }
+    return IMSL[id] + ' ' + n + '개';
+  }
+  function imsBox(id) {
+    var on = IMS.open === id, n = setN(id === 'm1' ? IT.m1s : IT.mcs);
+    return '<div class="ims" data-ims="' + id + '"><button type="button" class="imsb' + (n ? ' on' : '') + '" data-imsb="' + id + '" aria-expanded="' + on + '" aria-haspopup="true"><span>' + esc(imsLabel(id)) + '</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>' +
+      (on ? '<div class="imsp" role="dialog" aria-label="' + IMSL[id] + ' 고르기"><input type="search" data-imsq="' + id + '" placeholder="' + IMSL[id] + ' 이름·코드 검색" autocomplete="off" value="' + esc(IMS.q) + '">' +
+        '<div class="imsa"><button type="button" data-imsall="' + id + '">보이는 것 모두 고르기</button><button type="button" data-imsclr="' + id + '">모두 풀기</button><button type="button" class="imsok" data-imsok="1">닫기</button></div><ul class="imsl">' + imsList(id) + '</ul></div>' : '') + '</div>';
+  }
+  // 상품 목록 조건: 검색·정렬 / 구매그룹 버튼(Shift = 여러 개) / MCH1·MC(여러 개)·매출액 범위·증감 / 보기 방식
   function itemCtl(c) {
     var t = ST.t, pgs = {}, d = c.d;
     d.rows.forEach(function (r) { if (t === 'store' || c.cat[r[3]] === t) pgs[r[3]] = (pgs[r[3]] || 0) + 1; });
     var pgl = Object.keys(pgs).filter(function (x) { return x; }).sort(function (a, b) { return pgs[b] - pgs[a]; });
-    if (IT.pg && !pgs[IT.pg]) { IT.pg = ''; IT.m1 = ''; IT.mc = ''; }
+    Object.keys(IT.pgs).forEach(function (g) { if (!pgs[g]) delete IT.pgs[g]; });
     var m1s = {}, mcs = {};
     itemScope(c, 1).forEach(function (r) { var m = mcOf(d, r[2]); m1s[m[1] || '-'] = 1; });
-    if (IT.m1 && !m1s[IT.m1]) { IT.m1 = ''; IT.mc = ''; }
+    Object.keys(IT.m1s).forEach(function (x) { if (!m1s[x]) delete IT.m1s[x]; });
     itemScope(c, 2).forEach(function (r) { var m = mcOf(d, r[2]), key = m[2] || m[0] || '-'; mcs[key] = m[0] || key; });
-    if (IT.mc && !mcs[IT.mc]) IT.mc = '';
-    var m1l = Object.keys(m1s).sort(), mcl = Object.keys(mcs).sort(function (a, b) { return String(mcs[a]).localeCompare(String(mcs[b]), 'ko'); });
-    var opt = function (v, txt, cur) { return '<option value="' + esc(v) + '"' + (v === cur ? ' selected' : '') + '>' + esc(txt) + '</option>'; };
+    Object.keys(IT.mcs).forEach(function (x) { if (!mcs[x]) delete IT.mcs[x]; });
+    IMS.opts.m1 = Object.keys(m1s).sort().map(function (x) { return [x, m1Label(x)]; });
+    IMS.opts.mc = Object.keys(mcs).sort(function (a, b) { return String(mcs[a]).localeCompare(String(mcs[b]), 'ko'); }).map(function (x) { return [x, mcs[x] + (x !== mcs[x] ? ' (' + x + ')' : '')]; });
+    var none = !setN(IT.pgs);
     var chip = function (g) {
-      var on = g === IT.pg, nm = g ? pgName(g) : '전체';
-      return '<button type="button" data-ipg="' + esc(g) + '" aria-pressed="' + on + '">' + pgIcon(g ? c.cat[g] : 'all') + '<span>' + esc(nm) + '</span>' + (g ? '<small>' + won(pgs[g]) + '</small>' : '') + '</button>';
+      var on = g ? !!IT.pgs[g] : none, nm = g ? pgName(g) : '전체';
+      return '<button type="button" data-ipg="' + esc(g) + '" aria-pressed="' + on + '"' + (g ? ' title="Shift 를 누른 채 누르면 여러 개 고르기"' : '') + '>' + pgIcon(g ? c.cat[g] : 'all') + '<span>' + esc(nm) + '</span>' + (g ? '<small>' + won(pgs[g]) + '</small>' : '') + '</button>';
     };
+    var any = !none || setN(IT.m1s) || setN(IT.mcs) || IT.amin !== '' || IT.amax !== '' || IT.flt !== 'all';
     return '<div class="itctl">' +
       '<div class="itr1"><label class="itq"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="itq" placeholder="상품명 · 코드 · MC 검색" autocomplete="off" value="' + esc(IT.q) + '" aria-label="상품 검색"></label>' +
       '<div class="itsel"><select id="itsort" aria-label="정렬">' + ISORT.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === IT.sort ? ' selected' : '') + '>' + s[1] + '</option>'; }).join('') + '</select>' +
       '<button type="button" class="itdir" data-idir="1" aria-label="정렬 방향 바꾸기" title="정렬 방향">' + (IT.dir < 0 ? '↓' : '↑') + '</button></div></div>' +
-      '<div class="itpgs" role="group" aria-label="구매그룹"><span class="itlb">구매그룹</span><div class="itpgl">' + [''].concat(pgl).map(chip).join('') + '</div></div>' +
-      '<div class="itfl" role="group" aria-label="상품 조건"><span class="itlb">조건</span>' +
-      '<select id="itm1" aria-label="MCH1"><option value="">MCH1 전체</option>' + m1l.map(function (x) { return opt(x, x === '-' ? 'MCH1 없음' : 'MCH1 ' + x, IT.m1); }).join('') + '</select>' +
-      '<select id="itmc" aria-label="MC"><option value="">MC 전체</option>' + mcl.map(function (x) { return opt(x, mcs[x] + (x !== mcs[x] ? ' (' + x + ')' : ''), IT.mc); }).join('') + '</select>' +
-      '<span class="itamt"><span>매출</span><input type="number" id="itamin" inputmode="numeric" min="0" step="1" placeholder="이상" value="' + esc(IT.amin) + '" aria-label="매출 이상(천원)"><span>~</span><input type="number" id="itamax" inputmode="numeric" min="0" step="1" placeholder="이하" value="' + esc(IT.amax) + '" aria-label="매출 이하(천원)"><small>천원</small></span>' +
+      '<div class="itpgs" role="group" aria-label="구매그룹"><span class="itlb">구매그룹<small>Shift+클릭<br>여러 개</small></span><div class="itpgl">' + [''].concat(pgl).map(chip).join('') + '</div></div>' +
+      '<div class="itfl" role="group" aria-label="상품 조건"><span class="itlb">조건</span>' + imsBox('m1') + imsBox('mc') +
+      '<span class="itamt"><span>매출</span><input type="number" id="itamin" inputmode="numeric" min="0" step="1" placeholder="이상" value="' + esc(IT.amin) + '" aria-label="매출 이상(만원)"><span>~</span><input type="number" id="itamax" inputmode="numeric" min="0" step="1" placeholder="이하" value="' + esc(IT.amax) + '" aria-label="매출 이하(만원)"><small>만원</small></span>' +
       '<div class="itchips" role="group" aria-label="매출 증감">' + IFLT.map(function (x) { return '<button type="button" data-iflt="' + x[0] + '" aria-pressed="' + (IT.flt === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>' +
-      (IT.pg || IT.m1 || IT.mc || IT.amin !== '' || IT.amax !== '' || IT.flt !== 'all' ? '<button type="button" class="itclr" data-iclr="1">조건 지우기</button>' : '') + '</div>' +
-      '<div class="itview" role="group" aria-label="보기 방식"><button type="button" data-igrp="1" aria-pressed="' + IT.grp + '">MCH1 › MC 묶어 보기</button><button type="button" data-igrp="0" aria-pressed="' + !IT.grp + '">상품만 보기</button>' + (IT.grp ? '<button type="button" class="itexp" data-iexp="1">모두 펼치기</button><button type="button" class="itexp" data-iexp="0">모두 접기</button>' : '') + '</div>' +
+      (any ? '<button type="button" class="itclr" data-iclr="1">조건 지우기</button>' : '') + '</div>' +
+      '<div class="itview" role="group" aria-label="보기 방식"><span class="itlb">보기</span>' + IVIEW.map(function (x) { return '<button type="button" data-iview="' + x[0] + '" aria-pressed="' + (IT.view === x[0]) + '">' + x[1] + '</button>'; }).join('') +
+      (IT.view !== 'item' ? '<button type="button" class="itexp" data-iexp="1">모두 펼치기</button><button type="button" class="itexp" data-iexp="0">모두 접기</button>' : '') + '</div>' +
       '<div class="itcols" role="group" aria-label="보는 항목">' + ICOLS.map(function (x) { return '<button type="button" data-icol="' + x[0] + '" aria-pressed="' + (IT.col === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div>';
   }
-  // 순위 카드(2026-11-27 제이): 매출·매총율의 전점 순위 · 같은 그룹 순위 — 매출 리포트 데이터(점포 실적, 고른 기간) 기준
-  //   범위 = 고른 구매그룹 → 없으면 지금 탭(CD) → 점포 전체. MCH1·MC 단위 순위는 리포트 데이터에 없어 구매그룹까지만
+  // 상품 요약(2026-11-27 제이 개편): 매출 | 매출 순위(전점·그룹) | 매총율 | 매총율 순위(전점·그룹) 한 줄
+  //   매출·매총율 = 상품 데이터(고른 범위) · 순위 = 매출 리포트 데이터(점포 실적) — 범위는 고른 구매그룹(여러 개면 합계) → 지금 탭(CD) → 점포 전체
+  //   MCH1·MC 단위 순위는 리포트 데이터에 없어 구매그룹까지만
   function itemRank(me) {
-    var k = ST.k, t = ST.t, sc = IT.pg ? scopePg(IT.pg) : t === 'store' ? scopeStore(k) : scopeCat(t, k);
-    var scope = IT.pg ? pgName(IT.pg) : t === 'store' ? '점포 전체' : ((TABS.filter(function (x) { return x[0] === t; })[0] || [0, ''])[1]);
+    var k = ST.k, t = ST.t, pl = Object.keys(IT.pgs);
+    var sc = pl.length === 1 ? scopePg(pl[0]) : pl.length ? { codes: pl.slice().sort(), posKey: 'pgs' } : t === 'store' ? scopeStore(k) : scopeCat(t, k);
+    var scope = pl.length ? pl.map(pgName).join(' + ') : t === 'store' ? '점포 전체' : ((TABS.filter(function (x) { return x[0] === t; })[0] || [0, ''])[1]);
     var all = OPEN(), grp = openOf(GRP[me]), gnm = GNAME[GRP[me]] || '그룹';
-    var y = M(k, [me], sc);
-    var lead = function (pl, key) {
-      var b = null; pl.forEach(function (p) { var v = M(k, [p], sc)[key]; if (v != null && isFinite(v) && (!b || v > b[1])) b = [p, v]; }); return b;
-    };
     var short = function (p) { return String(NAME[p] || '').replace(/점$/, ''); };
-    var card = function (l, key, pl, fmt, who) {
-      var r = rankIn(k, pl, sc, key, me), b = lead(pl, key);
-      if (r.r == null) return '<div class="kpi itk itr"><p class="kl">' + l + '</p><p class="kv">-</p><p class="kd"><span>' + who + ' · 실적 없음</span></p></div>';
+    var lead = function (pl2, key) { var b = null; pl2.forEach(function (p) { var v = M(k, [p], sc)[key]; if (v != null && isFinite(v) && (!b || v > b[1])) b = [p, v]; }); return b; };
+    var one = function (key, pl2, who, fmt) {
+      var r = rankIn(k, pl2, sc, key, me), b = lead(pl2, key);
+      if (r.r == null) return '<div class="irk"><span>' + who + '</span><b>-</b><small>실적 없음</small></div>';
       var c0 = r.r <= Math.ceil(r.n / 3) ? 'up' : r.r > r.n - Math.ceil(r.n / 3) ? 'dn' : '';
-      return '<div class="kpi itk itr"><p class="kl">' + l + '</p><p class="kv"><span class="' + c0 + '">' + r.r + '</span><small>위 / ' + r.n + '점</small></p>' +
-        '<p class="kd"><span>' + who + (b && b[0] !== me ? ' · 1위 ' + esc(short(b[0])) + ' ' + fmt(b[1]) : ' · 1위') + '</span></p></div>';
+      return '<div class="irk"><span>' + who + '</span><b><em class="' + c0 + '">' + r.r + '</em><small>위 / ' + r.n + '</small></b><small>' + (b && b[0] !== me ? '1위 ' + esc(short(b[0])) + ' ' + fmt(b[1]) : '1위') + '</small></div>';
     };
-    var won_ = function (v) { return man(v) + '백만'; }, pc = function (v) { return f1(v) + '%'; };
-    if (!(y.gsT > 0) && !(y.gsL > 0)) return '';
-    return '<p class="itrh">점포 순위 <small>' + esc(scope) + ' · 매출 리포트 기준 · ' + esc(NAME[me]) + ' 매출 ' + (y.gsT > 0 ? won_(y.gsT) : '-') + ' · 매총율 ' + (y.mr == null ? '-' : pc(y.mr)) + '</small></p>' +
-      '<div class="kpis itks">' +
-      card('매출 전점 순위', 'gsT', all, won_, '킴스 ' + all.length + '점') +
-      card('매출 그룹 순위', 'gsT', grp, won_, esc(gnm) + ' ' + grp.length + '점') +
-      card('매총율 전점 순위', 'mr', all, pc, '킴스 ' + all.length + '점') +
-      card('매총율 그룹 순위', 'mr', grp, pc, esc(gnm) + ' ' + grp.length + '점') + '</div>';
+    var pc = function (v) { return f1(v) + '%'; };
+    var card = function (l, key, fmt) { // 매출·매총율 카드 안에 넣는 순위 줄
+      return '<div class="irks" title="' + esc(scope) + ' 기준"><p class="irh">' + l + ' <small>' + esc(scope) + '</small></p>' + one(key, all, '전점 ' + all.length + '점', fmt) + one(key, grp, esc(gnm) + ' ' + grp.length + '점', fmt) + '</div>';
+    };
+    return { s: card('매출 성장율 순위', 'growth', pct), m: card('매총율 순위', 'mr', pc) }; // 매출 순위는 성장율(전년 대비) 순위로(2026-11-27 제이)
   }
-  function itemSummary(c) {
-    var k = ST.k, rows = itemScope(c), mcn = IT.mc ? (function () { for (var i = 0; i < c.d.rows.length; i++) { var m = mcOf(c.d, c.d.rows[i][2]); if ((m[2] || m[0] || '-') === IT.mc) return m[0] || IT.mc; } return IT.mc; })() : '';
-    var scl = [IT.pg ? '구매그룹 ' + pgName(IT.pg) : '', IT.m1 ? 'MCH1 ' + IT.m1 : '', mcn ? 'MC ' + mcn : ''].filter(function (x) { return x; });
+  function itemSummary(c, me) {
+    var k = ST.k, rows = itemScope(c);
+    var nmOf = function (id, sel) { var n = setN(sel); if (!n) return ''; var o = IMS.opts[id] || []; return n === 1 ? ((o.filter(function (x) { return sel[x[0]]; })[0] || [0, IMSL[id] + ' ' + Object.keys(sel)[0]])[1]) : IMSL[id] + ' ' + n + '개'; };
+    var pl = Object.keys(IT.pgs);
+    var scl = [pl.length ? '구매그룹 ' + (pl.length > 2 ? pl.length + '개' : pl.map(pgName).join(' + ')) : '', nmOf('m1', IT.m1s), nmOf('mc', IT.mcs)].filter(function (x) { return x; });
     var scTxt = scl.length ? '<p class="itsc">고른 범위만: ' + esc(scl.join(' · ')) + '</p>' : '';
-    var tot = itemTotals(rows, k), sold = 0, soldL = 0, stk = 0, neg = 0;
-    rows.forEach(function (r) { var v = iv(r, k); if (v[0] > 0) sold++; if (v[1] > 0) soldL++; if (r[ISA + 1] > 0) stk++; if (r[ISA + 1] < 0) neg++; });
+    var tot = itemTotals(rows, k);
     var mr = iMr(tot.a, tot.g), mrl = iMr(tot.al, tot.gl), g = iGr(tot.a, tot.al);
-    var card = function (l, v, u, d, dc) { return '<div class="kpi itk"><p class="kl">' + l + '</p><p class="kv">' + v + '<small>' + u + '</small></p><p class="kd"><span class="' + (dc || '') + '">' + d + '</span></p></div>'; };
-    return scTxt + '<div class="kpis itks">' +
-      card('판매 상품', won(sold), '개', '전년 ' + won(soldL) + '개 · ' + (soldL ? pct(sold / soldL - 1) : '-'), cls(soldL ? sold / soldL - 1 : null)) +
-      card('상품 매출 합계', man(tot.a), '백만원', '전년 ' + man(tot.al) + '백만 · ' + pct(g), cls(g)) +
-      card('매총율', mr == null ? '-' : f1(mr * 100), mr == null ? '' : '%', '전년 ' + (mrl == null ? '-' : f1(mrl * 100) + '%') + ' · ' + (mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100)), mr == null || mrl == null ? '' : cls(mr - mrl)) +
-      card('재고 있는 상품', won(stk), '개', '재고액 ' + man(tot.sa) + '백만 · ' + (tot.d == null ? '재고일수 -' : '재고일수 ' + f1(tot.d) + '일') + (neg ? ' · 마이너스 ' + won(neg) + '개' : '')) +
-      '</div>';
+    var card = function (l, v, u, d, dc, x) { return '<div class="kpi itk ikw"><div class="ikm"><p class="kl">' + l + '</p><p class="kv">' + v + '<small>' + u + '</small></p><p class="kd"><span class="' + (dc || '') + '">' + d + '</span></p></div>' + (x || '') + '</div>'; };
+    var rk = itemRank(me);
+    return scTxt + '<div class="kpis itks2">' +
+      card('매출', man(tot.a), '백만원', '전년 ' + man(tot.al) + '백만 · ' + pct(g), cls(g), rk.s) +
+      card('매총율', mr == null ? '-' : f1(mr * 100), mr == null ? '' : '%', '전년 ' + (mrl == null ? '-' : f1(mrl * 100) + '%') + ' · ' + (mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100)), mr == null || mrl == null ? '' : cls(mr - mrl), rk.m) +
+      '</div><p class="itrn">순위 = 매출 리포트의 점포 실적 기준(구매그룹 단위까지) · 매출은 전년 대비 성장율 순위 · 상위 1/3 초록, 하위 1/3 빨강</p>';
   }
   function itemPick() {
     return '<p class="itpn">상품 데이터는 점포마다 따로 받습니다. 점포를 고르세요.</p><div class="itpick">' + D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
@@ -4020,7 +4098,7 @@ var KIMS = (function () {
     ];
     return head;
   }
-  var itemSumAll = function (c, me) { return itemSummary(c) + itemRank(me); };
+  var itemSumAll = function (c, me) { return itemSummary(c, me); };
   // 목록만 다시 그림(검색·정렬·필터) — 화면 전체를 다시 그리지 않아 입력 중 깜빡이지 않음
   //   all = 구매그룹·MCH1·MC 를 바꿨을 때: 요약·순위·조건 칸(고를 수 있는 MCH1·MC 목록)도 다시 그림
   function itemRedraw(all) {
@@ -4738,39 +4816,71 @@ var KIMS = (function () {
       var ul = b.previousElementSibling, on = !ul.classList.contains('open');
       ul.classList.toggle('open', on); b.setAttribute('aria-expanded', on); b.querySelector('span').textContent = on ? '접기' : b.title.replace(' 펼치기', ' 보기');
     });
-    // 상품 상세(2026-11-27): 점포 고르기·검색·정렬·필터·보는 항목·더 보기·상품 펼침 — 목록만 다시 그림
+    // 상품 상세(2026-11-27): 점포 고르기·검색·정렬·필터·보는 항목·더 보기·묶음 펼침 — 목록만 다시 그림
     var itT = 0, main0 = doc.getElementById('main');
+    var imsClose = function () { if (IMS.open) { IMS.open = ''; IMS.q = ''; itemRedraw(true); } };
+    var resetF = function () { IT.pgs = {}; IT.m1s = {}; IT.mcs = {}; IMS.open = ''; IMS.q = ''; };
     main0.addEventListener('click', function (e) {
       if (MODE !== 'item') return;
-      var b = e.target.closest && e.target.closest('[data-ist],[data-ipg],[data-iclr],[data-iflt],[data-icol],[data-imore],[data-iretry],[data-idir],[data-igrp],[data-iexp],tr[data-im],tr[data-ig],tr[data-imc]'); if (!b) return;
-      if (b.dataset.ist) { keepRender(function () { ST.s = b.dataset.ist; IT.pg = ''; IT.m1 = ''; IT.mc = ''; IT.open = {}; IT.lim = 100; }); return; }
+      if (IMS.open && !(e.target.closest && e.target.closest('.ims'))) imsClose();
+      var b = e.target.closest && e.target.closest('[data-ist],[data-ipg],[data-iclr],[data-iflt],[data-icol],[data-imore],[data-iretry],[data-idir],[data-iview],[data-iexp],[data-isort],[data-imsb],[data-imsall],[data-imsclr],[data-imsok],tr[data-im],tr[data-ig]'); if (!b) return;
+      if (b.dataset.ist) { keepRender(function () { ST.s = b.dataset.ist; resetF(); IT.open = {}; IT.og = {}; IT.lim = 100; }); return; }
       if (b.dataset.iretry) { itemLoad(b.dataset.iretry, true); quietRender(); return; }
-      if (b.dataset.ipg != null) { IT.pg = b.dataset.ipg; IT.m1 = ''; IT.mc = ''; IT.lim = 100; IT.og = {}; IT.om = {}; itemRedraw(true); return; }
-      if (b.dataset.iclr) { IT.pg = ''; IT.m1 = ''; IT.mc = ''; IT.amin = ''; IT.amax = ''; IT.flt = 'all'; IT.lim = 100; itemRedraw(true); return; }
-      if (b.dataset.iflt) { IT.flt = b.dataset.iflt; IT.lim = 100; [].forEach.call(main0.querySelectorAll('[data-iflt]'), function (x) { x.setAttribute('aria-pressed', x === b); }); }
-      else if (b.dataset.icol) { IT.col = b.dataset.icol; [].forEach.call(main0.querySelectorAll('[data-icol]'), function (x) { x.setAttribute('aria-pressed', x === b); }); var w = main0.querySelector('.itw'); if (w) w.dataset.col = IT.col; return; }
-      else if (b.dataset.imore) { if (b.dataset.imore === '1') IT.lim += 200; else IT.mlim[b.dataset.imore] = (IT.mlim[b.dataset.imore] || 50) + 100; }
-      else if (b.dataset.igrp) { IT.grp = b.dataset.igrp === '1'; quietRender(); return; }
-      else if (b.dataset.iexp) { var c0 = ITC[ST.s]; IT.og = {}; IT.om = {}; if (b.dataset.iexp === '1' && c0 && c0.d) itemRows(c0, ST.k).forEach(function (r) { var m = mcOf(c0.d, r[2]), g1 = m[1] || '-'; IT.og[g1] = 1; IT.om[g1 + '|' + (m[2] || m[0] || '-')] = 1; }); }
+      // MCH1·MC 고르기 창
+      if (b.dataset.imsb) { var was = IMS.open === b.dataset.imsb; IMS.open = was ? '' : b.dataset.imsb; IMS.q = ''; itemRedraw(true); if (!was) { var q0 = main0.querySelector('[data-imsq]'); if (q0) q0.focus({ preventScroll: true }); } return; }
+      if (b.dataset.imsok) { imsClose(); return; }
+      if (b.dataset.imsall || b.dataset.imsclr) {
+        var id = b.dataset.imsall || b.dataset.imsclr, sel = id === 'm1' ? IT.m1s : IT.mcs;
+        [].forEach.call(main0.querySelectorAll('input[data-imsv="' + id + '"]'), function (x) { if (b.dataset.imsall) { sel[x.value] = 1; x.checked = true; } });
+        if (b.dataset.imsclr) { Object.keys(sel).forEach(function (x) { delete sel[x]; }); [].forEach.call(main0.querySelectorAll('input[data-imsv="' + id + '"]'), function (x) { x.checked = false; }); }
+        imsLive(id); return;
+      }
+      // 구매그룹: 그냥 누르면 하나만, Shift 를 누른 채 누르면 여러 개(다시 누르면 뺌)
+      if (b.dataset.ipg != null) {
+        var g = b.dataset.ipg;
+        if (!g) IT.pgs = {};
+        else if (e.shiftKey) { if (IT.pgs[g]) delete IT.pgs[g]; else IT.pgs[g] = 1; }
+        else { var only = setN(IT.pgs) === 1 && IT.pgs[g]; IT.pgs = {}; if (!only) IT.pgs[g] = 1; }
+        IT.m1s = {}; IT.mcs = {}; IT.lim = 100; IT.og = {}; IT.mlim = {}; itemRedraw(true); return;
+      }
+      if (b.dataset.iclr) { resetF(); IT.amin = ''; IT.amax = ''; IT.flt = 'all'; IT.lim = 100; itemRedraw(true); return; }
+      if (b.dataset.iview) { IT.view = b.dataset.iview; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
+      if (b.dataset.isort) { var sk = b.dataset.isort; if (IT.sort === sk) IT.dir = -IT.dir; else { IT.sort = sk; IT.dir = ISUP[sk] ? 1 : -1; } itemRedraw(true); return; }
+      if (b.dataset.iflt) { IT.flt = b.dataset.iflt; IT.lim = 100; itemRedraw(true); return; }
+      if (b.dataset.icol) { IT.col = b.dataset.icol; [].forEach.call(main0.querySelectorAll('[data-icol]'), function (x) { x.setAttribute('aria-pressed', x === b); }); var w = main0.querySelector('.itw'); if (w) w.dataset.col = IT.col; return; }
+      if (b.dataset.imore) { if (b.dataset.imore === '1') IT.lim += 200; else IT.mlim[b.dataset.imore] = (IT.mlim[b.dataset.imore] || 50) + 100; }
+      else if (b.dataset.iexp) { var c0 = ITC[ST.s]; IT.og = b.dataset.iexp === '1' && c0 && c0.d ? itemAllPaths(c0) : {}; }
       else if (b.dataset.ig) { if (IT.og[b.dataset.ig]) delete IT.og[b.dataset.ig]; else IT.og[b.dataset.ig] = 1; }
-      else if (b.dataset.imc) { if (IT.om[b.dataset.imc]) delete IT.om[b.dataset.imc]; else IT.om[b.dataset.imc] = 1; }
       else if (b.dataset.idir) { IT.dir = -IT.dir; b.textContent = IT.dir < 0 ? '↓' : '↑'; }
       else if (b.dataset.im) { if (IT.open[b.dataset.im]) delete IT.open[b.dataset.im]; else IT.open[b.dataset.im] = 1; }
       itemRedraw();
     });
-    main0.addEventListener('keydown', function (e) { if (MODE === 'item' && (e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('tr[data-im],tr[data-ig],tr[data-imc]')) { e.preventDefault(); e.target.click(); } });
+    // 고르기 창에서 체크를 바꾸면: 창은 그대로 두고 요약·표·버튼 글자만 바꿈
+    var imsLive = function (id) {
+      var c = ITC[ST.s]; if (!(c && c.st === 'ok')) return;
+      var s = doc.getElementById('itsum'); if (s) s.innerHTML = itemSumAll(c, ST.s);
+      var bx = doc.getElementById('itbox'); if (bx) bx.innerHTML = itemTable(c);
+      var bt = main0.querySelector('[data-imsb="' + id + '"]'); if (bt) { bt.querySelector('span').textContent = imsLabel(id); bt.classList.toggle('on', !!setN(id === 'm1' ? IT.m1s : IT.mcs)); }
+    };
+    doc.addEventListener('click', function (e) { if (MODE === 'item' && IMS.open && e.target.isConnected && !main0.contains(e.target)) imsClose(); }); // 다시 그려져 떨어진 버튼(isConnected false)은 바깥 클릭이 아님
+    main0.addEventListener('keydown', function (e) {
+      if (MODE !== 'item') return;
+      if (e.key === 'Escape' && IMS.open) { var id0 = IMS.open; imsClose(); var bb = main0.querySelector('[data-imsb="' + id0 + '"]'); if (bb) bb.focus(); return; }
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('tr[data-im],tr[data-ig]')) { e.preventDefault(); e.target.click(); }
+    });
     main0.addEventListener('input', function (e) {
       if (MODE !== 'item') return;
       var id = e.target.id;
+      if (e.target.dataset && e.target.dataset.imsq) { IMS.q = e.target.value; var ul = e.target.parentNode.querySelector('.imsl'); if (ul) ul.innerHTML = imsList(e.target.dataset.imsq); return; }
       if (id === 'itq') { clearTimeout(itT); itT = setTimeout(function () { IT.q = e.target.value; IT.lim = 100; itemRedraw(); }, 180); }
       else if (id === 'itamin' || id === 'itamax') { clearTimeout(itT); itT = setTimeout(function () { IT[id === 'itamin' ? 'amin' : 'amax'] = e.target.value.replace(/[^0-9]/g, ''); IT.lim = 100; itemRedraw(); }, 300); }
     });
     main0.addEventListener('change', function (e) {
       if (MODE !== 'item') return;
-      if (e.target.id === 'itm1') { IT.m1 = e.target.value; IT.mc = ''; IT.lim = 100; itemRedraw(true); }
-      else if (e.target.id === 'itmc') { IT.mc = e.target.value; IT.lim = 100; itemRedraw(true); }
-      else if (e.target.id === 'itamin' || e.target.id === 'itamax') itemRedraw(true);
-      else if (e.target.id === 'itsort') { IT.sort = e.target.value; IT.dir = IT.sort === 'nm' || IT.sort === 'sd' ? 1 : -1; var db = main0.querySelector('[data-idir]'); if (db) db.textContent = IT.dir < 0 ? '↓' : '↑'; itemRedraw(); }
+      var t = e.target;
+      if (t.dataset && t.dataset.imsv) { var id = t.dataset.imsv, sel = id === 'm1' ? IT.m1s : IT.mcs; if (t.checked) sel[t.value] = 1; else delete sel[t.value]; if (id === 'm1') IT.mcs = {}; IT.lim = 100; IT.og = {}; imsLive(id); return; }
+      if (t.id === 'itamin' || t.id === 'itamax') itemRedraw(true);
+      else if (t.id === 'itsort') { IT.sort = t.value; IT.dir = ISUP[IT.sort] ? 1 : -1; itemRedraw(true); }
     });
     // 관리 필요 상품: CD·구매그룹 고르기
     doc.getElementById('main').addEventListener('click', function (e) {
