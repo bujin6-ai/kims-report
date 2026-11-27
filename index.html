@@ -785,7 +785,7 @@ tr.dim>*{opacity:.42}
 .hdc em{font-style:normal;font-size:11px;font-weight:600;white-space:nowrap;margin:2px 0;font-variant-numeric:tabular-nums}.hdc li.up em{color:var(--good)}.hdc li.dn em{color:var(--bad)}.hdc li.hmx em{font-weight:800}
 .hdc b{font-size:12px;font-weight:600;color:var(--muted);margin-top:4px}
 @media (max-width:640px){.hdc{--H:80px}.hdc em{font-size:9px}.hdt .hds{margin-left:0}}
-.dpw{margin-top:18px;display:grid;gap:8px}.dpr{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:8px}.dpr>b{font-size:13px;font-weight:700;color:var(--muted)}
+.dpw{margin-top:34px;display:grid;gap:8px}.dpr{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:8px}.dpr>b{font-size:13px;font-weight:700;color:var(--muted)}
 .dpb{display:flex;height:30px;border-radius:8px;overflow:hidden;gap:2px}.dpb span{display:flex;align-items:center;justify-content:center;min-width:0;overflow:hidden}
 .dpb em{font-style:normal;font-size:12px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
 .dpb .dp0{background:color-mix(in srgb,var(--ac) 22%,var(--panel));color:var(--fg)}.dpb .dp1{background:var(--ac);color:#fff}.dpb .dp2{background:color-mix(in srgb,var(--ac) 62%,#000);color:#fff}.dpb .dp3{background:color-mix(in srgb,var(--ac) 48%,var(--panel));color:var(--fg)}
@@ -2273,18 +2273,18 @@ var KIMS = (function () {
         return '<li class="' + (pos ? 'up' : 'dn') + (top ? ' hmx' : '') + '" title="' + x[0] + '시 ' + bms(x[1]) + '백만"><span class="hdu">' + (pos ? '<em>' + bms(x[1]) + '</em>' + bar : '') + '</span><span class="hdd">' + (pos ? '' : bar + '<em>' + bms(x[1]) + '</em>') + '</span><b>' + x[0] + '</b></li>';
       }).join('') + '</ol></div>' + dayParts(rows);
   }
-  // 하루 구간 비중(금년·전년): 오전 = 오픈~12시 전, 점심 = 12~15시 전, 오후 = 15~18시 전, 저녁 = 18시~마감 (2026-11-27 제이)
-  var DPART = [['오전', 0, 12], ['점심', 12, 15], ['오후', 15, 18], ['저녁', 18, 99]];
+  // 하루 구간 비중(금년·전년): 오전 = 오픈~12시 전, 오후 = 12~17시 전, 저녁 = 17시~마감 (2026-11-27 제이: 점심 뺌) · 4번째 = 색 번호
+  var DPART = [['오전', 0, 12, 0], ['오후', 12, 17, 1], ['저녁', 17, 99, 3]];
   function dayParts(rows) {
     var line = function (j, lab) {
       var tot = rows.reduce(function (a, r) { return a + r[j]; }, 0); if (!tot) return '';
       return '<div class="dpr"><b>' + lab + '</b><div class="dpb">' + DPART.map(function (p, n) {
         var v = rows.reduce(function (a, r) { return a + (+r[0] >= p[1] && +r[0] < p[2] ? r[j] : 0); }, 0), w = v / tot * 100;
-        return w > 0 ? '<span class="dp' + n + '" style="flex:' + w.toFixed(2) + '" title="' + lab + ' ' + p[0] + ' ' + bm(v) + '백만 · ' + f1(w) + '%"><em>' + p[0] + ' ' + f1(w) + '%</em></span>' : '';
+        return w > 0 ? '<span class="dp' + p[3] + '" style="flex:' + w.toFixed(2) + '" title="' + lab + ' ' + p[0] + ' ' + bm(v) + '백만 · ' + f1(w) + '%"><em>' + p[0] + ' ' + f1(w) + '%</em></span>' : '';
       }).join('') + '</div></div>';
     };
     var a = line(1, '금년'), b = line(2, '전년');
-    return a || b ? '<div class="dpw">' + a + b + '<p class="dpl">오전 오픈~12시 · 점심 12~15시 · 오후 15~18시 · 저녁 18시~마감</p></div>' : '';
+    return a || b ? '<div class="dpw">' + a + b + '<p class="dpl">오전 오픈~12시 · 오후 12시~17시 · 저녁 17시~마감</p></div>' : '';
   }
 
   var hourSec = function (k, plants, key, who, what) {
