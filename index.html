@@ -1153,6 +1153,86 @@ tr.dim>*{opacity:.42}
 .ptip tbody th{text-align:left;font-weight:600}.ptip tbody td small{color:var(--muted);font-size:11px;margin-left:5px}
 .ptip tr.pt-t th,.ptip tr.pt-t td{border-top:1px solid var(--line);font-weight:700}.ptip td.up{color:var(--good)}.ptip td.dn{color:var(--bad)}
 .ptip .pt-n{margin:6px 0 0;color:var(--muted);font-size:11px}
+/* ── 상품 상세(2026-11-27) ── */
+#nav .nbtns button:first-child:nth-last-child(3){grid-column:1/-1}
+#main .itks{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:900px){#main .itks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#main .itk .kd span.up{color:var(--good)}#main .itk .kd span.dn{color:var(--bad)}
+#main .itctl{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:4px 0 12px}
+#main .itq{flex:1 1 260px;display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+#main .itq svg{width:16px;height:16px;flex:none;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
+#main .itq input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--fg);font:inherit;font-size:14px}
+#main .itq:focus-within{border-color:var(--ac)}
+#main .itsel{display:flex;gap:6px;flex:0 1 auto;min-width:0}
+#main .itsel select{height:38px;max-width:180px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px}
+#main .itdir{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+#main .itchips,#main .itcols{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1 1 100%}
+#main .itchips::-webkit-scrollbar{display:none}
+#main .itcols{display:none}
+#main .itview{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 100%}
+#main .itview button{height:30px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+#main .itview button[aria-pressed=true]{background:var(--ac-soft);border-color:color-mix(in srgb,var(--ac) 45%,transparent);color:var(--ac)}
+#main .itview .itexp{color:var(--muted);font-weight:500}
+#main .itview [data-iexp="1"]{margin-left:auto}
+#main .itbl tbody tr.lv1,#main .itbl tbody tr.lv2{cursor:pointer}
+#main .itbl tbody tr.lv1 th,#main .itbl tbody tr.lv1 td{background:color-mix(in srgb,var(--ac) 5%,var(--panel));font-weight:600}
+#main .itbl tbody tr.lv1 th b::before,#main .itbl tbody tr.lv2 th b::before{content:'';display:inline-block;width:6px;height:6px;margin:0 8px 2px 1px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .2s}
+#main .itbl tbody tr.op th b::before{transform:rotate(45deg);margin-bottom:4px}
+#main .itbl tbody tr.lv2 th{padding-left:26px}#main .itbl tbody tr.lv2 th small{padding-left:16px}#main .itbl tbody tr.lv2.op th,#main .itbl tbody tr.lv2.op td{background:var(--hov)}
+#main .itbl tbody tr.lv3 th{padding-left:52px}
+#main .itbl tbody tr.lv1 th small{padding-left:16px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:300px}
+#main .itbl tbody tr.lvm td{padding:2px 8px 8px 52px;text-align:left}
+#main .itmore.sm{display:inline-block;margin:4px 0 0;height:30px;font-size:13px}
+@media (hover:hover){#main .itbl tbody tr.lv1:hover th,#main .itbl tbody tr.lv1:hover td,#main .itbl tbody tr.lv2:hover th,#main .itbl tbody tr.lv2:hover td{background:color-mix(in srgb,var(--ac) 10%,var(--panel))}#main .itview button:not([aria-pressed=true]):hover{border-color:var(--ac);color:var(--ac)}}
+#main .itchips button,#main .itcols button{flex:none;height:30px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+#main .itchips button[aria-pressed=true],#main .itcols button[aria-pressed=true]{background:var(--ac);border-color:var(--ac);color:#fff}
+#main .itw{border:1px solid var(--line);border-radius:12px}
+#main .itbl{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+#main .itbl th,#main .itbl td{padding:7px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+#main .itbl thead th{position:sticky;top:0;background:var(--panel);box-shadow:0 1px 0 var(--line);color:var(--muted);font-size:12px;font-weight:600;z-index:1}
+#main .itbl thead tr.g1 th{border-bottom:0;color:var(--fg);height:30px;box-sizing:border-box;box-shadow:none}#main .itbl thead tr.g2 th{top:30px}#main .itbl thead th small{font-weight:500;color:var(--muted);margin-left:3px}
+#main .itbl thead tr.g1 th[rowspan]{text-align:left;vertical-align:bottom}
+#main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:1px solid var(--line)}
+#main .itbl tbody th{text-align:left;max-width:320px;white-space:normal;font-weight:400}
+#main .itbl tbody th b{display:block;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#main .itbl tbody th small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+#main .itbl tbody tr[data-im]{cursor:pointer}
+@media (hover:hover){#main .itbl tbody tr[data-im]:hover{background:var(--hov)}}
+#main .itbl tbody tr.on{background:var(--hov)}
+#main .itbl tbody tr.tot th,#main .itbl tbody tr.tot td{background:color-mix(in srgb,var(--fg) 5%,var(--panel));font-weight:700}
+#main .itbl tbody tr.tot th small{display:inline;margin-left:4px}
+#main .itbl td.ly{color:var(--muted)}#main .itbl td.up{color:var(--good)}#main .itbl td.dn{color:var(--bad)}
+#main .itbl tr.itd td{padding:0 8px 10px;background:var(--hov);text-align:left;white-space:normal}
+#main .itdl{list-style:none;margin:0;padding:8px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+#main .itdl li{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--line)}
+#main .itdl li span{font-size:12px;font-weight:700}#main .itdl li span small{font-weight:500;color:var(--muted);margin-left:3px}
+#main .itdl li b{font-size:15px}#main .itdl li b small{font-size:11px;font-weight:500;color:var(--muted);margin-left:2px}
+#main .itdl li em{font-style:normal;font-weight:700;font-size:13px}#main .itdl li em.up{color:var(--good)}#main .itdl li em.dn{color:var(--bad)}
+#main .itdl li i{font-style:normal;font-size:12px;color:var(--muted)}
+#main .itmore{display:block;margin:12px auto 0;height:38px;padding:0 18px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+#main .itmore small{color:var(--muted);font-weight:500;margin-left:4px}
+#main .itnone{margin:14px 0 4px;text-align:center;color:var(--muted);font-size:13px}
+#main .itload{display:flex;flex-direction:column;align-items:center;gap:6px;padding:40px 12px;text-align:center}
+#main .itload small{color:var(--muted)}
+#main .itload .spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--ac);animation:itspin .8s linear infinite}
+@keyframes itspin{to{transform:rotate(360deg)}}
+#main .itpn{margin:0 0 12px;color:var(--muted);font-size:13px}
+#main .itpick{display:grid;gap:14px}
+#main .itpg p{margin:0 0 6px;font-size:13px;font-weight:700;color:var(--muted)}
+#main .itpg div{display:flex;flex-wrap:wrap;gap:6px}
+#main .itpg button{height:34px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+@media (hover:hover){#main .itpg button:hover,#main .itmore:hover,#main .itchips button:not([aria-pressed=true]):hover{border-color:var(--ac);color:var(--ac)}}
+@media (max-width:700px){
+#main .itcols{display:flex}
+#main .itsel{flex:1 1 100%}#main .itsel select{flex:1;max-width:none}
+#main .itw[data-col=s] .cm,#main .itw[data-col=s] .ck,#main .itw[data-col=m] .cs,#main .itw[data-col=m] .ck,#main .itw[data-col=k] .cs,#main .itw[data-col=k] .cm{display:none}
+#main .itbl{font-size:12px}#main .itbl th,#main .itbl td{padding:6px 4px}#main .itbl tbody th{max-width:36vw;padding-left:8px}#main .itbl thead th small{display:none}#main .itbl tbody tr.tot th small{display:block;margin:0}
+#main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:0}
+#main .itdl{grid-template-columns:repeat(2,minmax(0,1fr))}
+#main .itbl tbody tr.lv2 th{padding-left:14px}#main .itbl tbody tr.lv3 th{padding-left:24px}#main .itbl tbody tr.lvm td{padding-left:24px}
+#main .itbl tbody tr.lv1 th small,#main .itbl tbody tr.lv2 th small{padding-left:0;white-space:normal}
+#main .itview [data-iexp="1"]{margin-left:0}
+}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 /* 사이드 메뉴 카드형(2026-11-24): 로고·현재 점포 카드 / 리포트 목차 2열 타일 / 점포별 실적 그룹 막대 / 맨 아래 메인 화면 */
 #nav{--navbg:color-mix(in srgb,#5b6b8c 9%,var(--bg));--tile:color-mix(in srgb,var(--fg) 5%,var(--panel));background:var(--navbg);display:flex;flex-direction:column;gap:10px;padding:10px 10px 16px}
@@ -3185,6 +3265,12 @@ var KIMS = (function () {
   // ── 재고 데이터(2026-11-22) ── 메인 메뉴 '재고 데이터' → MODE 'stock'. 점포·CD 탭 이동은 매출 리포트와 같이 씀
   //   재고액(원가) at 기준일 = 전월말 재고 + 당월 수불(NET_AMT) + 원가차이 · CD·구매그룹은 상품 기준(DIM_MATERIAL) · BI 미대조
   var MODE = 'sales';
+  // 화면 종류(사이드 메뉴 버튼): [id, 이름, 아이콘] — 상품 상세(item)는 2026-11-27
+  var MODES = [['sales', '매출 리포트', 'stats'], ['stock', '재고 데이터', 'box'], ['item', '상품 상세', 'tag']];
+  // 상품 상세로 들어올 때 전점이면 설정의 기준 점포로(없으면 점포 고르기 화면)
+  // 상품 상세는 우선 관리자만(2026-11-27 제이): 웹 = 관리자 로그인, 로컬 미리보기 = KIMS_ITEM_SRC 가 있을 때만 · 서버(Apps Script item)도 관리자만 내려줌
+  var itemOk = function () { return WEB ? !!WEB.admin : typeof window !== 'undefined' && !!window.KIMS_ITEM_SRC; };
+  function itemEnter() { if (MODE === 'item' && ST.s === 'all' && S && S.store && S.store !== 'all' && NAME[S.store] && GRP[S.store] !== D.closed) ST.s = S.store; }
   var SDAYS = function (a, c) { return c > 0 ? a / (c / 30) : null; };
   var catCodes = function (id) { var c = D.storeCats.filter(function (x) { return x[0] === id; })[0]; return c ? c[2].map(function (g) { return g[0]; }) : []; };
   // 합계: sum = [TA 재고액, TQ 수량, PA 전월말, LA 전년 같은 날, C30·L30 최근 30일 매출원가, RCV·ISS 당월 입고·출고,
@@ -3652,6 +3738,211 @@ var KIMS = (function () {
     ]);
     return head;
   }
+  // ── 상품 상세(2026-11-27 제이) ── 메인 메뉴 '상품 상세' → MODE 'item' · 주소 #itm-점포-탭-기간
+  //   점포를 고르면 그 점포 상품 데이터(약 1만 개, 0.5MB 압축)만 서버에서 받아 옴(WEB.item) — 한 번 받은 점포는 이 기기에 저장
+  //   행 = [상품코드, 상품명, MC 번호, 구매그룹(상품 기준), M·W·D × (매출 금년·전년, 수량 금년·전년, 매출총이익 금년·전년), 재고액, 재고수량, 하루 매출원가]
+  var ITC = {}, IT = { q: '', flt: 'all', pg: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, grp: true, og: {}, om: {}, mlim: {} }; // grp = MCH1 › MC › 상품 묶어 보기(og·om 펼친 묶음, mlim MC 안 보이는 상품 수)
+  var IOFF = { M: 4, W: 10, D: 16 }, ISA = 22;
+  var pgCat = function (pg) { for (var i = 0; i < D.storeCats.length; i++) if (D.storeCats[i][2].some(function (g) { return g[0] === pg; })) return D.storeCats[i][0]; return 'etc'; };
+  var pgName = function (pg) { for (var i = 0; i < D.storeCats.length; i++) { var g = D.storeCats[i][2].filter(function (x) { return x[0] === pg; })[0]; if (g) return g[1]; } return pg || '-'; };
+  function itemLoad(p, force) {
+    var c = ITC[p];
+    if (c && !force && (c.st === 'load' || c.st === 'ok' || c.st === 'none')) return;
+    ITC[p] = { st: 'load' };
+    var src = WEB && WEB.item ? WEB.item(p, D.base)
+      : typeof window !== 'undefined' && window.KIMS_ITEM_SRC && window.fetch ? window.fetch(window.KIMS_ITEM_SRC + p + '.json').then(function (r) { return r.ok ? r.json().then(function (d) { return { data: d }; }) : { none: true }; })
+      : Promise.resolve({ none: true, local: true });
+    src.then(function (r) {
+      if (!r || r.none || !r.data) { ITC[p] = { st: 'none', local: r && r.local }; }
+      else {
+        var d = r.data, cat = {};
+        d.rows.forEach(function (x) { if (!(x[3] in cat)) cat[x[3]] = pgCat(x[3]); });
+        ITC[p] = { st: 'ok', d: d, cat: cat };
+      }
+    }, function (e) { ITC[p] = { st: 'err', err: (e && e.message) || '불러오지 못했습니다' }; }).then(function () {
+      if (MODE === 'item' && ST.v === 'report' && ST.s === p) quietRender();
+    });
+  }
+  // 상품 하나의 기간 값: [매출 금년, 전년, 수량 금년, 전년, 매출총이익 금년, 전년]
+  var iv = function (r, k) { var o = IOFF[k]; return r.slice(o, o + 6); };
+  var iDays = function (r) { return r[ISA] && r[ISA + 2] > 0 ? r[ISA] / r[ISA + 2] : null; }; // 재고가 없으면 -
+  var iGr = function (t, l) { return l > 0 ? t / l - 1 : null; };
+  var iMr = function (a, g) { return a > 0 ? g / a : null; };
+  var chun = function (v) { return v == null ? '-' : Math.round(v / 1000).toLocaleString('ko-KR'); }; // 천원
+  var qn = function (v) { return v == null ? '-' : (Math.abs(v - Math.round(v)) < 0.05 ? Math.round(v) : Math.round(v * 10) / 10).toLocaleString('ko-KR'); };
+  var IFLT = [['all', '전체'], ['up', '매출 증가'], ['dn', '매출 감소'], ['new', '신규(전년 없음)'], ['gone', '판매 중단(금년 없음)'], ['idle', '재고만 있음'], ['neg', '마이너스 재고']];
+  var ISORT = [['aT', '매출 큰 순'], ['aD', '매출 증감액'], ['g', '매출 성장율'], ['q', '판매수량'], ['mr', '매총율'], ['sa', '재고액'], ['sd', '재고일수'], ['nm', '상품명']];
+  function itemRows(c, k) {
+    var d = c.d, t = ST.t, q = IT.q.replace(/\s/g, '').toLowerCase(), f = IT.flt, pg = IT.pg;
+    var out = d.rows.filter(function (r) {
+      if (t !== 'store' && c.cat[r[3]] !== t) return false;
+      if (pg && r[3] !== pg) return false;
+      var v = iv(r, k);
+      if (f === 'up' && !(v[0] > v[1])) return false;
+      if (f === 'dn' && !(v[0] < v[1])) return false;
+      if (f === 'new' && !(v[0] > 0 && !v[1])) return false;
+      if (f === 'gone' && !(!v[0] && v[1] > 0)) return false;
+      if (f === 'idle' && !(r[ISA + 1] > 0 && !iv(r, 'M')[0])) return false;
+      if (f === 'neg' && !(r[ISA + 1] < 0)) return false;
+      if (f === 'all' && !v[0] && !v[1] && !v[2] && !v[3] && !r[ISA] && !r[ISA + 1]) return false; // 이 기간에 아무 값도 없는 상품은 뺌(재고가 있으면 보임)
+      if (q && (r[1] + r[0] + mcOf(d, r[2]).join(' ')).replace(/\s/g, '').toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    var key = IT.sort, dir = IT.dir;
+    var val = function (r) {
+      var v = iv(r, k);
+      switch (key) {
+        case 'aD': return v[0] - v[1];
+        case 'g': return iGr(v[0], v[1]);
+        case 'q': return v[2];
+        case 'mr': return iMr(v[0], v[4]);
+        case 'sa': return r[ISA];
+        case 'sd': return iDays(r);
+        default: return v[0];
+      }
+    };
+    // dir: -1 = 큰 것(가나다 끝)부터, 1 = 작은 것(가나다)부터 · 값이 없는 상품은 늘 맨 아래
+    if (key === 'nm') out.sort(function (a, b) { return dir * String(a[1]).localeCompare(String(b[1]), 'ko'); });
+    else out.sort(function (a, b) { var x = val(a), y = val(b); if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1; return dir < 0 ? y - x : x - y; });
+    return out;
+  }
+  function itemTotals(rows, k) {
+    var s = [0, 0, 0, 0, 0, 0], sa = 0, dc = 0;
+    rows.forEach(function (r) { var v = iv(r, k); for (var i = 0; i < 6; i++) s[i] += v[i]; sa += r[ISA]; dc += r[ISA + 2]; });
+    return { a: s[0], al: s[1], q: s[2], ql: s[3], g: s[4], gl: s[5], sa: sa, dc: dc, d: sa && dc > 0 ? sa / dc : null };
+  }
+  var ICOLS = [['s', '매출'], ['m', '수량·매총'], ['k', '재고']];
+  // MC 정보: [MC 이름, MCH1, MC 코드] (v1 데이터는 이름 문자열만)
+  var mcOf = function (d, i) { var m = d.mc[i]; return typeof m === 'string' ? [m, '', ''] : m || ['', '', '']; };
+  var tv = function (t) { return [t.a, t.al, t.q, t.ql, t.g, t.gl]; };
+  // 묶음(MCH1·MC) 줄 정렬 값 — 상품 정렬과 같은 기준을 합계에 적용
+  function aggVal(t) {
+    switch (IT.sort) {
+      case 'aD': return t.a - t.al;
+      case 'g': return iGr(t.a, t.al);
+      case 'q': return t.q;
+      case 'mr': return iMr(t.a, t.g);
+      case 'sa': return t.sa;
+      case 'sd': return t.d;
+      default: return t.a;
+    }
+  }
+  function sortAgg(list) {
+    var dir = IT.dir;
+    if (IT.sort === 'nm') return list.sort(function (a, b) { return dir * String(a.nm || a.k).localeCompare(String(b.nm || b.k), 'ko'); });
+    return list.sort(function (a, b) { var x = aggVal(a.t), y = aggVal(b.t); if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1; return dir < 0 ? y - x : x - y; });
+  }
+  function itemTable(c) {
+    var k = ST.k, rows = itemRows(c, k), tot = itemTotals(rows, k), d = c.d, grp = IT.grp, auto = !!IT.q.replace(/\s/g, '');
+    var gcls = function (v) { return v == null ? '' : v >= 0 ? 'up' : 'dn'; };
+    var line = function (nm, sub, v, sa, sq, days, attr, cl) {
+      var g = iGr(v[0], v[1]), mr = iMr(v[0], v[4]), mrl = iMr(v[1], v[5]), qg = iGr(v[2], v[3]);
+      return '<tr' + (attr || '') + (cl ? ' class="' + cl + '"' : '') + '><th scope="row"><b>' + nm + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</th>' +
+        '<td class="cs">' + chun(v[0]) + '</td><td class="cs ly">' + chun(v[1]) + '</td><td class="cs ' + gcls(g) + '">' + (v[1] > 0 ? pct(g) : v[0] ? '신규' : '-') + '</td>' +
+        '<td class="cm">' + qn(v[2]) + '</td><td class="cm ' + gcls(qg) + '">' + (v[3] > 0 ? pct(qg) : '-') + '</td><td class="cm">' + (mr == null ? '-' : f1(mr * 100) + '%') + '</td><td class="cm ' + (mr == null || mrl == null ? '' : gcls(mr - mrl)) + '">' + (mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100)) + '</td>' +
+        '<td class="ck">' + chun(sa) + '</td><td class="ck' + (sq < 0 ? ' dn' : '') + '">' + qn(sq) + '</td><td class="ck">' + (days == null ? '-' : f1(days)) + '</td></tr>';
+    };
+    var prod = function (r, lv) {
+      var on = IT.open[r[0]], v = iv(r, k), m = mcOf(d, r[2]);
+      var tr = line(esc(r[1] || r[0]), esc(r[0].replace(/^0+(?=\d{6})/, '')) + (grp ? '' : ' · ' + esc(m[0] || '-')), v, r[ISA], r[ISA + 1], iDays(r), ' data-im="' + esc(r[0]) + '" tabindex="0" aria-expanded="' + (on ? 'true' : 'false') + '"', 'lv' + lv + (on ? ' on' : ''));
+      if (!on) return tr;
+      var det = ['M', 'W', 'D'].map(function (kk) {
+        var x = iv(r, kk), g = iGr(x[0], x[1]), mr = iMr(x[0], x[4]);
+        return '<li><span>' + PNAME[kk] + ' <small>' + esc(d.per[kk][0]) + '</small></span><b>' + chun(x[0]) + '<small>천원</small></b><em class="' + gcls(g) + '">' + (x[1] > 0 ? pct(g) : x[0] ? '신규' : '-') + '</em><i>' + qn(x[2]) + '개 · 전년 ' + qn(x[3]) + '</i><i>매총율 ' + (mr == null ? '-' : f1(mr * 100) + '%') + '</i></li>';
+      }).join('');
+      return tr + '<tr class="itd"><td colspan="11"><ul class="itdl">' + det + '<li class="stk"><span>재고 <small>' + esc(d.sbase || d.base) + '</small></span><b>' + chun(r[ISA]) + '<small>천원</small></b><em>' + qn(r[ISA + 1]) + '개</em><i>재고일수 ' + (iDays(r) == null ? '-' : f1(iDays(r)) + '일') + '</i><i>' + esc(pgName(r[3])) + (m[1] ? ' · MCH1 ' + esc(m[1]) : '') + (m[2] ? ' · MC ' + esc(m[2]) : '') + '</i></li></ul></td></tr>';
+    };
+    var head = '<thead><tr class="g1"><th rowspan="2" scope="col">' + (grp ? 'MCH1 › MC › 상품' : '상품') + '</th><th colspan="3" class="cs">매출 <small>천원</small></th><th colspan="4" class="cm">수량 · 매총율</th><th colspan="3" class="ck">재고 <small>기준일</small></th></tr>' +
+      '<tr class="g2"><th class="cs">금년</th><th class="cs">전년</th><th class="cs">성장율</th><th class="cm">수량</th><th class="cm">증감</th><th class="cm">매총율</th><th class="cm">증감</th><th class="ck">재고액<small>천원</small></th><th class="ck">수량</th><th class="ck">일수</th></tr></thead>';
+    var body = line('합계 <small>' + won(rows.length) + '개</small>', '', tv(tot), tot.sa, null, tot.d, '', 'tot'), more = '';
+    if (!grp) {
+      var shown = rows.slice(0, IT.lim);
+      body += shown.map(function (r) { return prod(r, 0); }).join('');
+      if (rows.length > shown.length) more = '<button type="button" class="itmore" data-imore="1">' + won(Math.min(200, rows.length - shown.length)) + '개 더 보기 <small>(' + won(shown.length) + ' / ' + won(rows.length) + ')</small></button>';
+    } else {
+      // MCH1 › MC › 상품 (2026-11-27 제이): 상품은 이미 정렬된 순서 그대로 묶음 안에 들어감 · 검색 중에는 모두 펼침
+      var G = {}, gl = [];
+      rows.forEach(function (r) {
+        var m = mcOf(d, r[2]), g1 = m[1] || '-', g2 = m[2] || m[0] || '-';
+        var g = G[g1] || (G[g1] = { k: g1, rows: [], M: {} }); g.rows.push(r);
+        var mm = g.M[g2] || (g.M[g2] = { k: g2, nm: m[0] || '-', rows: [] }); mm.rows.push(r);
+      });
+      Object.keys(G).forEach(function (key) {
+        var g = G[key]; g.t = itemTotals(g.rows, k);
+        g.ml = sortAgg(Object.keys(g.M).map(function (x) { var mm = g.M[x]; mm.t = itemTotals(mm.rows, k); return mm; }));
+        gl.push(g);
+      });
+      sortAgg(gl);
+      body += gl.map(function (g) {
+        var on1 = auto || IT.og[g.k], top = g.ml.slice().sort(function (a, b) { return b.t.a - a.t.a; }).slice(0, 3).map(function (x) { return esc(x.nm); });
+        var sub = top.join(' · ') + (g.ml.length > 3 ? ' 외 ' + (g.ml.length - 3) : '') + ' · 상품 ' + won(g.rows.length) + '개';
+        var out = line(g.k === '-' ? 'MCH1 없음' : 'MCH1 ' + esc(g.k), sub, tv(g.t), g.t.sa, null, g.t.d, ' data-ig="' + esc(g.k) + '" tabindex="0" aria-expanded="' + (on1 ? 'true' : 'false') + '"', 'lv1' + (on1 ? ' op' : ''));
+        if (!on1) return out;
+        return out + g.ml.map(function (mm) {
+          var key = g.k + '|' + mm.k, on2 = auto || IT.om[key], lim = IT.mlim[key] || 50;
+          var o2 = line(esc(mm.nm), 'MC ' + esc(mm.k) + ' · 상품 ' + won(mm.rows.length) + '개', tv(mm.t), mm.t.sa, null, mm.t.d, ' data-imc="' + esc(key) + '" tabindex="0" aria-expanded="' + (on2 ? 'true' : 'false') + '"', 'lv2' + (on2 ? ' op' : ''));
+          if (!on2) return o2;
+          var ps = mm.rows.slice(0, lim);
+          return o2 + ps.map(function (r) { return prod(r, 3); }).join('') +
+            (mm.rows.length > ps.length ? '<tr class="lvm"><td colspan="11"><button type="button" class="itmore sm" data-imore="' + esc(key) + '">' + won(Math.min(100, mm.rows.length - ps.length)) + '개 더 보기 <small>(' + won(ps.length) + ' / ' + won(mm.rows.length) + ')</small></button></td></tr>' : '');
+        }).join('');
+      }).join('');
+    }
+    return '<div class="itw' + (grp ? ' tree' : '') + '" data-col="' + IT.col + '"><table class="itbl">' + head + '<tbody>' + body + '</tbody></table></div>' + (rows.length ? more : '<p class="itnone">조건에 맞는 상품이 없습니다.</p>');
+  }
+  function itemCtl(c) {
+    var t = ST.t, pgs = {};
+    c.d.rows.forEach(function (r) { if (t === 'store' || c.cat[r[3]] === t) pgs[r[3]] = 1; });
+    var pgl = Object.keys(pgs).filter(function (x) { return x; }).sort(function (a, b) { return pgName(a) < pgName(b) ? -1 : 1; });
+    if (IT.pg && !pgs[IT.pg]) IT.pg = '';
+    return '<div class="itctl">' +
+      '<label class="itq"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="itq" placeholder="상품명 · 코드 · MC 검색" autocomplete="off" value="' + esc(IT.q) + '" aria-label="상품 검색"></label>' +
+      '<div class="itsel"><select id="itpg" aria-label="구매그룹"><option value="">구매그룹 전체</option>' + pgl.map(function (g) { return '<option value="' + esc(g) + '"' + (g === IT.pg ? ' selected' : '') + '>' + esc(pgName(g)) + '</option>'; }).join('') + '</select>' +
+      '<select id="itsort" aria-label="정렬">' + ISORT.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === IT.sort ? ' selected' : '') + '>' + s[1] + '</option>'; }).join('') + '</select>' +
+      '<button type="button" class="itdir" data-idir="1" aria-label="정렬 방향 바꾸기" title="정렬 방향">' + (IT.dir < 0 ? '↓' : '↑') + '</button></div>' +
+      '<div class="itchips" role="group" aria-label="상품 고르기">' + IFLT.map(function (x) { return '<button type="button" data-iflt="' + x[0] + '" aria-pressed="' + (IT.flt === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="itview" role="group" aria-label="보기 방식"><button type="button" data-igrp="1" aria-pressed="' + IT.grp + '">MCH1 › MC 묶어 보기</button><button type="button" data-igrp="0" aria-pressed="' + !IT.grp + '">상품만 보기</button>' + (IT.grp ? '<button type="button" class="itexp" data-iexp="1">모두 펼치기</button><button type="button" class="itexp" data-iexp="0">모두 접기</button>' : '') + '</div>' +
+      '<div class="itcols" role="group" aria-label="보는 항목">' + ICOLS.map(function (x) { return '<button type="button" data-icol="' + x[0] + '" aria-pressed="' + (IT.col === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div>';
+  }
+  function itemSummary(c) {
+    var k = ST.k, t = ST.t, rows = c.d.rows.filter(function (r) { return t === 'store' || c.cat[r[3]] === t; });
+    var tot = itemTotals(rows, k), sold = 0, soldL = 0, stk = 0, neg = 0;
+    rows.forEach(function (r) { var v = iv(r, k); if (v[0] > 0) sold++; if (v[1] > 0) soldL++; if (r[ISA + 1] > 0) stk++; if (r[ISA + 1] < 0) neg++; });
+    var mr = iMr(tot.a, tot.g), mrl = iMr(tot.al, tot.gl), g = iGr(tot.a, tot.al);
+    var card = function (l, v, u, d, dc) { return '<div class="kpi itk"><p class="kl">' + l + '</p><p class="kv">' + v + '<small>' + u + '</small></p><p class="kd"><span class="' + (dc || '') + '">' + d + '</span></p></div>'; };
+    return '<div class="kpis itks">' +
+      card('판매 상품', won(sold), '개', '전년 ' + won(soldL) + '개 · ' + (soldL ? pct(sold / soldL - 1) : '-'), cls(soldL ? sold / soldL - 1 : null)) +
+      card('상품 매출 합계', man(tot.a), '백만원', '전년 ' + man(tot.al) + '백만 · ' + pct(g), cls(g)) +
+      card('매총율', mr == null ? '-' : f1(mr * 100), mr == null ? '' : '%', '전년 ' + (mrl == null ? '-' : f1(mrl * 100) + '%') + ' · ' + (mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100)), mr == null || mrl == null ? '' : cls(mr - mrl)) +
+      card('재고 있는 상품', won(stk), '개', '재고액 ' + man(tot.sa) + '백만 · ' + (tot.d == null ? '재고일수 -' : '재고일수 ' + f1(tot.d) + '일') + (neg ? ' · 마이너스 ' + won(neg) + '개' : '')) +
+      '</div>';
+  }
+  function itemPick() {
+    return '<p class="itpn">상품 데이터는 점포마다 따로 받습니다. 점포를 고르세요.</p><div class="itpick">' + D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
+      return '<div class="itpg"><p>' + esc(g[1]) + '</p><div>' + g[2].map(function (p) { return '<button type="button" data-ist="' + p + '">' + esc(NAME[p]) + '</button>'; }).join('') + '</div></div>';
+    }).join('') + '</div>';
+  }
+  function itemView() {
+    var me = ST.s === 'all' ? null : ST.s, t = ST.t;
+    var tn = t === 'store' ? '' : ' · ' + ((TABS.filter(function (x) { return x[0] === t; })[0] || [0, ''])[1]);
+    var head = { eyebrow: '', h1: me ? NAME[me] + ' 상품 상세' + tn : '상품 상세 · 점포 선택', sub: '' };
+    if (!me) { head.rows = [[sec('ipick', '점포 선택', '점포 선택', itemPick())]]; return head; }
+    var c = ITC[me];
+    if (!c) { itemLoad(me); c = ITC[me]; }
+    var body;
+    if (c.st === 'load') body = '<div class="itload" role="status"><i class="spin" aria-hidden="true"></i><b>' + esc(NAME[me]) + ' 상품 데이터를 받는 중…</b><small>점포당 약 1만 개 · 처음 한 번만 몇 초 걸립니다</small></div>';
+    else if (c.st === 'none') body = '<p class="note pend">' + (c.local ? '상품 상세는 웹(로그인 후)에서만 볼 수 있습니다.' : esc(NAME[me]) + ' 상품 데이터는 아직 없습니다. 다음 데이터 갱신부터 표시됩니다.') + '</p>';
+    else if (c.st === 'err') body = '<p class="note pend">상품 데이터를 받지 못했습니다(' + esc(c.err) + ').</p><button type="button" class="itmore" data-iretry="' + me + '">다시 받기</button>';
+    if (body) { head.rows = [[sec('ilist', '상품 목록', '상품 목록', body)]]; return head; }
+    var d = c.d, stale = d.base !== D.base;
+    head.rows = [
+      [sec('isum', '상품 요약', '상품 요약 <small class="h3s">' + PNAME[ST.k] + ' ' + esc(d.per[ST.k][0]) + '</small>', (stale ? '<p class="note pend">상품 데이터 기준일이 ' + esc(d.base) + '입니다(매출 리포트 ' + esc(D.base) + ').</p>' : '') + itemSummary(c), null, 'bare')],
+      [sec('ilist', '상품 목록', '상품 목록 <small class="h3s">' + PNAME[ST.k] + ' · 전년 ' + esc(d.per[ST.k][1]) + '</small>', itemCtl(c) + '<div id="itbox">' + itemTable(c) + '</div>')]
+    ];
+    return head;
+  }
+  // 목록만 다시 그림(검색·정렬·필터) — 화면 전체를 다시 그리지 않아 입력 중 깜빡이지 않음
+  function itemRedraw() { var c = ITC[ST.s], box = window.document.getElementById('itbox'); if (c && c.st === 'ok' && box) box.innerHTML = itemTable(c); }
   var NOT_YET = function (what) { return '<p class="note pend">' + what + ' 데이터는 아직 받지 않았습니다. 다음 데이터 갱신부터 표시됩니다.</p>'; };
   var OPT = [['daily', '일별 매출'], ['hour', '시간대 매출'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출 성장율'], ['heat', '실적 신호등 (점포)'], ['mc', 'MC 증감'], ['top', '상위 상품 (CD 탭)'], ['quad', '건수×건단가 현황 (전점)'], ['radar', '성장율 비교'], ['wf', 'CD 매출 증감'], ['mix', '매출 구성비'], ['grank', '점포 실적 순위 (전점)'], ['grpc', '그룹 증감 기여 (전점)']];
   // 재고 화면 전용 보일 항목(2026-11-24) — 매출 OPT 와 키가 겹치지 않게 s 로 시작
@@ -3660,6 +3951,7 @@ var KIMS = (function () {
   function view() {
     if (ST.v === 'stats') return statsView();
     if (MODE === 'stock') return stockView();
+    if (MODE === 'item') { if (itemOk()) return itemView(); MODE = 'sales'; }
     if (ST.s === 'all') return ST.t === 'store' || ALL_TABS.indexOf(ST.t) < 0 ? allView(ST.k) : allCatView(ST.k, ST.t);
     return ST.t === 'store' ? storeView(ST.k, ST.s) : catView(ST.k, ST.s, ST.t);
   }
@@ -3731,7 +4023,8 @@ var KIMS = (function () {
     store: '<path d="M3 9.5L4.6 4h14.8L21 9.5"/><path d="M3 9.5a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v8h14v-8"/><path d="M10 20v-5h4v5"/>',
     stats: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
     box: '<path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>',
-    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    tag: '<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>'
   };
   var ni = function (k) { return '<svg class="ni" viewBox="0 0 24 24" aria-hidden="true">' + NAVI[k] + '</svg>'; };
   function navHtml() {
@@ -3749,16 +4042,16 @@ var KIMS = (function () {
       '<span class="nmt"><b>' + meName + (ST.t !== 'store' && curTab ? ' · ' + curTab : '') + '</b><small>' + meSub + '</small></span>' +
       '<button type="button" class="nsw" data-go="pick" aria-label="점포 바꾸기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg></button></div>' +
       '<div class="nbtns"><button type="button" data-go="all"' + (allOn ? ' aria-current="page"' : '') + '>' + ni('all') + '<span>전점 요약</span></button>' +
-      '<button type="button" data-go="mode">' + ni(MODE === 'stock' ? 'stats' : 'box') + '<span>' + (MODE === 'stock' ? '매출 리포트' : '재고 데이터') + '</span></button></div>' +
+      MODES.filter(function (m) { return m[0] !== MODE && (m[0] !== 'item' || itemOk()); }).map(function (m) { return '<button type="button" data-go="mode" data-m="' + m[0] + '">' + ni(m[2]) + '<span>' + m[1] + '</span></button>'; }).join('') + '</div>' +
       '<div class="nsr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="navq" placeholder="점포 검색" autocomplete="off" aria-label="점포 검색"></div><ul class="sl nsrr" id="navqr" hidden></ul></div>';
-    out += '<div class="ncard nrep"><p class="nct"><span>' + (ST.v === 'stats' ? '접속 현황' : MODE === 'stock' ? '재고 데이터' : '리포트') + '</span></p>' + toc + '</div>';
+    out += '<div class="ncard nrep"><p class="nct"><span>' + (ST.v === 'stats' ? '접속 현황' : MODE === 'stock' ? '재고 데이터' : MODE === 'item' ? '상품 상세' : '리포트') + '</span></p>' + toc + '</div>';
     var scS = scopeStore(ST.k);
-    var showG = MODE !== 'stock'; // 재고 데이터 화면에서는 매출 성장율을 보이지 않음(2026-11-23)
+    var showG = MODE === 'sales'; // 재고·상품 상세 데이터 화면에서는 매출 성장율을 보이지 않음(2026-11-23)
     var gs = D.groups.filter(function (g) { return g[0] !== D.closed; });
     var gg = gs.map(function (g) { return M(ST.k, g[2], scS).growth; });
     var gmax = Math.max.apply(null, gg.map(function (x) { return Math.abs(x || 0); }).concat([0.0001]));
     // 재고 화면: 점포별 재고 대신 '재고 한눈에' 카드(2026-11-24) — 지금 보는 점포·CD의 재고액·재고일수·증감·순위
-    if (!showG && ST.v === 'report' && D.stock) {
+    if (MODE === 'stock' && ST.v === 'report' && D.stock) {
       var kp = me ? [me] : OPEN(), ky = sAgg(kp, sCodes(ST.t));
       if (ky) {
         var kr = function (l, v, c) { return '<p><span>' + l + '</span><b' + (c ? ' class="' + c + '"' : '') + '>' + v + '</b></p>'; };
@@ -3787,6 +4080,7 @@ var KIMS = (function () {
   }
   function headTitle() {
     if (ST.v === 'stats') return '접속 현황';
+    if (MODE === 'item') return (ST.s === 'all' ? '상품 상세' : NAME[ST.s] + ' 상품') + (ST.s !== 'all' && ST.t !== 'store' ? ' · ' + ((TABS.filter(function (x) { return x[0] === ST.t; })[0] || [0, ''])[1]) : '');
     if (MODE === 'stock') return (ST.s === 'all' ? '킴스클럽 전점' : NAME[ST.s]) + ' 재고' + (ST.t !== 'store' ? ' · ' + ((TABS.filter(function (x) { return x[0] === ST.t; })[0] || [0, ''])[1]) : '');
     if (ST.s === 'all') { var tt = TABS.filter(function (x) { return x[0] === ST.t; })[0]; return '킴스클럽 전점' + (ST.t !== 'store' && ALL_TABS.indexOf(ST.t) >= 0 && tt ? ' · ' + tt[1] : ''); }
     var t = TABS.filter(function (x) { return x[0] === ST.t; })[0];
@@ -3968,7 +4262,7 @@ var KIMS = (function () {
     // ② 재기(읽기만 — 화면 계산 1번)
     var plan = [];
     if (wide) secs.forEach(function (sec) {
-      var tbl = [].filter.call(sec.querySelectorAll('table'), function (t) { return t.offsetParent && t.querySelector('thead th') && !t.classList.contains('mxl') && !t.classList.contains('rdt'); })[0]; // rdt = 성장율 비교 작은 표(머리 고정하면 위 그래프를 가림)
+      var tbl = [].filter.call(sec.querySelectorAll('table'), function (t) { return t.offsetParent && t.querySelector('thead th') && !t.classList.contains('mxl') && !t.classList.contains('rdt') && !t.classList.contains('itbl'); })[0]; // itbl = 상품 상세 표(위에 검색·필터가 있어 자체 고정) · rdt = 성장율 비교 작은 표(머리 고정하면 위 그래프를 가림)
       if (!tbl || tbl.closest('.hx:not(.mt .hx)')) return;
       var thd = tbl.querySelector('thead');
       var items = [], h3 = sec.querySelector(':scope > h3'), note = sec.querySelector(':scope > p.note'), seg = sec.querySelector('.msegw, .dtbw');
@@ -4063,11 +4357,12 @@ var KIMS = (function () {
     render.done = true;
     doc.getElementById('htitle').textContent = headTitle();
     var pr = D.per[ST.k];
-    var hfull = ST.v === 'stats' ? '' : MODE === 'stock' ? (D.stock ? '재고 기준 ' + D.stock.base + ' · 전년 ' + D.stock.ly : '재고 데이터 준비 중') : pr.title.replace(/ (?:실적|누계)$/, '') + ' · ' + pr.vs.replace(/\s*대비$/, '');
+    var itd = MODE === 'item' && ITC[ST.s] && ITC[ST.s].st === 'ok' ? ITC[ST.s].d : null;
+    var hfull = ST.v === 'stats' ? '' : MODE === 'item' ? (itd ? PNAME[ST.k] + ' ' + itd.per[ST.k][0] + ' · 전년 ' + itd.per[ST.k][1] + ' · 재고 ' + itd.sbase : '상품 상세 · 점포별 상품 매출·재고') : MODE === 'stock' ? (D.stock ? '재고 기준 ' + D.stock.base + ' · 전년 ' + D.stock.ly : '재고 데이터 준비 중') : pr.title.replace(/ (?:실적|누계)$/, '') + ' · ' + pr.vs.replace(/\s*대비$/, '');
     var hshort = hfull.replace(/\d{4}-(\d{2})-(\d{2})/g, function (m, a, b) { return Number(a) + '/' + Number(b); }).replace(/\b(\d{1,2})\/(\d{2})\b/g, function (m, a, b) { return Number(a) + '/' + Number(b); }).replace('전년 동요일 ', '전년 ');
     doc.getElementById('hdate').innerHTML = '<span class="hdf">' + esc(hfull) + '</span><span class="hds">' + esc(hshort) + '</span>';
     [].forEach.call(doc.querySelectorAll('.seg button'), function (b) { b.setAttribute('aria-pressed', b.dataset.k === ST.k); });
-    doc.querySelector('.seg').hidden = ST.v === 'stats' || MODE === 'stock';
+    doc.querySelector('.seg').hidden = ST.v === 'stats' || MODE === 'stock' || (MODE === 'item' && ST.s === 'all');
     var cb = doc.getElementById('catbar');
     cb.hidden = ST.v !== 'report';
     var isAll = ST.s === 'all';
@@ -4082,6 +4377,7 @@ var KIMS = (function () {
       var tb = [].filter.call(cb.querySelectorAll('button'), function (b) { return b.dataset.t === ST.t; })[0], tn = tb ? tb.querySelector('span').textContent : '';
       var cr = [];
       if (MODE === 'stock') cr.push(['', '재고']);
+      if (MODE === 'item') cr.push(['', '상품']);
       if (ST.v === 'stats') cr.push(['', '접속 현황']);
       else {
         cr.push(['all', '전점']);
@@ -4101,7 +4397,7 @@ var KIMS = (function () {
       var hs = { s: ST.s, t: ST.t, k: ST.k, v: ST.v, m: MODE }, hk = hs.s + '-' + hs.t + '-' + hs.k + '-' + hs.v + '-' + hs.m, cs = window.history.state;
       var same = POPPING || !cs || !cs.kims || (cs.s + '-' + cs.t + '-' + cs.k + '-' + cs.v + '-' + (cs.m || 'sales')) === hk;
       hs.kims = 1;
-      window.history[same ? 'replaceState' : 'pushState'](hs, '', '#' + (MODE === 'stock' ? 'stk-' : '') + ST.s + '-' + ST.t + '-' + ST.k);
+      window.history[same ? 'replaceState' : 'pushState'](hs, '', '#' + (MODE === 'stock' ? 'stk-' : MODE === 'item' ? 'itm-' : '') + ST.s + '-' + ST.t + '-' + ST.k);
     } catch (e) {}
     S.last = ST.s; saveLocal();
     // 현재 보고 있는 항목을 사이드바에 표시
@@ -4148,7 +4444,7 @@ var KIMS = (function () {
     var doc = window.document, sc = doc.getElementById('scroller'); if (!sc) return;
     var st = sc.getBoundingClientRect().top;
     [].forEach.call(doc.querySelectorAll('#main section.stk'), function (sec) {
-      var tbl = [].filter.call(sec.querySelectorAll('table'), function (t) { return t.offsetParent && t.querySelector('thead th') && !t.classList.contains('mxl') && !t.classList.contains('rdt'); })[0]; // rdt = 성장율 비교 작은 표(머리 고정하면 위 그래프를 가림)
+      var tbl = [].filter.call(sec.querySelectorAll('table'), function (t) { return t.offsetParent && t.querySelector('thead th') && !t.classList.contains('mxl') && !t.classList.contains('rdt') && !t.classList.contains('itbl'); })[0]; // itbl = 상품 상세 표(위에 검색·필터가 있어 자체 고정) · rdt = 성장율 비교 작은 표(머리 고정하면 위 그래프를 가림)
       if (!tbl) return;
       var sth = parseFloat(sec.style.getPropertyValue('--sth')) || 0, thd = tbl.querySelector('thead'), hh = thd ? thd.getBoundingClientRect().height : 0;
       // 마지막 줄이 머리글 밑으로 숨기 전에 고정 묶음이 마지막 줄과 함께 올라가도록 시작점을 한 줄 앞당김
@@ -4194,6 +4490,9 @@ var KIMS = (function () {
       grpc: ['그룹별 매출·건수·건단가의 전년 대비 증감율', per],
       pgperf: ['구매그룹별 킴스 합계 실적 · 성장율 = 금년 ÷ 전년 − 1', per],
       top: ['같은 그룹 점포 매출을 합쳐 큰 순으로 고른 상위 상품(처음 10개, 화살표로 20개까지)과 점포별 매출', per],
+      // 상품 상세(2026-11-27)
+      isum: ['이 점포에서 고른 기간에 매출이 있었던 상품 수와 상품별 매출 합계', '상품 매출 합계 = 상품코드가 있는 매출만 더한 값 · 상품코드 없는 정산(에누리 등)이 빠져 매출 리포트의 점포 매출과 다름', '재고 = 기준일 재고(원가) · 재고일수 = 재고액 ÷ 하루 매출원가(이번 달 누적 매출원가 ÷ 영업일)'],
+      ilist: ['매출 = 실매출(천원) · 성장율 = 금년 ÷ 전년 같은 요일 기간 − 1 · 전년이 없으면 신규', '매총율 = 매출총이익 ÷ 매출 · 증감 = 금년 − 전년(%p)', '재고 = 기준일 재고액(원가, 천원)·수량 · 일수 = 재고액 ÷ 하루 매출원가', 'CD·구매그룹은 상품 기준(상품 마스터) · 상품을 누르면 월간·주간·전일 값이 펼쳐짐', '처음 100개를 보여 주고 아래 버튼으로 200개씩 더 봄'],
       // 재고
       sdrank: ['재고일수가 적은 순으로 점포를 줄 세운 순위 · 재고일수 = 재고액 ÷ 하루 평균 매출원가(최근 30일 매출원가 ÷ 30)', '색 = 평균과 비교: 10% 넘게 적으면 파랑, ±10% 안 노랑, 10% 넘게 많으면 빨강'],
       sday: ['날짜별 그날 마감 재고액(원가) · 막대 = 금년, 점선 = 전년 같은 요일(364일 전)', '이번 달 말일까지 그리며, 기준일 뒤 날짜는 전년 점선만 보임', '빨강 = 이번 달 최고, 초록 = 최저'],
@@ -4335,9 +4634,10 @@ var KIMS = (function () {
     if (S.first === 'last' && valid(S.last)) ST.s = S.last;
     var h = (window.location.hash || '').slice(1).split('-');
     if (h[0] === 'stk') { MODE = 'stock'; h = h.slice(1); if (!h[0]) h = ['all']; }
+    else if (h[0] === 'itm') { MODE = itemOk() ? 'item' : 'sales'; h = h.slice(1); if (!h[0]) h = [S.store && S.store !== 'all' && valid(S.store) ? S.store : 'all']; }
     // 메뉴 화면에서 매출 리포트 / 재고 데이터로 들어올 때(이미 열려 있으면) 모드만 바꿈
     // instant: 메뉴 화면에서 들어올 때 — 숨겨져 있던 옛 화면이 0.3초 보였다 사라지는 깜빡임 없이 바로 새 화면(2026-11-24)
-    window.kimsMode = function (m, instant) { m = m === 'stock' ? 'stock' : 'sales'; if (m === MODE && ST.v === 'report') return; var go = function () { MODE = m; ST.v = 'report'; render(true); }; if (instant) go(); else swapPage(go); };
+    window.kimsMode = function (m, instant) { m = m === 'stock' || (m === 'item' && itemOk()) ? m : 'sales'; if (m === MODE && ST.v === 'report') return; var go = function () { MODE = m; ST.v = 'report'; itemEnter(); render(true); }; if (instant) go(); else swapPage(go); };
     if (valid(h[0]) && h[0] !== 'all') { ST.s = h[0]; if (h[1]) ST.t = h[1]; if (D.per[h[2]]) ST.k = h[2]; }
     if (!TABS.some(function (t) { return t[0] === ST.t; })) ST.t = 'store';
     doc.querySelector('.seg').addEventListener('click', function (e) {
@@ -4348,6 +4648,34 @@ var KIMS = (function () {
       var b = e.target.closest && e.target.closest('.mcmore'); if (!b) return;
       var ul = b.previousElementSibling, on = !ul.classList.contains('open');
       ul.classList.toggle('open', on); b.setAttribute('aria-expanded', on); b.querySelector('span').textContent = on ? '접기' : b.title.replace(' 펼치기', ' 보기');
+    });
+    // 상품 상세(2026-11-27): 점포 고르기·검색·정렬·필터·보는 항목·더 보기·상품 펼침 — 목록만 다시 그림
+    var itT = 0, main0 = doc.getElementById('main');
+    main0.addEventListener('click', function (e) {
+      if (MODE !== 'item') return;
+      var b = e.target.closest && e.target.closest('[data-ist],[data-iflt],[data-icol],[data-imore],[data-iretry],[data-idir],[data-igrp],[data-iexp],tr[data-im],tr[data-ig],tr[data-imc]'); if (!b) return;
+      if (b.dataset.ist) { keepRender(function () { ST.s = b.dataset.ist; IT.pg = ''; IT.open = {}; IT.lim = 100; }); return; }
+      if (b.dataset.iretry) { itemLoad(b.dataset.iretry, true); quietRender(); return; }
+      if (b.dataset.iflt) { IT.flt = b.dataset.iflt; IT.lim = 100; [].forEach.call(main0.querySelectorAll('[data-iflt]'), function (x) { x.setAttribute('aria-pressed', x === b); }); }
+      else if (b.dataset.icol) { IT.col = b.dataset.icol; [].forEach.call(main0.querySelectorAll('[data-icol]'), function (x) { x.setAttribute('aria-pressed', x === b); }); var w = main0.querySelector('.itw'); if (w) w.dataset.col = IT.col; return; }
+      else if (b.dataset.imore) { if (b.dataset.imore === '1') IT.lim += 200; else IT.mlim[b.dataset.imore] = (IT.mlim[b.dataset.imore] || 50) + 100; }
+      else if (b.dataset.igrp) { IT.grp = b.dataset.igrp === '1'; quietRender(); return; }
+      else if (b.dataset.iexp) { var c0 = ITC[ST.s]; IT.og = {}; IT.om = {}; if (b.dataset.iexp === '1' && c0 && c0.d) itemRows(c0, ST.k).forEach(function (r) { var m = mcOf(c0.d, r[2]), g1 = m[1] || '-'; IT.og[g1] = 1; IT.om[g1 + '|' + (m[2] || m[0] || '-')] = 1; }); }
+      else if (b.dataset.ig) { if (IT.og[b.dataset.ig]) delete IT.og[b.dataset.ig]; else IT.og[b.dataset.ig] = 1; }
+      else if (b.dataset.imc) { if (IT.om[b.dataset.imc]) delete IT.om[b.dataset.imc]; else IT.om[b.dataset.imc] = 1; }
+      else if (b.dataset.idir) { IT.dir = -IT.dir; b.textContent = IT.dir < 0 ? '↓' : '↑'; }
+      else if (b.dataset.im) { if (IT.open[b.dataset.im]) delete IT.open[b.dataset.im]; else IT.open[b.dataset.im] = 1; }
+      itemRedraw();
+    });
+    main0.addEventListener('keydown', function (e) { if (MODE === 'item' && (e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('tr[data-im],tr[data-ig],tr[data-imc]')) { e.preventDefault(); e.target.click(); } });
+    main0.addEventListener('input', function (e) {
+      if (MODE !== 'item' || e.target.id !== 'itq') return;
+      clearTimeout(itT); itT = setTimeout(function () { IT.q = e.target.value; IT.lim = 100; itemRedraw(); }, 180);
+    });
+    main0.addEventListener('change', function (e) {
+      if (MODE !== 'item') return;
+      if (e.target.id === 'itpg') { IT.pg = e.target.value; IT.lim = 100; itemRedraw(); }
+      else if (e.target.id === 'itsort') { IT.sort = e.target.value; IT.dir = IT.sort === 'nm' || IT.sort === 'sd' ? 1 : -1; var db = main0.querySelector('[data-idir]'); if (db) db.textContent = IT.dir < 0 ? '↓' : '↑'; itemRedraw(); }
     });
     // 관리 필요 상품: CD·구매그룹 고르기
     doc.getElementById('main').addEventListener('click', function (e) {
@@ -4508,7 +4836,7 @@ var KIMS = (function () {
       closeNav(); if (doc.body.classList.contains('dr-open')) { applyMode(); closeDrawer(); }
       POPPING = true;
       try {
-        MODE = h.m === 'stock' ? 'stock' : 'sales';
+        MODE = h.m === 'stock' || (h.m === 'item' && itemOk()) ? h.m : 'sales';
         if (h.v === 'stats') { ST.v = 'stats'; render(true); }
         else keepRender(function () { ST.s = h.s; ST.t = h.t; ST.k = D.per[h.k] ? h.k : ST.k; ST.v = 'report'; });
       } finally { POPPING = false; }
@@ -4517,6 +4845,7 @@ var KIMS = (function () {
     window.addEventListener('hashchange', function () {
       var p = (window.location.hash || '').slice(1).split('-'), m = 'sales';
       if (p[0] === 'stk') { m = 'stock'; p = p.slice(1); if (!p[0]) p = ['all']; }
+      else if (p[0] === 'itm') { m = itemOk() ? 'item' : 'sales'; p = p.slice(1); if (!p[0]) p = [ST.s]; }
       if (!p[0] || (p[0] !== 'all' && !valid(p[0]))) return; // 메뉴 화면 등 다른 주소는 건드리지 않음
       var s2 = p[0], t2 = TABS.some(function (t) { return t[0] === p[1]; }) ? p[1] : 'store', k2 = D.per[p[2]] ? p[2] : ST.k;
       if (s2 === 'all' && ALL_TABS.indexOf(t2) < 0) t2 = 'store';
@@ -4609,7 +4938,7 @@ var KIMS = (function () {
       if (b.dataset.go === 'pick') { e.stopPropagation(); if (spop.hidden) openSpop(b); else closeSpop(); return; }
       if (b.dataset.go === 'home') { closeNav(); if (WEB && WEB.home) WEB.home(); return; }
       if (b.dataset.go === 'stats') { ST.v = 'stats'; closeNav(); render(true); return; }
-      if (b.dataset.go === 'mode') { closeNav(); swapPage(function () { MODE = MODE === 'stock' ? 'sales' : 'stock'; ST.v = 'report'; render(true); }); return; }
+      if (b.dataset.go === 'mode') { closeNav(); swapPage(function () { MODE = b.dataset.m || (MODE === 'stock' ? 'sales' : 'stock'); ST.v = 'report'; itemEnter(); render(true); }); return; }
       var wasStats = ST.v !== 'report';
       var chg = function () {
         if (b.dataset.store) { ST.s = b.dataset.store; ST.v = 'report'; } // 보던 탭(농산 등) 유지
@@ -5007,7 +5336,7 @@ var KIMS = (function () {
   var MENU = [
     { id: 'report', t: '매출 리포트', d: '킴스클럽 매출 실적', icon: 'report' },
     { id: 'stock', t: '재고 데이터', d: '점포·CD·구매그룹 재고', icon: 'stock' },
-    { id: 'soon1', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
+    { id: 'item', t: '상품 상세', d: '점포별 상품 매출·재고', icon: 'tag' },
     { id: 'soon2', t: '준비중', d: '새 메뉴가 들어갈 자리', icon: 'soon', soon: true },
   ];
   function refreshPortal() {
@@ -5065,7 +5394,8 @@ var KIMS = (function () {
         '<span class="hdate"><small>최근 반영일' + (sb && sb > (store(SEENK) || '') ? '<i class="hnew" title="새 실적이 들어왔어요(리포트를 열면 사라짐)">NEW</i>' : '') + '</small><b>' + (sb ? dLab(sb, true) : '확인 중…') + '</b></span>' +
         (L ? '<span class="plag' + (L.pre ? ' pre' : '') + '">' + ICON.late + '<span>' + L.short + (L.pre ? ' 실적은 오전 9시에 반영돼요' : ' 실적은 서버 문제로 반영이 늦어지고 있어요') + '</span></span>' : '') + '</button>' +
       '<button type="button" class="hcard stk" data-menu="stock" style="--i:1"><span class="hic">' + ICON.stock + '</span><span class="hgo">열기 →</span><span class="hct"><b>재고 데이터</b><small>점포·CD·구매그룹 재고</small></span></button>' +
-      '<button type="button" class="hcard soon" data-menu="soon1" style="--i:2"><span class="hct"><b>준비중</b><small>새 메뉴 자리</small></span></button>' +
+      (admin ? '<button type="button" class="hcard itm" data-menu="item" style="--i:2"><span class="hic">' + ICON.ver + '</span><span class="hgo">열기 →</span><span class="hct"><b>상품 상세</b><small>점포별 상품 매출·재고 · 관리자</small></span></button>' // 상품 상세는 우선 관리자만(2026-11-27)
+        : '<button type="button" class="hcard soon" data-menu="soon1" style="--i:2"><span class="hct"><b>준비중</b><small>새 메뉴 자리</small></span></button>') +
       '<button type="button" class="hcard soon" data-menu="soon2" style="--i:3"><span class="hct"><b>준비중</b><small>새 메뉴 자리</small></span></button></div>';
     var adm = admin ? '<section class="hadm"><h2 class="hsec adm">관리자 전용</h2><div class="hagrid">' +
       admCard('notice', ICON.notice, '공지사항 등록', '쓰기 · 고정 · 팝업', ur ? 'N ' + ur : '', 4) +
@@ -5418,6 +5748,7 @@ var KIMS = (function () {
       var m = t.dataset.menu;
       if (m === 'report') go('report');
       else if (m === 'stock') go('stk');
+      else if (m === 'item' && (P ? P.admin : (get() || {}).admin)) go('itm');
       else if (m === 'notice') go('notice');
       else if (m === 'admin') go('admin');
       else if (m === 'version') go('version');
@@ -5534,7 +5865,7 @@ var KIMS = (function () {
   function openReport() {
     try { var sb0 = salesBase(); if (sb0 && sb0 > (store(SEENK) || '')) store(SEENK, sb0); } catch (e) {}
     setView('report');
-    if (started) { if (window.kimsMode) window.kimsMode(/^#?stk/.test(location.hash) ? 'stock' : 'sales', true); window.dispatchEvent(new Event('resize')); checkFresh(); return; } // 숨겨져 있던 사이 크기 바뀐 것 반영 + 새 데이터 확인
+    if (started) { if (window.kimsMode) window.kimsMode(/^#?stk/.test(location.hash) ? 'stock' : /^#?itm/.test(location.hash) ? 'item' : 'sales', true); window.dispatchEvent(new Event('resize')); checkFresh(); return; } // 숨겨져 있던 사이 크기 바뀐 것 반영 + 새 데이터 확인
     if (!loading) loadReport();
   }
   function start(data, a, r) {
@@ -5545,8 +5876,34 @@ var KIMS = (function () {
       stats: function () { return api({ action: 'stats', token: a.token }).then(function (s) { if (!s.ok) throw new Error(s.err); return s; }); },
       logout: function () { signOut(false); },
       home: function () { go(''); },
+      item: itemFetch, // 상품 상세: 점포 하나의 상품 데이터(2026-11-27)
     };
     if (!started) { started = true; window.KIMS.init(data, web); } else { window.KIMS.update(data); if (r) window.KIMS.applyPrefs(r.prefs); }
+  }
+  // ── 상품 상세(2026-11-27 제이): 점포를 고를 때 그 점포 상품 데이터만 받음 ──
+  //   이 기기(IndexedDB 'item:점포')에 저장 — 저장본이 지금 실적 데이터와 같은 기준일이면 서버에 묻지 않음. 최근 본 4개 점포만 남김
+  var IKEEP = 4;
+  function itemFetch(plant, want) {
+    var a = get() || {}, key = 'item:' + plant;
+    var load = IDB ? idbDo('readonly', function (st) { return st.get(key); }) : Promise.resolve(null);
+    var keep = function () { // 오래된 점포 저장본 정리
+      if (!IDB) return;
+      var lk = lsStore('kims-item-keys') || []; lk = [plant].concat(lk.filter(function (x) { return x !== plant; }));
+      lk.slice(IKEEP).forEach(function (x) { idbDo('readwrite', function (st) { return st.delete('item:' + x); }); });
+      lsStore('kims-item-keys', lk.slice(0, IKEEP));
+    };
+    return load.then(function (c) {
+      var parse = function (txt) { return { data: JSON.parse(txt) }; };
+      if (c && c.data && want && c.base === want) { keep(); return parse(c.data); }
+      return authApi({ action: 'item', plant: plant, have: c && c.data ? c.ver : '' }).then(function (r) {
+        if (!r.ok) throw new Error(r.err || '서버 오류');
+        if (r.none) return { none: true };
+        if (r.same && c && c.data) { keep(); return parse(c.data); }
+        var o = parse(r.data);
+        if (IDB) idbDo('readwrite', function (st) { return st.put({ ver: r.ver, base: o.data.base, data: r.data }, key); });
+        keep(); return o;
+      }, function (err) { if (c && c.data) return parse(c.data); throw err; }); // 서버에 못 닿으면 저장본이라도
+    });
   }
   function dataBase(txt) { var m = /"base"\s*:\s*"(\d{4}-\d{2}-\d{2})"/.exec(String(txt || '').slice(0, 2000)); return m ? m[1] : ''; } // 데이터 기준일(전일)
   // 2026-11-25 제이 "메인 → 실적 첫 로딩이 길어짐": 아침 첫 접속은 폰 저장본이 전날 치라 서버 응답(수 초)을 기다려야 함
