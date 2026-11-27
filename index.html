@@ -785,11 +785,15 @@ tr.dim>*{opacity:.42}
 .hdc em{font-style:normal;font-size:11px;font-weight:600;white-space:nowrap;margin:2px 0;font-variant-numeric:tabular-nums}.hdc li.up em{color:var(--good)}.hdc li.dn em{color:var(--bad)}.hdc li.hmx em{font-weight:800}
 .hdc b{font-size:12px;font-weight:600;color:var(--muted);margin-top:4px}
 @media (max-width:640px){.hdc{--H:80px}.hdc em{font-size:9px}.hdt .hds{margin-left:0}}
-.dpw{margin-top:34px;display:grid;gap:8px}.dpr{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:8px}.dpr>b{font-size:13px;font-weight:700;color:var(--muted)}
+.dpw{margin-top:34px;display:grid;gap:8px}.dpr{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:8px}.dpr>b{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
 .dpb{display:flex;height:30px;border-radius:8px;overflow:hidden;gap:2px}.dpb span{display:flex;align-items:center;justify-content:center;min-width:0;overflow:hidden}
 .dpb em{font-style:normal;font-size:12px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
 .dpb .dp0{background:color-mix(in srgb,var(--ac) 22%,var(--panel));color:var(--fg)}.dpb .dp1{background:var(--ac);color:#fff}.dpb .dp2{background:color-mix(in srgb,var(--ac) 62%,#000);color:#fff}.dpb .dp3{background:color-mix(in srgb,var(--ac) 48%,var(--panel));color:var(--fg)}
-.dpl{margin:2px 0 0 42px;font-size:12px;color:var(--muted)}
+.dpl{margin:2px 0 0 52px;font-size:12px;color:var(--muted)}
+.dpg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.dpg span{display:flex;align-items:baseline;justify-content:center;flex-wrap:wrap;gap:2px 8px;padding:7px 6px;border-radius:8px;background:color-mix(in srgb,var(--fg) 4%,transparent);border-top:3px solid}
+.dpg .dp0{border-color:color-mix(in srgb,var(--ac) 22%,var(--panel))}.dpg .dp1{border-color:var(--ac)}.dpg .dp3{border-color:color-mix(in srgb,var(--ac) 48%,var(--panel))}
+.dpg small{font-size:12px;font-weight:600;color:var(--muted)}.dpg b{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}.dpg i{font-style:normal;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+@media (max-width:640px){.dpg b{font-size:14px}.dpg i{font-size:11px}}
 @media (max-width:640px){.dpb{height:26px}.dpb em{font-size:10px}}
 .prods:not(.open) li.mx{display:none}.prods.open li.mx{animation:tabIn .25s ease both}
 .rdw{display:flex;flex-direction:column;align-items:center;gap:6px}.rdw .radar{width:100%;max-width:540px;height:auto;display:block;overflow:visible}
@@ -2284,7 +2288,12 @@ var KIMS = (function () {
       }).join('') + '</div></div>';
     };
     var a = line(1, '금년'), b = line(2, '전년');
-    return a || b ? '<div class="dpw">' + a + b + '<p class="dpl">오전 오픈~12시 · 오후 12시~17시 · 저녁 17시~마감</p></div>' : '';
+    // 구간별 성장율(금년 ÷ 전년 − 1) — 2026-11-27 제이
+    var gr = '<div class="dpr"><b>성장율</b><div class="dpg">' + DPART.map(function (p) {
+      var sm = function (j) { return rows.reduce(function (t, r) { return t + (+r[0] >= p[1] && +r[0] < p[2] ? r[j] : 0); }, 0); }, t = sm(1), l = sm(2), v = l > 0 ? t / l - 1 : null;
+      return '<span class="dp' + p[3] + '" title="' + p[0] + ' 금년 ' + bm(t) + '백만 · 전년 ' + bm(l) + '백만"><small>' + p[0] + '</small><b class="' + cls(v) + '">' + (v == null ? '-' : pct(v)) + '</b><i>' + bms(t - l) + '백만</i></span>';
+    }).join('') + '</div></div>';
+    return a || b ? '<div class="dpw">' + a + b + gr + '<p class="dpl">오전 오픈~12시 · 오후 12시~17시 · 저녁 17시~마감</p></div>' : '';
   }
 
   var hourSec = function (k, plants, key, who, what) {
