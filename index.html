@@ -4982,7 +4982,7 @@ var KIMS = (function () {
       if (MODE !== 'item') return;
       var id = e.target.id;
       if (e.target.dataset && e.target.dataset.imsq) { IMS.q = e.target.value; var ul = e.target.parentNode.querySelector('.imsl'); if (ul) ul.innerHTML = imsList(e.target.dataset.imsq); return; }
-      if (id === 'itq') { clearTimeout(itT); itT = setTimeout(function () { IT.q = e.target.value; IT.lim = 100; itemRedraw(); }, 180); }
+      if (id === 'itq') { clearTimeout(itT); itT = setTimeout(function () { IT.q = e.target.value; IT.lim = 100; if (IT.qf !== 'nm') { IT.og = {}; IT.mlim = {}; } itemRedraw(); }, 180); } // MCH1·MC 검색은 늘 접힌 채로 시작(예전에 펼친 묶음이 남지 않게, 2026-11-28 제이)
       else if (id === 'itamin' || id === 'itamax') { clearTimeout(itT); itT = setTimeout(function () { IT[id === 'itamin' ? 'amin' : 'amax'] = e.target.value.replace(/[^0-9]/g, ''); IT.lim = 100; itemRedraw(); }, 300); }
     });
     main0.addEventListener('change', function (e) {
@@ -4996,7 +4996,7 @@ var KIMS = (function () {
         IT.m1s = {}; IT.mcs = {}; IT.lim = 100; IT.og = {}; IT.mlim = {}; itemRedraw(true); return;
       }
       if (t.id === 'itpf') { IT.pf = t.value; IT.m1s = {}; IT.mcs = {}; IT.lim = 100; IT.og = {}; IT.mlim = {}; itemRedraw(true); return; }
-      if (t.id === 'itqf') { IT.qf = t.value; IT.lim = 100; itemRedraw(true); var q1 = doc.getElementById('itq'); if (q1) q1.focus({ preventScroll: true }); return; }
+      if (t.id === 'itqf') { IT.qf = t.value; IT.lim = 100; IT.og = {}; IT.mlim = {}; itemRedraw(true); var q1 = doc.getElementById('itq'); if (q1) q1.focus({ preventScroll: true }); return; }
       if (t.id === 'itamin' || t.id === 'itamax') itemRedraw(true);
     });
     // 관리 필요 상품: CD·구매그룹 고르기
