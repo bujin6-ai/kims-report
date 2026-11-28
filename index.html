@@ -4002,6 +4002,7 @@ var KIMS = (function () {
       rs.forEach(function (r) { var key = grpKey(d, lvl, r), g = G[key]; if (!g) { g = G[key] = { k: key, nm: grpName(d, lvl, key, r), rows: [] }; list.push(g); } g.rows.push(r); });
       list.forEach(function (g) { g.t = itemTotals(g.rows, k); });
       sortAgg(list);
+      if (lvl === 'pg') list.sort(function (a, b) { return pgRank(a.k) - pgRank(b.k); }); // 구매그룹 줄은 체크박스와 같은 순서로 고정(2026-11-28 제이) — 순서 없는 구매그룹은 정렬 기준대로 뒤에
       return list.map(function (g) {
         var p = path + '/' + lvl + ':' + g.k, on = auto || IT.og[p], sub;
         if (lvl === 'mc') sub = 'MC ' + esc(g.k) + ' · 상품 ' + won(g.rows.length) + '개';
