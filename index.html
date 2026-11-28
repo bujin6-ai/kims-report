@@ -1189,7 +1189,7 @@ tr.dim>*{opacity:.42}
 /* 상품 목록(2026-11-28 제이 2차): 제목+검색+버튼 / 구매그룹 체크박스 / 조건+보기 3줄 · PC 는 위쪽 완전 고정, 표만 안에서 스크롤(--itwh = JS 가 잰 높이) */
 #main .ithd{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 0 10px}#main .ithd .ith3{margin:0;flex:none}
 #main .itctl{display:flex;flex-direction:column;gap:10px;padding:0 0 12px}
-@media (min-width:701px){#main .itw{max-height:var(--itwh,none);overflow:auto;overscroll-behavior:contain}}
+@media (min-width:701px){#main .itw{display:block;max-height:var(--itwh,none);overflow:auto;overscroll-behavior:contain;border-bottom:0;border-radius:12px 12px 0 0}#main .itw.dk .itbl{margin-bottom:76px}#main #sec-ilist{min-width:0;max-width:100%}#main .itw{max-width:100%}#main:has(#sec-ilist #itbox){padding-bottom:0}#main #sec-ilist:has(#itbox){padding-bottom:0;margin-bottom:0;border-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}}
 #main .itr1b{display:flex;align-items:center;gap:6px;margin-left:auto}
 #main .itexp{height:34px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--muted);font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
 #main .itrst{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 14px 0 11px;border:1px solid var(--ac);border-radius:8px;background:var(--ac-soft);color:var(--ac);font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
@@ -1436,6 +1436,13 @@ tr.dim>*{opacity:.42}
 #nav .nisv{margin:0;display:flex;align-items:baseline;gap:4px;flex-wrap:wrap}#nav .nisv b{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums}#nav .nisv small{font-size:14px;color:var(--muted);font-weight:600}
 #nav .nisv em{margin-left:auto;font-style:normal;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}#nav .nisv em.up{color:var(--good)}#nav .nisv em.dn{color:var(--bad)}
 #nav .nisd{margin:3px 0 0;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+/* 요약 카드 순위(2026-11-28 제이): 전점 · 같은 그룹 두 칸 */
+#nav .nirks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+#nav .nirk{display:flex;flex-direction:column;gap:1px;min-width:0;padding:8px 10px;border-radius:10px;background:var(--tile,color-mix(in srgb,var(--fg) 4%,var(--panel)))}
+#nav .nirk>span{font-size:12px;font-weight:600;color:var(--muted)}
+#nav .nirk>b{font-size:22px;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums}#nav .nirk>b small{margin-left:2px;font-size:12px;font-weight:500;color:var(--muted)}
+#nav .nirk>b em{font-style:normal}#nav .nirk>b em.up{color:var(--good)}#nav .nirk>b em.dn{color:var(--bad)}
+#nav .nirk>small{font-size:12px;font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (min-width:1024px) and (max-height:760px){#nav .nisv b{font-size:25px}#nav .nisk{padding:6px 0}}
 @media (min-width:1024px) and (max-height:760px){#nav .nskv b{font-size:21px}#nav .nskl p{padding:5px 0;font-size:13px}}
 /* 우리점 VS 비교점 개편(2026-11-24 제이 시안) */
@@ -3805,7 +3812,7 @@ var KIMS = (function () {
   // ── 상품 상세(2026-11-27 제이) ── 메인 메뉴 '상품 상세' → MODE 'item' · 주소 #itm-점포-탭-기간
   //   점포를 고르면 그 점포 상품 데이터(약 1만 개, 0.5MB 압축)만 서버에서 받아 옴(WEB.item) — 한 번 받은 점포는 이 기기에 저장
   //   행 = [상품코드, 상품명, MC 번호, 구매그룹(상품 기준), M·W·D × (매출 금년·전년, 수량 금년·전년, 매출총이익 금년·전년), 재고액, 재고수량, 하루 매출원가]
-  var ITC = {}, IT = { q: '', qf: 'nm', flt: 'all', pgs: {}, m1s: {}, mcs: {}, amin: '', amax: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, view: 'm1', og: {}, mlim: {} }; // view = 보기 방식(ILV) · og 펼친 묶음 경로 · mlim 묶음 안 보이는 상품 수 · pgs/m1s/mcs 여러 개 고른 조건
+  var ITC = {}, IT = { q: '', qf: 'nm', flt: 'all', pgs: {}, m1s: {}, mcs: {}, amin: '', amax: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, view: 'pg', og: {}, mlim: {} }; // view = 보기 방식(ILV) · og 펼친 묶음 경로 · mlim 묶음 안 보이는 상품 수 · pgs/m1s/mcs 여러 개 고른 조건
   var IOFF = { M: 4, W: 10, D: 16 }, ISA = 22;
   var pgCat = function (pg) { for (var i = 0; i < D.storeCats.length; i++) if (D.storeCats[i][2].some(function (g) { return g[0] === pg; })) return D.storeCats[i][0]; return 'etc'; };
   var pgName = function (pg) { for (var i = 0; i < D.storeCats.length; i++) { var g = D.storeCats[i][2].filter(function (x) { return x[0] === pg; })[0]; if (g) return g[1]; } return pg || '-'; };
@@ -4065,10 +4072,32 @@ var KIMS = (function () {
     var scl = [pl.length ? '구매그룹 ' + (pl.length > 2 ? pl.length + '개' : pl.map(pgName).join(' + ')) : '', nmOf('m1', IT.m1s), nmOf('mc', IT.mcs)].filter(function (x) { return x; });
     var tot = itemTotals(rows, k);
     var mr = iMr(tot.a, tot.g), mrl = iMr(tot.al, tot.gl), g = iGr(tot.a, tot.al);
-    var row = function (l, v, u, dv, dc, ly) { return '<div class="nisk"><p class="nisl">' + l + '</p><p class="nisv"><b>' + v + '</b><small>' + u + '</small><em class="' + (dc || '') + '">' + dv + '</em></p><p class="nisd">' + ly + '</p></div>'; };
+    var rk = itemNavRank(me);
+    var row = function (l, v, u, dv, dc, ly, x) { return '<div class="nisk"><p class="nisl">' + l + '</p><p class="nisv"><b>' + v + '</b><small>' + u + '</small><em class="' + (dc || '') + '">' + dv + '</em></p><p class="nisd">' + ly + '</p>' + (x || '') + '</div>'; };
     return (scl.length ? '<p class="nisc"><span>선택 범위</span>' + esc(scl.join(' · ')) + '</p>' : '') +
-      row('매출', man(tot.a), '백만원', tot.al > 0 ? pct(g) : tot.a ? '신규' : '-', cls(g), '전년 ' + man(tot.al) + '백만원') +
-      row('매총율', mr == null ? '-' : f1(mr * 100), mr == null ? '' : '%', mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100), mr == null || mrl == null ? '' : cls(mr - mrl), '전년 ' + (mrl == null ? '-' : f1(mrl * 100) + '%'));
+      row('매출', man(tot.a), '백만원', tot.al > 0 ? pct(g) : tot.a ? '신규' : '-', cls(g), '전년 ' + man(tot.al) + '백만원', rk.s) +
+      row('매총율', mr == null ? '-' : f1(mr * 100), mr == null ? '' : '%', mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100), mr == null || mrl == null ? '' : cls(mr - mrl), '전년 ' + (mrl == null ? '-' : f1(mrl * 100) + '%'), rk.m);
+  }
+  // 사이드바 요약 순위(2026-11-28 제이): 매출 성장율 · 매총율 증감(%p) 순위를 전점(영업 점포)·같은 그룹 안에서
+  //   순위는 매출 리포트의 점포 실적 기준(상품 데이터는 점포 하나뿐이라 비교 불가) — 범위는 고른 구매그룹(여러 개면 합계) → 지금 탭(CD) → 점포 전체
+  //   MCH1·MC 단위 순위는 리포트 데이터에 없어 구매그룹까지만(MCH1·MC를 골라도 구매그룹 범위 순위)
+  function itemNavRank(me) {
+    var k = ST.k, t = ST.t, pl = Object.keys(IT.pgs);
+    var sc = pl.length === 1 ? scopePg(pl[0]) : pl.length ? { codes: pl.slice().sort(), posKey: 'pgs' } : t === 'store' ? scopeStore(k) : scopeCat(t, k);
+    var all = OPEN(), grp = openOf(GRP[me]), gnm = GNAME[GRP[me]] || '그룹';
+    var short = function (p) { return String(NAME[p] || '').replace(/점$/, ''); };
+    var one = function (key, pl2, who, fmt) {
+      var r = rankIn(k, pl2, sc, key, me), b = null;
+      pl2.forEach(function (p) { var v = M(k, [p], sc)[key]; if (v != null && isFinite(v) && (!b || v > b[1])) b = [p, v]; });
+      var mine = M(k, [me], sc)[key];
+      if (r.r == null) return '<div class="nirk"><span>' + who + '</span><b>-</b><small>실적 없음</small></div>';
+      var c0 = r.r <= Math.ceil(r.n / 3) ? 'up' : r.r > r.n - Math.ceil(r.n / 3) ? 'dn' : '';
+      return '<div class="nirk"><span>' + who + '</span><b><em class="' + c0 + '">' + r.r + '</em><small>위 / ' + r.n + '</small></b>' +
+        '<small>' + (b && b[0] !== me ? '1위 ' + esc(short(b[0])) + ' ' + fmt(b[1]) : '1위 · ' + fmt(mine)) + '</small></div>';
+    };
+    var pp = function (v) { return sPp(v * 100); };
+    var box = function (key, fmt) { return '<div class="nirks">' + one(key, all, '전점 ' + all.length + '점', fmt) + one(key, grp, esc(gnm) + ' ' + grp.length + '점', fmt) + '</div>'; };
+    return { s: box('growth', pct), m: box('mrD', pp) };
   }
   // 사이드바 '상품 요약' 카드 — 지금 점포 상품 데이터를 받았을 때만
   function itemNavCard() {
@@ -4115,13 +4144,14 @@ var KIMS = (function () {
       // PC(701px 이상): 위쪽(제목·검색·조건·표 머리)은 완전히 고정, 표만 안에서 스크롤(2026-11-28 제이) — 표 높이 = 화면 아래(하단 독 위)까지
       var sc = doc.getElementById('scroller'), w = doc.querySelector('#main .itw');
       if (sc && w && window.matchMedia('(min-width:701px)').matches) {
-        var sr = sc.getBoundingClientRect(), bot = sr.bottom, dock = doc.getElementById('catbar'), dr = dock && dock.offsetHeight ? dock.getBoundingClientRect() : null;
-        if (dr && dr.top > sr.top + 200 && dr.top < bot) bot = dr.top - 6;
+        // 표는 화면 맨 아래까지(하단 독은 예전처럼 표 위에 떠 있음, 2026-11-28 제이) — 마지막 줄은 표 끝 빈 칸(.dk)으로 독 위까지 올릴 수 있음
+        var bot = sc.getBoundingClientRect().bottom;
         var wTop = w.getBoundingClientRect().top + sc.scrollTop; // 페이지 맨 위 기준 위치
-        var hh = Math.max(240, Math.floor(bot - wTop - 14));
+        var hh = Math.max(240, Math.floor(bot - wTop));
         m.style.setProperty('--itwh', hh + 'px');
         var pd = doc.getElementById('itpad'), over = sc.scrollHeight - sc.clientHeight - (pd ? parseFloat(pd.style.height) || 0 : 0); // 본문 아래 여백 때문에 페이지가 조금 스크롤되면 그만큼 줄임
         if (over > 0 && hh - over >= 240) m.style.setProperty('--itwh', (hh - over) + 'px');
+        w.classList.remove('dk'); if (w.scrollHeight > w.clientHeight + 1) w.classList.add('dk'); // 스크롤되는 표만 끝에 독 높이만큼 빈 칸
       } else m.style.removeProperty('--itwh');
     };
     set();
@@ -4159,8 +4189,10 @@ var KIMS = (function () {
   //   붙기 전이면 → 보던 높이 그대로
   function itemKeep(top) {
     var doc = window.document, sc = doc.getElementById('scroller'), m = doc.getElementById('main'), box = doc.getElementById('itbox'), cb = doc.getElementById('itctlb'); if (!sc || !m) return;
-    itemStick();
     var sp = doc.getElementById('itpad');
+    // PC(701px 이상)는 위쪽 고정 + 표 안 스크롤이라 빈 칸이 필요 없음 → 없애고 높이만 다시 잼
+    if (window.matchMedia('(min-width:701px)').matches) { if (sp) sp.style.height = '0px'; itemStick(); return; }
+    itemStick();
     if (!sp) { sp = doc.createElement('div'); sp.id = 'itpad'; sp.setAttribute('aria-hidden', 'true'); m.appendChild(sp); }
     if (box && cb && window.getComputedStyle(cb).position === 'sticky') {
       var boxTop = box.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop; // 스크롤과 무관한 표 위치
@@ -4899,7 +4931,7 @@ var KIMS = (function () {
         imsLive(id); return;
       }
       // 초기화(2026-11-28 제이): 검색·구매그룹·조건·정렬·보기·펼침 모두 처음 상태로
-      if (b.dataset.irst) { resetF(); IT.q = ''; IT.qf = 'nm'; IT.amin = ''; IT.amax = ''; IT.flt = 'all'; IT.sort = 'aT'; IT.dir = -1; IT.view = 'm1'; IT.open = {}; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
+      if (b.dataset.irst) { resetF(); IT.q = ''; IT.qf = 'nm'; IT.amin = ''; IT.amax = ''; IT.flt = 'all'; IT.sort = 'aT'; IT.dir = -1; IT.view = 'pg'; IT.open = {}; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
       if (b.dataset.iview) { IT.view = b.dataset.iview; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
       if (b.dataset.isort) { var sk = b.dataset.isort; if (IT.sort === sk) IT.dir = -IT.dir; else { IT.sort = sk; IT.dir = ISUP[sk] ? 1 : -1; } itemRedraw(true); return; }
       if (b.dataset.iflt) { IT.flt = b.dataset.iflt; IT.lim = 100; itemRedraw(true); return; }
