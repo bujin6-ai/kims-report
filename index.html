@@ -349,7 +349,7 @@ body.nav-open #nav{transform:none}
 .mcl li{position:relative;cursor:default}
 .mcl li .mtip{display:none;position:absolute;left:0;bottom:calc(100% + 6px);z-index:6;min-width:170px;padding:8px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);font-size:13px;pointer-events:none;flex-direction:column;gap:2px}
 .mcl li .mtip b{font-size:13px;margin-bottom:2px}.mcl li .mtip>span{display:flex;justify-content:space-between;gap:14px;color:var(--muted)}.mcl li .mtip em{font-style:normal;color:var(--fg);font-weight:600}
-.mcl li:hover .mtip,.mcl li:focus .mtip,.mcl li:focus-within .mtip{display:flex}
+.mcl li:hover .mtip,.mcl li:focus-visible .mtip,.mcl li:has(:focus-visible) .mtip{display:flex}
 .mcl li:hover{background:var(--hov);border-radius:6px}.mcl li:nth-child(-n+2) .mtip{bottom:auto;top:calc(100% + 6px)}
 
 .rt thead th small{font-weight:500;font-size:11px;margin-left:1px}
@@ -633,9 +633,10 @@ tr.dim>*{opacity:.42}
 #main .sb .sbtip b{font-size:13px;margin-bottom:2px}
 #main .sb .sbtip>span{display:flex;justify-content:space-between;gap:16px;color:var(--muted)}
 #main .sb .sbtip em{font-style:normal;color:var(--fg);font-weight:700}#main .sb .sbtip em.up{color:var(--good)}#main .sb .sbtip em.dn{color:var(--bad)}
-#main .sb.hasf:hover .sbtip,#main .sb.hasf:focus .sbtip{display:flex}
+/* 말풍선 하나만(2026-11-28 제이): 마우스로 누르면 포커스가 남아 다른 막대에 마우스를 올리면 두 개가 겹쳐 떴음 → 포커스는 키보드(Tab)일 때만 */
+#main .sb.hasf:hover .sbtip,#main .sb.hasf:focus-visible .sbtip{display:flex}
 #main .sb.hasf{cursor:default;border-radius:8px}#main .sb.hasf:hover{background:color-mix(in srgb,var(--fg) 3%,transparent)}
-:is(.panel,.row):has(.sb.hasf:hover,.sb.hasf:focus){position:relative;z-index:20}
+:is(.panel,.row):has(.sb.hasf:hover,.sb.hasf:focus-visible){position:relative;z-index:20}
 @media (max-width:480px){#main .sbh .sbg{display:flex;margin:2px 0 0}#main .sb .sbtip{left:10%}}
 /* 시간대 매출 말풍선: 금년·전년·증감(2026-11-24 제이) */
 #main .hrc li{position:relative}
@@ -646,9 +647,9 @@ tr.dim>*{opacity:.42}
 #main .hrc .htip>span{display:flex;align-items:center;gap:6px;color:var(--muted)}#main .hrc .htip em{margin-left:auto;padding-left:12px;font-style:normal;font-weight:700;color:var(--fg)}
 #main .hrc .htip em.up{color:var(--good)}#main .hrc .htip em.dn{color:var(--bad)}
 #main .hrc .htip i{display:inline-block;width:8px;height:8px;border-radius:2px}#main .hrc .htip i.t{background:var(--ac)}#main .hrc .htip i.l{background:var(--ly)}
-#main .hrc li:hover .htip,#main .hrc li:focus .htip{display:flex}
+#main .hrc li:hover .htip,#main .hrc li:focus-visible .htip{display:flex}
 #main .hrc li:nth-last-child(-n+4) .htip{left:auto;right:calc(100% + 6px)}
-:is(.panel,.row):has(.hrc li:hover,.hrc li:focus){position:relative;z-index:20}
+:is(.panel,.row):has(.hrc li:hover,.hrc li:focus-visible){position:relative;z-index:20}
 /* 터치 화면(폰·태블릿) 말풍선(2026-11-24 제이): 스크롤하려고 닿기만 해도 뜨던 것 → 톡 눌러야 열리고 다시 누르거나 다른 곳을 누르면 닫힘. 상품명·점포명을 가리지 않게 오른쪽 정렬 */
 @media (hover:none){
 #main .mcl li:is(:hover,:focus,:focus-within):not(.tipon) .mtip,#main .hrc li:is(:hover,:focus):not(.tipon) .htip,#main .sb.hasf:is(:hover,:focus):not(.tipon) .sbtip{display:none}
@@ -3237,6 +3238,8 @@ var KIMS = (function () {
   function showTip(hit) {
     var wrap = hit.closest('.dcw'), tip = wrap && wrap.querySelector('.tip');
     if (!tip) return;
+    // 말풍선 하나만(2026-11-28 제이): 다른 그래프에 열려 있던 것은 닫음(폰은 누르면 열려 있어서 그래프마다 하나씩 남았음)
+    [].forEach.call(window.document.querySelectorAll('.dcw'), function (w) { if (w !== wrap) hideTip(w); });
     var d = Number(hit.getAttribute('data-d')), kind = wrap.dataset.kind;
     tip.innerHTML = kind && GTIP[kind] ? GTIP[kind](wrap, hit) : tipHtml(wrap.dataset.me || ST.s, d, wrap.dataset.cid || 'store'); tip.hidden = false;
     [].forEach.call(wrap.querySelectorAll('.hit'), function (h) { h.classList.toggle('on', h === hit); });
@@ -5363,7 +5366,7 @@ var KIMS = (function () {
     doc.getElementById('main').addEventListener('click', pick);
     var placeTip = function (ifo) { var t = ifo.querySelector('.ift'); if (!t) return; t.style.left = ''; var r = t.getBoundingClientRect(), vw = window.innerWidth; if (r.right > vw - 10) t.style.left = (-8 - (r.right - vw + 10)) + 'px'; };
     doc.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.ifb'); var open = doc.querySelectorAll('.ifo.open'); [].forEach.call(open, function (x) { if (!b || x !== b.parentNode) x.classList.remove('open'); }); if (b) { e.stopPropagation(); b.parentNode.classList.toggle('open'); placeTip(b.parentNode); } });
-    doc.getElementById('main').addEventListener('mouseover', function (e) { var f = e.target.closest && e.target.closest('.ifo'); if (f) placeTip(f); });
+    doc.getElementById('main').addEventListener('mouseover', function (e) { var f = e.target.closest && e.target.closest('.ifo'); if (f) { [].forEach.call(doc.querySelectorAll('.ifo.open'), function (x) { if (x !== f) x.classList.remove('open'); }); placeTip(f); } }); // 다른 설명(i)에 마우스를 올리면 눌러 둔 설명은 닫음(겹침 방지)
     // 터치 화면 말풍선(2026-11-24 제이): 톡 누르면 열고, 같은 줄을 다시 누르거나 다른 곳을 누르면 닫음. 스크롤하면 닫음
     // MC 증감(2026-11-25 제이): 마우스만 올려도 뜨던 말풍선 → 막대 그래프를 누르면 열리고 다시 누르면 닫힘(PC·폰 공통). 다른 곳을 누르면 닫힘
     // 2026-11-26 제이: 말풍선이 줄 왼쪽 끝에 떠서 누른 곳과 멀었음 → 누른 자리(가로) 바로 위에 띄움(화면 밖으로 나가지 않게)
