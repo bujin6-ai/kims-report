@@ -5035,6 +5035,11 @@ var KIMS = (function () {
     var sxfClose = function (e) { if (e && e.target && e.target.closest && e.target.closest('.sxf-m')) return; [].forEach.call(doc.querySelectorAll('#main .sxf-d[open]'), function (x) { x.open = false; }); };
     doc.getElementById('scroller').addEventListener('scroll', sxfClose, { passive: true });
     doc.getElementById('scroller').addEventListener('scroll', function () { itemPadFit(); KT.top = this.scrollTop; }, { passive: true }); // 위로 올리면 덧댄 빈 칸 줄임 · 보던 높이 기억
+    // 섹션 안 탭(라디오)을 바꾸면 고정 머리글을 다시 잼(2026-11-28 제이: 우리점 VS 비교점 CD 탭마다 범례가 따로 있어 머리글이 아래로 내려가 겹쳐 보임)
+    doc.getElementById('main').addEventListener('change', function (e) {
+      var t = e.target; if (!(t && t.type === 'radio' && t.closest && t.closest('section.panel'))) return;
+      window.requestAnimationFrame(function () { stickHeads(false); liftHeads(); });
+    });
     keepTopWatch();
     doc.getElementById('main').addEventListener('scroll', function (e) { if (e.target.classList && e.target.classList.contains('sxf')) sxfClose(); }, true);
     // 관리 필요 상품: 열 제목을 누르면 그 열로 정렬(같은 열을 다시 누르면 반대로)
