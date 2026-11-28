@@ -1242,9 +1242,11 @@ tr.dim>*{opacity:.42}
 #main .itbl{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
 #main .itbl th,#main .itbl td{padding:8px 9px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
 #main .itbl thead th{position:sticky;top:var(--ith,0px);background:var(--panel);box-shadow:0 1px 0 var(--line);color:var(--muted);font-size:13px;font-weight:600;z-index:1}
-#main .itbl thead tr.g1 th{border-bottom:0;color:var(--fg);height:32px;box-sizing:border-box;box-shadow:none}#main .itbl thead tr.g2 th{top:calc(var(--ith,0px) + 32px)}#main .itbl thead th small{font-weight:500;color:var(--muted);margin-left:3px}
+#main .itbl thead tr.g1 th{border-bottom:0;color:var(--fg);height:32px;box-sizing:border-box;box-shadow:none}#main .itbl thead tr.g2 th{top:calc(var(--ith,0px) + var(--itg1,32px))}#main .itbl thead th small{font-weight:500;color:var(--muted);margin-left:3px}
 #main .itbl thead tr.g1 th[rowspan]{text-align:left;vertical-align:bottom}
-#main .itbl .cq+.cs,#main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:1px solid var(--line)}
+#main .itbl .cs+.cm,#main .itbl .cm+.cq,#main .itbl .cq+.ck{border-left:1px solid var(--line)}
+/* 표 머리 묶음 이름(매출·매총율·판매수량·재고수량)은 가운데(2026-11-28 제이) */
+#main .itbl thead tr.g1 th[colspan]{text-align:center}#main .itbl thead tr.g1 th.ck{text-align:center}#main .itbl thead tr.g1 th.ck.srt button{justify-content:center;text-align:center}
 #main .itbl tbody th{text-align:left;max-width:320px;white-space:normal;font-weight:400}
 #main .itbl tbody th b{display:block;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 #main .itbl tbody th small{display:block;color:var(--muted);font-size:13px;margin-top:1px}
@@ -1280,7 +1282,7 @@ tr.dim>*{opacity:.42}
 #main .itw[data-col] .cq,#main .itw[data-col] .cs,#main .itw[data-col] .cm,#main .itw[data-col] .ck{display:none}#main .itw[data-col=q] .cq,#main .itw[data-col=s] .cs,#main .itw[data-col=m] .cm,#main .itw[data-col=k] .ck{display:table-cell}
 #main .itbl tbody tr.d1 th{padding-left:14px}#main .itbl tbody tr.d2 th{padding-left:24px}#main .itbl tbody tr.d3 th{padding-left:34px}#main .itbl tbody tr.lvm td{padding-left:24px}#main .itbl tbody tr.igr th small{padding-left:0;white-space:normal}#main .itlb small{display:none}
 #main .itbl{font-size:13px}#main .itbl th,#main .itbl td{padding:6px 4px}#main .itbl tbody th{max-width:36vw;padding-left:8px}#main .itbl thead th small{display:none}#main .itbl tbody tr.tot th small{display:block;margin:0}
-#main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:0}
+#main .itbl .cs+.cm,#main .itbl .cm+.cq,#main .itbl .cq+.ck{border-left:0}
 #main .itdl{grid-template-columns:repeat(2,minmax(0,1fr))}
 #main .itbl tbody tr.lv2 th{padding-left:14px}#main .itbl tbody tr.lv3 th{padding-left:24px}#main .itbl tbody tr.lvm td{padding-left:24px}
 #main .itbl tbody tr.lv1 th small,#main .itbl tbody tr.lv2 th small{padding-left:0;white-space:normal}
@@ -3897,7 +3899,7 @@ var KIMS = (function () {
     return { a: s[0], al: s[1], q: s[2], ql: s[3], g: s[4], gl: s[5], sa: sa, sq: sq };
   }
   // 휴대폰에서 보는 항목(한 번에 한 묶음)
-  var ICOLS = [['q', '판매수량'], ['s', '매출'], ['m', '매총율'], ['k', '재고']];
+  var ICOLS = [['s', '매출'], ['m', '매총율'], ['q', '판매수량'], ['k', '재고']];
   // MC 정보: [MC 이름, MCH1, MC 코드] (v1 데이터는 이름 문자열만)
   var mcOf = function (d, i) { var m = d.mc[i]; return typeof m === 'string' ? [m, '', ''] : m || ['', '', '']; };
   var tv = function (t) { return [t.a, t.al, t.q, t.ql, t.g, t.gl]; };
@@ -3931,13 +3933,13 @@ var KIMS = (function () {
   function itemTable(c) {
     var k = ST.k, rows = itemRows(c, k), tot = itemTotals(rows, k), d = c.d, lv = ILV[IT.view] || [], auto = !!IT.q.replace(/\s/g, '');
     var gcls = function (v) { return v == null ? '' : v >= 0 ? 'up' : 'dn'; };
-    // 칸 순서(2026-11-27 제이): 판매수량(수량·증감) | 매출 만원(금년·전년·성장율) | 매총율(매총율·증감) | 전일 마감 재고수량
+    // 칸 순서(2026-11-28 제이): 매출 만원(금년·전년·성장율) | 매총율(매총율·증감) | 판매수량(수량·증감) | 전일 마감 재고수량
     var line = function (nm, sub, v, sq, attr, cl) {
       var g = iGr(v[0], v[1]), mr = iMr(v[0], v[4]), mrl = iMr(v[1], v[5]), qg = iGr(v[2], v[3]);
       return '<tr' + (attr || '') + (cl ? ' class="' + cl + '"' : '') + '><th scope="row"><b>' + nm + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</th>' +
-        '<td class="cq">' + qn(v[2]) + '</td><td class="cq ' + gcls(qg) + '">' + (v[3] > 0 ? pct(qg) : '-') + '</td>' +
         '<td class="cs">' + manw(v[0]) + '</td><td class="cs ly">' + manw(v[1]) + '</td><td class="cs ' + gcls(g) + '">' + (v[1] > 0 ? pct(g) : v[0] ? '신규' : '-') + '</td>' +
         '<td class="cm">' + (mr == null ? '-' : f1(mr * 100) + '%') + '</td><td class="cm ' + (mr == null || mrl == null ? '' : gcls(mr - mrl)) + '">' + (mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100)) + '</td>' +
+        '<td class="cq">' + qn(v[2]) + '</td><td class="cq ' + gcls(qg) + '">' + (v[3] > 0 ? pct(qg) : '-') + '</td>' +
         '<td class="ck' + (sq < 0 ? ' dn' : '') + '">' + qn(sq) + '</td></tr>';
     };
     var NC = 9;
@@ -3957,8 +3959,8 @@ var KIMS = (function () {
       return '<th scope="col" class="' + cl + ' srt' + (on ? ' on' : '') + '"' + (extra || '') + ' aria-sort="' + (on ? (IT.dir < 0 ? 'descending' : 'ascending') : 'none') + '"><button type="button" data-isort="' + key + '" title="' + esc(String(txt).replace(/<[^>]+>/g, ' ')) + ' 순으로 정렬">' + txt + arr(key) + '</button></th>';
     };
     var title = lv.length ? lv.map(function (x) { return ILVN[x]; }).join(' › ') + ' › 상품' : '상품';
-    var head = '<thead><tr class="g1">' + sh('nm', title, 'cn', ' rowspan="2"') + '<th colspan="2" class="cq">판매수량</th><th colspan="3" class="cs">매출 <small>만원</small></th><th colspan="2" class="cm">매총율</th>' + sh('sq', '전일 마감<br>재고수량', 'ck', ' rowspan="2"') + '</tr>' +
-      '<tr class="g2">' + sh('q', '수량', 'cq') + sh('qg', '증감', 'cq') + sh('aT', '금년', 'cs') + sh('aL', '전년', 'cs') + sh('g', '성장율', 'cs') + sh('mr', '매총율', 'cm') + sh('mrD', '증감', 'cm') + '</tr></thead>';
+    var head = '<thead><tr class="g1">' + sh('nm', title, 'cn', ' rowspan="2"') + '<th colspan="3" class="cs">매출 <small>만원</small></th><th colspan="2" class="cm">매총율</th><th colspan="2" class="cq">판매수량</th>' + sh('sq', '전일 마감<br>재고수량', 'ck', ' rowspan="2"') + '</tr>' +
+      '<tr class="g2">' + sh('aT', '금년', 'cs') + sh('aL', '전년', 'cs') + sh('g', '성장율', 'cs') + sh('mr', '매총율', 'cm') + sh('mrD', '증감', 'cm') + sh('q', '수량', 'cq') + sh('qg', '증감', 'cq') + '</tr></thead>';
     var body = line('합계 <small>' + won(rows.length) + '개</small>', '', tv(tot), tot.sq, '', 'tot');
     var tree = function (rs, dep, path) {
       if (dep >= lv.length) {
@@ -4090,7 +4092,11 @@ var KIMS = (function () {
   var itRO = null;
   function itemStick() {
     var doc = window.document, cb = doc.getElementById('itctlb'), m = doc.getElementById('main'); if (!m) return;
-    var set = function () { var el = doc.getElementById('itctlb'), on = el && window.getComputedStyle(el).position === 'sticky'; m.style.setProperty('--ith', (on ? el.offsetHeight : 0) + 'px'); }; // 폰(700px 이하)은 고정 안 함
+    var set = function () {
+      var el = doc.getElementById('itctlb'), on = el && window.getComputedStyle(el).position === 'sticky', g1 = doc.querySelector('#main .itbl tr.g1');
+      m.style.setProperty('--ith', (on ? el.offsetHeight : 0) + 'px'); // 폰(700px 이하)은 고정 안 함
+      if (g1 && g1.offsetHeight) m.style.setProperty('--itg1', g1.offsetHeight + 'px'); // 표 머리 둘째 줄은 첫 줄 실제 높이만큼 아래(2026-11-28 줄 어긋남)
+    };
     set();
     if (cb && window.ResizeObserver) { if (!itRO) itRO = new window.ResizeObserver(set); itRO.disconnect(); itRO.observe(cb); }
   }
@@ -4098,12 +4104,42 @@ var KIMS = (function () {
   //   all = 구매그룹·MCH1·MC 를 바꿨을 때: 조건 칸(고를 수 있는 MCH1·MC 목록)·사이드바 요약도 다시 그림
   function itemRedraw(all) {
     var c = ITC[ST.s], doc = window.document, box = doc.getElementById('itbox'); if (!(c && c.st === 'ok' && box)) return;
+    var top = itemTop();
     if (all) {
       var s = doc.getElementById('itsum'), cb = doc.getElementById('itctlb');
       if (cb) { var pl = cb.querySelector('.itpgl'), sl = pl ? pl.scrollLeft : 0; cb.innerHTML = itemCtl(c); pl = cb.querySelector('.itpgl'); if (pl) pl.scrollLeft = sl; }
       if (s) s.innerHTML = itemSumAll(c, ST.s); // 요약의 MCH1·MC 이름은 itemCtl 이 만든 목록(IMS.opts)을 씀 → 조건 칸 다음에
     }
     box.innerHTML = itemTable(c);
+    itemKeep(top);
+  }
+  // 목록이 짧아져도 보던 높이 유지(2026-11-28 제이): 아래로 내려 조건 칸이 위에 붙은 상태에서 상품이 적은 구매그룹을 고르면
+  //   화면 높이가 줄어 스크롤이 위로 밀리며 조건 칸이 내려옴 → 본문 끝에 빈 칸(#itpad)을 덧대 위쪽은 그대로, 목록 끝만 올라오게
+  //   빈 칸은 위로 스크롤하면 필요한 만큼만 남기고 줄어듦(itemPadFit)
+  var itemTop = function () { var sc = window.document.getElementById('scroller'); return sc ? sc.scrollTop : 0; };
+  function itemPadFit(keep) {
+    var doc = window.document, sc = doc.getElementById('scroller'), sp = doc.getElementById('itpad'); if (!sc || !sp) return;
+    var h = parseFloat(sp.style.height) || 0, want = (keep == null ? sc.scrollTop : keep) + sc.clientHeight; // 필요한 전체 높이
+    if (!h && sc.scrollHeight >= want) return;
+    // 내용이 화면보다 짧으면 scrollHeight = 화면 높이라 내용 높이를 모름 → 빈 칸을 넉넉히(want) 줬다가 넘치는 만큼 뺌
+    sp.style.height = want + 'px';
+    var need = Math.max(0, Math.ceil(want - (sc.scrollHeight - want)));
+    sp.style.height = need + 'px';
+  }
+  //   조건 칸이 위에 붙어 있었으면(내려 본 상태) → 조건 칸은 그 자리, 표는 조건 칸 바로 아래부터(목록 처음부터 보임)
+  //   붙기 전이면 → 보던 높이 그대로
+  function itemKeep(top) {
+    var doc = window.document, sc = doc.getElementById('scroller'), m = doc.getElementById('main'), box = doc.getElementById('itbox'), cb = doc.getElementById('itctlb'); if (!sc || !m) return;
+    itemStick();
+    var sp = doc.getElementById('itpad');
+    if (!sp) { sp = doc.createElement('div'); sp.id = 'itpad'; sp.setAttribute('aria-hidden', 'true'); m.appendChild(sp); }
+    if (box && cb && window.getComputedStyle(cb).position === 'sticky') {
+      var boxTop = box.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop; // 스크롤과 무관한 표 위치
+      var stuck = Math.max(0, Math.round(boxTop - cb.offsetHeight - (parseFloat(window.getComputedStyle(cb).marginBottom) || 0)));
+      if (top > stuck) top = stuck;
+    }
+    itemPadFit(top);
+    if (sc.scrollTop !== top) sc.scrollTop = top;
   }
   var NOT_YET = function (what) { return '<p class="note pend">' + what + ' 데이터는 아직 받지 않았습니다. 다음 데이터 갱신부터 표시됩니다.</p>'; };
   var OPT = [['daily', '일별 매출'], ['hour', '시간대 매출'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출 성장율'], ['heat', '실적 신호등 (점포)'], ['mc', 'MC 증감'], ['top', '상위 상품 (CD 탭)'], ['quad', '건수×건단가 현황 (전점)'], ['radar', '성장율 비교'], ['wf', 'CD 매출 증감'], ['mix', '매출 구성비'], ['grank', '점포 실적 순위 (전점)'], ['grpc', '그룹 증감 기여 (전점)']];
@@ -4849,7 +4885,7 @@ var KIMS = (function () {
     var imsLive = function (id) {
       var c = ITC[ST.s]; if (!(c && c.st === 'ok')) return;
       var s = doc.getElementById('itsum'); if (s) s.innerHTML = itemSumAll(c, ST.s);
-      var bx = doc.getElementById('itbox'); if (bx) bx.innerHTML = itemTable(c);
+      var bx = doc.getElementById('itbox'), tp = itemTop(); if (bx) { bx.innerHTML = itemTable(c); itemKeep(tp); }
       var bt = main0.querySelector('[data-imsb="' + id + '"]'); if (bt) { bt.querySelector('span').textContent = imsLabel(id); bt.classList.toggle('on', !!setN(id === 'm1' ? IT.m1s : IT.mcs)); }
     };
     doc.addEventListener('click', function (e) { if (MODE === 'item' && IMS.open && e.target.isConnected && !main0.contains(e.target)) imsClose(); }); // 다시 그려져 떨어진 버튼(isConnected false)은 바깥 클릭이 아님
@@ -4896,6 +4932,7 @@ var KIMS = (function () {
     // 폰: 고정 위치 메뉴라 스크롤·칩 줄을 밀면 닫음
     var sxfClose = function (e) { if (e && e.target && e.target.closest && e.target.closest('.sxf-m')) return; [].forEach.call(doc.querySelectorAll('#main .sxf-d[open]'), function (x) { x.open = false; }); };
     doc.getElementById('scroller').addEventListener('scroll', sxfClose, { passive: true });
+    doc.getElementById('scroller').addEventListener('scroll', function () { if (MODE === 'item') itemPadFit(); }, { passive: true }); // 위로 올리면 덧댄 빈 칸 줄임
     doc.getElementById('main').addEventListener('scroll', function (e) { if (e.target.classList && e.target.classList.contains('sxf')) sxfClose(); }, true);
     // 관리 필요 상품: 열 제목을 누르면 그 열로 정렬(같은 열을 다시 누르면 반대로)
     doc.getElementById('main').addEventListener('click', function (e) {
