@@ -1296,6 +1296,15 @@ tr.dim>*{opacity:.42}
 #main .itbl tbody tr.lv2 th{padding-left:14px}#main .itbl tbody tr.lv3 th{padding-left:24px}#main .itbl tbody tr.lvm td{padding-left:24px}
 #main .itbl tbody tr.lv1 th small,#main .itbl tbody tr.lv2 th small{padding-left:0;white-space:normal}
 }
+/* 손실 관리(2026-11-28): 일별 손실 쌓기 막대(마크다운·폐기·재고차이) · 월별 손실율 증감 색 */
+.sdc rect.lsb.m{fill:#e3a008}.sdc rect.lsb.d{fill:var(--bad)}.sdc rect.lsb.s{fill:#8b5cf6}
+.slg.lslg i.m{background:#e3a008}.slg.lslg i.d{background:var(--bad)}.slg.lslg i.s{background:#8b5cf6}
+.sdc text.mg.dn{fill:var(--bad)}.sdc text.mg.up{fill:var(--good)}
+.lct td.dn{color:var(--bad);font-weight:700}.lct td.up{color:var(--good);font-weight:700}
+.kacc li b.dn{color:var(--bad)}.kacc li b.up{color:var(--good)}
+.hcard.los .hic{background:#fdf2e9;color:#c2410c}
+@media (max-width:700px){#main .sxi.lxi td.v::before{content:"이 유형 "}}
+@media (max-width:600px){.sdc .dcw[data-kind=lmon] text.mv{display:block}.lct th:nth-child(9),.lct td:nth-child(9){display:none}}
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 /* 사이드 메뉴 카드형(2026-11-24): 로고·현재 점포 카드 / 리포트 목차 2열 타일 / 점포별 실적 그룹 막대 / 맨 아래 메인 화면 */
 #nav{--navbg:color-mix(in srgb,#5b6b8c 9%,var(--bg));--tile:color-mix(in srgb,var(--fg) 5%,var(--panel));background:var(--navbg);display:flex;flex-direction:column;gap:10px;padding:10px 10px 16px}
@@ -3304,6 +3313,7 @@ var KIMS = (function () {
   var kaccAny = function (p, c, v) {
     var a = v.split(':');
     if (MODE === 'stock' && a[0] === 'sk') return a[1] === 'st' ? sSkuStores(c, p === 'ALL' ? null : p) : sSkuBody(p);
+    if (MODE === 'loss' && LKEY[a[0]]) return a[1] === 'st' ? lKaccStores(c, a[0], p === 'ALL' ? null : p) : lKaccBody(p, c, a[0]); // 손실 카드(2026-11-28)
     if (MODE === 'stock' && SKEY[a[0]]) return a[1] === 'st' ? sKaccStores(c, a[0], p === 'ALL' ? null : p) : sKaccBody(p, c, a[0]); // 재고 카드(2026-11-23)
     return a[1] === 'st' ? kaccStores(c, a[0], p === 'ALL' ? null : p) : kaccBody(p, c, a[0]);
   };
@@ -3348,7 +3358,7 @@ var KIMS = (function () {
   //   재고액(원가) at 기준일 = 전월말 재고 + 당월 수불(NET_AMT) + 원가차이 · CD·구매그룹은 상품 기준(DIM_MATERIAL) · BI 미대조
   var MODE = 'sales';
   // 화면 종류(사이드 메뉴 버튼): [id, 이름, 아이콘] — 상품 상세(item)는 2026-11-27
-  var MODES = [['sales', '매출 리포트', 'stats'], ['stock', '재고 데이터', 'box'], ['item', '상품 상세', 'tag']];
+  var MODES = [['sales', '매출 리포트', 'stats'], ['stock', '재고 데이터', 'box'], ['item', '상품 상세', 'tag'], ['loss', '손실 관리', 'loss']]; // 손실 관리 2026-11-28
   // 상품 상세로 들어올 때 전점이면 설정의 기준 점포로(없으면 점포 고르기 화면)
   // 상품 상세는 우선 관리자만(2026-11-27 제이): 웹 = 관리자 로그인, 로컬 미리보기 = KIMS_ITEM_SRC 가 있을 때만 · 서버(Apps Script item)도 관리자만 내려줌
   var itemOk = function () { return WEB ? !!WEB.admin : typeof window !== 'undefined' && !!window.KIMS_ITEM_SRC; };
@@ -3820,6 +3830,333 @@ var KIMS = (function () {
     ]);
     return head;
   }
+  // ── 손실 관리(2026-11-28 제이) ── 메인 메뉴 '손실 관리' → MODE 'loss' · 주소 #los-점포-탭-기간 · 화면 틀은 재고 데이터와 같음
+  //   손실 = 마크다운 + 폐기 + 재고차이로스, 손실율 = 손실 ÷ 실매출 — 모두 하이퍼 정판율 마트(매출 카드 손실율과 같은 기준) · CD·구매그룹은 상품 기준 · BI 미대조
+  //   완성 전까지 관리자만(2026-11-28 제이). 모든 사용자에게 열 때는 LOSS_PUBLIC 을 true 로(web-auth.js 의 LOSS_PUBLIC 도 같이)
+  var LOSS_PUBLIC = false;
+  var lossOk = function () { return LOSS_PUBLIC || (WEB ? !!WEB.admin : true); };
+  var LTYPE = [['md', '마크다운', 'M'], ['ds', '폐기', 'D'], ['sh', '재고차이로스', 'S']];
+  // 합계: sum[K][점포][구매그룹] = [마크다운·폐기·재고차이·실매출 금년, 같은 4칸 전년]
+  function lAgg(k, plants, codes) {
+    var s = [0, 0, 0, 0, 0, 0, 0, 0], any = false, sm = ((D.lossx || {}).sum || {})[k] || {};
+    plants.forEach(function (p) { var r = sm[p] || {}; (codes || Object.keys(r)).forEach(function (g) { var v = r[g]; if (v) { any = true; for (var i = 0; i < 8; i++) s[i] += v[i] || 0; } }); });
+    if (!any) return null;
+    var rt = function (a, n) { return n > 0 ? a / n * 100 : null; }, gr = function (a, b) { return b > 0 ? a / b - 1 : null; };
+    var y = { md: s[0], ds: s[1], sh: s[2], n: s[3], mdL: s[4], dsL: s[5], shL: s[6], nL: s[7], l: s[0] + s[1] + s[2], lL: s[4] + s[5] + s[6] };
+    y.r = rt(y.l, y.n); y.rL = rt(y.lL, y.nL); y.rD = y.r != null && y.rL != null ? y.r - y.rL : null; y.g = gr(y.l, y.lL);
+    LTYPE.forEach(function (x) { var a = y[x[0]], b = y[x[0] + 'L']; y[x[0] + 'R'] = rt(a, y.n); y[x[0] + 'RL'] = rt(b, y.nL); y[x[0] + 'G'] = gr(a, b); });
+    return y;
+  }
+  var lCodes = function (t) { return t === 'store' ? null : catCodes(t); };
+  var lRngTxt = function (k) { var r = D.lossx && D.lossx.rng && D.lossx.rng[k]; if (!r) return ''; var f = function (d) { return Number(d.slice(4, 6)) + '/' + Number(d.slice(6)); }; return r[0] === r[1] ? f(r[0]) : f(r[0]) + '~' + f(r[1]); };
+  var lPctCls = function (g) { return g == null || Math.abs(g) < 0.0005 ? '' : g > 0 ? 'dn' : 'up'; }; // 손실은 늘면 빨강
+  var lPpCls = function (d) { return d == null || Math.abs(d) < 0.005 ? '' : d > 0 ? 'dn' : 'up'; };
+  var lR = function (v) { return v == null ? '-' : f2(v) + '%'; };
+  var lMan = function (v) { return v == null ? '-' : man(v) + '백만'; };
+  var lWan = function (v) { if (v == null) return '-'; var m = v / 1e4; return Math.abs(m) < 100 ? (Math.round(m * 10) / 10).toLocaleString('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : Math.round(m).toLocaleString('ko-KR'); };
+  function lCards(k, plants, t, me) {
+    var y = lAgg(k, plants, lCodes(t)); if (!y) return NOT_YET('손실');
+    var rk = function () { if (!me) return ''; var dv = function (p) { var x = lAgg(k, [p], lCodes(t)); return x && x.r; }; return badge('킴스', sRank(OPEN(), me, dv, false)) + badge(GNAME[GRP[me]], sRank(openOf(GRP[me]), me, dv, false)) + '<small class="kbn">낮은 순</small>'; };
+    var fm = function (v) { return man(v) + '백만'; }, fr = function (v) { return f2(v) + '%'; };
+    var card = sCard;
+    var typ = function (x) { var a = y[x[0]], b = y[x[0] + 'L'], g = y[x[0] + 'G']; return card(x[1] + '<small class="ksub">손실율 ' + lR(y[x[0] + 'R']) + '</small>', man(a), '백만원', '전년 ' + man(b) + '백만 · ' + pct(g), lPctCls(g), '', sBars(a, b, '금년', '전년', fm), 'l' + x[2].toLowerCase()); };
+    return '<div class="kpis skp lkp" data-p="' + (me || 'ALL') + '"' + (t === 'store' ? '' : ' data-c="' + t + '"') + '>' +
+      card('손실액<small class="ksub">마크다운+폐기+재고차이</small>', man(y.l), '백만원', '전년 ' + man(y.lL) + '백만 · ' + pct(y.g), lPctCls(y.g), '', sBars(y.l, y.lL, '금년', '전년', fm), 'la') +
+      card('손실율<small class="ksub">손실 ÷ 실매출</small>', y.r == null ? '-' : f2(y.r), y.r == null ? '' : '%', '전년 ' + lR(y.rL) + ' · ' + pp2(y.rD), lPpCls(y.rD), rk(), y.r == null || y.rL == null ? '' : sBars(y.r, y.rL, '금년', '전년', fr), 'lr') +
+      LTYPE.map(typ).join('') + '</div>';
+  }
+  // ── 카드 펼침(CD·구매그룹별 / 점포별) ──
+  var LKEY = { la: ['손실액', '금년', '전년', '증감율'], lr: ['손실율', '금년', '전년', '증감'], lm: ['마크다운', '금년', '전년', '증감율'], ld: ['폐기', '금년', '전년', '증감율'], ls: ['재고차이로스', '금년', '전년', '증감율'] };
+  var LKF = { lm: 'md', ld: 'ds', ls: 'sh' };
+  function lVal(y, key) {
+    if (!y) return ['-', '-', '', ''];
+    if (key === 'la') return [lMan(y.l), lMan(y.lL), pct(y.g), lPctCls(y.g)];
+    if (key === 'lr') return [lR(y.r), lR(y.rL), pp2(y.rD), lPpCls(y.rD)];
+    var f = LKF[key]; return [lMan(y[f]), lMan(y[f + 'L']), pct(y[f + 'G']), lPctCls(y[f + 'G'])];
+  }
+  var lSort = function (y, key) { return !y ? null : key === 'la' ? y.l : key === 'lr' ? y.r : y[LKF[key]]; };
+  function lKaccBody(pAttr, cid, key) {
+    var plants = pAttr === 'ALL' ? OPEN() : [pAttr], K = LKEY[key], k = ST.k;
+    var cats = cid ? D.storeCats.filter(function (c) { return c[0] === cid; }) : D.storeCats;
+    var line = function (name, y, lvl) { var v = lVal(y, key); return '<li class="' + lvl + '"><span>' + esc(name) + '</span><em>' + v[0] + '</em><em class="ly">' + v[1] + '</em><b class="' + v[3] + '">' + v[2] + '</b></li>'; };
+    var head = '<li class="kh"><span>' + (cid ? '구매그룹' : 'CD · 구매그룹') + '</span><em>' + K[1] + '</em><em>' + K[2] + '</em><b>' + K[3] + '</b></li>';
+    var rows = cats.map(function (c) {
+      var y = lAgg(k, plants, catCodes(c[0])); if (!y) return '';
+      var pgs = c[2].map(function (g) { return [g[1], lAgg(k, plants, [g[0]])]; }).filter(function (x) { return x[1]; });
+      return '<ul class="kg">' + head + line(c[1] + (cid ? ' 합계' : ''), y, 'cd') + (pgs.length > 1 || cid ? pgs.map(function (x) { return line(x[0], x[1], 'pg'); }).join('') : '') + '</ul>';
+    }).join('');
+    if (!cid) rows = '<ul class="kg ktot">' + head + line((pAttr === 'ALL' ? '킴스' : NAME[pAttr]) + ' 합계', lAgg(k, plants, null), 'cd') + '</ul>' + rows;
+    return '<p class="kt">' + esc(pAttr === 'ALL' ? '킴스 합계' : NAME[pAttr]) + ' · ' + K[0] + ' <small>' + (cid ? '구매그룹별' : 'CD·구매그룹별') + ' · ' + PNAME[k] + '</small></p><div class="kgs">' + rows + '</div>';
+  }
+  function lKaccStores(cid, key, me) {
+    var K = LKEY[key], codes = cid ? catCodes(cid) : null, k = ST.k;
+    var head = '<li class="kh"><span>그룹 · 점포</span><em>' + K[1] + '</em><em>' + K[2] + '</em><b>' + K[3] + '</b></li>';
+    var grp = D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
+      var vt = lVal(lAgg(k, g[2], codes), key);
+      var rows = g[2].map(function (p) { return [p, lAgg(k, [p], codes)]; }).filter(function (x) { return x[1]; })
+        .sort(function (a, b) { var x = lSort(a[1], key), z = lSort(b[1], key); return (z == null ? -1e15 : z) - (x == null ? -1e15 : x); });
+      return '<ul class="kg">' + head + '<li class="cd"><span>' + esc(g[1]) + ' ' + g[2].length + '점</span><em>' + vt[0] + '</em><em class="ly">' + vt[1] + '</em><b class="' + vt[3] + '">' + vt[2] + '</b></li>' +
+        rows.map(function (x, i) { var v = lVal(x[1], key); return '<li class="pg pick' + (x[0] === me ? ' me' : '') + '" data-s="' + x[0] + '" tabindex="0"><span><i>' + (i + 1) + '</i>' + esc(NAME[x[0]]) + '</span><em>' + v[0] + '</em><em class="ly">' + v[1] + '</em><b class="' + v[3] + '">' + v[2] + '</b></li>'; }).join('') + '</ul>';
+    }).join('');
+    var ka = lVal(lAgg(k, OPEN(), codes), key);
+    grp = '<ul class="kg ktot">' + head + '<li class="cd"><span>킴스 합계 ' + OPEN().length + '점</span><em>' + ka[0] + '</em><em class="ly">' + ka[1] + '</em><b class="' + ka[3] + '">' + ka[2] + '</b></li></ul>' + grp;
+    return '<p class="kt">전점포 ' + (cid ? sTabName(cid) + ' ' : '') + K[0] + ' <small>그룹별 · 큰 순 · 점포를 누르면 그 점포로 이동</small></p><div class="kgs st">' + grp + '</div>';
+  }
+  // ── 손실율 순위(점포): 그룹 · 킴스 전체 안에서 우리점 위치(낮은 순) ──
+  function lRankStrip(k, t, me) {
+    var codes = lCodes(t), dv = function (p) { var x = lAgg(k, [p], codes); return x ? x.r : null; };
+    var strip = function (title, list, label) {
+      var vs = list.map(function (p) { return [p, dv(p)]; }).filter(function (x) { return x[1] != null && isFinite(x[1]); }).sort(function (a, b) { return a[1] - b[1]; });
+      var i = -1; vs.forEach(function (x, j) { if (x[0] === me) i = j; });
+      if (i < 0) return '<div class="sdx-rk"><p><b>' + title + '</b><span>-</span></p></div>';
+      // 색 = 같은 범위(그룹·킴스) 합산 손실율과 비교: 10% 넘게 낮으면 파랑, ±10% 안이면 노랑, 10% 넘게 높으면 빨강(재고일수 순위와 같은 규칙)
+      var av = lAgg(k, list, codes), ax = av && av.r > 0 ? vs[i][1] / av.r : null, tone = ax == null ? '' : ax > 1.1 ? ' r' : ax < 0.9 ? '' : ' y';
+      return '<div class="sdx-rk' + tone + '"><p><b>' + title + '</b><span title="' + (av && av.r != null ? '평균 ' + lR(av.r) + ' · 우리점 ' + lR(vs[i][1]) : '') + '"><em>' + (i + 1) + '위</em> / ' + vs.length + '</span></p><ol class="sdx-cells' + (label ? ' lab' : '') + '">' + vs.map(function (x, j) {
+        var nm = cleanName(NAME[x[0]]).replace(/점$/, '');
+        return '<li' + (j === i ? ' class="me"' : '') + ' title="' + esc(NAME[x[0]]) + ' ' + lR(x[1]) + '">' + (label ? (j === i ? esc(nm) : j + 1) : '') + '</li>';
+      }).join('') + '</ol></div>';
+    };
+    var g = GRP[me], gl = GNAME[g] + (GNAME[g].slice(-1) === '형' ? '점' : '') + ' 그룹';
+    return strip(gl, openOf(g), true) + strip('킴스 전체', OPEN(), false) + '<p class="sdx-ax"><span>손실율 낮음</span><span>높음</span></p>';
+  }
+  // ── CD 손실액 / CD 손실율 진단: 점선 = 같은 그룹(전점 화면은 영업 점포 전체) 같은 CD(구매그룹) 평균 ──
+  function lDiagRows(k, plants, t, me) {
+    var tot = lAgg(k, plants, lCodes(t)); if (!tot) return null;
+    var items = t === 'store' ? D.storeCats.filter(function (c) { return c[0] !== 'etc' && c[1] !== '기타'; }).map(function (c) { return [c[1], catCodes(c[0])]; }) : ((D.storeCats.filter(function (c) { return c[0] === t; })[0] || [0, 0, []])[2]).map(function (g) { return [g[1], [g[0]]]; });
+    var gp = me ? openOf(GRP[me]) : OPEN(), gn = me ? GNAME[GRP[me]] + (GNAME[GRP[me]].slice(-1) === '형' ? '점' : '') : '킴스';
+    var rows = items.map(function (it) {
+      var y = lAgg(k, plants, it[1]); if (!(y && (y.l || y.n))) return null;
+      var ga = lAgg(k, gp, it[1]), n = gp.filter(function (p) { var x = lAgg(k, [p], it[1]); return x && x.n > 0; }).length;
+      return { n: it[0], y: y, l: y.l, r: y.r, avgA: ga && n ? ga.l / n : null, avgR: ga ? ga.r : null };
+    }).filter(Boolean).sort(function (a, b) { return b.l - a.l; });
+    if (!rows.length) return null;
+    return { rows: rows, gn: gn, gc: gp.length, unit: t === 'store' ? 'CD' : '구매그룹' };
+  }
+  function lDiagAmt(k, plants, t, me) {
+    var R = lDiagRows(k, plants, t, me); if (!R) return NOT_YET('손실');
+    var rows = R.rows, sa = rows.reduce(function (x, r) { return x + Math.max(0, r.l); }, 0), amax = Math.max.apply(null, rows.map(function (r) { return Math.max(r.l, r.avgA || 0); }).concat([1])) * 1.15;
+    var avgN = me ? R.gn + ' 그룹 평균' : '점포 평균';
+    return '<p class="note">손실액 = 마크다운 + 폐기 + 재고차이로스(백만원, ' + PNAME[k] + ') · 구성비 = 보이는 ' + R.unit + ' 손실액 합계 중 비중 · 점선 = ' + (me ? R.gn + ' 그룹 ' + R.gc + '개점' : '영업 ' + R.gc + '개점') + '의 같은 ' + R.unit + ' 점포당 평균 손실액' + (me ? ' · 막대 색 = 점선 이상 빨강, 미만 파랑 · 막대 길이 = 평균(가운데 점선) 대비, 평균의 2배 이상이면 끝까지' : ' · 막대 길이는 제곱근 눈금(작은 CD도 보이게)') + '</p>' +
+      sDashLg('점선 = ' + avgN + (me ? '<span class="sdx-k"><i class="hi"></i>평균 이상<i class="lo"></i>평균 미만</span>' : '')) +
+      '<div class="sdx-dg v2"><div class="sdx-dh"><span>' + R.unit + '</span><span>손실액 <small>백만원 · 구성비</small></span><span>' + (me ? R.gn + ' 평균' : '점포 평균') + '</span></div>' + rows.map(function (r) {
+        var rel = me && r.avgA > 0, bw = rel ? Math.min(100, Math.max(0, r.l) / r.avgA * 50) : Math.sqrt(Math.max(0, r.l) / amax) * 100;
+        var ax = r.avgA == null ? null : rel ? '50.0' : (Math.sqrt(Math.max(0, r.avgA) / amax) * 100).toFixed(1), hl = !me || r.avgA == null ? '' : r.l >= r.avgA ? 'hi' : 'lo';
+        return '<div class="sdx-dr"><b class="sxn">' + esc(r.n) + '</b>' +
+          '<span class="sxa"><i class="tr"><i class="' + hl + '" style="width:' + bw.toFixed(1) + '%"></i>' + (ax ? '<i class="avg" style="left:' + ax + '%" title="' + avgN + ' ' + man(r.avgA) + '백만원"></i>' : '') + '</i><em><b>' + man(r.l) + '</b>백만 · ' + (sa ? f1(Math.max(0, r.l) / sa * 100) : '-') + '%</em></span>' +
+          '<span class="sxt"><small class="sdx-av">' + (r.avgA == null ? '-' : man(r.avgA) + '백만') + '</small></span></div>';
+      }).join('') + '</div>';
+  }
+  function lDiag(k, plants, t, me) {
+    var R = lDiagRows(k, plants, t, me); if (!R) return NOT_YET('손실');
+    var rows = R.rows, rs = rows.filter(function (r) { return r.r != null; }).map(function (r) { return r.r; });
+    var rmax = Math.max.apply(null, rs.concat(rows.map(function (r) { return r.avgR || 0; }), [0.1])) * 1.15;
+    var hi = me && rs.length > 1 ? Math.max.apply(null, rs) : null, lo = me && rs.length > 1 ? Math.min.apply(null, rs) : null;
+    var tag = function (r) {
+      if (r.r == null || !(r.avgR > 0)) return ['', '-'];
+      var x = r.r / r.avgR, times = x >= 1.5 ? ' · 평균의 ' + (Math.round(x * 10) / 10) + '배' : '';
+      if (x > 1.1) return ['w', (r.r === hi ? '가장 높음' : '평균보다 높음') + times];
+      if (x < 0.9) return ['g', r.r === lo ? '가장 낮음' : '평균보다 낮음'];
+      return ['', '평균 수준'];
+    };
+    return '<p class="note">손실율 = 손실액 ÷ 실매출(' + PNAME[k] + ') · 점선 = ' + (me ? R.gn + ' 그룹 ' + R.gc + '개점' : '영업 ' + R.gc + '개점') + ' 같은 ' + R.unit + '의 손실율(합산 손실 ÷ 합산 실매출) · 진단 = 이 평균과 비교, ±10% 안이면 평균 수준 · 평균의 1.5배 이상이면 몇 배인지 표시</p>' +
+      sDashLg('점선 = ' + (me ? R.gn + ' 그룹 평균' : '점포 전체 평균')) +
+      '<div class="sdx-dg v2"><div class="sdx-dh"><span>' + R.unit + '</span><span>손실율</span><span>진단 · ' + (me ? R.gn + ' 평균' : '평균') + '</span></div>' + rows.map(function (r) {
+        var tg = tag(r), avgX = r.avgR == null ? null : (r.avgR / rmax * 100).toFixed(1);
+        return '<div class="sdx-dr"><b class="sxn">' + esc(r.n) + '</b>' +
+          '<span class="sxd"><i class="tr">' + (r.r == null ? '' : '<i class="' + tg[0] + '" style="width:' + (Math.max(0, r.r) / rmax * 100).toFixed(1) + '%"></i>') + (avgX ? '<i class="avg" style="left:' + avgX + '%" title="평균 ' + lR(r.avgR) + '"></i>' : '') + '</i><em class="' + tg[0] + '">' + lR(r.r) + '</em></span>' +
+          '<span class="sxt"><span class="sdx-chip ' + tg[0] + '">' + tg[1] + '</span><small class="sdx-av">' + (me ? R.gn + ' ' : '평균 ') + lR(r.avgR) + '</small></span></div>';
+      }).join('') + '</div>';
+  }
+  // ── 일별 손실: 막대 = 마크다운·폐기·재고차이 쌓기(금년 당월) · 점선 = 전년 같은 요일 손실 합계 ──
+  function lSeries(plants, key, box) { // → {날짜 또는 YYYYMM: [MD, DS, SH, N]}
+    var by = {};
+    plants.forEach(function (p) { ((((D.lossx || {})[box] || {})[p] || {})[key] || []).forEach(function (x) { var a = by[x[0]] || (by[x[0]] = [0, 0, 0, 0]); for (var i = 0; i < 4; i++) a[i] += x[i + 1] || 0; }); });
+    return by;
+  }
+  var lSum3 = function (a) { return a ? a[0] + a[1] + a[2] : null; };
+  GTIP.lday = function (wrap, hit) {
+    var d = hit.dataset.day, ld = dAdd(d, -364), lab = function (s) { return Number(s.slice(5, 7)) + '/' + Number(s.slice(8)) + '(' + WD[new Date(s + 'T00:00:00Z').getUTCDay()] + ')'; };
+    var pl = wrap.dataset.me === 'ALL' ? OPEN() : [wrap.dataset.me], key = wrap.dataset.t === 'store' ? 'store' : wrap.dataset.t, by = lSeries(pl, key, 'day'), a = by[d], b = by[ld];
+    var li = function (n, v, sub, c) { return '<li class="' + (c || 'pg') + '"><span>' + n + '</span><b>' + v + '</b><em>' + (sub || '') + '</em></li>'; };
+    return '<p class="tt">' + lab(d) + ' 손실 <small>전년 같은 요일 ' + lab(ld) + '</small></p><ul>' +
+      (a ? li('손실 합계', man(lSum3(a)) + '백만', a[3] > 0 ? '손실율 ' + f2(lSum3(a) / a[3] * 100) + '%' : '', 'tot') + LTYPE.map(function (x, i) { return li(x[1], man(a[i]) + '백만', ''); }).join('') : li('금년', '데이터 없음', '', 'tot')) +
+      (b ? '<li class="sep" aria-hidden="true"></li>' + li('전년 손실', man(lSum3(b)) + '백만', b[3] > 0 ? '손실율 ' + f2(lSum3(b) / b[3] * 100) + '%' : '') : '') + '</ul>';
+  };
+  function lDayChart(plants, t) {
+    var key = t === 'store' ? 'store' : t, by = lSeries(plants, key, 'day'), base = D.lossx.base, m0 = base.slice(0, 7);
+    var dk = Object.keys(by).filter(function (d) { return d.slice(0, 7) === m0; }).sort(); if (!dk.length) return NOT_YET('일별 손실');
+    var ds = [], d0 = m0 + '-01'; for (var dd = d0; dd.slice(0, 7) === m0; dd = dAdd(dd, 1)) ds.push(dd);
+    var v = ds.map(function (d) { return by[d] || null; }), lv = ds.map(function (d) { var x = by[dAdd(d, -364)]; return x ? lSum3(x) : null; });
+    var hasL = lv.some(function (x) { return x != null; });
+    var tops = v.map(function (a) { return a ? Math.max(0, a[0]) + Math.max(0, a[1]) + Math.max(0, a[2]) : null; });
+    var mx = Math.max.apply(null, tops.filter(function (x) { return x != null; }).concat(lv.filter(function (x) { return x != null; }), [1])) * 1.12;
+    var W = Math.max(320, CHART_W), H = 220, L = 8, R = 8, T = 26, B = 30, n = ds.length;
+    var HS = CHART_W < 560 && n * 24 + 16 > W; if (HS) W = n * 24 + 16;
+    var cw = (W - L - R) / n, bw = Math.max(4, Math.min(26, cw * 0.62));
+    var X = function (i) { return L + cw * (i + 0.5); }, Y = function (a) { return T + (H - T - B) * (1 - Math.max(0, a) / mx); };
+    var last = ds.indexOf(dk[dk.length - 1]);
+    var bars = v.map(function (a, i) {
+      if (!a) return '';
+      var y0 = H - B, out = '';
+      [['m', a[0]], ['d', a[1]], ['s', a[2]]].forEach(function (p) { if (!(p[1] > 0)) return; var h = (H - T - B) * p[1] / mx; out += '<rect class="lsb ' + p[0] + '" x="' + (X(i) - bw / 2).toFixed(1) + '" y="' + (y0 - h).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + Math.max(0.5, h).toFixed(1) + '"/>'; y0 -= h; });
+      return out;
+    }).join('');
+    var lp = ''; lv.forEach(function (a, i) { if (a != null) lp += (lp ? 'L' : 'M') + X(i).toFixed(1) + ',' + Y(a).toFixed(1); });
+    var vv = tops.filter(function (x) { return x != null; }), imx = tops.indexOf(Math.max.apply(null, vv));
+    var lab = function (i, c) { return tops[i] == null ? '' : '<text class="sv ' + c + '" x="' + X(i).toFixed(1) + '" y="' + (Y(tops[i]) - 6).toFixed(1) + '" text-anchor="middle">' + man(tops[i]) + '</text>'; };
+    var step = Math.ceil(n / (W < 500 ? 8 : 16)), dow = function (d) { return new Date(d + 'T00:00:00Z').getUTCDay(); };
+    var hits = ds.map(function (d, i) { return !v[i] && lv[i] == null ? '' : '<rect class="hit" data-day="' + d + '" x="' + (L + cw * i).toFixed(1) + '" y="' + T + '" width="' + cw.toFixed(1) + '" height="' + (H - B - T) + '" tabindex="0"/>'; }).join('');
+    return '<p class="note">' + (t === 'store' ? '' : '이 CD ') + '단위 백만원 · 정판율 마트는 하루쯤 늦게 들어와 최근 날짜가 비어 있을 수 있음 · 막대에 마우스를 올리면(폰은 누르면) 유형별 금액·손실율</p>' +
+      '<p class="slg lslg"><span><i class="m"></i>마크다운</span><span><i class="d"></i>폐기</span><span><i class="s"></i>재고차이로스</span>' + (hasL ? '<span><i class="l"></i>전년 같은 요일</span>' : '') + '</p>' +
+      '<div class="sdc' + (HS ? ' sdx-hs" data-sx="' + ((L + cw * (last + 0.5)) / W).toFixed(3) : '') + '"><div class="dcw" data-kind="lday" data-me="' + (ST.s === 'all' ? 'ALL' : ST.s) + '" data-t="' + t + '"><svg viewBox="0 0 ' + W + ' ' + H + '" width="' + (HS ? W : '100%') + '" height="' + H + '" role="img" aria-label="당월 일별 손실액">' +
+      '<line class="sax" x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '"/>' + bars + (lp ? '<path class="sll" d="' + lp + '"/>' : '') +
+      lab(imx, 'hi') + (last !== imx ? lab(last, 'cur') : '') +
+      ds.map(function (d, i) { var wd = dow(d); return i % step === 0 || i === last || (i === n - 1 && (n - 1) % step >= Math.ceil(step / 2)) ? '<text class="sx' + (wd === 0 ? ' sun' : wd === 6 ? ' sat' : '') + '" x="' + X(i).toFixed(1) + '" y="' + (H - 10) + '" text-anchor="middle">' + Number(d.slice(8)) + '</text>' : ''; }).join('') + hits + '</svg><div class="tip" hidden></div></div></div>';
+  }
+  // ── 월별 손실율: 금년 vs 전년(이번 달은 1일~마트 마지막 날, 전년은 같은 요일 구간) ──
+  function lMonRows(plants, t) {
+    var key = t === 'store' ? 'store' : t, mo = lSeries(plants, key, 'mon'), dy = lSeries(plants, key, 'day'), base = D.lossx.base, y0 = Number(base.slice(0, 4)), m0 = Number(base.slice(5, 7));
+    var dk = Object.keys(dy).filter(function (d) { return d.slice(0, 7) === base.slice(0, 7); });
+    var cur = [0, 0, 0, 0], curL = [0, 0, 0, 0], anyL = false;
+    dk.forEach(function (d) { var a = dy[d], b = dy[dAdd(d, -364)]; for (var i = 0; i < 4; i++) cur[i] += a[i]; if (b) { anyL = true; for (var j = 0; j < 4; j++) curL[j] += b[j]; } });
+    var rows = [];
+    for (var m = 1; m <= 12; m++) {
+      var mm = (m < 10 ? '0' : '') + m, isC = m === m0;
+      var a = m > m0 ? null : isC ? (dk.length ? cur : null) : mo[y0 + mm] || null, b = isC ? (anyL ? curL : null) : mo[(y0 - 1) + mm] || null;
+      rows.push({ m: m, a: a, b: b, cur: isC, r: a && a[3] > 0 ? lSum3(a) / a[3] * 100 : null, rL: b && b[3] > 0 ? lSum3(b) / b[3] * 100 : null });
+    }
+    return rows;
+  }
+  GTIP.lmon = function (wrap, hit) {
+    var m = Number(hit.dataset.m), y0 = Number(D.lossx.base.slice(0, 4)), r = lMonRows(wrap.dataset.me === 'ALL' ? OPEN() : [wrap.dataset.me], wrap.dataset.t)[m - 1];
+    var li = function (n, v, sub, c) { return '<li class="' + (c || 'pg') + '"><span>' + n + '</span><b>' + v + '</b><em>' + (sub || '') + '</em></li>'; };
+    return '<p class="tt">' + m + '월 손실율 <small>' + y0 + '년 vs ' + (y0 - 1) + '년' + (r.cur ? ' · 이번 달은 마트에 들어온 날까지' : '') + '</small></p><ul>' +
+      li(y0 + '년', lR(r.r), r.a ? man(lSum3(r.a)) + '백만' : '', 'tot') + li((y0 - 1) + '년', lR(r.rL), r.b ? man(lSum3(r.b)) + '백만' : '') +
+      (r.a ? '<li class="sep" aria-hidden="true"></li>' + LTYPE.map(function (x, i) { return li(x[1], man(r.a[i]) + '백만', r.a[3] > 0 ? f2(r.a[i] / r.a[3] * 100) + '%' : ''); }).join('') : '') + '</ul>';
+  };
+  function lMonChart(plants, t) {
+    var rows = lMonRows(plants, t), y0 = Number(D.lossx.base.slice(0, 4)), m0 = Number(D.lossx.base.slice(5, 7));
+    var vals = []; rows.forEach(function (r) { if (r.r != null) vals.push(r.r); if (r.rL != null) vals.push(r.rL); });
+    if (!vals.length) return NOT_YET('월별 손실');
+    var mx = Math.max.apply(null, vals.concat([0.1])) * 1.15, W = Math.max(320, CHART_W), H = 230, L = 8, R = 8, T = 22, B = 46, n = 12;
+    var HS = CHART_W < 560; if (HS) W = Math.max(W, n * 60 + 16);
+    var cw = (W - L - R) / n, bw = Math.max(5, Math.min(22, cw * 0.32));
+    var Y = function (a) { return T + (H - T - B) * (1 - Math.max(0, a) / mx); }, X = function (i) { return L + cw * (i + 0.5); };
+    var noLy = rows.filter(function (r) { return r.rL == null && r.m <= m0; }).map(function (r) { return r.m; });
+    var svg = rows.map(function (r, i) {
+      var x = X(i), out = '';
+      if (r.rL != null) out += '<rect class="mb l" x="' + (r.r != null ? x - bw - 1 : x - bw / 2).toFixed(1) + '" y="' + Y(r.rL).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + (H - B - Y(r.rL)).toFixed(1) + '" rx="3"/>';
+      if (r.r != null) out += '<rect class="mb t lmb' + (r.cur ? ' cur' : '') + '" x="' + (r.rL != null ? x + 1 : x - bw / 2).toFixed(1) + '" y="' + Y(r.r).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + (H - B - Y(r.r)).toFixed(1) + '" rx="3"/>' +
+        '<text class="mv" x="' + (r.rL != null ? x + 1 + bw / 2 : x).toFixed(1) + '" y="' + (Y(r.r) - 5).toFixed(1) + '" text-anchor="middle">' + f2(r.r) + '</text>';
+      out += '<text class="mx" x="' + x.toFixed(1) + '" y="' + (H - B + 16) + '" text-anchor="middle">' + r.m + '월' + (r.cur ? '*' : '') + '</text>';
+      if (r.r != null && r.rL != null) { var dd = r.r - r.rL; out += '<text class="mg ' + lPpCls(dd) + '" x="' + x.toFixed(1) + '" y="' + (H - B + 32) + '" text-anchor="middle">' + pp2(dd) + '</text>'; }
+      return out;
+    }).join('');
+    var hits = rows.map(function (r, i) { return r.r == null && r.rL == null ? '' : '<rect class="hit" data-m="' + r.m + '" x="' + (L + cw * i).toFixed(1) + '" y="' + T + '" width="' + cw.toFixed(1) + '" height="' + (H - B - T) + '" tabindex="0"/>'; }).join('');
+    return '<p class="note">손실율(%) · 아래 = 전년 대비 증감(%p, 늘면 빨강) · ' + m0 + '월* = 1일~마트에 들어온 날까지 vs 전년 같은 요일 구간' + (noLy.length ? ' · 전년 ' + (noLy.length === 1 ? noLy[0] + '월' : noLy[0] + '~' + noLy[noLy.length - 1] + '월') + '은 마트에 데이터가 없어 비움' : '') + '</p>' +
+      '<p class="slg"><span><i class="t lt"></i>' + y0 + '년</span><span><i class="l"></i>' + (y0 - 1) + '년</span></p>' +
+      '<div class="sdc' + (HS ? ' sdx-hs" data-sx="' + (X(m0 - 1) / W).toFixed(3) : '') + '"><div class="dcw" data-kind="lmon" data-me="' + (ST.s === 'all' ? 'ALL' : ST.s) + '" data-t="' + t + '"><svg viewBox="0 0 ' + W + ' ' + H + '" width="' + (HS ? W : '100%') + '" height="' + H + '" role="img" aria-label="월별 손실율 금년 전년 비교"><line class="sax" x1="' + L + '" x2="' + (W - R) + '" y1="' + (H - B) + '" y2="' + (H - B) + '"/>' + svg + hits + '</svg><div class="tip" hidden></div></div></div>';
+  }
+  // ── 손실 상세 표(CD·구매그룹) ──
+  function lCdTable(k, plants, t, who) {
+    var tot = lAgg(k, plants, lCodes(t)); if (!tot) return NOT_YET('손실');
+    var cats = t === 'store' ? D.storeCats : D.storeCats.filter(function (c) { return c[0] === t; });
+    var row = function (name, y, lvl) {
+      if (!y) return '';
+      return '<tr class="' + lvl + '"><th>' + esc(name) + '</th><td>' + man(y.l) + '</td><td>' + lR(y.r) + '</td><td class="ly">' + lR(y.rL) + '</td><td class="' + lPpCls(y.rD) + '">' + pp2(y.rD) + '</td><td>' + man(y.md) + '</td><td>' + man(y.ds) + '</td><td>' + man(y.sh) + '</td><td class="ly">' + man(y.n) + '</td></tr>';
+    };
+    var body = row(who + (t === 'store' ? ' 합계' : ' ' + ((cats[0] || [])[1] || '') + ' 합계'), tot, 'tot') + cats.map(function (c) {
+      var y = lAgg(k, plants, catCodes(c[0])); if (!y) return '';
+      var pgs = c[2].map(function (g) { return [g[1], lAgg(k, plants, [g[0]])]; }).filter(function (x) { return x[1]; });
+      return (t === 'store' ? row(c[1], y, 'cd') : '') + (pgs.length > 1 || t !== 'store' ? pgs.map(function (x) { return row(x[0], x[1], 'pg'); }).join('') : '');
+    }).join('');
+    return '<p class="note">금액 단위 백만원 · ' + PNAME[k] + (lRngTxt(k) ? ' ' + lRngTxt(k) : '') + ' · 증감 = 손실율 금년 − 전년(%p, 늘면 빨강) · 실매출 = 정판율 마트 실매출(손실율 분모)</p><div class="hx"><table class="st sct lct"><thead><tr><th>' + (t === 'store' ? 'CD · 구매그룹' : '구매그룹') + '</th><th>손실액</th><th>손실율</th><th>전년 손실율</th><th>증감</th><th>마크다운</th><th>폐기</th><th>재고차이</th><th>실매출</th></tr></thead><tbody>' + body + '</tbody></table></div>';
+  }
+  // ── 전점: 점포별 손실 순위(항목 버튼) ──
+  var LRANK = [
+    ['손실율', '손실율 높은 순', function (y) { return y.r; }, function (y) { return lR(y.r); }, true],
+    ['손실액', '손실액 큰 순', function (y) { return y.l; }, function (y) { return man(y.l) + '백만'; }, true],
+    ['손실율 증감', '전년 대비 손실율 증감(%p) 큰 순', function (y) { return y.rD; }, function (y) { return pp2(y.rD); }, true],
+    ['마크다운율', '마크다운 ÷ 실매출 높은 순', function (y) { return y.mdR; }, function (y) { return lR(y.mdR); }, true],
+    ['폐기율', '폐기 ÷ 실매출 높은 순', function (y) { return y.dsR; }, function (y) { return lR(y.dsR); }, true],
+  ];
+  function lRankTabs(k, t) {
+    return detailTabs('lrank', LRANK.map(function (g, gi) {
+      var rows = OPEN().map(function (p) { return [p, lAgg(k, [p], lCodes(t))]; }).filter(function (x) { return x[1] && g[2](x[1]) != null && isFinite(g[2](x[1])); });
+      if (rows.length < 3) return [g[0], NOT_YET('손실')];
+      rows.sort(function (a, b) { return g[4] ? g[2](b[1]) - g[2](a[1]) : g[2](a[1]) - g[2](b[1]); });
+      var ab = rows.map(function (x) { return Math.abs(g[2](x[1])); }).sort(function (a, b) { return a - b; }), mx = ab[Math.floor(ab.length * 0.9)] || ab[ab.length - 1] || 1;
+      return [g[0], '<p class="note">' + g[1] + ' · ' + PNAME[k] + ' · 막대를 누르면 그 점포로 이동</p><ol class="grk" style="--rows:' + Math.ceil(rows.length / 2) + '">' + rows.map(function (x, i) {
+        var v = g[2](x[1]), w = Math.min(1, Math.abs(v) / mx) * 50, neg = v < 0, bad = gi === 2 ? v > 0 : false;
+        return '<li class="pick" data-s="' + x[0] + '" tabindex="0"><span class="gi">' + (i + 1) + '</span><span class="gn">' + esc(NAME[x[0]]) + '<small>' + GNAME[GRP[x[0]]] + '</small></span><span class="gtk"><i class="' + (neg ? 'n' : 'p') + ' sk' + (bad ? ' hi' : '') + '" style="width:' + w.toFixed(1) + '%"></i></span><b' + (bad ? ' class="dn"' : neg && gi === 2 ? ' class="up"' : '') + '>' + g[3](x[1]) + '</b></li>';
+      }).join('') + '</ol>'];
+    }));
+  }
+  // ── 점포: 관리 필요 상품 = 이번 달 손실 큰 상품(유형별 탭) · CD 고르기 ──
+  var LIF = {};
+  var LXCD = [['nongsan', '농산'], ['susan', '수산'], ['chuksan', '축산'], ['gongsan', '공산'], ['deli', '델리'], ['living', '리빙']];
+  var LXICON = { deli: '<path d="M4 11h16a8 8 0 0 1-16 0zM3 11h18M9 7c0-1.5 1-2 1-3.5M13 7c0-1.5 1-2 1-3.5"/>', living: '<path d="M3 11l9-7 9 7M5 9.5V20h14V9.5M10 20v-6h4v6"/>' };
+  function lItemFilter(t, cd, by) {
+    var ic = function (k) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (SXICON[k] || LXICON[k] || SXICON.all) + '</svg>'; };
+    if (t !== 'store') return '';
+    var cds = LXCD.filter(function (c) { return by[c[0]]; }); if (!cds.length) return '';
+    return '<div class="sxf lxf" role="group" aria-label="CD 고르기"><button type="button" class="sxf-b' + (!cd ? ' on' : '') + '" data-cd="" data-pg="">' + ic('all') + '<span>전체</span></button>' +
+      cds.map(function (c) { return '<div class="sxf-c' + (cd === c[0] ? ' on' : '') + '"><button type="button" class="sxf-b" data-cd="' + c[0] + '" data-pg="">' + ic(c[0]) + '<span>' + c[1] + '</span></button></div>'; }).join('') + '</div>';
+  }
+  var LXSORT = [['a', 'd', '이 유형 손실 큰 순'], ['d', 'd', '손실율 높은 순'], ['q', 'd', '손실 합계 큰 순'], ['s', 'd', '실매출 큰 순'], ['s', 'a', '실매출 작은 순']];
+  function lItems(me, t) {
+    var by = (((D.lossx || {}).item) || {})[me] || {}, cd = t === 'store' ? (LIF.store || '') : t;
+    if (cd && !by[cd]) cd = '';
+    var cats = cd ? [cd] : Object.keys(by);
+    if (!cats.length) return NOT_YET('손실 상품');
+    var cn = function (c) { return ((D.storeCats.filter(function (x) { return x[0] === c; })[0]) || [0, ''])[1]; };
+    var y0 = lAgg('M', [me], cd ? catCodes(cd) : null), avg = y0 ? y0.r : null; // 기준선 = 이 점포(고른 CD) 월간 손실율
+    var filt = lItemFilter(t, cd, by);
+    var head = '<p class="sxi-chips"><span><i class="dsh" aria-hidden="true"></i>점선 = ' + esc(cd ? cn(cd) : NAME[me]) + ' 월간 손실율 ' + lR(avg) + '</span><span>단위<em> · 금액</em> 만원 · ' + PNAME.M + (lRngTxt('M') ? ' ' + lRngTxt('M') : '') + '</span></p>';
+    return head + detailTabs('litem', LTYPE.map(function (tp, ti) {
+      var list = [].concat.apply([], cats.map(function (c) { return ((by[c] || {})[tp[2]] || []).map(function (r) { return r.concat([c]); }); }));
+      list.sort(function (a, b) { return b[4 + ti] - a[4 + ti]; }); list = list.slice(0, 20);
+      if (!list.length) return [tp[1], '<p class="pempty sm">해당 상품이 없습니다</p>'];
+      var tot = list.reduce(function (x, r) { return x + r[4 + ti]; }, 0), amax = Math.max.apply(null, list.map(function (r) { return r[4 + ti]; }).concat([1]));
+      var rate = function (r) { var l = r[4] + r[5] + r[6]; return r[7] > 0 ? l / r[7] * 100 : null; };
+      var rmax = Math.max.apply(null, list.map(function (r) { var x = rate(r); return x == null ? 0 : x; }).concat([(avg || 1) * 3, 1])), LM = Math.log(rmax * 1.05 * 100), lp = function (x) { return Math.max(0, Math.min(100, Math.log(Math.max(x * 100, 1)) / LM * 100)); };
+      var th = function (k2, nm, dir) { return '<th class="' + k2 + '"' + (k2 === 'a' ? ' aria-sort="descending"' : '') + '><button type="button" class="sxs" data-k="' + k2 + '" data-n="' + nm + '" data-d="' + dir + '">' + nm + '</button></th>'; };
+      var body = list.map(function (r, i) {
+        var c = r[r.length - 1], l = r[4] + r[5] + r[6], x = rate(r), lv = x == null ? 3 : avg > 0 ? (x >= avg * 10 ? 3 : x >= avg * 3 ? 2 : x > avg ? 1 : 0) : 0;
+        var pgn = r[3] ? ((pgOf(c).filter(function (g) { return g[0] === r[3]; })[0]) || [0, ''])[1] : '';
+        var sub = [esc(pgn || cn(c)), esc(r[2] || '')].filter(Boolean).join(' · ');
+        return '<tr' + (i >= 10 ? ' class="sxm"' : '') + ' data-a="' + r[4 + ti] + '" data-d="' + (x == null ? 1e9 : x) + '" data-q="' + l + '" data-s="' + r[7] + '" data-v="' + (l ? r[4 + ti] / l : 0) + '">' +
+          '<td class="i">' + (i + 1) + '</td><th class="n">' + esc(r[1] || r[0]) + '<small>' + sub + '</small></th>' +
+          '<td class="a" data-l="' + tp[1] + '"><span class="sxi-b"><i style="width:' + (Math.max(0, r[4 + ti]) / amax * 100).toFixed(1) + '%"></i></span><b>' + lWan(r[4 + ti]) + '</b></td>' +
+          '<td class="d" data-l="손실율"><span class="sxi-b lg"><i class="v' + lv + '" style="width:' + (x == null ? 100 : lp(x)).toFixed(1) + '%"></i>' + (avg > 0 ? '<u style="left:' + lp(avg).toFixed(1) + '%" title="평균 ' + lR(avg) + '"></u>' : '') + '</span><b class="v' + lv + '">' + (x == null ? '매출 없음' : x >= 1000 ? Math.round(x).toLocaleString('ko-KR') + '%' : f1(x) + '%') + '</b></td>' +
+          '<td class="q" data-l="손실 합계">' + lWan(l) + '</td><td class="s" data-l="실매출">' + lWan(r[7]) + '</td><td class="v" data-l="이 유형 비중">' + (l > 0 ? Math.round(r[4 + ti] / l * 100) + '%' : '-') + '</td></tr>';
+      }).join('');
+      return [tp[1], '<p class="sxi-sum"><span>' + tp[1] + ' 합계 <b>' + lWan(tot) + '</b>만원</span><span class="sxi-st">정렬 · <b class="sxi-sl">' + tp[1] + ' 큰 순</b></span>' +
+        '<label class="sxi-so"><span>정렬</span><select class="sxi-sel" aria-label="정렬 기준">' + LXSORT.map(function (o) { var v = o[0] + ':' + o[1]; return '<option value="' + v + '"' + (v === 'a:d' ? ' selected' : '') + '>' + o[2].replace('이 유형', tp[1]) + '</option>'; }).join('') + '</select></label><span class="sxi-h">열 제목을 누르면 정렬이 바뀝니다</span></p>' +
+        '<div class="hx sxi-w"><table class="sxi lxi" data-k="a" data-dir="d"><thead><tr><th class="i">#</th><th class="n">상품</th>' +
+        th('a', tp[1], 'd') + th('d', '손실율', 'd') + th('q', '손실 합계', 'd') + th('s', '실매출', 'd') + th('v', '이 유형 비중', 'd') + '</tr></thead><tbody>' + body + '</tbody></table></div>' +
+        (list.length > 10 ? '<button type="button" class="sxi-more" aria-expanded="false"><span>' + (list.length - 10) + '개 더 보기</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>' : '') +
+        '<p class="note">이번 달 ' + tp[1] + ' 금액이 큰 상품(CD별 상위 40개 안에서 20개) · 손실율 = 상품 손실 합계 ÷ 상품 실매출, 막대는 로그 눈금 · 색 = 점선(평균) 이하 회색, 3배 미만 노랑, 10배 미만 주황, 그 이상 빨강 · 이 유형 비중 = 상품 손실 합계 중 ' + tp[1] + '</p>'];
+    })).replace('<div class="dtbw">', '<div class="dtbw sxi-tabs">').replace(/(<div class="dtbw sxi-tabs"><div class="dtb"[\s\S]*?<\/div>)/, function (m) { return m + filt; });
+  }
+  function lossView() {
+    var X0 = D.lossx, me = ST.s === 'all' ? null : ST.s, t = ST.t, k = ST.k, plants = me ? [me] : OPEN();
+    var tn = t === 'store' ? '' : ' · ' + sTabName(t);
+    var head = { eyebrow: '', h1: (me ? NAME[me] : '킴스클럽 전점') + ' 손실' + tn, sub: '' };
+    if (!X0) { head.rows = [[sec('lkpi', '손실 요약', '', NOT_YET('손실'))]]; return head; }
+    var who = me ? NAME[me] : '킴스', rg = lRngTxt(k) ? ' <small class="h3s">' + PNAME[k] + ' ' + lRngTxt(k) + '</small>' : '';
+    head.rows = [
+      [sec('lkpi', '손실 요약', '', lCards(k, plants, t, me), null, 'bare')],
+    ].concat(me ? [[sec('lrk', '손실율 순위', '손실율 순위 <small class="h3s">낮은 순 · ' + PNAME[k] + '</small>', lRankStrip(k, t, me), 'lrk')]] : []).concat([
+      [sec('ldamt', t === 'store' ? 'CD 손실액' : '구매그룹 손실액', 'x' + rg, lDiagAmt(k, plants, t, me), 'ldamt'), sec('ldiag', t === 'store' ? 'CD 손실율 진단' : '구매그룹 손실율 진단', 'x' + rg, lDiag(k, plants, t, me), 'ldiag')],
+      [sec('lday', '일별 손실', '일별 손실 <small class="h3s">' + Number(X0.base.slice(5, 7)) + '월 · 백만원</small>', lDayChart(plants, t), 'lday')],
+      [sec('lmon', '월별 손실', '월별 손실율 <small class="h3s">금년 vs 전년</small>', lMonChart(plants, t), 'lmon')],
+      [sec('lcd', '손실 상세', (t === 'store' ? 'CD·구매그룹별' : '구매그룹별') + ' 손실' + rg, lCdTable(k, plants, t, who), 'lcd')],
+    ]).concat(me ? [[sec('litem', '관리 필요 상품', '관리 필요 상품 <small class="h3s">이번 달 손실 큰 상품</small>', lItems(me, t), 'litem')]] : [
+      [sec('lrank', '점포 손실 순위', '점포별 손실 순위', lRankTabs(k, t), 'lrank')],
+    ]);
+    return head;
+  }
   // ── 상품 상세(2026-11-27 제이) ── 메인 메뉴 '상품 상세' → MODE 'item' · 주소 #itm-점포-탭-기간
   //   점포를 고르면 그 점포 상품 데이터(약 1만 개, 0.5MB 압축)만 서버에서 받아 옴(WEB.item) — 한 번 받은 점포는 이 기기에 저장
   //   행 = [상품코드, 상품명, MC 번호, 구매그룹(상품 기준), M·W·D × (매출 금년·전년, 수량 금년·전년, 매출총이익 금년·전년), 재고액, 재고수량, 하루 매출원가]
@@ -4254,11 +4591,14 @@ var KIMS = (function () {
   var OPT = [['daily', '일별 매출'], ['hour', '시간대 매출'], ['detail', '우리점 VS 비교점'], ['gb', '잘한·부족한 점'], ['bars', '그룹 매출 성장율'], ['heat', '실적 신호등 (점포)'], ['mc', 'MC 증감'], ['top', '상위 상품 (CD 탭)'], ['quad', '건수×건단가 현황 (전점)'], ['radar', '성장율 비교'], ['wf', 'CD 매출 증감'], ['mix', '매출 구성비'], ['grank', '점포 실적 순위 (전점)'], ['grpc', '그룹 증감 기여 (전점)']];
   // 재고 화면 전용 보일 항목(2026-11-24) — 매출 OPT 와 키가 겹치지 않게 s 로 시작
   var SOPT = [['sdrank', '재고일수 순위 (점포)'], ['sdamt', 'CD 재고액'], ['sdiag', 'CD 재고일수 진단'], ['sday', '일별 재고액'], ['smon', '월별 재고'], ['scd', '재고 상세'], ['sitem', '관리 필요 상품 (점포)'], ['srank', '점포 재고 순위 (전점)']];
+  // 손실 화면 전용 보일 항목(2026-11-28) — l 로 시작
+  var LOPT = [['lrk', '손실율 순위 (점포)'], ['ldamt', 'CD 손실액'], ['ldiag', 'CD 손실율 진단'], ['lday', '일별 손실'], ['lmon', '월별 손실'], ['lcd', '손실 상세'], ['litem', '관리 필요 상품 (점포)'], ['lrank', '점포 손실 순위 (전점)']];
   var ST = { k: 'D', s: 'all', t: 'store', v: 'report' };
   function view() {
     if (ST.v === 'stats') return statsView();
     if (MODE === 'stock') return stockView();
     if (MODE === 'item') { if (itemOk()) return itemView(); MODE = 'sales'; }
+    if (MODE === 'loss') { if (lossOk()) return lossView(); MODE = 'sales'; }
     if (ST.s === 'all') return ST.t === 'store' || ALL_TABS.indexOf(ST.t) < 0 ? allView(ST.k) : allCatView(ST.k, ST.t);
     return ST.t === 'store' ? storeView(ST.k, ST.s) : catView(ST.k, ST.s, ST.t);
   }
@@ -4322,6 +4662,10 @@ var KIMS = (function () {
     sitem: '<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
     srank: '<path d="M8 21V11M12 21V5M16 21v-7M4 21h16"/>',
     sgrp: '<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20a6 6 0 0 1 12 0M10 20a6 6 0 0 1 12 0"/>',
+    lkpi: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    lrk: '<path d="M8 21V11M12 21V5M16 21v-7M4 21h16"/>', ldamt: '<path d="M4 7h12M4 12h8M4 17h14"/><path d="M14 4v16" stroke-dasharray="1.5 2"/>', ldiag: '<path d="M4 6h10M4 12h16M4 18h7"/><path d="M17 4v4" stroke-dasharray="1.5 1.5"/>',
+    lday: '<path d="M4 20V12M9 20V8M14 20v-6M19 20V6"/>', lmon: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>', lcd: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10M15 10v10"/>',
+    litem: '<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>', lrank: '<path d="M8 21V11M12 21V5M16 21v-7M4 21h16"/>',
     def: '<circle cx="12" cy="12" r="8"/>',
   };
   var NAVI = {
@@ -4331,7 +4675,8 @@ var KIMS = (function () {
     stats: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
     box: '<path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>',
     user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
-    tag: '<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>'
+    tag: '<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+    loss: '<path d="M3 6l6 6 4-4 8 8"/><path d="M15 16h6v-6"/>'
   };
   var ni = function (k) { return '<svg class="ni" viewBox="0 0 24 24" aria-hidden="true">' + NAVI[k] + '</svg>'; };
   function navHtml() {
@@ -4349,11 +4694,11 @@ var KIMS = (function () {
       '<span class="nmt"><b>' + meName + (ST.t !== 'store' && curTab ? ' · ' + curTab : '') + '</b><small>' + meSub + '</small></span>' +
       '<button type="button" class="nsw" data-go="pick" aria-label="점포 바꾸기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg></button></div>' +
       '<div class="nbtns"><button type="button" data-go="all"' + (allOn ? ' aria-current="page"' : '') + '>' + ni('all') + '<span>' + (MODE === 'item' ? '점포 선택' : '전점 요약') + '</span></button>' + // 상품 상세는 전점 화면이 곧 점포 고르기(2026-11-28 제이)
-      MODES.filter(function (m) { return m[0] !== MODE && (m[0] !== 'item' || itemOk()); }).map(function (m) { return '<button type="button" data-go="mode" data-m="' + m[0] + '">' + ni(m[2]) + '<span>' + m[1] + '</span></button>'; }).join('') + '</div>' +
+      MODES.filter(function (m) { return m[0] !== MODE && (m[0] !== 'item' || itemOk()) && (m[0] !== 'loss' || lossOk()); }).map(function (m) { return '<button type="button" data-go="mode" data-m="' + m[0] + '">' + ni(m[2]) + '<span>' + m[1] + '</span></button>'; }).join('') + '</div>' +
       '<div class="nsr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="navq" placeholder="점포 검색" autocomplete="off" aria-label="점포 검색"></div><ul class="sl nsrr" id="navqr" hidden></ul></div>';
     // 상품 상세: 목차 카드(상품 요약·상품 목록) 대신 '상품 요약' 카드(2026-11-28 제이)
     if (MODE === 'item' && ST.v === 'report') out += itemNavCard();
-    else out += '<div class="ncard nrep"><p class="nct"><span>' + (ST.v === 'stats' ? '접속 현황' : MODE === 'stock' ? '재고 데이터' : '리포트') + '</span></p>' + toc + '</div>';
+    else out += '<div class="ncard nrep"><p class="nct"><span>' + (ST.v === 'stats' ? '접속 현황' : MODE === 'stock' ? '재고 데이터' : MODE === 'loss' ? '손실 관리' : '리포트') + '</span></p>' + toc + '</div>';
     var scS = scopeStore(ST.k);
     var showG = MODE === 'sales'; // 재고·상품 상세 데이터 화면에서는 매출 성장율을 보이지 않음(2026-11-23)
     var gs = D.groups.filter(function (g) { return g[0] !== D.closed; });
@@ -4369,6 +4714,17 @@ var KIMS = (function () {
         out += '<div class="ncard nsk"><p class="nct"><span>재고 한눈에</span><small>' + (ST.t === 'store' ? '' : sTabName(ST.t) + ' · ') + '기준 ' + Number(D.stock.base.slice(5, 7)) + '/' + Number(D.stock.base.slice(8)) + '</small></p>' +
           '<p class="nskv"><b>' + man(ky.a) + '</b><small>백만원</small></p>' +
           '<div class="nskl">' + kr('재고일수', ky.d == null ? '-' : f1(ky.d) + '일') + kr('전월말 대비', ky.gm == null ? '-' : pct(ky.gm)) + kr('전년 같은 요일 대비', ky.gy == null ? '-' : pct(ky.gy)) + (krk ? kr('재고일수 순위', krk) : '') + '</div></div>';
+      }
+    }
+    // 손실 화면: '손실 한눈에' 카드(2026-11-28) — 지금 보는 점포·CD·기간의 손실액·손실율·유형별
+    if (MODE === 'loss' && ST.v === 'report' && D.lossx) {
+      var lky = lAgg(ST.k, me ? [me] : OPEN(), lCodes(ST.t));
+      if (lky) {
+        var lkr = function (l, v, c) { return '<p><span>' + l + '</span><b' + (c ? ' class="' + c + '"' : '') + '>' + v + '</b></p>'; }, lrk = '';
+        if (me) { var ldv = function (p) { var x = lAgg(ST.k, [p], lCodes(ST.t)); return x && x.r; }, l1 = sRank(OPEN(), me, ldv, false), l2 = sRank(openOf(GRP[me]), me, ldv, false); if (l1.r) lrk = '킴스 ' + l1.r + '위 · ' + GNAME[GRP[me]] + ' ' + l2.r + '위'; }
+        out += '<div class="ncard nsk"><p class="nct"><span>손실 한눈에</span><small>' + (ST.t === 'store' ? '' : sTabName(ST.t) + ' · ') + PNAME[ST.k] + (lRngTxt(ST.k) ? ' ' + lRngTxt(ST.k) : '') + '</small></p>' +
+          '<p class="nskv"><b>' + man(lky.l) + '</b><small>백만원</small></p>' +
+          '<div class="nskl">' + lkr('손실율', lR(lky.r)) + lkr('전년 대비', pp2(lky.rD), lPpCls(lky.rD)) + LTYPE.map(function (x) { return lkr(x[1], man(lky[x[0]]) + '백만'); }).join('') + (lrk ? lkr('손실율 순위', lrk) : '') + '</div></div>';
       }
     }
     if (showG) out += '<div class="ncard nst"><p class="nct"><span>' + (showG ? '그룹별 실적' : '점포별 재고') + '</span>' + (showG ? '<small>' + PNAME[ST.k] + ' 매출 성장율</small>' : '') + '</p><div class="sdds">' +
@@ -4390,6 +4746,7 @@ var KIMS = (function () {
   function headTitle() {
     if (ST.v === 'stats') return '접속 현황';
     if (MODE === 'item') return (ST.s === 'all' ? '상품 상세' : NAME[ST.s] + ' 상품') + (ST.s !== 'all' && ST.t !== 'store' ? ' · ' + ((TABS.filter(function (x) { return x[0] === ST.t; })[0] || [0, ''])[1]) : '');
+    if (MODE === 'loss') return (ST.s === 'all' ? '킴스클럽 전점' : NAME[ST.s]) + ' 손실' + (ST.t !== 'store' ? ' · ' + sTabName(ST.t) : '');
     if (MODE === 'stock') return (ST.s === 'all' ? '킴스클럽 전점' : NAME[ST.s]) + ' 재고' + (ST.t !== 'store' ? ' · ' + ((TABS.filter(function (x) { return x[0] === ST.t; })[0] || [0, ''])[1]) : '');
     if (ST.s === 'all') { var tt = TABS.filter(function (x) { return x[0] === ST.t; })[0]; return '킴스클럽 전점' + (ST.t !== 'store' && ALL_TABS.indexOf(ST.t) >= 0 && tt ? ' · ' + tt[1] : ''); }
     var t = TABS.filter(function (x) { return x[0] === ST.t; })[0];
@@ -4425,7 +4782,7 @@ var KIMS = (function () {
     var me = ST.s, openGroups = D.groups.filter(function (g) { return g[0] !== D.closed; });
     var opt = function (v, t, cur) { return '<option value="' + v + '"' + (v === cur ? ' selected' : '') + '>' + t + '</option>'; };
     var radio = function (name, v, t, cur) { return '<label class="rb"><input type="radio" name="' + name + '" value="' + v + '"' + (v === cur ? ' checked' : '') + '><span>' + t + '</span></label>'; };
-    var stk = MODE === 'stock', cmp = stk ? '' : cmpHtml(me); // 재고 화면: 비교점·기본 기간은 매출 화면 설정이라 뺌
+    var stk = MODE === 'stock' || MODE === 'loss', cmp = stk ? '' : cmpHtml(me), xopt = MODE === 'loss' ? LOPT : MODE === 'stock' ? SOPT : OPT; // 재고 화면: 비교점·기본 기간은 매출 화면 설정이라 뺌
     return '<div class="dh"><h2 id="dtitle">설정</h2><button type="button" class="ib" id="dclose" aria-label="설정 닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
       '<div class="db">' +
       '<fieldset class="fs"><legend>화면 크기</legend><div class="seg3">' + [[90, '작게'], [100, '보통'], [115, '크게'], [130, '아주 크게']].map(function (x) { return radio('scale', String(x[0]), x[1], String(S.scale || 100)); }).join('') + '</div><p class="hint">글자·표·그래프가 함께 커지고 작아집니다. 이 기기에서 바로 미리 볼 수 있고, 저장해야 유지됩니다.</p></fieldset>' +
@@ -4433,8 +4790,8 @@ var KIMS = (function () {
       '<fieldset class="fs"><legend>점포 선택</legend><select id="fStore" class="sel">' + opt('all', '전점 요약', me) + openGroups.map(function (g) { return '<optgroup label="' + g[1] + '">' + g[2].map(function (p) { return opt(p, NAME[p], me); }).join('') + '</optgroup>'; }).join('') + '</select></fieldset>' +
       cmp +
       '<fieldset class="fs"><legend>처음 열 때</legend><div class="seg3">' + radio('first', 'all', '전점 요약', S.first) + radio('first', 'last', '마지막 본 점포', S.first) + '</div>' +
-      (stk ? '' : '<p class="cg">기본 기간</p><div class="seg3">' + D.periods.map(function (p) { return radio('per', p[0], p[1], S.per || D.defPeriod); }).join('') + '</div>') + '</fieldset>' +
-      '<fieldset class="fs"><legend>보일 항목' + (stk ? ' <small>재고 화면</small>' : '') + '</legend><div class="chips">' + (stk ? SOPT : OPT).map(function (o) { return '<label class="chip"><input type="checkbox" name="show" value="' + o[0] + '"' + (S.hide[o[0]] ? '' : ' checked') + '><span>' + o[1] + '</span></label>'; }).join('') + '</div></fieldset>' +
+      (MODE === 'stock' ? '' : '<p class="cg">기본 기간</p><div class="seg3">' + D.periods.map(function (p) { return radio('per', p[0], p[1], S.per || D.defPeriod); }).join('') + '</div>') + '</fieldset>' +
+      '<fieldset class="fs"><legend>보일 항목' + (MODE === 'loss' ? ' <small>손실 화면</small>' : MODE === 'stock' ? ' <small>재고 화면</small>' : '') + '</legend><div class="chips">' + xopt.map(function (o) { return '<label class="chip"><input type="checkbox" name="show" value="' + o[0] + '"' + (S.hide[o[0]] ? '' : ' checked') + '><span>' + o[1] + '</span></label>'; }).join('') + '</div></fieldset>' +
       '<fieldset class="fs"><legend>설정 초기화</legend><p class="hint">화면 크기·모드·비교점·보일 항목 등 모든 설정을 처음 상태로 되돌립니다.</p><button type="button" class="btn warn" id="dreset">설정 초기화</button></fieldset>' +
       (WEB ? '<fieldset class="fs"><legend>계정</legend><p class="hint">' + esc(WEB.name || '') + ' 로그인 중</p>' + (WEB.home ? '<button type="button" class="btn" id="dhome" style="width:100%;margin-bottom:8px">메뉴 화면으로</button>' : '') + '<button type="button" class="btn" id="dlogout" style="width:100%">로그아웃</button></fieldset>' : '') +
       '<p class="hint">' + (CLOUD.uid || WEB ? '로그인한 계정과 이 기기에 저장됩니다.' : '이 기기(브라우저)에 저장됩니다.') + '</p>' +
@@ -4446,7 +4803,7 @@ var KIMS = (function () {
     var n = JSON.parse(JSON.stringify(S));
     n.mode = val('mode') || n.mode; n.scale = Number(val('scale')) || 100; n.first = val('first') || n.first; n.per = val('per') || n.per;
     n.store = doc.getElementById('fStore').value;
-    n.hide = JSON.parse(JSON.stringify(S.hide || {})); (MODE === 'stock' ? SOPT : OPT).forEach(function (o) { n.hide[o[0]] = true; }); q('input[name=show]:checked').forEach(function (x) { delete n.hide[x.value]; });
+    n.hide = JSON.parse(JSON.stringify(S.hide || {})); (MODE === 'loss' ? LOPT : MODE === 'stock' ? SOPT : OPT).forEach(function (o) { n.hide[o[0]] = true; }); q('input[name=show]:checked').forEach(function (x) { delete n.hide[x.value]; });
     var me = n.store;
     if (me !== 'all' && q('input[name=cmp]').length) {
       var picked = q('input[name=cmp]:checked').map(function (x) { return x.value; }).slice(0, CMAX);
@@ -4667,7 +5024,7 @@ var KIMS = (function () {
     doc.getElementById('htitle').textContent = headTitle();
     var pr = D.per[ST.k];
     var itd = MODE === 'item' && ITC[ST.s] && ITC[ST.s].st === 'ok' ? ITC[ST.s].d : null;
-    var hfull = ST.v === 'stats' ? '' : MODE === 'item' ? (itd ? PNAME[ST.k] + ' ' + itd.per[ST.k][0] + ' · 전년 ' + itd.per[ST.k][1] + ' · 재고 ' + itd.sbase : '상품 상세 · 점포별 상품 매출·재고') : MODE === 'stock' ? (D.stock ? '재고 기준 ' + D.stock.base + ' · 전년 ' + D.stock.ly : '재고 데이터 준비 중') : pr.title.replace(/ (?:실적|누계)$/, '') + ' · ' + pr.vs.replace(/\s*대비$/, '');
+    var hfull = ST.v === 'stats' ? '' : MODE === 'item' ? (itd ? PNAME[ST.k] + ' ' + itd.per[ST.k][0] + ' · 전년 ' + itd.per[ST.k][1] + ' · 재고 ' + itd.sbase : '상품 상세 · 점포별 상품 매출·재고') : MODE === 'loss' ? (D.lossx ? '손실 ' + PNAME[ST.k] + ' ' + (D.lossx.rng && D.lossx.rng[ST.k] ? D.lossx.rng[ST.k].map(function (d) { return d.slice(0, 4) + '-' + d.slice(4, 6) + '-' + d.slice(6); }).filter(function (d, i, a) { return i === 0 || d !== a[0]; }).join('~') : D.per[ST.k].title.replace(/ (?:실적|누계)$/, '')) + ' · 전년 같은 요일 대비' : '손실 데이터 준비 중') : MODE === 'stock' ? (D.stock ? '재고 기준 ' + D.stock.base + ' · 전년 ' + D.stock.ly : '재고 데이터 준비 중') : pr.title.replace(/ (?:실적|누계)$/, '') + ' · ' + pr.vs.replace(/\s*대비$/, '');
     var hshort = hfull.replace(/\d{4}-(\d{2})-(\d{2})/g, function (m, a, b) { return Number(a) + '/' + Number(b); }).replace(/\b(\d{1,2})\/(\d{2})\b/g, function (m, a, b) { return Number(a) + '/' + Number(b); }).replace('전년 동요일 ', '전년 ');
     doc.getElementById('hdate').innerHTML = '<span class="hdf">' + esc(hfull) + '</span><span class="hds">' + esc(hshort) + '</span>';
     [].forEach.call(doc.querySelectorAll('.seg button'), function (b) { b.setAttribute('aria-pressed', b.dataset.k === ST.k); });
@@ -4687,6 +5044,7 @@ var KIMS = (function () {
       var cr = [];
       if (MODE === 'stock') cr.push(['', '재고']);
       if (MODE === 'item') cr.push(['', '상품']);
+      if (MODE === 'loss') cr.push(['', '손실']);
       if (ST.v === 'stats') cr.push(['', '접속 현황']);
       else {
         cr.push(['all', '전점']);
@@ -4707,7 +5065,7 @@ var KIMS = (function () {
       var hs = { s: ST.s, t: ST.t, k: ST.k, v: ST.v, m: MODE }, hk = hs.s + '-' + hs.t + '-' + hs.k + '-' + hs.v + '-' + hs.m, cs = window.history.state;
       var same = POPPING || !cs || !cs.kims || (cs.s + '-' + cs.t + '-' + cs.k + '-' + cs.v + '-' + (cs.m || 'sales')) === hk;
       hs.kims = 1;
-      window.history[same ? 'replaceState' : 'pushState'](hs, '', '#' + (MODE === 'stock' ? 'stk-' : MODE === 'item' ? 'itm-' : '') + ST.s + '-' + ST.t + '-' + ST.k);
+      window.history[same ? 'replaceState' : 'pushState'](hs, '', '#' + (MODE === 'stock' ? 'stk-' : MODE === 'item' ? 'itm-' : MODE === 'loss' ? 'los-' : '') + ST.s + '-' + ST.t + '-' + ST.k);
     } catch (e) {}
     S.last = ST.s; saveLocal();
     // 현재 보고 있는 항목을 사이드바에 표시
@@ -4944,10 +5302,11 @@ var KIMS = (function () {
     if (S.first === 'last' && valid(S.last)) ST.s = S.last;
     var h = (window.location.hash || '').slice(1).split('-');
     if (h[0] === 'stk') { MODE = 'stock'; h = h.slice(1); if (!h[0]) h = ['all']; }
+    else if (h[0] === 'los') { MODE = lossOk() ? 'loss' : 'sales'; h = h.slice(1); if (!h[0]) h = ['all']; }
     else if (h[0] === 'itm') { MODE = itemOk() ? 'item' : 'sales'; h = h.slice(1); if (!h[0]) h = [S.store && S.store !== 'all' && valid(S.store) ? S.store : 'all']; }
     // 메뉴 화면에서 매출 리포트 / 재고 데이터로 들어올 때(이미 열려 있으면) 모드만 바꿈
     // instant: 메뉴 화면에서 들어올 때 — 숨겨져 있던 옛 화면이 0.3초 보였다 사라지는 깜빡임 없이 바로 새 화면(2026-11-24)
-    window.kimsMode = function (m, instant) { m = m === 'stock' || (m === 'item' && itemOk()) ? m : 'sales'; if (m === MODE && ST.v === 'report') return; var go = function () { MODE = m; ST.v = 'report'; itemEnter(); render(true); }; if (instant) go(); else swapPage(go); };
+    window.kimsMode = function (m, instant) { m = m === 'stock' || (m === 'item' && itemOk()) || (m === 'loss' && lossOk()) ? m : 'sales'; if (m === MODE && ST.v === 'report') return; var go = function () { MODE = m; ST.v = 'report'; itemEnter(); render(true); }; if (instant) go(); else swapPage(go); };
     if (valid(h[0]) && h[0] !== 'all') { ST.s = h[0]; if (h[1]) ST.t = h[1]; if (D.per[h[2]]) ST.k = h[2]; }
     if (!TABS.some(function (t) { return t[0] === ST.t; })) ST.t = 'store';
     doc.querySelector('.seg').addEventListener('click', function (e) {
@@ -5028,6 +5387,7 @@ var KIMS = (function () {
     doc.getElementById('main').addEventListener('click', function (e) {
       var b = e.target.closest && e.target.closest('.sxf [data-cd]'); if (!b) return;
       var cd = b.dataset.cd, pg = b.dataset.pg || '';
+      if (MODE === 'loss') { keepRender(function () { LIF[ST.t] = cd; }); return; } // 손실 관리 상품 CD 고르기(2026-11-28)
       keepRender(function () { SIF[ST.t] = ST.t === 'store' ? { cd: cd, pg: pg } : { cd: ST.t, pg: pg }; });
     });
     doc.getElementById('main').addEventListener('toggle', function (e) {
@@ -5190,7 +5550,7 @@ var KIMS = (function () {
       closeNav(); if (doc.body.classList.contains('dr-open')) { applyMode(); closeDrawer(); }
       POPPING = true;
       try {
-        MODE = h.m === 'stock' || (h.m === 'item' && itemOk()) ? h.m : 'sales';
+        MODE = h.m === 'stock' || (h.m === 'item' && itemOk()) || (h.m === 'loss' && lossOk()) ? h.m : 'sales';
         if (h.v === 'stats') { ST.v = 'stats'; render(true); }
         else keepRender(function () { ST.s = h.s; ST.t = h.t; ST.k = D.per[h.k] ? h.k : ST.k; ST.v = 'report'; });
       } finally { POPPING = false; }
@@ -5199,6 +5559,7 @@ var KIMS = (function () {
     window.addEventListener('hashchange', function () {
       var p = (window.location.hash || '').slice(1).split('-'), m = 'sales';
       if (p[0] === 'stk') { m = 'stock'; p = p.slice(1); if (!p[0]) p = ['all']; }
+      else if (p[0] === 'los') { m = lossOk() ? 'loss' : 'sales'; p = p.slice(1); if (!p[0]) p = ['all']; }
       else if (p[0] === 'itm') { m = itemOk() ? 'item' : 'sales'; p = p.slice(1); if (!p[0]) p = [ST.s]; }
       if (!p[0] || (p[0] !== 'all' && !valid(p[0]))) return; // 메뉴 화면 등 다른 주소는 건드리지 않음
       var s2 = p[0], t2 = TABS.some(function (t) { return t[0] === p[1]; }) ? p[1] : 'store', k2 = D.per[p[2]] ? p[2] : ST.k;
@@ -5292,7 +5653,7 @@ var KIMS = (function () {
       if (b.dataset.go === 'pick') { e.stopPropagation(); if (spop.hidden) openSpop(b); else closeSpop(); return; }
       if (b.dataset.go === 'home') { closeNav(); if (WEB && WEB.home) WEB.home(); return; }
       if (b.dataset.go === 'stats') { ST.v = 'stats'; closeNav(); render(true); return; }
-      if (b.dataset.go === 'mode') { closeNav(); swapPage(function () { MODE = b.dataset.m || (MODE === 'stock' ? 'sales' : 'stock'); ST.v = 'report'; itemEnter(); render(true); }); return; }
+      if (b.dataset.go === 'mode') { closeNav(); swapPage(function () { MODE = b.dataset.m || (MODE === 'stock' ? 'sales' : 'stock'); if (MODE === 'loss' && !lossOk()) MODE = 'sales'; ST.v = 'report'; itemEnter(); render(true); }); return; }
       var wasStats = ST.v !== 'report';
       var chg = function () {
         if (b.dataset.store) { ST.s = b.dataset.store; ST.v = 'report'; } // 보던 탭(농산 등) 유지
@@ -5413,7 +5774,7 @@ var KIMS = (function () {
     if (S.first === 'last' && S.last && S.last !== storeBefore && NAME[S.last]) { ST.s = S.last; ST.t = 'store'; }
     quietRender();
   }
-  return { applyPrefs: applyPrefs, update: update, init: init, setup: function (d) { setup(d); S = merge(null); if (TABS.length === 1) tabsInit(); }, metrics: metrics, M: M, scopeStore: scopeStore, scopeCat: scopeCat, rankIn: rankIn, OPEN: OPEN, ALL: ALL, state: ST, html: html, navHtml: navHtml, setCmp: function (me, list) { S.cmp[me] = list; } };
+  return { applyPrefs: applyPrefs, update: update, init: init, setup: function (d) { setup(d); S = merge(null); if (TABS.length === 1) tabsInit(); }, metrics: metrics, M: M, scopeStore: scopeStore, scopeCat: scopeCat, rankIn: rankIn, OPEN: OPEN, ALL: ALL, state: ST, html: html, navHtml: navHtml, setCmp: function (me, list) { S.cmp[me] = list; }, mode: function (m) { MODE = m; } };
 })();
 </script>
 <script>window.KIMS_API="https://script.google.com/macros/s/AKfycby4V51vRDZlyWaNZfmM3tOIjaFH-N8dMDUQlez50uqJKX0OPwQvb4NiRK11Wt9Wib90pw/exec";window.KIMS_LOGO="data:image/png;base64,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";window.KIMS_PLOGO="data:image/png;base64,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";</script>
@@ -5490,6 +5851,7 @@ var KIMS = (function () {
     cloudOff: '<svg viewBox="0 0 24 24"><path d="M8.5 6.4A6 6 0 0 1 18.4 11a3.6 3.6 0 0 1 1.9 5.9M17 18H7a4.5 4.5 0 0 1-1.4-8.8"/><path d="M3 3l18 18"/></svg>',
     ver: '<svg viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>',
     stock: '<svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>',
+    loss: '<svg viewBox="0 0 24 24"><path d="M3 6l6 6 4-4 8 8"/><path d="M15 16h6v-6"/></svg>',
     refresh: '<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.9-3M4 5v3h3M4 13a8 8 0 0 0 14.9 3M20 19v-3h-3"/></svg>',
     bars: '<svg viewBox="0 0 24 24"><path d="M5 20h14M7.5 16.5v-4M12 16.5V8M16.5 16.5V11"/></svg>',
     chat: '<svg viewBox="0 0 24 24"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></svg>',
@@ -5694,6 +6056,9 @@ var KIMS = (function () {
 
   // ───────── 메뉴 화면(포털) ─────────
   var P = null, PV = 'home', OPEN = {}, EDIT = null, USERS = null, UF = 'pending', popShown = false, MINE = {}, VEDIT = null; // VEDIT: 수정 중인 버전 기록 · MINE: 이 화면에서 직접 쓴 공지(팝업 제외)
+  // 손실 관리 메뉴(2026-11-28 제이): 완성 전까지 관리자만 → 모든 사용자에게 열 때 LOSS_PUBLIC 을 true 로(app.js 의 LOSS_PUBLIC 도 같이)
+  var LOSS_PUBLIC = false;
+  var lossOpen = function () { return LOSS_PUBLIC || !!(P ? P.admin : (get() || {}).admin); };
   var MENU = [
     { id: 'report', t: '매출 리포트', d: '킴스클럽 매출 실적', icon: 'report' },
     { id: 'stock', t: '재고 데이터', d: '점포·CD·구매그룹 재고', icon: 'stock' },
@@ -5757,7 +6122,8 @@ var KIMS = (function () {
       '<button type="button" class="hcard stk" data-menu="stock" style="--i:1"><span class="hic">' + ICON.stock + '</span><span class="hgo">열기 →</span><span class="hct"><b>재고 데이터</b><small>점포·CD·구매그룹 재고</small></span></button>' +
       (admin ? '<button type="button" class="hcard itm" data-menu="item" style="--i:2"><span class="hic">' + ICON.ver + '</span><span class="hgo">열기 →</span><span class="hct"><b>상품 상세</b><small>점포별 상품 매출·재고 · 관리자</small></span></button>' // 상품 상세는 우선 관리자만(2026-11-27)
         : '<button type="button" class="hcard soon" data-menu="soon1" style="--i:2"><span class="hct"><b>준비중</b><small>새 메뉴 자리</small></span></button>') +
-      '<button type="button" class="hcard soon" data-menu="soon2" style="--i:3"><span class="hct"><b>준비중</b><small>새 메뉴 자리</small></span></button></div>';
+      (lossOpen() ? '<button type="button" class="hcard los" data-menu="loss" style="--i:3"><span class="hic">' + ICON.loss + '</span><span class="hgo">열기 →</span><span class="hct"><b>손실 관리</b><small>마크다운·폐기·재고차이' + (LOSS_PUBLIC ? '' : ' · 관리자') + '</small></span></button>' // 손실 관리는 완성 전까지 관리자만(2026-11-28 제이)
+        : '<button type="button" class="hcard soon" data-menu="soon2" style="--i:3"><span class="hct"><b>준비중</b><small>새 메뉴 자리</small></span></button>') + '</div>';
     var adm = admin ? '<section class="hadm"><h2 class="hsec adm">관리자 전용</h2><div class="hagrid">' +
       admCard('notice', ICON.notice, '공지사항 등록', '쓰기 · 고정 · 팝업', ur ? 'N ' + ur : '', 4) +
       admCard('admin', ICON.users, '사용자 관리', '승인 · 비밀번호 초기화', P && P.pending ? '대기 ' + P.pending : '', 5) +
@@ -6112,6 +6478,7 @@ var KIMS = (function () {
       if (m === 'report') go('report');
       else if (m === 'stock') go('stk');
       else if (m === 'item' && (P ? P.admin : (get() || {}).admin)) go('itm');
+      else if (m === 'loss' && lossOpen()) go('los');
       else if (m === 'notice') go('notice');
       else if (m === 'admin') go('admin');
       else if (m === 'version') go('version');
@@ -6228,7 +6595,7 @@ var KIMS = (function () {
   function openReport() {
     try { var sb0 = salesBase(); if (sb0 && sb0 > (store(SEENK) || '')) store(SEENK, sb0); } catch (e) {}
     setView('report');
-    if (started) { if (window.kimsMode) window.kimsMode(/^#?stk/.test(location.hash) ? 'stock' : /^#?itm/.test(location.hash) ? 'item' : 'sales', true); window.dispatchEvent(new Event('resize')); checkFresh(); return; } // 숨겨져 있던 사이 크기 바뀐 것 반영 + 새 데이터 확인
+    if (started) { if (window.kimsMode) window.kimsMode(/^#?stk/.test(location.hash) ? 'stock' : /^#?itm/.test(location.hash) ? 'item' : /^#?los/.test(location.hash) ? 'loss' : 'sales', true); window.dispatchEvent(new Event('resize')); checkFresh(); return; } // 숨겨져 있던 사이 크기 바뀐 것 반영 + 새 데이터 확인
     if (!loading) loadReport();
   }
   function start(data, a, r) {
