@@ -1203,6 +1203,9 @@ tr.dim>*{opacity:.42}
 #main .itck.on{background:var(--ac-soft);border-color:var(--ac);color:var(--ac)}
 @media (hover:hover){#main .itck:not(.on):hover{border-color:var(--ac);color:var(--ac)}}
 #main .itck:focus-within{outline:2px solid var(--ac);outline-offset:1px}
+/* 매입 구분(2026-11-28 제이): 조건 줄 select + 상품 이름 옆 표시 — 직매입 회색, 수수료 주황 */
+#main .itfl select.itpfs{max-width:none;font-weight:600}#main .itfl select.itpfs.on{border-color:var(--ac);color:var(--ac);background:var(--ac-soft)}
+#main .itbl em.ipf{display:inline-block;margin-left:5px;padding:0 5px;border-radius:5px;font-style:normal;font-size:11px;font-weight:700;line-height:17px;vertical-align:1px;white-space:nowrap}#main .itbl em.ipf.d{background:color-mix(in srgb,var(--fg) 7%,transparent);color:var(--muted)}#main .itbl em.ipf.c{background:color-mix(in srgb,#f59e0b 18%,transparent);color:#b45309}:root[data-mode=dark] #main .itbl em.ipf.c{color:#fbbf24}#main .itbl em.ipf.o{background:color-mix(in srgb,var(--fg) 7%,transparent);color:var(--muted)}
 #main .itr3{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
 #main .itfl{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 #main .itfl select{height:36px;max-width:220px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px}
@@ -3813,8 +3816,8 @@ var KIMS = (function () {
   // ── 상품 상세(2026-11-27 제이) ── 메인 메뉴 '상품 상세' → MODE 'item' · 주소 #itm-점포-탭-기간
   //   점포를 고르면 그 점포 상품 데이터(약 1만 개, 0.5MB 압축)만 서버에서 받아 옴(WEB.item) — 한 번 받은 점포는 이 기기에 저장
   //   행 = [상품코드, 상품명, MC 번호, 구매그룹(상품 기준), M·W·D × (매출 금년·전년, 수량 금년·전년, 매출총이익 금년·전년), 재고액, 재고수량, 하루 매출원가]
-  var ITC = {}, IT = { q: '', qf: 'nm', flt: 'all', pgs: {}, m1s: {}, mcs: {}, amin: '', amax: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, view: 'pg', og: {}, mlim: {} }; // view = 보기 방식(ILV) · og 펼친 묶음 경로 · mlim 묶음 안 보이는 상품 수 · pgs/m1s/mcs 여러 개 고른 조건
-  var IOFF = { M: 4, W: 10, D: 16 }, ISA = 22;
+  var ITC = {}, IT = { q: '', qf: 'nm', pf: 'all', flt: 'all', pgs: {}, m1s: {}, mcs: {}, amin: '', amax: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, view: 'pg', og: {}, mlim: {} }; // view = 보기 방식(ILV) · og 펼친 묶음 경로 · mlim 묶음 안 보이는 상품 수 · pgs/m1s/mcs 여러 개 고른 조건
+  var IOFF = { M: 4, W: 10, D: 16 }, ISA = 22, IPF = 25; // IPF = 사입형태(v3, 2026-11-28): d 직매입 · c 수수료매입 · o 그 밖 · 빈칸 모름
   var pgCat = function (pg) { for (var i = 0; i < D.storeCats.length; i++) if (D.storeCats[i][2].some(function (g) { return g[0] === pg; })) return D.storeCats[i][0]; return 'etc'; };
   var pgName = function (pg) { for (var i = 0; i < D.storeCats.length; i++) { var g = D.storeCats[i][2].filter(function (x) { return x[0] === pg; })[0]; if (g) return g[1]; } return pg || '-'; };
   function itemLoad(p, force) {
@@ -3829,7 +3832,7 @@ var KIMS = (function () {
       else {
         var d = r.data, cat = {};
         d.rows.forEach(function (x) { if (!(x[3] in cat)) cat[x[3]] = pgCat(x[3]); });
-        ITC[p] = { st: 'ok', d: d, cat: cat };
+        ITC[p] = { st: 'ok', d: d, cat: cat, hasPf: d.rows.some(function (x) { return x[IPF]; }) }; // 사입형태가 있는 데이터(v3)만 매입 필터를 보임
       }
     }, function (e) { ITC[p] = { st: 'err', err: (e && e.message) || '불러오지 못했습니다' }; }).then(function () {
       if (MODE === 'item' && ST.v === 'report' && ST.s === p) quietRender();
@@ -3844,6 +3847,10 @@ var KIMS = (function () {
   var IFLT = [['all', '전체'], ['up', '매출 증가'], ['dn', '매출 감소']]; // 신규·판매 중단·재고만·마이너스 재고는 2026-11-27 제이 요청으로 뺌
   // 정렬: 표 머리 이름을 누르면 그 항목으로(같은 이름을 다시 누르면 방향 바꿈) — 정렬 select·방향 버튼은 2026-11-28 제이 요청으로 뺌
   // 검색 대상(2026-11-28 제이): 상품명(코드 포함) · MCH1 · MC 중 골라서 검색
+  // 매입 구분(2026-11-28 제이): 조건 줄 필터 + 상품 이름 옆 표시
+  var IPFL = [['all', '매입 전체'], ['d', '직매입'], ['c', '수수료매입']];
+  var IPFN = { d: '직매입', c: '수수료', o: '기타 매입' };
+  var pfTag = function (x) { return x && IPFN[x] ? ' <em class="ipf ' + x + '">' + IPFN[x] + '</em>' : ''; };
   var IQF = [['nm', '상품명', '상품명 · 코드 검색'], ['m1', 'MCH1', 'MCH1 이름 · 코드 검색'], ['mc', 'MC', 'MC 이름 · 코드 검색']];
   // 구매그룹 체크박스 순서(2026-11-28 제이) — 이름 공백 무시, 목록에 없는 구매그룹은 맨 뒤
   var PGORD = ['채소', '청과', '양곡', '수산', '건식', '축산', '공산식품', '공산비식품', '리빙패브릭', '에코마트', 'TO-GO', '즉석델리', '하이퍼공통'];
@@ -3863,6 +3870,7 @@ var KIMS = (function () {
     return d.rows.filter(function (r) {
       if (t !== 'store' && c.cat[r[3]] !== t) return false;
       if (hp && !pgs[r[3]]) return false;
+      if (IT.pf !== 'all' && (r[IPF] || '') !== IT.pf) return false; // 매입 필터(직매입·수수료매입)
       if (h1 || hc) { var m = mcOf(d, r[2]); if (h1 && !m1[m[1] || '-']) return false; if (hc && !mc[m[2] || m[0] || '-']) return false; }
       return true;
     });
@@ -3959,13 +3967,13 @@ var KIMS = (function () {
     var NC = 11;
     var prod = function (r, dep) {
       var on = IT.open[r[0]], v = iv(r, k), m = mcOf(d, r[2]);
-      var tr = line(esc(r[1] || r[0]), esc(r[0].replace(/^0+(?=\d{6})/, '')) + (lv.indexOf('mc') < 0 ? ' · ' + esc(m[0] || '-') : ''), v, r[ISA + 1], ' data-im="' + esc(r[0]) + '" tabindex="0" aria-expanded="' + (on ? 'true' : 'false') + '"', 'lp d' + dep + (on ? ' on' : ''));
+      var tr = line(esc(r[1] || r[0]) + pfTag(r[IPF]),esc(r[0].replace(/^0+(?=\d{6})/, '')) + (lv.indexOf('mc') < 0 ? ' · ' + esc(m[0] || '-') : ''), v, r[ISA + 1], ' data-im="' + esc(r[0]) + '" tabindex="0" aria-expanded="' + (on ? 'true' : 'false') + '"', 'lp d' + dep + (on ? ' on' : ''));
       if (!on) return tr;
       var det = ['M', 'W', 'D'].map(function (kk) {
         var x = iv(r, kk), g = iGr(x[0], x[1]), mr = iMr(x[0], x[4]);
         return '<li><span>' + PNAME[kk] + ' <small>' + esc(d.per[kk][0]) + '</small></span><b>' + manw(x[0]) + '<small>만원</small></b><em class="' + gcls(g) + '">' + (x[1] > 0 ? pct(g) : x[0] ? '신규' : '-') + '</em><i>판매 ' + qn(x[2]) + '개 · 전년 ' + qn(x[3]) + '</i><i>매총율 ' + (mr == null ? '-' : f1(mr * 100) + '%') + '</i></li>';
       }).join('');
-      return tr + '<tr class="itd"><td colspan="' + NC + '"><ul class="itdl">' + det + '<li class="stk"><span>전일 마감 재고 <small>' + esc(d.sbase || d.base) + '</small></span><b>' + qn(r[ISA + 1]) + '<small>개</small></b><i>' + esc(pgName(r[3])) + (m[1] ? ' · ' + esc(m1Label(m[1])) : '') + (m[2] ? ' · MC ' + esc(m[2]) : '') + '</i></li></ul></td></tr>';
+      return tr + '<tr class="itd"><td colspan="' + NC + '"><ul class="itdl">' + det + '<li class="stk"><span>전일 마감 재고 <small>' + esc(d.sbase || d.base) + '</small></span><b>' + qn(r[ISA + 1]) + '<small>개</small></b><i>' + (r[IPF] && IPFN[r[IPF]] ? (r[IPF] === 'c' ? '수수료매입' : IPFN[r[IPF]]) + ' · ' : '') + esc(pgName(r[3])) + (m[1] ? ' · ' + esc(m1Label(m[1])) : '') + (m[2] ? ' · MC ' + esc(m[2]) : '') + '</i></li></ul></td></tr>';
     };
     var arr = function (key) { var on = IT.sort === key; return '<i class="sa' + (on ? ' on' : '') + '" aria-hidden="true">' + (on ? (IT.dir < 0 ? '▼' : '▲') : '▲▼') + '</i>'; };
     var sh = function (key, txt, cl, extra) {
@@ -4041,6 +4049,7 @@ var KIMS = (function () {
   }
   // 상품 목록 조건(2026-11-28 제이): 구매그룹 체크박스(여러 개) / 조건(MCH1·MC·매출액·증감) + 보기 방식
   function itemCtl(c) {
+    if (!c.hasPf) IT.pf = 'all'; // 사입형태 없는 예전 데이터
     var t = ST.t, pgs = {}, pga = {}, d = c.d, k = ST.k;
     d.rows.forEach(function (r) { if (t === 'store' || c.cat[r[3]] === t) { pgs[r[3]] = (pgs[r[3]] || 0) + 1; pga[r[3]] = (pga[r[3]] || 0) + iv(r, k)[0]; } });
     // 이 기간 매출 실적이 없는 구매그룹은 보이지 않음 · 순서는 PGORD
@@ -4060,7 +4069,9 @@ var KIMS = (function () {
     };
     return '<div class="itctl">' +
       '<div class="itpgs" role="group" aria-label="구매그룹"><span class="itlb">구매그룹</span><div class="itpgl">' + [''].concat(pgl).map(chk).join('') + '</div></div>' +
-      '<div class="itr3"><div class="itfl" role="group" aria-label="상품 조건"><span class="itlb">조건</span>' + imsBox('m1') + imsBox('mc') +
+      '<div class="itr3"><div class="itfl" role="group" aria-label="상품 조건"><span class="itlb">조건</span>' +
+      (c.hasPf ? '<select id="itpf" class="itpfs' + (IT.pf !== 'all' ? ' on' : '') + '" aria-label="매입 구분">' + IPFL.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === IT.pf ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>' : '') +
+      imsBox('m1') + imsBox('mc') +
       '<span class="itamt"><span>매출</span><input type="number" id="itamin" inputmode="numeric" min="0" step="1" placeholder="이상" value="' + esc(IT.amin) + '" aria-label="매출 이상(만원)"><span>~</span><input type="number" id="itamax" inputmode="numeric" min="0" step="1" placeholder="이하" value="' + esc(IT.amax) + '" aria-label="매출 이하(만원)"><small>만원</small></span>' +
       '<div class="itchips" role="group" aria-label="매출 증감">' + IFLT.map(function (x) { return '<button type="button" data-iflt="' + x[0] + '" aria-pressed="' + (IT.flt === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div>' +
       '<div class="itview" role="group" aria-label="보기 방식"><span class="itlb">보기</span>' + IVIEW.map(function (x) { return '<button type="button" data-iview="' + x[0] + '" aria-pressed="' + (IT.view === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div>' +
@@ -4072,7 +4083,7 @@ var KIMS = (function () {
     var k = ST.k, rows = itemScope(c);
     var nmOf = function (id, sel) { var n = setN(sel); if (!n) return ''; var o = IMS.opts[id] || []; return n === 1 ? ((o.filter(function (x) { return sel[x[0]]; })[0] || [0, IMSL[id] + ' ' + Object.keys(sel)[0]])[1]) : IMSL[id] + ' ' + n + '개'; };
     var pl = Object.keys(IT.pgs);
-    var scl = [pl.length ? '구매그룹 ' + (pl.length > 2 ? pl.length + '개' : pl.map(pgName).join(' + ')) : '', nmOf('m1', IT.m1s), nmOf('mc', IT.mcs)].filter(function (x) { return x; });
+    var scl = [IT.pf !== 'all' ? (IT.pf === 'c' ? '수수료매입' : '직매입') : '', pl.length ? '구매그룹 ' + (pl.length > 2 ? pl.length + '개' : pl.map(pgName).join(' + ')) : '', nmOf('m1', IT.m1s), nmOf('mc', IT.mcs)].filter(function (x) { return x; });
     var tot = itemTotals(rows, k);
     var mr = iMr(tot.a, tot.g), mrl = iMr(tot.al, tot.gl), g = iGr(tot.a, tot.al);
     var rk = itemNavRank(me);
@@ -4934,7 +4945,7 @@ var KIMS = (function () {
         imsLive(id); return;
       }
       // 초기화(2026-11-28 제이): 검색·구매그룹·조건·정렬·보기·펼침 모두 처음 상태로
-      if (b.dataset.irst) { resetF(); IT.q = ''; IT.qf = 'nm'; IT.amin = ''; IT.amax = ''; IT.flt = 'all'; IT.sort = 'aT'; IT.dir = -1; IT.view = 'pg'; IT.open = {}; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
+      if (b.dataset.irst) { resetF(); IT.q = ''; IT.qf = 'nm'; IT.pf = 'all'; IT.amin = ''; IT.amax = ''; IT.flt = 'all'; IT.sort = 'aT'; IT.dir = -1; IT.view = 'pg'; IT.open = {}; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
       if (b.dataset.iview) { IT.view = b.dataset.iview; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
       if (b.dataset.isort) { var sk = b.dataset.isort; if (IT.sort === sk) IT.dir = -IT.dir; else { IT.sort = sk; IT.dir = ISUP[sk] ? 1 : -1; } itemRedraw(true); return; }
       if (b.dataset.iflt) { IT.flt = b.dataset.iflt; IT.lim = 100; itemRedraw(true); return; }
@@ -4975,6 +4986,7 @@ var KIMS = (function () {
         if (!g) IT.pgs = {}; else if (t.checked) IT.pgs[g] = 1; else delete IT.pgs[g];
         IT.m1s = {}; IT.mcs = {}; IT.lim = 100; IT.og = {}; IT.mlim = {}; itemRedraw(true); return;
       }
+      if (t.id === 'itpf') { IT.pf = t.value; IT.m1s = {}; IT.mcs = {}; IT.lim = 100; IT.og = {}; IT.mlim = {}; itemRedraw(true); return; }
       if (t.id === 'itqf') { IT.qf = t.value; IT.lim = 100; itemRedraw(true); var q1 = doc.getElementById('itq'); if (q1) q1.focus({ preventScroll: true }); return; }
       if (t.id === 'itamin' || t.id === 'itamax') itemRedraw(true);
     });
