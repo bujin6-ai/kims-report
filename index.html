@@ -1189,7 +1189,7 @@ tr.dim>*{opacity:.42}
 /* 상품 목록(2026-11-28 제이 2차): 제목+검색+버튼 / 구매그룹 체크박스 / 조건+보기 3줄 · PC 는 위쪽 완전 고정, 표만 안에서 스크롤(--itwh = JS 가 잰 높이) */
 #main .ithd{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 0 10px}#main .ithd .ith3{margin:0;flex:none}
 #main .itctl{display:flex;flex-direction:column;gap:10px;padding:0 0 12px}
-@media (min-width:701px){#main .itw{display:block;max-height:var(--itwh,none);overflow:auto;overscroll-behavior:contain;border-bottom:0;border-radius:12px 12px 0 0}#main .itw.dk .itbl{margin-bottom:76px}#main #sec-ilist{min-width:0;max-width:100%}#main .itw{max-width:100%}#main:has(#sec-ilist #itbox){padding-bottom:0}#main #sec-ilist:has(#itbox){padding-bottom:0;margin-bottom:0;border-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}}
+@media (min-width:701px){#main .itw{display:block;max-height:var(--itwh,none);overflow:auto;overscroll-behavior:contain;border-bottom:0;border-radius:12px 12px 0 0}#main .itw.itend .itbl{margin-bottom:76px}#main #sec-ilist{min-width:0;max-width:100%}#main .itw{max-width:100%}#main:has(#sec-ilist #itbox){padding-bottom:0}#main #sec-ilist:has(#itbox){padding-bottom:0;margin-bottom:0;border-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}}
 #main .itr1b{display:flex;align-items:center;gap:6px;margin-left:auto}
 #main .itexp{height:34px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--muted);font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
 #main .itrst{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 14px 0 11px;border:1px solid var(--ac);border-radius:8px;background:var(--ac-soft);color:var(--ac);font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
@@ -4144,14 +4144,14 @@ var KIMS = (function () {
       // PC(701px 이상): 위쪽(제목·검색·조건·표 머리)은 완전히 고정, 표만 안에서 스크롤(2026-11-28 제이) — 표 높이 = 화면 아래(하단 독 위)까지
       var sc = doc.getElementById('scroller'), w = doc.querySelector('#main .itw');
       if (sc && w && window.matchMedia('(min-width:701px)').matches) {
-        // 표는 화면 맨 아래까지(하단 독은 예전처럼 표 위에 떠 있음, 2026-11-28 제이) — 마지막 줄은 표 끝 빈 칸(.dk)으로 독 위까지 올릴 수 있음
+        // 표는 화면 맨 아래까지(하단 독은 예전처럼 표 위에 떠 있음, 2026-11-28 제이) — 마지막 줄은 표 끝 빈 칸(.itend)으로 독 위까지 올릴 수 있음
         var bot = sc.getBoundingClientRect().bottom;
         var wTop = w.getBoundingClientRect().top + sc.scrollTop; // 페이지 맨 위 기준 위치
         var hh = Math.max(240, Math.floor(bot - wTop));
         m.style.setProperty('--itwh', hh + 'px');
         var pd = doc.getElementById('itpad'), over = sc.scrollHeight - sc.clientHeight - (pd ? parseFloat(pd.style.height) || 0 : 0); // 본문 아래 여백 때문에 페이지가 조금 스크롤되면 그만큼 줄임
         if (over > 0 && hh - over >= 240) m.style.setProperty('--itwh', (hh - over) + 'px');
-        w.classList.remove('dk'); if (w.scrollHeight > w.clientHeight + 1) w.classList.add('dk'); // 스크롤되는 표만 끝에 독 높이만큼 빈 칸
+        w.classList.remove('itend'); if (w.scrollHeight > w.clientHeight + 1) w.classList.add('itend'); // 스크롤되는 표만 끝에 독 높이만큼 빈 칸 (.dk 는 다크 모드 스위치 클래스라 쓰면 안 됨)
       } else m.style.removeProperty('--itwh');
     };
     set();
@@ -4295,12 +4295,12 @@ var KIMS = (function () {
     var gLabel = function (g) { return g + (g.slice(-1) === '형' ? '점' : ''); };
     var LG = typeof window !== 'undefined' && window.KIMS_LOGO, logo = LG ? '<img class="nlogo" src="' + LG + '" alt="킴스클럽">' : '<b class="nlogo txt">KIM\'S CLUB</b>';
     var meName = me ? esc(NAME[me]) : '킴스클럽 전점';
-    var meSub = ST.v === 'stats' ? '접속 현황' : me ? gLabel(GNAME[GRP[me]]) + ' 그룹' : '전점 요약';
+    var meSub = ST.v === 'stats' ? '접속 현황' : me ? gLabel(GNAME[GRP[me]]) + ' 그룹' : MODE === 'item' ? '점포 선택' : '전점 요약';
     var out = '<div class="ncard nhead">' + logo +
       '<div class="nme"><span class="nav-av" aria-hidden="true">' + (me ? esc(cleanName(NAME[me]).charAt(0)) : '전') + '</span>' +
       '<span class="nmt"><b>' + meName + (ST.t !== 'store' && curTab ? ' · ' + curTab : '') + '</b><small>' + meSub + '</small></span>' +
       '<button type="button" class="nsw" data-go="pick" aria-label="점포 바꾸기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg></button></div>' +
-      '<div class="nbtns"><button type="button" data-go="all"' + (allOn ? ' aria-current="page"' : '') + '>' + ni('all') + '<span>전점 요약</span></button>' +
+      '<div class="nbtns"><button type="button" data-go="all"' + (allOn ? ' aria-current="page"' : '') + '>' + ni('all') + '<span>' + (MODE === 'item' ? '점포 선택' : '전점 요약') + '</span></button>' + // 상품 상세는 전점 화면이 곧 점포 고르기(2026-11-28 제이)
       MODES.filter(function (m) { return m[0] !== MODE && (m[0] !== 'item' || itemOk()); }).map(function (m) { return '<button type="button" data-go="mode" data-m="' + m[0] + '">' + ni(m[2]) + '<span>' + m[1] + '</span></button>'; }).join('') + '</div>' +
       '<div class="nsr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="navq" placeholder="점포 검색" autocomplete="off" aria-label="점포 검색"></div><ul class="sl nsrr" id="navqr" hidden></ul></div>';
     // 상품 상세: 목차 카드(상품 요약·상품 목록) 대신 '상품 요약' 카드(2026-11-28 제이)
