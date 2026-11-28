@@ -2837,6 +2837,7 @@ var KIMS = (function () {
         [sec('gb', '잘한·부족한 점', '', gbHtml(gd, bd), 'gb')],
         [sec('rank', '점포 상세 실적', '점포별 실적', rtTable(k, rankTblOf(k, OPEN(), sc, D.groups.filter(function (x) { return x[0] !== D.closed; }), me)))],
         [sec('heat', '실적 신호등', 'CD·구매그룹 매출 성장율', heatTable, 'heat'), sec('bars', '그룹 매출 성장율', gn + ' 점포 매출', bars(k, me, sc), 'bars')],
+        [sec('mc', 'MC 증감', '품목(MC)별 전년 대비 증감', storeMc(k, me), 'mc')],
       ],
     };
   }
@@ -2885,6 +2886,18 @@ var KIMS = (function () {
     if (t !== 'store') return one(t);
     var cats = D.storeCats.filter(function (c) { return by[c[0]]; });
     return cats.length ? detailTabs('mcall', cats.map(function (c) { return [c[1], one(c[0])]; })) : NOT_YET('전점 MC');
+  }
+  // 점포 화면 MC 증감(2026-11-28 제이): 그 점포의 CD별 MC 목록을 '전체 · CD' 탭으로. 전체 = 모든 CD를 합쳐 증감 큰 순 15개
+  //   (CD마다 증가·감소 상위 15개가 들어오므로 합쳐서 다시 고른 상위 15개 = 점포 전체 상위 15개)
+  function storeMc(k, me) {
+    var by = ((D.mc[k] || {})[me]) || {};
+    var cats = D.storeCats.filter(function (c) { var m = by[c[0]]; return m && (m.up.length || m.dn.length); });
+    if (!cats.length) return NOT_YET(NAME[me] + ' MC');
+    var all = { up: [], dn: [] };
+    cats.forEach(function (c) { all.up = all.up.concat(by[c[0]].up); all.dn = all.dn.concat(by[c[0]].dn); });
+    var hasG = mcHasG(all.up.concat(all.dn));
+    var note = '<p class="note">' + esc(NAME[me]) + ' · 매출 기준 · 백만원 · 전체 = 모든 CD 합산 상위 · 그룹 성장율 = ' + GNAME[GRP[me]] + ' 다른 점포 합산 전년비' + (hasG ? '' : ' (현재 데이터에 없어 다음 갱신부터 표시)') + '</p>';
+    return note + detailTabs('mcst', [['전체', mcBlock(all)]].concat(cats.map(function (c) { return [c[1], mcBlock(by[c[0]])]; })));
   }
   function catView(k, me, id) {
     var c = D.storeCats.filter(function (x) { return x[0] === id; })[0], g = GRP[me], gn = GNAME[g], G = openOf(g), CC = cmpCols(me), C = setOf(me), oth = othersOf(me);
