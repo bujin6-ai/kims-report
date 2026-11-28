@@ -3946,14 +3946,22 @@ var KIMS = (function () {
   // 묶음 열쇠·이름
   var grpKey = function (d, lvl, r) { if (lvl === 'pg') return r[3] || '-'; var m = mcOf(d, r[2]); return lvl === 'm1' ? (m[1] || '-') : (m[2] || m[0] || '-'); };
   var grpName = function (d, lvl, key, r) { if (lvl === 'pg') return key === '-' ? '구매그룹 없음' : pgName(key); if (lvl === 'm1') return m1Label(key); return mcOf(d, r[2])[0] || key; };
+  // 보이는 묶음 단계(2026-11-28 제이): MCH1·MC 로 검색하면 그 단계 묶음 줄이 보이게 — MCH1 검색 = MCH1 › MC › 상품, MC 검색 = MC › 상품(접힌 채, 눌러서 펼침)
+  //   상품명 검색·검색 없음 = 고른 보기 방식 그대로
+  var itemLv = function () {
+    if (IT.q.replace(/\s/g, '')) { if (IT.qf === 'm1') return ['m1', 'mc']; if (IT.qf === 'mc') return ['mc']; }
+    return ILV[IT.view] || [];
+  };
+  // 펼치기·접기 버튼: 묶음이 없는 화면(상품만 보기, 검색이 묶음을 만들지 않을 때)에서는 숨김
+  var itemExpSync = function () { var none = !itemLv().length; [].forEach.call(window.document.querySelectorAll('#main .ithd [data-iexp]'), function (b) { b.hidden = none; }); };
   // 펼친 묶음 경로 모두(모두 펼치기)
   function itemAllPaths(c) {
-    var d = c.d, lv = ILV[IT.view] || [], o = {};
+    var d = c.d, lv = itemLv(), o = {};
     itemRows(c, ST.k).forEach(function (r) { var p = ''; lv.forEach(function (lvl) { p += '/' + lvl + ':' + grpKey(d, lvl, r); o[p] = 1; }); });
     return o;
   }
   function itemTable(c) {
-    var k = ST.k, rows = itemRows(c, k), tot = itemTotals(rows, k), d = c.d, lv = ILV[IT.view] || [], auto = !!IT.q.replace(/\s/g, '');
+    var k = ST.k, rows = itemRows(c, k), tot = itemTotals(rows, k), d = c.d, lv = itemLv(), auto = !!IT.q.replace(/\s/g, '') && IT.qf === 'nm'; // 상품명 검색만 묶음을 모두 펼침
     var gcls = function (v) { return v == null ? '' : v >= 0 ? 'up' : 'dn'; };
     // 칸 순서(2026-11-28 제이): 매출 만원(금년·전년·성장율) | 매총율(금년·전년·증감) | 판매수량(금년·전년·증감) | 전일 마감 재고수량
     var line = function (nm, sub, v, sq, attr, cl) {
@@ -4037,7 +4045,7 @@ var KIMS = (function () {
     return '<div class="ithd"><h3 class="ith3">상품 목록 <small class="h3s">' + PNAME[ST.k] + ' · 전년 ' + esc(d.per[ST.k][1]) + '</small></h3>' +
       '<div class="itq"><select id="itqf" aria-label="검색 대상">' + IQF.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === qf[0] ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>' +
       '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="itq" placeholder="' + qf[2] + '" autocomplete="off" value="' + esc(IT.q) + '" aria-label="' + qf[1] + ' 검색"></div>' +
-      '<div class="itr1b"><button type="button" class="itexp" data-iexp="1"' + (IT.view === 'item' ? ' hidden' : '') + '>모두 펼치기</button><button type="button" class="itexp" data-iexp="0"' + (IT.view === 'item' ? ' hidden' : '') + '>모두 접기</button>' +
+      '<div class="itr1b"><button type="button" class="itexp" data-iexp="1"' + (!itemLv().length ? ' hidden' : '') + '>모두 펼치기</button><button type="button" class="itexp" data-iexp="0"' + (!itemLv().length ? ' hidden' : '') + '>모두 접기</button>' +
       '<button type="button" class="itrst" data-irst="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>초기화</button></div></div>';
   }
   function itemHeadSync() {
@@ -4045,7 +4053,7 @@ var KIMS = (function () {
     var s = doc.getElementById('itqf'), q = doc.getElementById('itq');
     if (s && s.value !== qf[0]) s.value = qf[0];
     if (q) { q.placeholder = qf[2]; q.setAttribute('aria-label', qf[1] + ' 검색'); if (q.value !== IT.q) q.value = IT.q; }
-    [].forEach.call(doc.querySelectorAll('#main .ithd [data-iexp]'), function (b) { b.hidden = IT.view === 'item'; });
+    itemExpSync();
   }
   // 상품 목록 조건(2026-11-28 제이): 구매그룹 체크박스(여러 개) / 조건(MCH1·MC·매출액·증감) + 보기 방식
   function itemCtl(c) {
@@ -4183,6 +4191,7 @@ var KIMS = (function () {
       itemHeadSync();
     }
     box.innerHTML = itemTable(c);
+    itemExpSync();
     var w1 = box.querySelector('.itw'); if (w1 && wt) w1.scrollTop = wt;
     itemKeep(top);
   }
