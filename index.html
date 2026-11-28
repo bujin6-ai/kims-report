@@ -1186,53 +1186,46 @@ tr.dim>*{opacity:.42}
 #main .itks{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media (max-width:900px){#main .itks{grid-template-columns:repeat(2,minmax(0,1fr))}}
 #main .itk .kd span.up{color:var(--good)}#main .itk .kd span.dn{color:var(--bad)}
-#main .itctl{display:flex;flex-direction:column;gap:10px;margin:4px 0 12px}
+/* 상품 목록 조건 칸(2026-11-28 제이): 3줄 — 검색+초기화 / 구매그룹 체크박스 / 조건+보기 · PC 에서는 위에 고정 */
+#main .itctl{display:flex;flex-direction:column;gap:10px;padding:4px 0 12px}
+@media (min-width:701px){#main #itctlb{position:sticky;top:0;z-index:7;background:var(--panel);box-shadow:0 1px 0 var(--line);margin-bottom:12px}#main #itctlb .itctl{padding:10px 0}}
 #main .itr1{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
-#main .itlb{flex:none;width:56px;color:var(--muted);font-size:13px;font-weight:700}
-#main .itpgs{display:flex;align-items:flex-start;gap:8px}#main .itpgs .itlb{padding-top:10px}
-#main .itpgl{display:flex;flex-wrap:wrap;gap:6px;min-width:0;flex:1}
-#main .itpgl button{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px 0 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s,color .15s}
-#main .itpgl button svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:var(--muted)}
-#main .itpgl button small{color:var(--muted);font-size:11px;font-weight:500}
-#main .itpgl button[aria-pressed=true]{background:var(--ac-soft);border-color:var(--ac);color:var(--ac)}#main .itpgl button[aria-pressed=true] svg,#main .itpgl button[aria-pressed=true] small{color:var(--ac)}
-@media (hover:hover){#main .itpgl button:not([aria-pressed=true]):hover{border-color:var(--ac);color:var(--ac)}}
+#main .itr1b{display:flex;align-items:center;gap:6px;margin-left:auto}
+#main .itexp{height:34px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--muted);font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
+#main .itrst{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 14px 0 11px;border:1px solid var(--ac);border-radius:8px;background:var(--ac-soft);color:var(--ac);font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+#main .itrst svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:hover){#main .itexp:hover{border-color:var(--ac);color:var(--ac)}#main .itrst:hover{background:var(--ac);color:#fff}}
+#main .itlb{flex:none;color:var(--muted);font-size:13px;font-weight:700;white-space:nowrap}
+#main .itpgs{display:flex;align-items:center;gap:8px}
+#main .itpgl{display:flex;flex-wrap:wrap;gap:4px;min-width:0;flex:1}
+#main .itck{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 8px 0 6px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--fg);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;user-select:none;transition:background .15s,border-color .15s,color .15s}
+#main .itck input{width:16px;height:16px;margin:0;flex:none;accent-color:var(--ac);cursor:pointer}
+#main .itck.on{background:var(--ac-soft);border-color:var(--ac);color:var(--ac)}
+@media (hover:hover){#main .itck:not(.on):hover{border-color:var(--ac);color:var(--ac)}}
+#main .itck:focus-within{outline:2px solid var(--ac);outline-offset:1px}
+#main .itr3{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
 #main .itfl{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 #main .itfl select{height:36px;max-width:220px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px}
 #main .itamt{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font-size:13px;color:var(--muted)}
-#main .itamt input{width:84px;height:28px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--fg);font:inherit;font-size:13px;text-align:right;outline:0;-moz-appearance:textfield}
+#main .itamt input{width:60px;height:28px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--fg);font:inherit;font-size:13px;text-align:right;outline:0;-moz-appearance:textfield}
 #main .itamt input::-webkit-outer-spin-button,#main .itamt input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 #main .itamt input:focus{border-bottom-color:var(--ac)}#main .itamt small{font-size:12px}
 #main .itfl .itchips{flex:0 0 auto}
-#main .itclr{height:30px;padding:0 10px;border:0;background:none;color:var(--ac);font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-#main .itsc{margin:0 0 8px;font-size:13px;font-weight:700;color:var(--ac)}
 #main .itrh{margin:16px 0 8px;font-size:15px;font-weight:700}#main .itrh small{margin-left:6px;color:var(--muted);font-size:12px;font-weight:500}
 #main .itk .kl small{margin-left:4px;color:var(--muted);font-size:11px;font-weight:500}
-#main .itks2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media (max-width:900px){#main .itks2{grid-template-columns:1fr}}
-#main .ikw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:16px;align-items:center}
-#main .irks{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;padding-left:16px;border-left:1px solid var(--line)}#main .irh{grid-column:1/-1;margin:0;font-size:12px;font-weight:700;color:var(--muted)}#main .irh small{font-weight:500;font-size:11px;margin-left:3px}
-@media (max-width:520px){#main .ikw{grid-template-columns:1fr}#main .irks{padding:10px 0 0;border-left:0;border-top:1px solid var(--line)}}
-#main .irk{display:flex;flex-direction:column;gap:2px;min-width:0}#main .irk+.irk{padding-left:12px;border-left:1px dashed var(--line)}
-#main .irk>span{color:var(--muted);font-size:12px;font-weight:600}
-#main .irk>b{font-size:22px;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums}#main .irk>b small{margin-left:2px;font-size:12px;font-weight:500;color:var(--muted)}
-#main .irk>b em{font-style:normal}#main .irk>b em.up{color:var(--good)}#main .irk>b em.dn{color:var(--bad)}
-#main .irk>small{color:var(--fg);font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#main .itrn{margin:8px 2px 0;color:var(--muted);font-size:12px}
 @media (max-width:640px){#main .itlb{display:none}#main .itpgl{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}#main .itpgl::-webkit-scrollbar{display:none}#main .itfl select{flex:1 1 0;min-width:0;max-width:none}#main .itamt{flex:1 1 100%;box-sizing:border-box;min-width:0}#main .itamt input{flex:1 1 0;min-width:0;width:auto}}
-#main .itq{flex:1 1 260px;display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+#main .itq{flex:0 1 420px;min-width:0;display:flex;align-items:center;gap:8px;height:38px;padding:0 12px 0 4px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+#main .itq select{flex:none;height:30px;padding:0 6px;border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;color:var(--fg);font:inherit;font-size:13px;font-weight:700;cursor:pointer;outline:0}
 #main .itq svg{width:16px;height:16px;flex:none;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
 #main .itq input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--fg);font:inherit;font-size:14px}
 #main .itq:focus-within{border-color:var(--ac)}
-#main .itsel{display:flex;gap:6px;flex:0 1 auto;min-width:0}
-#main .itsel select{height:38px;max-width:180px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px}
-#main .itdir{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
 #main .itchips,#main .itcols{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 #main .itchips::-webkit-scrollbar{display:none}
 #main .itcols{display:none}
-#main .itview{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 100%}
-#main .itview button{height:30px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+#main .itview{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding-left:14px;border-left:1px solid var(--line)}
+#main .itview .itlb{margin-right:2px}
+#main .itview button{height:32px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 #main .itview button[aria-pressed=true]{background:var(--ac-soft);border-color:color-mix(in srgb,var(--ac) 45%,transparent);color:var(--ac)}
-#main .itview .itexp{color:var(--muted);font-weight:500}
-#main .itview [data-iexp="1"]{margin-left:auto}
 #main .itbl tbody tr.lv1,#main .itbl tbody tr.lv2{cursor:pointer}
 #main .itbl tbody tr.lv1 th,#main .itbl tbody tr.lv1 td{background:color-mix(in srgb,var(--ac) 5%,var(--panel));font-weight:600}
 #main .itbl tbody tr.lv1 th b::before,#main .itbl tbody tr.lv2 th b::before{content:'';display:inline-block;width:6px;height:6px;margin:0 8px 2px 1px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .2s}
@@ -1246,15 +1239,15 @@ tr.dim>*{opacity:.42}
 #main .itchips button,#main .itcols button{flex:none;height:30px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 #main .itchips button[aria-pressed=true],#main .itcols button[aria-pressed=true]{background:var(--ac);border-color:var(--ac);color:#fff}
 #main .itw{border:1px solid var(--line);border-radius:12px}
-#main .itbl{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
-#main .itbl th,#main .itbl td{padding:7px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
-#main .itbl thead th{position:sticky;top:0;background:var(--panel);box-shadow:0 1px 0 var(--line);color:var(--muted);font-size:12px;font-weight:600;z-index:1}
-#main .itbl thead tr.g1 th{border-bottom:0;color:var(--fg);height:30px;box-sizing:border-box;box-shadow:none}#main .itbl thead tr.g2 th{top:30px}#main .itbl thead th small{font-weight:500;color:var(--muted);margin-left:3px}
+#main .itbl{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+#main .itbl th,#main .itbl td{padding:8px 9px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+#main .itbl thead th{position:sticky;top:var(--ith,0px);background:var(--panel);box-shadow:0 1px 0 var(--line);color:var(--muted);font-size:13px;font-weight:600;z-index:1}
+#main .itbl thead tr.g1 th{border-bottom:0;color:var(--fg);height:32px;box-sizing:border-box;box-shadow:none}#main .itbl thead tr.g2 th{top:calc(var(--ith,0px) + 32px)}#main .itbl thead th small{font-weight:500;color:var(--muted);margin-left:3px}
 #main .itbl thead tr.g1 th[rowspan]{text-align:left;vertical-align:bottom}
 #main .itbl .cq+.cs,#main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:1px solid var(--line)}
 #main .itbl tbody th{text-align:left;max-width:320px;white-space:normal;font-weight:400}
 #main .itbl tbody th b{display:block;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-#main .itbl tbody th small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+#main .itbl tbody th small{display:block;color:var(--muted);font-size:13px;margin-top:1px}
 #main .itbl tbody tr[data-im]{cursor:pointer}
 @media (hover:hover){#main .itbl tbody tr[data-im]:hover{background:var(--hov)}}
 #main .itbl tbody tr.on{background:var(--hov)}
@@ -1283,15 +1276,14 @@ tr.dim>*{opacity:.42}
 @media (hover:hover){#main .itpg button:hover,#main .itmore:hover,#main .itchips button:not([aria-pressed=true]):hover{border-color:var(--ac);color:var(--ac)}}
 @media (max-width:700px){
 #main .itcols{display:flex}
-#main .itsel{flex:1 1 100%}#main .itsel select{flex:1;max-width:none}
+#main .itq{flex:1 1 100%}#main .itr1b{margin-left:0}#main .itview{padding-left:0;border-left:0}#main .itfl{flex:1 1 100%;min-width:0}
 #main .itw[data-col] .cq,#main .itw[data-col] .cs,#main .itw[data-col] .cm,#main .itw[data-col] .ck{display:none}#main .itw[data-col=q] .cq,#main .itw[data-col=s] .cs,#main .itw[data-col=m] .cm,#main .itw[data-col=k] .ck{display:table-cell}
 #main .itbl tbody tr.d1 th{padding-left:14px}#main .itbl tbody tr.d2 th{padding-left:24px}#main .itbl tbody tr.d3 th{padding-left:34px}#main .itbl tbody tr.lvm td{padding-left:24px}#main .itbl tbody tr.igr th small{padding-left:0;white-space:normal}#main .itlb small{display:none}
-#main .itbl{font-size:12px}#main .itbl th,#main .itbl td{padding:6px 4px}#main .itbl tbody th{max-width:36vw;padding-left:8px}#main .itbl thead th small{display:none}#main .itbl tbody tr.tot th small{display:block;margin:0}
+#main .itbl{font-size:13px}#main .itbl th,#main .itbl td{padding:6px 4px}#main .itbl tbody th{max-width:36vw;padding-left:8px}#main .itbl thead th small{display:none}#main .itbl tbody tr.tot th small{display:block;margin:0}
 #main .itbl .cs+.cm,#main .itbl .cm+.ck{border-left:0}
 #main .itdl{grid-template-columns:repeat(2,minmax(0,1fr))}
 #main .itbl tbody tr.lv2 th{padding-left:14px}#main .itbl tbody tr.lv3 th{padding-left:24px}#main .itbl tbody tr.lvm td{padding-left:24px}
 #main .itbl tbody tr.lv1 th small,#main .itbl tbody tr.lv2 th small{padding-left:0;white-space:normal}
-#main .itview [data-iexp="1"]{margin-left:0}
 }
 .st tbody tr.tot th,.st tbody tr.tot td{font-weight:700;background:color-mix(in srgb,var(--fg) 6%,var(--panel));border-bottom:1.5px solid var(--fg)}
 /* 사이드 메뉴 카드형(2026-11-24): 로고·현재 점포 카드 / 리포트 목차 2열 타일 / 점포별 실적 그룹 막대 / 맨 아래 메인 화면 */
@@ -1433,6 +1425,16 @@ tr.dim>*{opacity:.42}
 @media (min-width:1024px){
 #nav .ncard.nsk{flex:none}
 }
+/* 상품 상세 사이드바 '상품 요약'(2026-11-28 제이) — 실적 + 오른쪽 성장율·증감, 순위 없음, 글씨 크게 */
+#nav .ncard.nisum{flex:none}#nav .nisum .nct small{font-size:12px;color:var(--muted);font-weight:500}
+#nav .nisst{margin:0 0 6px;font-size:12px;color:var(--muted)}
+#nav .nisc{margin:0 0 8px;padding:6px 10px;border-radius:8px;background:var(--ac-soft);color:var(--ac);font-size:13px;font-weight:700;line-height:1.4}#nav .nisc span{display:block;font-size:12px;font-weight:600;opacity:.8}
+#nav .nisk{padding:10px 0}#nav .nisk+.nisk{border-top:1px solid var(--line)}
+#nav .nisl{margin:0 0 2px;font-size:14px;font-weight:700;color:var(--muted)}
+#nav .nisv{margin:0;display:flex;align-items:baseline;gap:4px;flex-wrap:wrap}#nav .nisv b{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums}#nav .nisv small{font-size:14px;color:var(--muted);font-weight:600}
+#nav .nisv em{margin-left:auto;font-style:normal;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}#nav .nisv em.up{color:var(--good)}#nav .nisv em.dn{color:var(--bad)}
+#nav .nisd{margin:3px 0 0;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+@media (min-width:1024px) and (max-height:760px){#nav .nisv b{font-size:25px}#nav .nisk{padding:6px 0}}
 @media (min-width:1024px) and (max-height:760px){#nav .nskv b{font-size:21px}#nav .nskl p{padding:5px 0;font-size:13px}}
 /* 우리점 VS 비교점 개편(2026-11-24 제이 시안) */
 #sec-detail>h3{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:12px}
@@ -3801,7 +3803,7 @@ var KIMS = (function () {
   // ── 상품 상세(2026-11-27 제이) ── 메인 메뉴 '상품 상세' → MODE 'item' · 주소 #itm-점포-탭-기간
   //   점포를 고르면 그 점포 상품 데이터(약 1만 개, 0.5MB 압축)만 서버에서 받아 옴(WEB.item) — 한 번 받은 점포는 이 기기에 저장
   //   행 = [상품코드, 상품명, MC 번호, 구매그룹(상품 기준), M·W·D × (매출 금년·전년, 수량 금년·전년, 매출총이익 금년·전년), 재고액, 재고수량, 하루 매출원가]
-  var ITC = {}, IT = { q: '', flt: 'all', pgs: {}, m1s: {}, mcs: {}, amin: '', amax: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, view: 'm1', og: {}, mlim: {} }; // view = 보기 방식(ILV) · og 펼친 묶음 경로 · mlim 묶음 안 보이는 상품 수 · pgs/m1s/mcs 여러 개 고른 조건
+  var ITC = {}, IT = { q: '', qf: 'nm', flt: 'all', pgs: {}, m1s: {}, mcs: {}, amin: '', amax: '', sort: 'aT', dir: -1, lim: 100, col: 's', open: {}, view: 'm1', og: {}, mlim: {} }; // view = 보기 방식(ILV) · og 펼친 묶음 경로 · mlim 묶음 안 보이는 상품 수 · pgs/m1s/mcs 여러 개 고른 조건
   var IOFF = { M: 4, W: 10, D: 16 }, ISA = 22;
   var pgCat = function (pg) { for (var i = 0; i < D.storeCats.length; i++) if (D.storeCats[i][2].some(function (g) { return g[0] === pg; })) return D.storeCats[i][0]; return 'etc'; };
   var pgName = function (pg) { for (var i = 0; i < D.storeCats.length; i++) { var g = D.storeCats[i][2].filter(function (x) { return x[0] === pg; })[0]; if (g) return g[1]; } return pg || '-'; };
@@ -3830,8 +3832,12 @@ var KIMS = (function () {
   var manw = function (v) { return v == null ? '-' : Math.round(v / 10000).toLocaleString('ko-KR'); }; // 만원(2026-11-27 제이: 천원 → 만원)
   var qn = function (v) { return v == null ? '-' : (Math.abs(v - Math.round(v)) < 0.05 ? Math.round(v) : Math.round(v * 10) / 10).toLocaleString('ko-KR'); };
   var IFLT = [['all', '전체'], ['up', '매출 증가'], ['dn', '매출 감소']]; // 신규·판매 중단·재고만·마이너스 재고는 2026-11-27 제이 요청으로 뺌
-  // 정렬: 표 머리 이름을 누르면 그 항목으로(같은 이름을 다시 누르면 방향 바꿈) · 아래 select 는 휴대폰용
-  var ISORT = [['aT', '매출 큰 순'], ['aL', '전년 매출'], ['aD', '매출 증감액'], ['g', '매출 성장율'], ['q', '판매수량'], ['qg', '판매수량 증감'], ['mr', '매총율'], ['mrD', '매총율 증감'], ['sq', '재고수량'], ['nm', '이름']];
+  // 정렬: 표 머리 이름을 누르면 그 항목으로(같은 이름을 다시 누르면 방향 바꿈) — 정렬 select·방향 버튼은 2026-11-28 제이 요청으로 뺌
+  // 검색 대상(2026-11-28 제이): 상품명(코드 포함) · MCH1 · MC 중 골라서 검색
+  var IQF = [['nm', '상품명', '상품명 · 코드 검색'], ['m1', 'MCH1', 'MCH1 이름 · 코드 검색'], ['mc', 'MC', 'MC 이름 · 코드 검색']];
+  // 구매그룹 체크박스 순서(2026-11-28 제이) — 이름 공백 무시, 목록에 없는 구매그룹은 맨 뒤
+  var PGORD = ['채소', '청과', '양곡', '수산', '건식', '축산', '공산식품', '공산비식품', '리빙패브릭', '에코마트', 'TO-GO', '즉석델리', '하이퍼공통'];
+  var pgRank = function (pg) { var i = PGORD.indexOf(String(pgName(pg)).replace(/\s/g, '').toUpperCase()); return i < 0 ? 99 : i; };
   var ISUP = { nm: 1 }; // 처음 누르면 작은 것(가나다)부터인 항목
   // 보기 방식(2026-11-27 제이): 구매그룹 › MCH1 › MC › 상품 / MCH1 › MC › 상품 / MC › 상품 / 상품만
   var IVIEW = [['pg', '구매그룹'], ['m1', 'MCH1'], ['mc', 'MC'], ['item', '상품만 보기']];
@@ -3876,7 +3882,7 @@ var KIMS = (function () {
       if (f === 'up' && !(v[0] > v[1])) return false;
       if (f === 'dn' && !(v[0] < v[1])) return false;
       if (f === 'all' && !v[0] && !v[1] && !v[2] && !v[3] && !r[ISA] && !r[ISA + 1]) return false; // 이 기간에 아무 값도 없는 상품은 뺌(재고가 있으면 보임)
-      if (q && (r[1] + r[0] + mcOf(d, r[2]).join(' ')).replace(/\s/g, '').toLowerCase().indexOf(q) < 0) return false;
+      if (q) { var m = mcOf(d, r[2]), hay = IT.qf === 'm1' ? m1Label(m[1] || '-') : IT.qf === 'mc' ? m[0] + (m[2] || '') : r[1] + r[0]; if (String(hay).replace(/\s/g, '').toLowerCase().indexOf(q) < 0) return false; }
       return true;
     });
     var key = IT.sort, dir = IT.dir;
@@ -3979,11 +3985,6 @@ var KIMS = (function () {
     body += tree(rows, 0, '');
     return '<div class="itw' + (lv.length ? ' tree' : '') + '" data-col="' + IT.col + '"><table class="itbl">' + head + '<tbody>' + body + '</tbody></table></div>' + (rows.length ? '' : '<p class="itnone">조건에 맞는 상품이 없습니다.</p>');
   }
-  // 구매그룹 버튼 아이콘 = 그 구매그룹이 속한 CD 아이콘(아래 독의 CD 버튼 그림을 그대로 씀)
-  var pgIcon = function (cat) {
-    var el = typeof window !== 'undefined' && window.document.querySelector('#catbar [data-t="' + cat + '"] svg');
-    return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (el ? el.innerHTML : SXICON.all) + '</svg>';
-  };
   // MCH1·MC 여러 개 고르기(2026-11-27 제이): 버튼을 누르면 위에 검색칸 + 체크 목록 · 검색을 바꿔도 고른 것은 그대로
   var IMS = { open: '', q: '', opts: {} };
   var IMSL = { m1: 'MCH1', mc: 'MC' };
@@ -4005,12 +4006,14 @@ var KIMS = (function () {
       (on ? '<div class="imsp" role="dialog" aria-label="' + IMSL[id] + ' 고르기"><input type="search" data-imsq="' + id + '" placeholder="' + IMSL[id] + ' 이름·코드 검색" autocomplete="off" value="' + esc(IMS.q) + '">' +
         '<div class="imsa"><button type="button" data-imsall="' + id + '">보이는 것 모두 고르기</button><button type="button" data-imsclr="' + id + '">모두 풀기</button><button type="button" class="imsok" data-imsok="1">닫기</button></div><ul class="imsl">' + imsList(id) + '</ul></div>' : '') + '</div>';
   }
-  // 상품 목록 조건: 검색·정렬 / 구매그룹 버튼(Shift = 여러 개) / MCH1·MC(여러 개)·매출액 범위·증감 / 보기 방식
+  // 상품 목록 조건(2026-11-28 제이: 3줄 · 위에 고정)
+  //   1줄 검색(대상 고르기: 상품명·MCH1·MC) + 모두 펼치기/접기·초기화 / 2줄 구매그룹 체크박스(여러 개) / 3줄 조건(MCH1·MC·매출액·증감) + 보기 방식
   function itemCtl(c) {
-    var t = ST.t, pgs = {}, d = c.d;
-    d.rows.forEach(function (r) { if (t === 'store' || c.cat[r[3]] === t) pgs[r[3]] = (pgs[r[3]] || 0) + 1; });
-    var pgl = Object.keys(pgs).filter(function (x) { return x; }).sort(function (a, b) { return pgs[b] - pgs[a]; });
-    Object.keys(IT.pgs).forEach(function (g) { if (!pgs[g]) delete IT.pgs[g]; });
+    var t = ST.t, pgs = {}, pga = {}, d = c.d, k = ST.k;
+    d.rows.forEach(function (r) { if (t === 'store' || c.cat[r[3]] === t) { pgs[r[3]] = (pgs[r[3]] || 0) + 1; pga[r[3]] = (pga[r[3]] || 0) + iv(r, k)[0]; } });
+    // 이 기간 매출 실적이 없는 구매그룹은 보이지 않음 · 순서는 PGORD
+    var pgl = Object.keys(pgs).filter(function (x) { return x && pga[x]; }).sort(function (a, b) { return pgRank(a) - pgRank(b) || pga[b] - pga[a]; });
+    Object.keys(IT.pgs).forEach(function (g) { if (!pga[g]) delete IT.pgs[g]; });
     var m1s = {}, mcs = {};
     itemScope(c, 1).forEach(function (r) { var m = mcOf(d, r[2]); m1s[m[1] || '-'] = 1; });
     Object.keys(IT.m1s).forEach(function (x) { if (!m1s[x]) delete IT.m1s[x]; });
@@ -4019,60 +4022,44 @@ var KIMS = (function () {
     IMS.opts.m1 = Object.keys(m1s).sort().map(function (x) { return [x, m1Label(x)]; });
     IMS.opts.mc = Object.keys(mcs).sort(function (a, b) { return String(mcs[a]).localeCompare(String(mcs[b]), 'ko'); }).map(function (x) { return [x, mcs[x] + (x !== mcs[x] ? ' (' + x + ')' : '')]; });
     var none = !setN(IT.pgs);
-    var chip = function (g) {
-      var on = g ? !!IT.pgs[g] : none, nm = g ? pgName(g) : '전체';
-      return '<button type="button" data-ipg="' + esc(g) + '" aria-pressed="' + on + '"' + (g ? ' title="Shift 를 누른 채 누르면 여러 개 고르기"' : '') + '>' + pgIcon(g ? c.cat[g] : 'all') + '<span>' + esc(nm) + '</span>' + (g ? '<small>' + won(pgs[g]) + '</small>' : '') + '</button>';
+    var chk = function (g) {
+      var on = g ? !!IT.pgs[g] : none;
+      return '<label class="itck' + (on ? ' on' : '') + '"' + (g ? ' title="상품 ' + won(pgs[g]) + '개"' : '') + '><input type="checkbox" data-ipgc="' + esc(g) + '"' + (on ? ' checked' : '') + '><span>' + esc(g ? pgName(g) : '전체') + '</span></label>';
     };
-    var any = !none || setN(IT.m1s) || setN(IT.mcs) || IT.amin !== '' || IT.amax !== '' || IT.flt !== 'all';
+    var qf = IQF.filter(function (x) { return x[0] === IT.qf; })[0] || IQF[0];
     return '<div class="itctl">' +
-      '<div class="itr1"><label class="itq"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="itq" placeholder="상품명 · 코드 · MC 검색" autocomplete="off" value="' + esc(IT.q) + '" aria-label="상품 검색"></label>' +
-      '<div class="itsel"><select id="itsort" aria-label="정렬">' + ISORT.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === IT.sort ? ' selected' : '') + '>' + s[1] + '</option>'; }).join('') + '</select>' +
-      '<button type="button" class="itdir" data-idir="1" aria-label="정렬 방향 바꾸기" title="정렬 방향">' + (IT.dir < 0 ? '↓' : '↑') + '</button></div></div>' +
-      '<div class="itpgs" role="group" aria-label="구매그룹"><span class="itlb">구매그룹<small>Shift+클릭<br>여러 개</small></span><div class="itpgl">' + [''].concat(pgl).map(chip).join('') + '</div></div>' +
-      '<div class="itfl" role="group" aria-label="상품 조건"><span class="itlb">조건</span>' + imsBox('m1') + imsBox('mc') +
+      '<div class="itr1"><div class="itq"><select id="itqf" aria-label="검색 대상">' + IQF.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === qf[0] ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>' +
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="itq" placeholder="' + qf[2] + '" autocomplete="off" value="' + esc(IT.q) + '" aria-label="' + qf[1] + ' 검색"></div>' +
+      '<div class="itr1b">' + (IT.view !== 'item' ? '<button type="button" class="itexp" data-iexp="1">모두 펼치기</button><button type="button" class="itexp" data-iexp="0">모두 접기</button>' : '') +
+      '<button type="button" class="itrst" data-irst="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>초기화</button></div></div>' +
+      '<div class="itpgs" role="group" aria-label="구매그룹"><span class="itlb">구매그룹</span><div class="itpgl">' + [''].concat(pgl).map(chk).join('') + '</div></div>' +
+      '<div class="itr3"><div class="itfl" role="group" aria-label="상품 조건"><span class="itlb">조건</span>' + imsBox('m1') + imsBox('mc') +
       '<span class="itamt"><span>매출</span><input type="number" id="itamin" inputmode="numeric" min="0" step="1" placeholder="이상" value="' + esc(IT.amin) + '" aria-label="매출 이상(만원)"><span>~</span><input type="number" id="itamax" inputmode="numeric" min="0" step="1" placeholder="이하" value="' + esc(IT.amax) + '" aria-label="매출 이하(만원)"><small>만원</small></span>' +
-      '<div class="itchips" role="group" aria-label="매출 증감">' + IFLT.map(function (x) { return '<button type="button" data-iflt="' + x[0] + '" aria-pressed="' + (IT.flt === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>' +
-      (any ? '<button type="button" class="itclr" data-iclr="1">조건 지우기</button>' : '') + '</div>' +
-      '<div class="itview" role="group" aria-label="보기 방식"><span class="itlb">보기</span>' + IVIEW.map(function (x) { return '<button type="button" data-iview="' + x[0] + '" aria-pressed="' + (IT.view === x[0]) + '">' + x[1] + '</button>'; }).join('') +
-      (IT.view !== 'item' ? '<button type="button" class="itexp" data-iexp="1">모두 펼치기</button><button type="button" class="itexp" data-iexp="0">모두 접기</button>' : '') + '</div>' +
+      '<div class="itchips" role="group" aria-label="매출 증감">' + IFLT.map(function (x) { return '<button type="button" data-iflt="' + x[0] + '" aria-pressed="' + (IT.flt === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div>' +
+      '<div class="itview" role="group" aria-label="보기 방식"><span class="itlb">보기</span>' + IVIEW.map(function (x) { return '<button type="button" data-iview="' + x[0] + '" aria-pressed="' + (IT.view === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div>' +
       '<div class="itcols" role="group" aria-label="보는 항목">' + ICOLS.map(function (x) { return '<button type="button" data-icol="' + x[0] + '" aria-pressed="' + (IT.col === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div>';
   }
-  // 상품 요약(2026-11-27 제이 개편): 매출 | 매출 순위(전점·그룹) | 매총율 | 매총율 순위(전점·그룹) 한 줄
-  //   매출·매총율 = 상품 데이터(고른 범위) · 순위 = 매출 리포트 데이터(점포 실적) — 범위는 고른 구매그룹(여러 개면 합계) → 지금 탭(CD) → 점포 전체
-  //   MCH1·MC 단위 순위는 리포트 데이터에 없어 구매그룹까지만
-  function itemRank(me) {
-    var k = ST.k, t = ST.t, pl = Object.keys(IT.pgs);
-    var sc = pl.length === 1 ? scopePg(pl[0]) : pl.length ? { codes: pl.slice().sort(), posKey: 'pgs' } : t === 'store' ? scopeStore(k) : scopeCat(t, k);
-    var scope = pl.length ? pl.map(pgName).join(' + ') : t === 'store' ? '점포 전체' : ((TABS.filter(function (x) { return x[0] === t; })[0] || [0, ''])[1]);
-    var all = OPEN(), grp = openOf(GRP[me]), gnm = GNAME[GRP[me]] || '그룹';
-    var short = function (p) { return String(NAME[p] || '').replace(/점$/, ''); };
-    var lead = function (pl2, key) { var b = null; pl2.forEach(function (p) { var v = M(k, [p], sc)[key]; if (v != null && isFinite(v) && (!b || v > b[1])) b = [p, v]; }); return b; };
-    var one = function (key, pl2, who, fmt) {
-      var r = rankIn(k, pl2, sc, key, me), b = lead(pl2, key);
-      if (r.r == null) return '<div class="irk"><span>' + who + '</span><b>-</b><small>실적 없음</small></div>';
-      var c0 = r.r <= Math.ceil(r.n / 3) ? 'up' : r.r > r.n - Math.ceil(r.n / 3) ? 'dn' : '';
-      return '<div class="irk"><span>' + who + '</span><b><em class="' + c0 + '">' + r.r + '</em><small>위 / ' + r.n + '</small></b><small>' + (b && b[0] !== me ? '1위 ' + esc(short(b[0])) + ' ' + fmt(b[1]) : '1위') + '</small></div>';
-    };
-    var pc = function (v) { return f1(v) + '%'; };
-    var card = function (l, key, fmt) { // 매출·매총율 카드 안에 넣는 순위 줄
-      return '<div class="irks" title="' + esc(scope) + ' 기준"><p class="irh">' + l + ' <small>' + esc(scope) + '</small></p>' + one(key, all, '전점 ' + all.length + '점', fmt) + one(key, grp, esc(gnm) + ' ' + grp.length + '점', fmt) + '</div>';
-    };
-    return { s: card('매출 성장율 순위', 'growth', pct), m: card('매총율 순위', 'mr', pc) }; // 매출 순위는 성장율(전년 대비) 순위로(2026-11-27 제이)
-  }
+  // 상품 요약(2026-11-28 제이): 본문 위 카드 → 왼쪽 사이드바 카드로 옮김 · 순위 표시는 뺌 · 성장율·증감은 실적 오른쪽
+  //   값 = 상품 데이터에서 지금 고른 범위(탭 CD · 구매그룹 · MCH1 · MC)의 합계
   function itemSummary(c, me) {
     var k = ST.k, rows = itemScope(c);
     var nmOf = function (id, sel) { var n = setN(sel); if (!n) return ''; var o = IMS.opts[id] || []; return n === 1 ? ((o.filter(function (x) { return sel[x[0]]; })[0] || [0, IMSL[id] + ' ' + Object.keys(sel)[0]])[1]) : IMSL[id] + ' ' + n + '개'; };
     var pl = Object.keys(IT.pgs);
     var scl = [pl.length ? '구매그룹 ' + (pl.length > 2 ? pl.length + '개' : pl.map(pgName).join(' + ')) : '', nmOf('m1', IT.m1s), nmOf('mc', IT.mcs)].filter(function (x) { return x; });
-    var scTxt = scl.length ? '<p class="itsc">고른 범위만: ' + esc(scl.join(' · ')) + '</p>' : '';
     var tot = itemTotals(rows, k);
     var mr = iMr(tot.a, tot.g), mrl = iMr(tot.al, tot.gl), g = iGr(tot.a, tot.al);
-    var card = function (l, v, u, d, dc, x) { return '<div class="kpi itk ikw"><div class="ikm"><p class="kl">' + l + '</p><p class="kv">' + v + '<small>' + u + '</small></p><p class="kd"><span class="' + (dc || '') + '">' + d + '</span></p></div>' + (x || '') + '</div>'; };
-    var rk = itemRank(me);
-    return scTxt + '<div class="kpis itks2">' +
-      card('매출', man(tot.a), '백만원', '전년 ' + man(tot.al) + '백만 · ' + pct(g), cls(g), rk.s) +
-      card('매총율', mr == null ? '-' : f1(mr * 100), mr == null ? '' : '%', '전년 ' + (mrl == null ? '-' : f1(mrl * 100) + '%') + ' · ' + (mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100)), mr == null || mrl == null ? '' : cls(mr - mrl), rk.m) +
-      '</div><p class="itrn">순위 = 매출 리포트의 점포 실적 기준(구매그룹 단위까지) · 매출은 전년 대비 성장율 순위 · 상위 1/3 초록, 하위 1/3 빨강</p>';
+    var row = function (l, v, u, dv, dc, ly) { return '<div class="nisk"><p class="nisl">' + l + '</p><p class="nisv"><b>' + v + '</b><small>' + u + '</small><em class="' + (dc || '') + '">' + dv + '</em></p><p class="nisd">' + ly + '</p></div>'; };
+    return (scl.length ? '<p class="nisc"><span>선택 범위</span>' + esc(scl.join(' · ')) + '</p>' : '') +
+      row('매출', man(tot.a), '백만원', tot.al > 0 ? pct(g) : tot.a ? '신규' : '-', cls(g), '전년 ' + man(tot.al) + '백만원') +
+      row('매총율', mr == null ? '-' : f1(mr * 100), mr == null ? '' : '%', mr == null || mrl == null ? '-' : sPp((mr - mrl) * 100), mr == null || mrl == null ? '' : cls(mr - mrl), '전년 ' + (mrl == null ? '-' : f1(mrl * 100) + '%'));
+  }
+  // 사이드바 '상품 요약' 카드 — 지금 점포 상품 데이터를 받았을 때만
+  function itemNavCard() {
+    var me = ST.s, c = ITC[me];
+    if (MODE !== 'item' || ST.v !== 'report' || me === 'all' || !(c && c.st === 'ok')) return '';
+    var d = c.d, stale = d.base !== D.base;
+    return '<div class="ncard nisum"><p class="nct"><span>상품 요약</span><small>' + PNAME[ST.k] + ' ' + esc(d.per[ST.k][0]) + '</small></p>' +
+      (stale ? '<p class="nisst">상품 데이터 기준일 ' + esc(d.base) + '</p>' : '') + '<div id="itsum">' + itemSummary(c, me) + '</div></div>';
   }
   function itemPick() {
     return '<p class="itpn">상품 데이터는 점포마다 따로 받습니다. 점포를 고르세요.</p><div class="itpick">' + D.groups.filter(function (g) { return g[0] !== D.closed; }).map(function (g) {
@@ -4091,22 +4078,30 @@ var KIMS = (function () {
     else if (c.st === 'none') body = '<p class="note pend">' + (c.local ? '상품 상세는 웹(로그인 후)에서만 볼 수 있습니다.' : esc(NAME[me]) + ' 상품 데이터는 아직 없습니다. 다음 데이터 갱신부터 표시됩니다.') + '</p>';
     else if (c.st === 'err') body = '<p class="note pend">상품 데이터를 받지 못했습니다(' + esc(c.err) + ').</p><button type="button" class="itmore" data-iretry="' + me + '">다시 받기</button>';
     if (body) { head.rows = [[sec('ilist', '상품 목록', '상품 목록', body)]]; return head; }
-    var d = c.d, stale = d.base !== D.base;
+    var d = c.d;
+    // 상품 요약은 왼쪽 사이드바 카드(itemNavCard)로 옮김(2026-11-28 제이) — 본문은 상품 목록만, 조건 칸은 위에 고정
     head.rows = [
-      [sec('isum', '상품 요약', '상품 요약 <small class="h3s">' + PNAME[ST.k] + ' ' + esc(d.per[ST.k][0]) + '</small>', (stale ? '<p class="note pend">상품 데이터 기준일이 ' + esc(d.base) + '입니다(매출 리포트 ' + esc(D.base) + ').</p>' : '') + '<div id="itsum">' + itemSumAll(c, me) + '</div>', null, 'bare')],
       [sec('ilist', '상품 목록', '상품 목록 <small class="h3s">' + PNAME[ST.k] + ' · 전년 ' + esc(d.per[ST.k][1]) + '</small>', '<div id="itctlb">' + itemCtl(c) + '</div><div id="itbox">' + itemTable(c) + '</div>')]
     ];
     return head;
   }
   var itemSumAll = function (c, me) { return itemSummary(c, me); };
+  // 조건 칸(위에 고정) 높이만큼 표 머리를 아래에 고정 — 조건 칸 줄 수가 바뀌면(화면 폭) 다시 잼
+  var itRO = null;
+  function itemStick() {
+    var doc = window.document, cb = doc.getElementById('itctlb'), m = doc.getElementById('main'); if (!m) return;
+    var set = function () { var el = doc.getElementById('itctlb'), on = el && window.getComputedStyle(el).position === 'sticky'; m.style.setProperty('--ith', (on ? el.offsetHeight : 0) + 'px'); }; // 폰(700px 이하)은 고정 안 함
+    set();
+    if (cb && window.ResizeObserver) { if (!itRO) itRO = new window.ResizeObserver(set); itRO.disconnect(); itRO.observe(cb); }
+  }
   // 목록만 다시 그림(검색·정렬·필터) — 화면 전체를 다시 그리지 않아 입력 중 깜빡이지 않음
-  //   all = 구매그룹·MCH1·MC 를 바꿨을 때: 요약·순위·조건 칸(고를 수 있는 MCH1·MC 목록)도 다시 그림
+  //   all = 구매그룹·MCH1·MC 를 바꿨을 때: 조건 칸(고를 수 있는 MCH1·MC 목록)·사이드바 요약도 다시 그림
   function itemRedraw(all) {
     var c = ITC[ST.s], doc = window.document, box = doc.getElementById('itbox'); if (!(c && c.st === 'ok' && box)) return;
     if (all) {
       var s = doc.getElementById('itsum'), cb = doc.getElementById('itctlb');
-      if (s) s.innerHTML = itemSumAll(c, ST.s);
       if (cb) { var pl = cb.querySelector('.itpgl'), sl = pl ? pl.scrollLeft : 0; cb.innerHTML = itemCtl(c); pl = cb.querySelector('.itpgl'); if (pl) pl.scrollLeft = sl; }
+      if (s) s.innerHTML = itemSumAll(c, ST.s); // 요약의 MCH1·MC 이름은 itemCtl 이 만든 목록(IMS.opts)을 씀 → 조건 칸 다음에
     }
     box.innerHTML = itemTable(c);
   }
@@ -4211,7 +4206,9 @@ var KIMS = (function () {
       '<div class="nbtns"><button type="button" data-go="all"' + (allOn ? ' aria-current="page"' : '') + '>' + ni('all') + '<span>전점 요약</span></button>' +
       MODES.filter(function (m) { return m[0] !== MODE && (m[0] !== 'item' || itemOk()); }).map(function (m) { return '<button type="button" data-go="mode" data-m="' + m[0] + '">' + ni(m[2]) + '<span>' + m[1] + '</span></button>'; }).join('') + '</div>' +
       '<div class="nsr"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg><input type="search" id="navq" placeholder="점포 검색" autocomplete="off" aria-label="점포 검색"></div><ul class="sl nsrr" id="navqr" hidden></ul></div>';
-    out += '<div class="ncard nrep"><p class="nct"><span>' + (ST.v === 'stats' ? '접속 현황' : MODE === 'stock' ? '재고 데이터' : MODE === 'item' ? '상품 상세' : '리포트') + '</span></p>' + toc + '</div>';
+    // 상품 상세: 목차 카드(상품 요약·상품 목록) 대신 '상품 요약' 카드(2026-11-28 제이)
+    if (MODE === 'item' && ST.v === 'report') out += itemNavCard();
+    else out += '<div class="ncard nrep"><p class="nct"><span>' + (ST.v === 'stats' ? '접속 현황' : MODE === 'stock' ? '재고 데이터' : '리포트') + '</span></p>' + toc + '</div>';
     var scS = scopeStore(ST.k);
     var showG = MODE === 'sales'; // 재고·상품 상세 데이터 화면에서는 매출 성장율을 보이지 않음(2026-11-23)
     var gs = D.groups.filter(function (g) { return g[0] !== D.closed; });
@@ -4559,6 +4556,7 @@ var KIMS = (function () {
     // 가로 스크롤 그래프(폰 재고 일별·월별): 처음엔 최근 날짜·이번 달이 보이게
     [].forEach.call(doc.querySelectorAll('#main .sdx-hs'), function (el) { var f = parseFloat(el.dataset.sx); if (f >= 0) el.scrollLeft = Math.max(0, f * el.scrollWidth - el.clientWidth * 0.75); });
     [].forEach.call(doc.querySelectorAll('#main .mtbl'), function (t) { var g = t.querySelector('tr.g1'); if (g && g.offsetHeight) t.style.setProperty('--g1h', g.offsetHeight + 'px'); });
+    if (MODE === 'item') itemStick();
     // 화면(점포·탭·기간·보기)이 바뀌면 방문 기록을 남겨 휴대폰 '뒤로가기'로 바로 전 화면에 돌아오게 함
     try {
       var hs = { s: ST.s, t: ST.t, k: ST.k, v: ST.v, m: MODE }, hk = hs.s + '-' + hs.t + '-' + hs.k + '-' + hs.v + '-' + hs.m, cs = window.history.state;
@@ -4823,7 +4821,7 @@ var KIMS = (function () {
     main0.addEventListener('click', function (e) {
       if (MODE !== 'item') return;
       if (IMS.open && !(e.target.closest && e.target.closest('.ims'))) imsClose();
-      var b = e.target.closest && e.target.closest('[data-ist],[data-ipg],[data-iclr],[data-iflt],[data-icol],[data-imore],[data-iretry],[data-idir],[data-iview],[data-iexp],[data-isort],[data-imsb],[data-imsall],[data-imsclr],[data-imsok],tr[data-im],tr[data-ig]'); if (!b) return;
+      var b = e.target.closest && e.target.closest('[data-ist],[data-irst],[data-iflt],[data-icol],[data-imore],[data-iretry],[data-iview],[data-iexp],[data-isort],[data-imsb],[data-imsall],[data-imsclr],[data-imsok],tr[data-im],tr[data-ig]'); if (!b) return;
       if (b.dataset.ist) { keepRender(function () { ST.s = b.dataset.ist; resetF(); IT.open = {}; IT.og = {}; IT.lim = 100; }); return; }
       if (b.dataset.iretry) { itemLoad(b.dataset.iretry, true); quietRender(); return; }
       // MCH1·MC 고르기 창
@@ -4835,15 +4833,8 @@ var KIMS = (function () {
         if (b.dataset.imsclr) { Object.keys(sel).forEach(function (x) { delete sel[x]; }); [].forEach.call(main0.querySelectorAll('input[data-imsv="' + id + '"]'), function (x) { x.checked = false; }); }
         imsLive(id); return;
       }
-      // 구매그룹: 그냥 누르면 하나만, Shift 를 누른 채 누르면 여러 개(다시 누르면 뺌)
-      if (b.dataset.ipg != null) {
-        var g = b.dataset.ipg;
-        if (!g) IT.pgs = {};
-        else if (e.shiftKey) { if (IT.pgs[g]) delete IT.pgs[g]; else IT.pgs[g] = 1; }
-        else { var only = setN(IT.pgs) === 1 && IT.pgs[g]; IT.pgs = {}; if (!only) IT.pgs[g] = 1; }
-        IT.m1s = {}; IT.mcs = {}; IT.lim = 100; IT.og = {}; IT.mlim = {}; itemRedraw(true); return;
-      }
-      if (b.dataset.iclr) { resetF(); IT.amin = ''; IT.amax = ''; IT.flt = 'all'; IT.lim = 100; itemRedraw(true); return; }
+      // 초기화(2026-11-28 제이): 검색·구매그룹·조건·정렬·보기·펼침 모두 처음 상태로
+      if (b.dataset.irst) { resetF(); IT.q = ''; IT.qf = 'nm'; IT.amin = ''; IT.amax = ''; IT.flt = 'all'; IT.sort = 'aT'; IT.dir = -1; IT.view = 'm1'; IT.open = {}; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
       if (b.dataset.iview) { IT.view = b.dataset.iview; IT.og = {}; IT.mlim = {}; IT.lim = 100; itemRedraw(true); return; }
       if (b.dataset.isort) { var sk = b.dataset.isort; if (IT.sort === sk) IT.dir = -IT.dir; else { IT.sort = sk; IT.dir = ISUP[sk] ? 1 : -1; } itemRedraw(true); return; }
       if (b.dataset.iflt) { IT.flt = b.dataset.iflt; IT.lim = 100; itemRedraw(true); return; }
@@ -4851,7 +4842,6 @@ var KIMS = (function () {
       if (b.dataset.imore) { if (b.dataset.imore === '1') IT.lim += 200; else IT.mlim[b.dataset.imore] = (IT.mlim[b.dataset.imore] || 50) + 100; }
       else if (b.dataset.iexp) { var c0 = ITC[ST.s]; IT.og = b.dataset.iexp === '1' && c0 && c0.d ? itemAllPaths(c0) : {}; }
       else if (b.dataset.ig) { if (IT.og[b.dataset.ig]) delete IT.og[b.dataset.ig]; else IT.og[b.dataset.ig] = 1; }
-      else if (b.dataset.idir) { IT.dir = -IT.dir; b.textContent = IT.dir < 0 ? '↓' : '↑'; }
       else if (b.dataset.im) { if (IT.open[b.dataset.im]) delete IT.open[b.dataset.im]; else IT.open[b.dataset.im] = 1; }
       itemRedraw();
     });
@@ -4879,8 +4869,14 @@ var KIMS = (function () {
       if (MODE !== 'item') return;
       var t = e.target;
       if (t.dataset && t.dataset.imsv) { var id = t.dataset.imsv, sel = id === 'm1' ? IT.m1s : IT.mcs; if (t.checked) sel[t.value] = 1; else delete sel[t.value]; if (id === 'm1') IT.mcs = {}; IT.lim = 100; IT.og = {}; imsLive(id); return; }
+      // 구매그룹 체크박스(2026-11-28 제이: Shift+클릭 대신) — '전체' = 모두 풀기, 나머지는 켜고 끄기(여러 개)
+      if (t.dataset && t.dataset.ipgc != null) {
+        var g = t.dataset.ipgc;
+        if (!g) IT.pgs = {}; else if (t.checked) IT.pgs[g] = 1; else delete IT.pgs[g];
+        IT.m1s = {}; IT.mcs = {}; IT.lim = 100; IT.og = {}; IT.mlim = {}; itemRedraw(true); return;
+      }
+      if (t.id === 'itqf') { IT.qf = t.value; IT.lim = 100; itemRedraw(true); var q1 = doc.getElementById('itq'); if (q1) q1.focus({ preventScroll: true }); return; }
       if (t.id === 'itamin' || t.id === 'itamax') itemRedraw(true);
-      else if (t.id === 'itsort') { IT.sort = t.value; IT.dir = ISUP[IT.sort] ? 1 : -1; itemRedraw(true); }
     });
     // 관리 필요 상품: CD·구매그룹 고르기
     doc.getElementById('main').addEventListener('click', function (e) {
