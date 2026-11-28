@@ -1107,8 +1107,8 @@ tr.dim>*{opacity:.42}
 .app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto auto auto;grid-template-areas:"menu title crumb seg set"}
 .crumb{grid-area:crumb;display:none;align-items:center;gap:9px;justify-self:end;padding:0 6px;font-size:16px;font-weight:700;color:var(--muted);white-space:nowrap}
 .app.docked .crumb{display:inline-flex}.crumb:empty{display:none!important}
-.crumb b{color:var(--fg);font-weight:800}.crumb i{font-style:normal;color:color-mix(in srgb,var(--muted) 75%,transparent);font-weight:500}
-.crumb button{font:inherit;color:var(--ac);background:none;border:0;padding:0;cursor:pointer}@media (hover:hover){.crumb button:hover{text-decoration:underline;text-underline-offset:3px}}
+.crumb b{color:var(--fg);font-weight:800}.crumb b[aria-current]{color:var(--ac)}/* 지금 화면 = 파랑, 앞 화면 = 검정(2026-11-28 제이) */.crumb i{font-style:normal;color:color-mix(in srgb,var(--muted) 75%,transparent);font-weight:500}
+.crumb button{font:inherit;color:var(--fg);background:none;border:0;padding:0;cursor:pointer}@media (hover:hover){.crumb button:hover{text-decoration:underline;text-underline-offset:3px}}
 @media (max-width:1100px){.crumb{font-size:14px;gap:6px}}@media (max-width:900px){.app.docked .crumb{display:none}}
 @media (max-width:640px){.app.docked .hdr{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"menu title set" "seg seg seg"}.app.docked .crumb{display:none}#toTop{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
 .nojs .dock,.nojs .dkt{display:none!important}
@@ -4107,19 +4107,15 @@ var KIMS = (function () {
     var k = ST.k, t = ST.t, pl = Object.keys(IT.pgs);
     var sc = pl.length === 1 ? scopePg(pl[0]) : pl.length ? { codes: pl.slice().sort(), posKey: 'pgs' } : t === 'store' ? scopeStore(k) : scopeCat(t, k);
     var all = OPEN(), grp = openOf(GRP[me]), gnm = GNAME[GRP[me]] || '그룹';
-    var short = function (p) { return String(NAME[p] || '').replace(/점$/, ''); };
-    var one = function (key, pl2, who, fmt) {
-      var r = rankIn(k, pl2, sc, key, me), b = null;
-      pl2.forEach(function (p) { var v = M(k, [p], sc)[key]; if (v != null && isFinite(v) && (!b || v > b[1])) b = [p, v]; });
-      var mine = M(k, [me], sc)[key];
-      if (r.r == null) return '<div class="nirk"><span>' + who + '</span><b>-</b><small>실적 없음</small></div>';
+    // 1위 점포·값 줄은 뺌(2026-11-28 제이) — 순위만
+    var one = function (key, pl2, who) {
+      var r = rankIn(k, pl2, sc, key, me);
+      if (r.r == null) return '<div class="nirk"><span>' + who + '</span><b>-</b></div>';
       var c0 = r.r <= Math.ceil(r.n / 3) ? 'up' : r.r > r.n - Math.ceil(r.n / 3) ? 'dn' : '';
-      return '<div class="nirk"><span>' + who + '</span><b><em class="' + c0 + '">' + r.r + '</em><small>위 / ' + r.n + '</small></b>' +
-        '<small>' + (b && b[0] !== me ? '1위 ' + esc(short(b[0])) + ' ' + fmt(b[1]) : '1위 · ' + fmt(mine)) + '</small></div>';
+      return '<div class="nirk"><span>' + who + '</span><b><em class="' + c0 + '">' + r.r + '</em><small>위 / ' + r.n + '</small></b></div>';
     };
-    var pp = function (v) { return sPp(v * 100); };
-    var box = function (key, fmt) { return '<div class="nirks">' + one(key, all, '전점 ' + all.length + '점', fmt) + one(key, grp, esc(gnm) + ' ' + grp.length + '점', fmt) + '</div>'; };
-    return { s: box('growth', pct), m: box('mrD', pp) };
+    var box = function (key) { return '<div class="nirks">' + one(key, all, '전점 ' + all.length + '점') + one(key, grp, esc(gnm) + ' ' + grp.length + '점') + '</div>'; };
+    return { s: box('growth'), m: box('mrD') };
   }
   // 사이드바 '상품 요약' 카드 — 지금 점포 상품 데이터를 받았을 때만
   function itemNavCard() {
@@ -4210,6 +4206,26 @@ var KIMS = (function () {
   }
   //   조건 칸이 위에 붙어 있었으면(내려 본 상태) → 조건 칸은 그 자리, 표는 조건 칸 바로 아래부터(목록 처음부터 보임)
   //   붙기 전이면 → 보던 높이 그대로
+  // 모든 화면 공통(2026-11-28 제이): 탭·조건을 바꿔 본문이 짧아져도 위쪽은 그대로, 아래만 올라오게
+  //   본문 끝 빈 칸(#itpad)을 만들어 top 높이까지 스크롤할 수 있게 함 — 위로 올리면 itemPadFit 이 필요한 만큼으로 줄임
+  function padEnsure(top) {
+    var doc = window.document, m = doc.getElementById('main'); if (!m) return;
+    var sp = doc.getElementById('itpad');
+    if (!sp) { sp = doc.createElement('div'); sp.id = 'itpad'; sp.setAttribute('aria-hidden', 'true'); m.appendChild(sp); }
+    itemPadFit(top);
+  }
+  // 본문 높이가 줄어 스크롤이 밀려 올라갔으면(브라우저가 끝에 맞춰 자름) 빈 칸을 덧대고 보던 높이로 되돌림 — 그리기 전에 실행돼 화면이 튀지 않음
+  //   KT.top = 사용자가 마지막으로 보던 높이(스크롤할 때마다, 일부러 옮길 때 갱신)
+  var KT = { top: 0 };
+  function keepTopWatch() {
+    var doc = window.document, sc = doc.getElementById('scroller'), m = doc.getElementById('main');
+    if (!sc || !m || !window.ResizeObserver) return;
+    new window.ResizeObserver(function () {
+      if (MODE === 'item' && window.matchMedia('(min-width:701px)').matches) return; // PC 상품 상세는 표 안에서 스크롤
+      var max = sc.scrollHeight - sc.clientHeight;
+      if (KT.top > 0 && sc.scrollTop < KT.top - 1 && sc.scrollTop >= max - 1) { padEnsure(KT.top); sc.scrollTop = KT.top; }
+    }).observe(m);
+  }
   function itemKeep(top) {
     var doc = window.document, sc = doc.getElementById('scroller'), m = doc.getElementById('main'), box = doc.getElementById('itbox'), cb = doc.getElementById('itctlb'); if (!sc || !m) return;
     var sp = doc.getElementById('itpad');
@@ -4670,7 +4686,7 @@ var KIMS = (function () {
       }
       crumb.innerHTML = cr.map(function (c, i) { var last = i === cr.length - 1; return (i ? '<i aria-hidden="true">›</i>' : '') + (last || !c[0] ? '<b' + (last ? ' aria-current="page"' : '') + '>' + esc(c[1]) + '</b>' : '<button type="button" data-cr="' + c[0] + '">' + esc(c[1]) + '</button>'); }).join('');
     }
-    if (toTop) { doc.getElementById('scroller').scrollTop = 0; main.classList.remove('fx'); void main.offsetWidth; main.classList.add('fx'); }
+    if (toTop) { KT.top = 0; doc.getElementById('scroller').scrollTop = 0; main.classList.remove('fx'); void main.offsetWidth; main.classList.add('fx'); }
     // 화면 배치 계산을 한 번으로: 측정 모드에서 항목 버튼·고정 머리글 위치를 함께 잰 뒤 한꺼번에 씀
     var sj = measureSegs(); stickHeads(true); applySegs(sj); placePeriod(); queueLift(); wxFill();
     // 가로 스크롤 그래프(폰 재고 일별·월별): 처음엔 최근 날짜·이번 달이 보이게
@@ -4835,10 +4851,10 @@ var KIMS = (function () {
     change();
     render(false);
     var hit = cands.filter(function (x) { return doc.getElementById(x.id); })[0];
-    if (hit) {
-      var y = sc.scrollTop + vtop(doc.getElementById(hit.id)) - hit.t;
-      sc.scrollTop = Math.max(0, y);
-    } else sc.scrollTop = before < 4 ? 0 : before; // 같은 항목이 하나도 없으면 보던 높이 그대로
+    var y0 = before < 4 ? 0 : before; // 같은 항목이 하나도 없으면 보던 높이 그대로
+    if (hit) y0 = Math.max(0, sc.scrollTop + vtop(doc.getElementById(hit.id)) - hit.t);
+    if (!(MODE === 'item' && window.matchMedia('(min-width:701px)').matches)) padEnsure(y0); // 짧아진 화면도 그 높이까지 내려갈 수 있게(위쪽 고정, 2026-11-28 제이)
+    KT.top = y0; sc.scrollTop = y0;
     // 지금 화면에 보이는 줄은 등장 효과 없이 바로 제자리
     var bot = st + vh;
     [].forEach.call(main.querySelectorAll('.row.rv'), function (r) { var q = r.getBoundingClientRect(); if (q.top < bot && q.bottom > st - 20) { r.classList.remove('rv'); if (rv) rv.unobserve(r); } });
@@ -5017,7 +5033,8 @@ var KIMS = (function () {
     // 폰: 고정 위치 메뉴라 스크롤·칩 줄을 밀면 닫음
     var sxfClose = function (e) { if (e && e.target && e.target.closest && e.target.closest('.sxf-m')) return; [].forEach.call(doc.querySelectorAll('#main .sxf-d[open]'), function (x) { x.open = false; }); };
     doc.getElementById('scroller').addEventListener('scroll', sxfClose, { passive: true });
-    doc.getElementById('scroller').addEventListener('scroll', function () { if (MODE === 'item') itemPadFit(); }, { passive: true }); // 위로 올리면 덧댄 빈 칸 줄임
+    doc.getElementById('scroller').addEventListener('scroll', function () { itemPadFit(); KT.top = this.scrollTop; }, { passive: true }); // 위로 올리면 덧댄 빈 칸 줄임 · 보던 높이 기억
+    keepTopWatch();
     doc.getElementById('main').addEventListener('scroll', function (e) { if (e.target.classList && e.target.classList.contains('sxf')) sxfClose(); }, true);
     // 관리 필요 상품: 열 제목을 누르면 그 열로 정렬(같은 열을 다시 누르면 반대로)
     doc.getElementById('main').addEventListener('click', function (e) {
