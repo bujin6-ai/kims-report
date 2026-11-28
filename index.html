@@ -846,6 +846,10 @@ tr.dim>*{opacity:.42}
 #main .stk .dtt table thead th{top:calc(var(--sth,0px) - 8px)}
 #main .stk .dtt .mtbl thead{top:calc(var(--sth,0px) - 8px)}}
 #main.measuring table thead th,#main.measuring table thead,#main.measuring .sth{position:static!important}
+/* 점포 상세 실적 표(2026-11-28 제이): 노트북(1024~1439px)에서 표가 오른쪽으로 넘쳐 '건단가'가 잘리고 화면이 옆으로 밀리던 것 → 글씨·칸 여백을 줄여 1280px 이상은 한 화면에 맞춤,
+   그보다 좁으면 표 안에서만 옆으로 밀리게(화면 전체는 안 밀림) */
+@media (min-width:1024px) and (max-width:1439px){#main #sec-rank .mtbl{font-size:14px;letter-spacing:-.02em}#main #sec-rank .mtbl th,#main #sec-rank .mtbl td{padding-left:3px;padding-right:3px}#main #sec-rank .mtbl .gs{padding-left:6px}#main #sec-rank .mtbl thead th{font-size:12px}#main #sec-rank .mtbl .rkb{padding:1px 4px;min-width:0}}
+@media (min-width:1024px) and (max-width:1279px){#main #sec-rank .hx{overflow-x:auto}}
 #main.measuring,#main.measuring section,#main.measuring .row,#main.measuring .sth,#main.measuring thead,#main.measuring thead th{transform:none!important;transition:none!important;animation:none!important}
 .mcl li{grid-template-columns:7.5em minmax(0,1fr) 8.8em 5em}
 .mcl .ma{text-align:right;font-size:.88em;font-weight:600;padding-left:10px;position:relative;white-space:nowrap;align-self:stretch;display:flex;align-items:center;justify-content:flex-end}
@@ -5440,6 +5444,10 @@ var KIMS = (function () {
     });
     return Promise.race([done, new Promise(function (ok) { setTimeout(ok, 1500); })]);
   }
+  function wipeLocal() { // 로그아웃: 실적 저장본·상품 상세 저장본(IndexedDB 'kv' 전체)과 상품 저장 목록 지움
+    MEM = null; lsStore('kims-data', null); lsStore('kims-item-keys', null);
+    return IDB ? idbDo('readwrite', function (st) { return st.clear(); }) : Promise.resolve();
+  }
   var store = function (k, v) {
     if (k !== 'kims-data' || !IDB || !MEMOK) return lsStore(k, v);
     if (v === undefined) return MEM;
@@ -5647,7 +5655,10 @@ var KIMS = (function () {
     var a = get() || {};
     if (!expired && a.token) api({ action: 'logout', token: a.token }).catch(function () {});
     put({ email: a.email }); store(DK, null); store(PK, null);
-    if (started) { location.replace(location.pathname); return; } // 리포트 화면 상태까지 깨끗하게
+    // 2026-11-28 제이: 로그아웃하면 이 기기에 저장한 실적·상품 상세 데이터(IndexedDB)를 모두 지움(함께 쓰는 PC에 상품 데이터가 남던 것)
+    //   지우기가 끝난 뒤(최대 1초) 화면을 새로 띄움 — 바로 새로 띄우면 지우기가 끊길 수 있음
+    var wiped = wipeLocal();
+    if (started) { Promise.race([wiped, new Promise(function (ok) { setTimeout(ok, 1000); })]).then(function () { location.replace(location.pathname); }); return; } // 리포트 화면 상태까지 깨끗하게
     P = null; showGate('login', msg ? { t: msg } : null, a.email);
   }
 
